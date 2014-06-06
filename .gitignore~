@@ -1,6 +1,5 @@
 *.class
 *.log
-README.md~
 
 # sbt specific
 .cache/
