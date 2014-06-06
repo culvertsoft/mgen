@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<Project>
+
+	<Settings>
+		<java_out>test_files/generated/java/</java_out>
+		<cpp_out>test_files/generated/cpp/</cpp_out>
+		<js_out>test_files/generated/js/</js_out>
+	</Settings>
+
+	<Module>gameworld.dependency.depmodule1.xml</Module>
+	<Module>gameworld.dependency.depmodule2.xml</Module>
+	<Module>gameworld.dependency.depmodule3.xml</Module>
+
+</Project>

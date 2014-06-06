@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Project>
+
+	<Generator name="Java">
+		<generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator
+		</generator_class_path>
+		<output_path>../MGenVisualDesignerModel/src</output_path>
+		<classregistry_path>se.culvertsoft.mgen.visualdesigner
+		</classregistry_path>
+	</Generator>
+
+	<Generator name="Javascript">
+		<generator_class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator
+		</generator_class_path>
+		<output_path>../MGenVisualDesignerModel/site/js/mgen-data.js
+		</output_path>
+		<classregistry_path>mgen_classreg</classregistry_path>
+	</Generator>
+
+	<Module>se.culvertsoft.mgen.visualdesigner.model.xml</Module>
+
+</Project>
