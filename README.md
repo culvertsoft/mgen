@@ -14,7 +14,7 @@ Each component customizable/extendable:
 
  * IDLs can be customized/extended by adding new parsers or extending existing ones, through the Compiler's plugin architecture.
 
- * Generated code can be customized/extended/stripped by adding new generators or subclassing existing ones.
+ * Generated code can be customized/extended/stripped by adding new generators or subclassing existing ones, also through the Compiler's plugin architecture.
 
  * The supplied support libraries can also be extended or replaced (e.g. adding new serializers)
 
