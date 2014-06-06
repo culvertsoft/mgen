@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<Module>
+
+	<Types>
+
+		<DepVectorR3>
+			<x type="int" />
+			<y type="float" />
+			<z type="double" />
+		</DepVectorR3>
+
+		<DepPositioning>
+			<position type="DepVectorR3" flags="required" />
+			<velocity type="DepVectorR3" />
+			<acceleration type="DepVectorR3" flags="polymorphic, nullable" />
+		</DepPositioning>
+
+		<DepEntity>
+			<id type="int64" />
+			<positioning type="DepPositioning" />
+		</DepEntity>
+
+		<DepCreature extends="DepEntity">
+			<hp type="int16" />
+		</DepCreature>
+
+		<DepVehicle extends="DepEntity" />
+
+		<DepCar extends="DepVehicle">
+			<brand type="String" />
+			<nWheels type="int8" />
+		</DepCar>
+
+		<DepItem extends="DepEntity" />
+
+		<DepEntityHolder>
+			<!-- Polymorphic field -->
+			<entity type="DepEntity" />
+		</DepEntityHolder>
+
+		<DepGarageViewer>
+			<!-- Nonpolymorphic field -->
+			<vehicles type="array[DepVehicle]" flags="nonpolymorphic" />
+		</DepGarageViewer>
+
+		<DepWorld>
+			<name type="String" />
+			<entities type="map[int64, DepEntity]" />
+			<loadedFromDataBase type="String" flags="polymorphic, nullable" />
+		</DepWorld>
+
+	</Types>
+
+</Module>

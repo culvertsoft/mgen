@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title></title>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.js"></script>
+        <script>
+            $(window).load(function() {
+                $("#sendParentMessage").click(function(){
+                    opener.postMessage('Message from Popup to Parent', '*');
+                });
+
+                addEventListener('message', function(e){
+                  console.log('Popup received message!: ', e.data);
+                }, false);
+            });
+        </script>
+    </head>
+    <body>
+        <div id="sendParentMessage">Send Parent Message</div>
+    </body>
+</html>

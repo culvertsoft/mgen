@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project default="create_run_jar" name="Create Runnable Jar for Project MGenJavaScriptGenerator with libraries in sub-folder">
+    <target name="create_run_jar">
+        <jar destfile="build/MGenJavaScriptGenerator.jar">
+            <manifest>
+                <attribute name="Main-Class" value="se.culvertsoft.mgen.jspack.generator.DummyMain"/>
+            </manifest>
+            <fileset dir="bin"/>
+        </jar>
+    </target>
+</project>

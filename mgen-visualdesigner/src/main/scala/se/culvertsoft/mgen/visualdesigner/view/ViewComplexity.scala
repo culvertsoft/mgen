@@ -1,0 +1,6 @@
+package se.culvertsoft.mgen.visualdesigner.view
+
+abstract class ViewComplexity
+case object VIEW_COMPLEXITY_UNSET extends ViewComplexity
+case object VIEW_COMPLEXITY_SIMPLE extends ViewComplexity
+case object VIEW_COMPLEXITY_COMPLEX extends ViewComplexity

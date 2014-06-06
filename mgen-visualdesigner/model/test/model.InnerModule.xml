@@ -1,0 +1,10 @@
+<Module>
+    <Types>
+        <InnerClass>
+            <newField type="int32"/>
+            <newField type="int32"/>
+            <newField type="int32"/>
+            <newField type="int32"/>
+        </InnerClass>
+    </Types>
+</Module>

@@ -1,0 +1,61 @@
+package se.culvertsoft.mgen.api.model.impl;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import se.culvertsoft.mgen.api.model.CustomType;
+import se.culvertsoft.mgen.api.model.Module;
+import se.culvertsoft.mgen.api.model.Type;
+
+public class ModuleImpl implements Module {
+
+	private final String m_path;
+	private final Map<String, String> m_settings;
+	private HashMap<String, CustomTypeImpl> m_types;
+
+	public ModuleImpl(final String path, final Map<String, String> settings) {
+		m_path = path;
+		m_settings = settings;
+		m_types = new HashMap<String, CustomTypeImpl>();
+	}
+
+	public Map<String, String> settings() {
+		return m_settings;
+	}
+
+	public String path() {
+		return m_path;
+	}
+
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public Map<String, CustomType> types() {
+		return (Map<String, CustomType>) ((Map) m_types);
+	}
+
+	public HashMap<String, CustomTypeImpl> typesMutable() {
+		return m_types;
+	}
+
+	public void setTypes(final List<CustomTypeImpl> types) {
+		m_types.clear();
+		for (final CustomTypeImpl type : types) {
+			addType(type);
+		}
+	}
+
+	public void addType(final CustomTypeImpl type) {
+		m_types.put(type.name(), type);
+	}
+
+	@Override
+	public List<Type> getAllKnownTypesWithName(String typeName) {
+		final ArrayList<Type> out = new ArrayList<Type>();
+		final Type thisModuleType = m_types.get(typeName);
+		if (thisModuleType != null)
+			out.add(thisModuleType);
+		return out;
+	}
+
+}

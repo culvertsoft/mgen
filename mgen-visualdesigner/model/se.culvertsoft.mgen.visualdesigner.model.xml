@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Module>
+
+	<Types>
+
+		<!-- = = = = = = = -->
+		<!-- = = = = = = = -->
+		<!-- Utility Types -->
+		<!-- = = = = = = = -->
+
+		<EntityIdBase />
+
+		<EntityId extends="EntityIdBase">
+			<lsb type="int64" flags="required" />
+			<msb type="int64" flags="required" />
+		</EntityId>
+
+		<ClassPathEntityId extends="EntityIdBase">
+			<path type="string" flags="required" />
+		</ClassPathEntityId>
+
+		<Placement>
+			<x type="int32" />
+			<y type="int32" />
+			<width type="int32" />
+			<height type="int32" />
+		</Placement>
+
+		<Generator>
+			<name type="string" flags="required" />
+			<generatorClassName type="string" flags="required" />
+			<generatorJarFileFolder type="string" flags="required" />
+			<classRegistryPath type="string" flags="required" />
+			<outputFolder type="string" flags="required" />
+			<settings type="map[string, string]" />
+		</Generator>
+
+
+		<!-- = = = = = = -->
+		<!-- = = = = = = -->
+		<!-- Base Types -->
+		<!-- = = = = = = -->
+
+		<Entity>
+			<id type="EntityIdBase" />
+			<name type="string" />
+			<parent type="EntityIdBase" />
+		</Entity>
+
+		<PlacedEntity extends="Entity">
+			<placement type="Placement" flags="required" />
+		</PlacedEntity>
+
+
+		<!-- = = = = = = -->
+		<!-- = = = = = = -->
+		<!-- Entity Types -->
+		<!-- = = = = = = -->
+
+		<CustomType extends="PlacedEntity">
+			<superType type="EntityIdBase" />
+			<subTypes type="list[EntityIdBase]" />
+			<fields type="list[CustomTypeField]" />
+		</CustomType>
+
+		<Module extends="PlacedEntity">
+			<settings type="map[string, string]" />
+			<submodules type="list[Module]" />
+			<types type="list[CustomType]" />
+		</Module>
+
+		<Project extends="Entity">
+			<generators type="list[Generator]" flags="required" />
+			<settings type="map[string, string]" />
+			<dependencies type="list[String]" />
+			<modules type="list[Module]" />
+		</Project>
+
+		<CustomTypeField extends="Entity">
+			<type type="FieldType" flags="required" />
+			<flags type="list[string]" />
+		</CustomTypeField>
+
+
+		<!-- = = = = = = -->
+		<!-- = = = = = = -->
+		<!-- Field Types -->
+		<!-- = = = = = = -->
+
+		<FieldType />
+
+		<BuiltInType extends="FieldType" />
+
+		<SimpleType extends="BuiltInType" />
+
+		<StringType extends="SimpleType" />
+
+		<PrimitiveType extends="SimpleType" />
+		<BoolType extends="PrimitiveType" />
+		<Int8Type extends="PrimitiveType" />
+		<Int16Type extends="PrimitiveType" />
+		<Int32Type extends="PrimitiveType" />
+		<Int64Type extends="PrimitiveType" />
+		<Float32Type extends="PrimitiveType" />
+		<Float64Type extends="PrimitiveType" />
+
+		<GenericType extends="BuiltInType" />
+
+		<MapType extends="GenericType">
+			<keyType type="SimpleType" flags="polymorphic" />
+			<valueType type="FieldType" flags="polymorphic" />
+		</MapType>
+
+		<ListOrArrayType extends="GenericType">
+			<elementType type="FieldType" flags="polymorphic" />
+		</ListOrArrayType>
+
+		<ListType extends="ListOrArrayType" />
+
+		<ArrayType extends="ListOrArrayType" />
+
+		<CustomTypeRef extends="FieldType">
+			<id type="EntityIdBase" />
+		</CustomTypeRef>
+
+		<NoType extends="BuiltInType" />
+
+		<!-- = = = = = = -->
+		<!-- = = = = = = -->
+		<!-- Helper Types -->
+		<!-- = = = = = = -->
+
+		<ClipboardContents>
+			<items type="List[Entity]" flags="required" />
+		</ClipboardContents>
+
+
+	</Types>
+
+</Module>

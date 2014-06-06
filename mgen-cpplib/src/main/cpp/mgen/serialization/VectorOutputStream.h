@@ -1,0 +1,37 @@
+/*
+ * VectorOutputStream.h
+ *
+ *  Created on: 3 mar 2014
+ *      Author: GiGurra
+ */
+
+#ifndef VECTOROUTPUTSTREAM_H_
+#define VECTOROUTPUTSTREAM_H_
+
+#include <vector>
+#include "mgen/exceptions/IOException.h"
+
+namespace mgen {
+
+class VectorOutputStream {
+public:
+
+    VectorOutputStream(std::vector<char>& data) :
+            m_data(data) {
+    }
+
+    void write(const void* src, const int nBytes) {
+        m_data.insert(
+                m_data.end(),
+                reinterpret_cast<const char*>(src),
+                reinterpret_cast<const char*>(src) + nBytes);
+    }
+
+private:
+    std::vector<char>& m_data;
+
+};
+
+} /* namespace mgen */
+
+#endif /* VECTOROUTPUTSTREAM_H_ */

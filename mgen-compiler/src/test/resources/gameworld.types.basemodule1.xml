@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<Module>
+
+	<Types>
+
+		<VectorR3>
+			<x type="int" />
+			<y type="float" />
+			<z type="double" />
+		</VectorR3>
+
+		<Matrix4x4d>
+			<values type="array[array[double]]" />
+		</Matrix4x4d>
+
+		<Positioning>
+			<position type="VectorR3" flags="required" />
+			<velocity type="VectorR3" flags="optional" />
+			<acceleration type="VectorR3" flags="polymorphic, optional" />
+		</Positioning>
+
+		<Entity>
+			<id type="int64" />
+			<positioning type="Positioning" />
+		</Entity>
+
+		<Creature extends="Entity">
+			<hp type="int16" />
+		</Creature>
+
+		<Vehicle extends="Entity">
+			<topSpeed type="int32" flags="required" />
+		</Vehicle>
+
+		<Car extends="Vehicle">
+			<brand type="String" flags="required" />
+			<nWheels type="int8" />
+		</Car>
+
+		<Item extends="Entity" />
+
+		<EntityHolder>
+			<!-- Polymorphic field -->
+			<entity type="Entity" />
+		</EntityHolder>
+
+		<GarageViewer>
+			<!-- Nonpolymorphic field -->
+			<vehicles type="array[Vehicle]" flags="nonpolymorphic" />
+		</GarageViewer>
+
+		<World>
+			<name type="String" />
+			<entities type="map[int64, Entity]" />
+			<loadedFromDataBase type="String" flags="polymorphic, optional" />
+		</World>
+
+	</Types>
+
+</Module>
