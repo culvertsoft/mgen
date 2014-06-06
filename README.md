@@ -7,9 +7,8 @@ Flexible cross-language data modeling tools for programmers:
  * Pre-Build Model Generation	(pre-build code generation through the mgen-compiler)
  * Runtime Module Utilities 	(support libraries with functionality such as serialization, data mapping etc)
  
-IDL 	--> 	Compiler [ Parser + Code Generators ] 	--> 	Generated Code 
-									+		-->	Application/Library
-								Support Libraries
+IDL 	--> 	Compiler [ Parser + Code Generators ] 	--> 	Generated Code + Support Libraries	-->	Application/Library
+
 
 Each component customizable and extendable plugin system:
  * Subclassing parsers (to support custom IDLs, or many simultaneously defined models in different IDLs)
