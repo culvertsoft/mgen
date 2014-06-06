@@ -1,6 +1,8 @@
 *.class
 *.log
 README.md~
+.gitignore~
+LICENSE~
 
 # sbt specific
 .cache/
