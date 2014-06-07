@@ -65,7 +65,7 @@ Build Requirements:
 Build Instructions:
   * "clone the repo"
   * cd mgen
-  * make all/clean
+  * make all
 
 Target dirs:
   * mgen/mgen-...../target
