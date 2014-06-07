@@ -65,7 +65,7 @@ One feature that ClassRegistries provide in C++ is the ability to call template 
 
 MGen does not rely on Java reflection or C++ RTTI.
 
-We have measured binary serialization performances of some polymorphic objects in C++ on a single ivy bridge i7 core to more than 1,5 Gbit/s (g++ 4.8.1 o3).
+We have measured binary serialization performances of some polymorphic objects in C++ on a single ivy bridge i7 core to more than 1,5 Gbit/s (g++ 4.8.1 o3). Performance in the other direction was roughly 30% less. Performance is important to us, however it should be made clear that performance is NOT the primary focus of MGen.
 
 
 MGen Standard IDL
