@@ -49,7 +49,7 @@ By default classes are java-beans and C++ data containers with getters and sette
  * Serialization
  * Deep Copying
  * Equality Testing
- * Automatic type instantiation from streams
+ * Automatic type instantiation
  * Type metadata
 
 The runtime libraries provides two default serializers:
