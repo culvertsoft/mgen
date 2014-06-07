@@ -9,10 +9,8 @@ This is done by defining models in an IDL and generate readable source code that
 
 MGen source code is designed to be open: IDL parsers, code generators, runtime libraries can all be extended and/or replaced. There is nothing stopping you from plugging in a protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
 
-.
-
 Components
-====
+----
 
 MGen's core components consist of:
  * The MGen API
@@ -23,10 +21,8 @@ Most of MGen's build tools and build interfaces are written in Java, although un
 
 If you prefer not to use command line tools, we also provide visual tools and editors, though these can never fully replace manual IDL editing when it comes to advanced usage: extending MGen parsers and generators beyond the standard implementation.
 
-.
-
 MGen Compiler
-====
+----
 
 The compiler is divided into two parts, the parser and the code generators, which are responsible for:
  * Interpreting the data model definitions (parsing IDLs)
@@ -43,36 +39,27 @@ Key features for the compiler are:
  * Customizable serializers
  * Ability to extend to new languages
 
-.
-
 MGen Runtime Libraries
-====
-
-<TODO>
- 
-
-.
+----
+- TODO -
 
 MGen Standard IDL
-====
+----
+- TODO -
 
-<TODO> 
- 
-.
-
-====
-
+License
+----
 Dual-Licensed under:
  * GPL v2
  * Commercial License (will be available after initial release)
 
-====
-
+Version
+----
  - Alpha v0.x -
 (pre-release experimental code)
 
-====
-
+Help
+----
 Build Requirements:
   * Java >= 1.6
   * CMAKE >= 2.10
@@ -87,4 +74,4 @@ Build Instructions:
 
 Target dirs:
   * mgen/mgen-...../target
-  
+ 
