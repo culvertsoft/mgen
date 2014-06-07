@@ -47,6 +47,13 @@ The standard MGen code generators for these languages produce two things:
 
 By default clases are java-beans and C++ data containers with getters and setters. They also come with methods for accessing type metadata, as well as read- and write access methods for hooking up to serializers.
 
+Generated classes work together with the runtime libraries to provide utilities for:
+ * Serialization
+ * Deep Copying
+ * Equality Testing
+ * Automatic type instantiation from streams
+ * Type metadata
+
 The runtime libraries provides two default serializers:
  * The MGen Binary format Serializer
  * The MGen JSON format Serializer
