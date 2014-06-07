@@ -100,7 +100,7 @@ Help
 Build Requirements:
   * Java >= 1.6
   * CMAKE >= 2.10
-  * g++/MinGW >= 4 (Visual studio support coming! The library already work with VS, but currently not building the tests)
+  * g++/MinGW >= 4 (Visual studio support coming! The library already works with VS, but currently not building the tests)
   * make (use gnuwin32 on windows)
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
