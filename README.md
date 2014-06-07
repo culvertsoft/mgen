@@ -1,20 +1,25 @@
 MGen
 ====
 
-MGen is a toolkit for creating data models for software applications, making them easy to store and communicate with other software, across language-, version- and system barriers. 
+MGen is a toolkit for generating source code and creating data models easy to communicate with other software, across language-, version- and system barriers. 
 
-Inspired by tools and frameworks such as Protocol Buffers, Thrift, Avro, ICE, HLA, WtDbo, our goal is to reduce the work required to build, maintain and extend cross-langauge data models.
+Inspired by Protocol Buffers, Thrift, Avro, ICE, HLA, WtDbo, our goal is to reduce the work required to build, maintain and extend cross-langauge data models.
 
-We do this by defining models in an IDL and generate readable source code that feel simple, natural and fast enough to use in application and library code.
+This is done by defining models in an IDL and generate readable source code that feel simple, natural and fast enough to use in application and library code.
 
-MGen source code is designed to be open. IDL parsers, code generators, runtime libraries can all be extended and/or replaced. There is nothing stopping you from plugging in protobuf IDL parsers, thrift wire protocol serializer, or adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
+MGen source code is designed to be open: IDL parsers, code generators, runtime libraries can all be extended and/or replaced. There is nothing stopping you from plugging in a protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
+
+.
+
+Components
+====
 
 MGen's core components consist of:
  * The MGen API
  * The MGen Compiler
  * The MGen Runtime libraries
 
-Most of MGen's build tools and build interfaces are written in Java, although under the hood much of the back-end functionality for the compiler is written in Scala.
+Most of MGen's build tools and build interfaces are written in Java, although under the hood much of the compiler is written in Scala.
 
 If you prefer not to use command line tools, we also provide visual tools and editors, though these can never fully replace manual IDL editing when it comes to advanced usage: extending MGen parsers and generators beyond the standard implementation.
 
@@ -23,7 +28,7 @@ If you prefer not to use command line tools, we also provide visual tools and ed
 MGen Compiler
 ====
 
-The compiler is divided into two main components, the Parser and the Code Generators, which are responsible for:
+The compiler is divided into two parts, the parser and the code generators, which are responsible for:
  * Interpreting the data model definitions (parsing IDLs)
  * Generating code (c++, java, javascript, etc..)
 
