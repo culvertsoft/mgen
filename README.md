@@ -41,7 +41,7 @@ Key features for the compiler are:
 MGen Runtime Libraries
 ----
 Out of the box, MGen supplies standard code generators for C++, Java and JavaScript. 
-These generators produce two things:
+The standard MGen code generators for these languages produce two things:
  * Classes
  * ClassRegistries
 
