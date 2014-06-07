@@ -46,7 +46,7 @@ Key features:
 
 Dual-Licensed under:
  * GPL v2
- * Commercial License (future)
+ * Commercial License (will be available after initial release)
 
 ====
 
