@@ -81,7 +81,7 @@ However, what this does is it gives us the advantage of supporting lossy and reo
 
 We believe supporting circular object graphs should be the responsibility of the synchronizing layer of applications talking with each other - not the data layer. We do have ideas to build such systems (ESBs, ORMs and common object graphs among application nodes and the like) on that support the MGen data model - but not as a part of MGen.
 
-In short - we chose to separate the concerns of data representation from data transport method - the latter is not something MGen is concerned with whatsoever.
+In short - we chose to separate the concerns of data representation from data transport method - the latter is not something MGen is concerned with at this point.
 
 
 License
