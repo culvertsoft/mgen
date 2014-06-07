@@ -72,6 +72,18 @@ MGen Standard IDL
 ----
 - TODO -
 
+
+What MGen is and is not
+----
+MGen serializers and utilities are designed to be state-less. There is no common object graph preservation or node-to-node implementation with synchronization. This is a concious design choice and also implies that the standard implementation of serializers do not support circular object graphs. 
+
+However, what this does is it gives us the advantage of supporting lossy and reordering protocols, priority based messaging etc without worrying about objects having all the necessary information to be reconstructed on receiving side. 
+
+We believe supporting circular object graphs should be the responsibility of the synchronizing layer of applications talking with each other - not the data layer. We do have ideas to build such systems (ESBs, ORMs and common object graphs among application nodes and the like) on that support the MGen data model - but not as a part of MGen.
+
+In short - we chose to separate the concerns of data representation from data transport method - the latter is not something MGen is concerned with whatsoever.
+
+
 License
 ----
 Dual-Licensed under:
