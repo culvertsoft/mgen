@@ -36,6 +36,7 @@ Key features for the compiler are:
  * Support for polymorphic types (maps directly to c++/java class hierarchies)
  * Customizable generators (generated code contents and functionality)
  * Customizable parsers
+ * Plug-in architecture for loading custom parsers and generators
  * Ability to extend to new languages
 
 MGen Runtime Libraries
@@ -45,7 +46,7 @@ The standard MGen code generators for these languages produce two things:
  * Classes
  * ClassRegistries
 
-By default clases are java-beans and C++ data containers with getters and setters. Generated classes work together with the runtime libraries to provide utilities for:
+By default classes are java-beans and C++ data containers with getters and setters. Generated classes work together with the runtime libraries to provide utilities for:
  * Serialization
  * Deep Copying
  * Equality Testing
