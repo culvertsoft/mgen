@@ -55,16 +55,14 @@ Dual-Licensed under:
 
 ====
 
-Build Instructions
-
-Requirements:
+Build Requirements:
   * Java v >= 1.6
   * CMAKE v >= 2.10
   * g++/MinGW v >= 4 (Visual studio support coming!)
   * make (use gnuwin32 on windows)
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
-Build:
+Build Instructions:
   * "clone the repo"
   * cd mgen
   * make all/clean
