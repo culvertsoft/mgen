@@ -1,46 +1,59 @@
 MGen
 ====
 
-Flexible cross-language modeling tools for developers:
+MGen is a toolkit for creating data models for software applications, making them easy to store and communicate with other software, across language-, version- and system barriers. 
 
- * Data model design
- * Class/Code generation
- * Runtime utilities (serializers, mappers etc)
- 
-IDL(s) 	--> 	Compiler [Parser + Code Generators] 	--> 	Generated Code (to be used with support libraries)
+Inspired by tools and frameworks such as Protocol Buffers, Thrift, Avro, ICE, HLA, WtDbo, our goal is to reduce the work required to build, maintain and extend cross-langauge data models.
 
+We do this by defining models in an IDL and generate readable source code that feel simple, natural and fast enough to use in application and library code.
 
-Each component customizable/extendable:
+MGen source code is designed to be open. IDL parsers, code generators, runtime libraries can all be extended and/or replaced. There is nothing stopping you from plugging in protobuf IDL parsers, thrift wire protocol serializer, or adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
 
- * IDLs can be customized/extended by adding new parsers or extending existing ones, through the Compiler's plugin architecture.
+MGen's core components consist of:
+ * The MGen API
+ * The MGen Compiler
+ * The MGen Runtime libraries
 
- * Generated code can be customized/extended/stripped by adding new generators or subclassing existing ones, also through the Compiler's plugin architecture.
+Most of MGen's build tools and build interfaces are written in Java, although under the hood much of the back-end functionality for the compiler is written in Scala.
 
- * The supplied support libraries can also be extended or replaced (e.g. adding new serializers)
+If you prefer not to use command line tools, we also provide visual tools and editors, though these can never fully replace manual IDL editing when it comes to advanced usage: extending MGen parsers and generators beyond the standard implementation.
 
+.
 
+MGen Compiler
 ====
 
+The compiler is divided into two main components, the Parser and the Code Generators, which are responsible for:
+ * Interpreting the data model definitions (parsing IDLs)
+ * Generating code (c++, java, javascript, etc..)
 
-Key features:
+Parsers and code generators are what we call plug-ins, that is, they are loaded dynamically on compiler startup. If the user wants to extend or replace parsers or code generators, he/she provides command line arguments to the compiler for where to search for JAR files containing his own compilers. The only requirement is that the custom classes fulfils the basic Parser and Generator Java interfaces specified in the MGen API.
 
- * Design, maintain, modify your model in one place and generate native representations to your language of choice, that make sense to work with, not just as middleware for storage/messaging/rpc.
-
- * Support for generic and heterogenous containers
-
+Key features for the compiler are:
+ * Support for generic types 
+ * Heterogenous containers
  * Support for polymorphic types (maps directly to c++/java class hierarchies)
-
- * Model versioning and backwards compatibility. In many cases you can add, remove, change order among and even move fields among sub/super types and still preserve backwards compatibility.
-
  * Customizable generators (generated code contents and functionality)
-
  * Customizable parsers
-
  * Customizable serializers
-
  * Ability to extend to new languages
 
+.
 
+MGen Runtime Libraries
+====
+
+<TODO>
+ 
+
+.
+
+MGen Standard IDL
+====
+
+<TODO> 
+ 
+.
 
 ====
 
