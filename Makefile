@@ -32,3 +32,10 @@ clean:
 	#							#
 	#########################################################
 
+
+run-compiler:
+	cd mgen-compiler && make run
+
+run-visualdesigner:
+	cd mgen-visualdesigner && make run
+

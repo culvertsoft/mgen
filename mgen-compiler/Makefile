@@ -10,3 +10,7 @@ clean:
 	#########################################
 	sbt clean
 
+
+run:	all
+	java -jar target/mgen-compiler-assembly-*
+

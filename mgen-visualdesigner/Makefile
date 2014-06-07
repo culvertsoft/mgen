@@ -1,12 +1,11 @@
 
-COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-0.1-SNAPSHOT.jar
+MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-0.1-SNAPSHOT.jar
 
 all: 	
 	#########################################
 	# GENERATING MGEN-VISUALDESIGNER MODEL	#
 	#########################################
-	rm src_generated -rf
-	java -jar $(COMPILER_JAR) -project="model/project.xml" -plugin_paths="../mgen-javagenerator/target/"
+	java -jar $(MGEN_COMPILER_JAR) -project="model/project.xml" -plugin_paths="../mgen-javagenerator/target/"
 	#########################################
 	#     BUILDING MGEN-VISUALDESIGNER 	#
 	#########################################
@@ -18,4 +17,10 @@ clean:
 	#########################################
 	rm src_generated -rf
 	sbt clean
+
+run:	all
+	#########################################
+	#     STARTING MGEN-VISUALDESIGNER	#
+	#########################################
+	java -jar target/mgen-visualdesigner-assembly-*
 
