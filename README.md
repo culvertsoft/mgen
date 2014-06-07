@@ -40,7 +40,26 @@ Key features for the compiler are:
 
 MGen Runtime Libraries
 ----
-- TODO -
+Out of the box, MGen supplies standard code generators for C++, Java and JavaScript. 
+These generators produce two things:
+ * Classes
+ * ClassRegistries
+
+By default clases are java-beans and C++ data containers with getters and setters. They also come with methods for accessing type metadata, as well as read- and write access methods for hooking up to serializers.
+
+The runtime libraries provides two default serializers:
+ * The MGen Binary format Serializer
+ * The MGen JSON format Serializer
+
+You can can of course modify, extend and/or replace these by just extending the runtime libraries.
+
+ClassRegistries are used to dynamically instantiate and identify data types over data streams during deserialization.
+In some cases they may also be used during serialization. Some language implementations rely on ClassRegistries more than others. One could argue that Java for example  does not really need one (because of reflection), however for performance reasons and API uniformity, they are created for Java as well.
+
+One feature that ClassRegistries provide in C++ is the ability to call template methods with dynamic dispatch. This means you for example can use the ClassRegistry to access a visitor method on a base type with a templated argument, such as a custom serializer, and the method will be called with full type preservation on the visitor method in the most derived class.
+
+MGen does not rely on Java reflection or C++ RTTI.
+
 
 MGen Standard IDL
 ----
