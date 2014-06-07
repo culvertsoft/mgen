@@ -58,7 +58,7 @@ Dual-Licensed under:
 Build Requirements:
   * Java >= 1.6
   * CMAKE >= 2.10
-  * g++/MinGW >= 4 (Visual studio support coming! The library works with VS, but the tests only build with make)
+  * g++/MinGW >= 4 (Visual studio support coming! The library - which is header only - works with VS, but the tests only build with make)
   * make (use gnuwin32 on windows)
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
