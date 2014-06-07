@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import se.culvertsoft.mgen.api.generator.GeneratedSourceFile
-import se.culvertsoft.mgen.api.types.Module
+import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
+import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 abstract class CppClassRegistryGenerator(fileEnding: String) {

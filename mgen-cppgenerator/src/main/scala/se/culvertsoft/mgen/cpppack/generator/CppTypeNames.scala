@@ -3,15 +3,15 @@ package se.culvertsoft.mgen.cpppack.generator
 import scala.collection.mutable.HashMap
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
-import se.culvertsoft.mgen.api.types.Field
-import se.culvertsoft.mgen.api.types.Module
-import se.culvertsoft.mgen.api.types.ArrayType
-import se.culvertsoft.mgen.api.types.CustomType
-import se.culvertsoft.mgen.api.types.ListType
-import se.culvertsoft.mgen.api.types.MGenBaseType
-import se.culvertsoft.mgen.api.types.MapType
-import se.culvertsoft.mgen.api.types.Type
-import se.culvertsoft.mgen.api.types.TypeEnum
+import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.ArrayType
+import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ListType
+import se.culvertsoft.mgen.api.model.MGenBaseType
+import se.culvertsoft.mgen.api.model.MapType
+import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.api.model.TypeEnum
 
 object CppTypeNames {
 

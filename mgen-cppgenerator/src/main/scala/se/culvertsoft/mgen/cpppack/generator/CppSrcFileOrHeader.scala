@@ -1,11 +1,11 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import se.culvertsoft.mgen.api.generator.GeneratedSourceFile
-import se.culvertsoft.mgen.api.types.Field
-import se.culvertsoft.mgen.api.types.Module
-import se.culvertsoft.mgen.api.types.CustomType
-import se.culvertsoft.mgen.api.types.Type
-import se.culvertsoft.mgen.api.types.TypeEnum
+import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
+import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.compiler.internal.BuiltInGenerator.upFirst
 import se.culvertsoft.mgen.compiler.internal.BuiltInJavaCppGenerator

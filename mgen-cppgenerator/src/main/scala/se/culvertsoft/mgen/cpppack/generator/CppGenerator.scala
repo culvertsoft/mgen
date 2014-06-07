@@ -1,9 +1,9 @@
 package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.JavaConversions.seqAsJavaList
-import se.culvertsoft.mgen.api.generator.GeneratedSourceFile
-import se.culvertsoft.mgen.api.types.Module
-import se.culvertsoft.mgen.api.types.CustomType
+import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.compiler.internal.BuiltInJavaCppGenerator
 
 class CppGenerator extends BuiltInJavaCppGenerator {

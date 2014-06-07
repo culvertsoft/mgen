@@ -4,7 +4,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 
 import CppTypeNames.getTypeName
-import se.culvertsoft.mgen.api.types.CustomType
+import se.culvertsoft.mgen.api.model.CustomType
 
 object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 

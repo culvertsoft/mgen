@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import se.culvertsoft.mgen.api.types.CustomType
-import se.culvertsoft.mgen.api.types.TypeEnum
+import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.compiler.internal.BuiltInJavaCppGenerator
 

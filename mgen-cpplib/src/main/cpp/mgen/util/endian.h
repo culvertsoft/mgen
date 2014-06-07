@@ -12,8 +12,8 @@ namespace mgen {
 namespace endian {
 
 enum ByteOrder {
-    LITTLE_ENDIAN,
-    BIG_ENDIAN
+    MGEN_LITTLE_ENDIAN,
+    MGEN_BIG_ENDIAN
 };
 
 inline ByteOrder getSystemByteOrder();
@@ -134,7 +134,7 @@ inline double hton(const double v) {
 
 inline ByteOrder findSystemByteOrder() {
     const int i = 1;
-    return *reinterpret_cast<const char*>(&i) == 1 ? LITTLE_ENDIAN : BIG_ENDIAN;
+    return *reinterpret_cast<const char*>(&i) == 1 ? MGEN_LITTLE_ENDIAN : MGEN_BIG_ENDIAN;
 }
 
 inline ByteOrder getSystemByteOrder() {
@@ -143,12 +143,12 @@ inline ByteOrder getSystemByteOrder() {
 }
 
 inline bool isSystemBigEndian() {
-    static const bool b = getSystemByteOrder() == BIG_ENDIAN;
+    static const bool b = getSystemByteOrder() == MGEN_BIG_ENDIAN;
     return b;
 }
 
 inline bool isSystemLittleEndian() {
-    static const bool b = getSystemByteOrder() == LITTLE_ENDIAN;
+    static const bool b = getSystemByteOrder() == MGEN_LITTLE_ENDIAN;
     return b;
 }
 

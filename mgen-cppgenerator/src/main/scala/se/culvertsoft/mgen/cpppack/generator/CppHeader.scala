@@ -4,9 +4,9 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaSet
 
 import CppTypeNames.getTypeName
-import se.culvertsoft.mgen.api.types.CustomType
-import se.culvertsoft.mgen.api.types.Module
-import se.culvertsoft.mgen.api.types.TypeEnum
+import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.TypeEnum
 
 object CppHeader extends CppSrcFileOrHeader(".h") {
    import CppTypeNames._

@@ -4,10 +4,10 @@ import scala.collection.mutable.HashMap
 
 import CppTypeNames.getTypeName
 import se.culvertsoft.mgen.api.exceptions.GenerationException
-import se.culvertsoft.mgen.api.types.Field
-import se.culvertsoft.mgen.api.types.Module
-import se.culvertsoft.mgen.api.types.Type
-import se.culvertsoft.mgen.api.types.TypeEnum
+import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.api.model.TypeEnum
 
 object CppConstruction {
 

@@ -4,7 +4,7 @@ import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.JavaConverters.mapAsScalaMapConverter
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
-import se.culvertsoft.mgen.api.types.Module
+import se.culvertsoft.mgen.api.model.Module
 
 object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(".cpp") {
 

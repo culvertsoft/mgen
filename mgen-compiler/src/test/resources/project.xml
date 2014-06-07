@@ -4,23 +4,25 @@
 
 	<Generator name="Java">
 		<generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</generator_class_path>
-		<output_path>../MGenJavaLib_test/src</output_path>
+		<output_path>target/src_generated</output_path>
 		<classregistry_path>gameworld.types</classregistry_path>
 	</Generator>
 
 	<Generator name="C++">
 		<generator_class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</generator_class_path>
-		<output_path>../../WorkspaceCulvertsoftCpp/MGenCppLib_test/generated</output_path>
+		<output_path>target/src_generated</output_path>
 		<classregistry_path>gameworld.types</classregistry_path>
 		<generate_unity_build>true</generate_unity_build>
 	</Generator>
 
+<!--
 	<Generator name="Javascript">
 		<generator_class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </generator_class_path>
 		<output_path>../MGenJavaScriptLib_test/src</output_path>
 		<output_filename>mgen-data.js</output_filename>
 		<classregistry_name>mgen_classreg</classregistry_name>
 	</Generator>
+-->
 
 	<Depend>dependencies/project.xml</Depend>
 

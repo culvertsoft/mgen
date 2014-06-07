@@ -12,7 +12,10 @@
 #include "OsTime.h"
 
 #include <iostream>
+
+#ifdef _MSC_VER
 #include <conio.h>
+#endif
 
 template<typename ClassRegType, typename TestType>
 void testBinary(

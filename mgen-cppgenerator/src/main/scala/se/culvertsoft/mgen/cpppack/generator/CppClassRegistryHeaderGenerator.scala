@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
 
-import se.culvertsoft.mgen.api.types.Module
+import se.culvertsoft.mgen.api.model.Module
 
 object CppClassRegistryHeaderGenerator extends CppClassRegistryGenerator(".h") {
 
