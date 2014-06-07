@@ -4,19 +4,21 @@
 // version := "SNAPSHOT"
 // scalaVersion := "2.10.4"
 
+version := System.getenv("MGEN_BUILD_VERSION")
+
 crossPaths := false
 
 retrieveManaged := true
 
 unmanagedSourceDirectories in Compile += baseDirectory.value / "src_generated"
 
-libraryDependencies += "default" % "mgen-api" % "0.1-SNAPSHOT"
+libraryDependencies += "default" % "mgen-api" % version.value
 
-libraryDependencies += "default" % "mgen-compiler" % "0.1-SNAPSHOT"
+libraryDependencies += "default" % "mgen-compiler" % version.value
 
-libraryDependencies += "default" % "mgen-javalib" % "0.1-SNAPSHOT"
+libraryDependencies += "default" % "mgen-javalib" % version.value
 
-libraryDependencies += "default" % "mgen-javagenerator" % "0.1-SNAPSHOT"
+libraryDependencies += "default" % "mgen-javagenerator" % version.value
 
 libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
 

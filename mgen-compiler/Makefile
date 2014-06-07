@@ -12,5 +12,5 @@ clean:
 
 
 run:	all
-	java -jar target/mgen-compiler-assembly-*
+	java -jar target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 

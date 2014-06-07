@@ -1,5 +1,5 @@
 
-MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-0.1-SNAPSHOT.jar
+MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 
 all: 	
 	#########################################
@@ -22,5 +22,5 @@ run:	all
 	#########################################
 	#     STARTING MGEN-VISUALDESIGNER	#
 	#########################################
-	java -jar target/mgen-visualdesigner-assembly-*
+	java -jar target/mgen-visualdesigner-assembly-$(MGEN_BUILD_VERSION).jar
 

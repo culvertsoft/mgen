@@ -4,11 +4,13 @@
 // version := "SNAPSHOT"
 // scalaVersion := "2.10.4"
 
+version := System.getenv("MGEN_BUILD_VERSION")
+
 crossPaths := false
 
 retrieveManaged := true
 
-libraryDependencies += "default" % "mgen-api" % "0.1-SNAPSHOT"
+libraryDependencies += "default" % "mgen-api" % version.value
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 

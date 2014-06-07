@@ -4,6 +4,8 @@
 // version := "SNAPSHOT"
 // scalaVersion := "2.10.4"
 
+version := System.getenv("MGEN_BUILD_VERSION")
+
 crossPaths := false
 
 retrieveManaged := true
