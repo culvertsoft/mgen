@@ -1,7 +1,7 @@
 MGen
 ====
 
-Flexible cross-language modeling tools for programmers:
+Flexible cross-language modeling tools for developers:
 
  * Data model design
  * Class/Code generation
