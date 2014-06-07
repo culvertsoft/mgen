@@ -36,7 +36,6 @@ Key features for the compiler are:
  * Support for polymorphic types (maps directly to c++/java class hierarchies)
  * Customizable generators (generated code contents and functionality)
  * Customizable parsers
- * Customizable serializers
  * Ability to extend to new languages
 
 MGen Runtime Libraries
