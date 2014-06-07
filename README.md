@@ -45,9 +45,7 @@ The standard MGen code generators for these languages produce two things:
  * Classes
  * ClassRegistries
 
-By default clases are java-beans and C++ data containers with getters and setters. They also come with methods for accessing type metadata, as well as read- and write access methods for hooking up to serializers.
-
-Generated classes work together with the runtime libraries to provide utilities for:
+By default clases are java-beans and C++ data containers with getters and setters. Generated classes work together with the runtime libraries to provide utilities for:
  * Serialization
  * Deep Copying
  * Equality Testing
