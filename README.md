@@ -72,7 +72,80 @@ We have measured binary serialization performances of some polymorphic objects i
 
 MGen Standard IDL
 ----
-- TODO -
+MGen currently uses xml for its standard IDL. We say this because in the future (before official release) we may switch or support multiple IDLs out-of-the-box. 
+
+There are two types of IDL files required by MGen compiler to run:
+ * Project files
+ * Module files
+
+You could say that project files are our variant of makefiles. They define what module files to include but also what code generators to use, and settings for these. Below is the project file used in defining the data model used by our visual data model editor:
+
+    <Project>
+
+     <Generator name="Java">
+      <generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</generator_class_path>
+      <output_path>src_generated/main/java</output_path>
+      <classregistry_path>se.culvertsoft.mgen.visualdesigner</classregistry_path>
+     </Generator>
+
+     <Module>se.culvertsoft.mgen.visualdesigner.model.xml</Module>
+
+    </Project>
+
+Module files are where the actual data models are defined. The format we've come up with for doing this is very much work-in-progress, but it should be noted that it is intended to be easy to read and edit for humans - not necessarily conform to a particular markup standard. Below you see the first part of the data model definition for the visual editor which was referenced in the project file above (to view the full source [here](mgen-visualdesigner/model/se.culvertsoft.mgen.visualdesigner.model.xml) ):
+
+    <Module>
+
+     <Types>
+
+      <!-- = = = = = = = -->
+      <!-- = = = = = = = -->
+      <!-- Utility Types -->
+      <!-- = = = = = = = -->
+
+      <EntityIdBase />
+
+      <EntityId extends="EntityIdBase">
+       <lsb type="int64" flags="required" />
+       <msb type="int64" flags="required" />
+      </EntityId>
+
+      <ClassPathEntityId extends="EntityIdBase">
+       <path type="string" flags="required" />
+      </ClassPathEntityId>
+
+      <Placement>
+       <x type="int32" />
+       <y type="int32" />
+       <width type="int32" />
+       <height type="int32" />
+      </Placement>
+
+      <Generator>
+       <name type="string" flags="required" />
+       <generatorClassName type="string" flags="required" />
+       <generatorJarFileFolder type="string" flags="required" />
+       <classRegistryPath type="string" flags="required" />
+       <outputFolder type="string" flags="required" />
+       <settings type="map[string, string]" />
+      </Generator>
+
+
+      <!-- = = = = = = -->
+      <!-- = = = = = = -->
+      <!-- Base Types -->
+      <!-- = = = = = = -->
+
+      <Entity>
+       <id type="EntityIdBase" />
+       <name type="string" />
+       <parent type="EntityIdBase" />
+      </Entity>
+
+      <PlacedEntity extends="Entity">
+       <placement type="Placement" flags="required" />
+      </PlacedEntity>
+
 
 
 What MGen is and is not
