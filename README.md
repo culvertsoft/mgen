@@ -5,7 +5,7 @@ MGen is a toolkit for source code generation and creating data models that are e
 
 Inspired by Protocol Buffers, Thrift, Avro, ICE, HLA, WtDbo, our goal is to reduce the work required to build, maintain and extend cross-langauge data models.
 
-This is done by defining models in an IDL and generating source code that feel simple, natural and fast enough to use in application and library code.
+This is done by defining models in an extendable IDL and generating source code that feel simple, natural and fast enough to use in application and library code.
 
 MGen's own source code is designed to be open: IDL parsers, code generators, runtime libraries can all be extended and/or replaced. There is nothing stopping you from plugging in a protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
 
