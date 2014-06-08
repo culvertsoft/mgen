@@ -24,9 +24,7 @@ If you prefer not to use command line tools, we also provide visual tools and ed
 MGen Compiler
 ----
 
-The compiler is divided into two parts, the parser and the code generators, which are responsible for:
- * Interpreting the data model definitions (parsing IDLs)
- * Generating code (c++, java, javascript, etc..)
+The compiler is divided into two parts, the parser and the code generators.
 
 Parsers and code generators are what we call plug-ins, that is, they are loaded dynamically on compiler startup. If the user wants to extend or replace parsers or code generators, he/she provides command line arguments to the compiler for where to search for JAR files containing his own classes. The only requirement is that the custom classes fulfil the basic Parser and Generator Java interfaces specified in the MGen API.
 
