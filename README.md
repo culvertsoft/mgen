@@ -1,7 +1,7 @@
 MGen
 ====
 
-MGen is a toolkit for generating source code and creating data models easy to use and communicate with other software, across language-, version- and system barriers. 
+MGen is a toolkit for generating source code and creating data models that are easy to use and communicate with other software, across language-, version- and system barriers. 
 
 Inspired by Protocol Buffers, Thrift, Avro, ICE, HLA, WtDbo, our goal is to reduce the work required to build, maintain and extend cross-langauge data models.
 
