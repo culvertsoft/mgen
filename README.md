@@ -78,7 +78,7 @@ There are two types of IDL files required by MGen compiler to run:
  * Project files
  * Module files
 
-You could say that project files are our variant of makefiles. They define what module files to include but also what code generators to use, and settings for these. Below is the project file used in defining the data model used by our visual data model editor:
+Project files are our variant of makefiles. They define what module files to include but also what code generators to use, and settings for these. Below is the project file used in defining the data model used by our visual data model editor:
 
     <Project>
 
