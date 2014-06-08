@@ -51,6 +51,8 @@ By default classes are java-beans and C++ data containers with getters and sette
  * Equality Testing
  * Automatic type instantiation
  * Type metadata
+ * Stringification
+ * Hashing
 
 The runtime libraries provides two default serializers:
  * The MGen Binary format Serializer
