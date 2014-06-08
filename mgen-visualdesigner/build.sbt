@@ -10,7 +10,7 @@ crossPaths := false
 
 retrieveManaged := true
 
-unmanagedSourceDirectories in Compile += baseDirectory.value / "src_generated"
+unmanagedSourceDirectories in Compile += baseDirectory.value / "src_generated/main/java"
 
 libraryDependencies += "default" % "mgen-api" % version.value
 
