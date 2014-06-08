@@ -26,7 +26,7 @@ MGen Compiler
 
 The compiler is divided into two parts, the parser and the code generators.
 
-Parsers and code generators are what we call plug-ins, that is, they are loaded dynamically on compiler startup. If the user wants to extend or replace parsers or code generators, he/she provides command line arguments to the compiler for where to search for JAR files containing his own classes. The only requirement is that the custom classes fulfil the basic Parser and Generator Java interfaces specified in the MGen API.
+Parsers and code generators are what we call plug-ins, that is, they are loaded dynamically on compiler startup. If the user wants to extend or replace parsers or code generators, he/she provides command line arguments to the compiler for where to search for JAR files containing his own parser and/or generator classes. The only requirement is that the custom classes fulfil the basic Parser and Generator Java interfaces specified in the MGen API.
 
 Key features for the compiler are:
  * Support for generic types 
