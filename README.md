@@ -58,7 +58,7 @@ The runtime libraries provide two default serializers:
  * The MGen Binary format Serializer
  * The MGen JSON format Serializer
 
-You can can of course modify, extend and/or replace these by just extending the runtime libraries.
+You can can of course modify, extend and/or replace these by just extending the runtime librariy classes.
 
 ClassRegistries are used to dynamically instantiate and identify data types over data streams during deserialization.
 In some cases they may also be used during serialization. Some language implementations rely on ClassRegistries more than others. One could argue that Java for example  does not really need one (because of reflection), however for performance reasons and API uniformity, they are created for Java as well.
