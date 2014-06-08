@@ -1,13 +1,14 @@
 MGen
 ====
 
-MGen is a toolkit for source code generation and creating data models that are easy to use and communicate with other software, across language-, version- and system barriers. 
+MGen is a toolkit for source code generation and creating data models that are easy to use and communicate with other software, across language-, version- and system barriers.
 
-Inspired by Protocol Buffers, Thrift, Avro, ICE, HLA, WtDbo, our goal is to reduce the work required to build, maintain and extend cross-langauge data models.
+Inspired by Protocol Buffers (usually called protobuf), Thrift, Avro, ICE, HLA, WtDbo, our goal is to reduce the work required to build, maintain and extend cross-language data models.
 
-This is done by defining models in an extendable IDL and generating source code that feel simple, natural and fast enough to use in application and library code.
+This is done by defining models in an extendable [IDL](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia") and generating source code that feel simple, natural and fast enough to use in application and library code.
 
-MGen's own source code is designed to be open: IDL parsers, code generators, runtime libraries can all be extended and/or replaced. There is nothing stopping you from plugging in a protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
+MGen's own source code is designed to be customizable: IDL parsers, code generators, runtime libraries can all be extended and/or replaced. There is nothing stopping you from plugging in protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
+
 
 Components
 ----
@@ -30,7 +31,7 @@ Parsers and code generators are what we call plug-ins, that is, they are loaded 
 
 Key features for the compiler, standard parser and standard generators are:
  * Support for generic types 
- * Heterogenous containers
+ * Heterogeneous containers
  * Support for polymorphic types (maps directly to c++/java class hierarchies)
  * Customizable generators (generated code contents and functionality)
  * Customizable parsers
@@ -40,10 +41,10 @@ Key features for the compiler, standard parser and standard generators are:
 MGen Runtime Libraries
 ----
 Out of the box, MGen supplies standard code generators for C++, Java and JavaScript. These produce two things:
- * Classes
- * ClassRegistries
+ * Classes (or class-like structures in JavaScript)
+ * ClassRegistries (registry for all generated classes)
 
-By default classes are java-beans and C++ data containers with getters and setters. Generated classes work together with the runtime libraries to provide utilities for:
+By default classes are java-beans and C++ data containers with getters and setters or class-like structures in the case of JavaScript. Generated classes work together with the runtime libraries to provide utilities for:
  * Serialization
  * Deep Copying
  * Equality Testing
@@ -56,7 +57,7 @@ The runtime libraries provide two default serializers:
  * The MGen Binary format Serializer
  * The MGen JSON format Serializer
 
-You can can of course modify, extend and/or replace these by extending or replacing the runtime library classes.
+You can of course modify, extend and/or replace these by extending or replacing the runtime library classes.
 
 ClassRegistries are used to dynamically instantiate and identify data types over data streams during deserialization.
 In some cases they may also be used during serialization. Some language implementations rely on ClassRegistries more than others. One could argue that Java for example  does not really need one (because of reflection), however for performance reasons and API uniformity, they are created for Java as well.
@@ -152,9 +153,9 @@ Below you see the first part of the data model definition for the visual editor 
 
 What MGen is and is not
 ----
-MGen serializers and utilities are designed to be state-less. There is no common object graph preservation or node-to-node implementation with synchronization. This is a concious design choice and also implies that the standard implementation of serializers do not support circular references. MGen serializers consider all data to be just that - data. MGen serializers have no concept of references or object identities (Although generated polymorphic code and data types in most languages are of reference types - during serialization they are treated as nothing more than data containers).
+MGen serializers and utilities are designed to be state-less. There is no common object graph preservation or node-to-node implementation with synchronization. This is a conscious design choice and also implies that the standard implementation of serializers do not support circular references. MGen serializers consider all data to be just that - data. MGen serializers have no concept of references or object identities (Although generated polymorphic code and data types in most languages are of reference types - during serialization they are treated as nothing more than data containers).
 
-However, what this does is it gives us the advantage of supporting lossy and reordering protocols, priority based messaging etc without worrying about objects having all the necessary information to be reconstructed on receiving side. If you wish to send one message over http, another over a udp socket and a third with smoke signals, in the opposite order, MGen won't really care.
+However, what this does is it gives us the advantage of supporting lossy and reordering protocols, priority based messaging etc without worrying about objects having all the necessary information to be reconstructed on receiving side. If you wish to send one message over http, another over a UDP socket and a third with smoke signals, in the opposite order, MGen won't really care.
 
 We believe supporting identities and true object graphs should be the responsibility of the layer above, the layer syncronizing applications with with each other - not the data layer. We do have ideas to build such systems (ESBs, ORMs and common object graphs among application nodes and the like) on that support the MGen data model - but not as a part of MGen.
 
@@ -182,7 +183,7 @@ Build Requirements:
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
 Build Instructions:
-  * "clone the repo"
+  * clone the repo: git clone git@github.com:/culvertsoft/mgen mgen
   * cd mgen
   * make all
 
