@@ -22,3 +22,9 @@ project/plugins/project/
 # temp files
 *~
 
+# eclipse stuff
+.project
+.classpath
+.cache
+
+

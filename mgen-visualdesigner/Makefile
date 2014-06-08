@@ -18,6 +18,12 @@ clean:
 	rm src_generated -rf
 	sbt clean
 
+eclipse:
+	####################################################
+	# CREATING ECLIPSE PROJECT FOR MGEN-VISUALDESIGNER #
+	####################################################
+	sbt eclipse
+
 run:	all
 	#########################################
 	#     STARTING MGEN-VISUALDESIGNER	#

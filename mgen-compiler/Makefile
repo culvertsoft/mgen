@@ -4,6 +4,12 @@ all:
 	#########################################
 	sbt compile package assembly publish-local
 
+eclipse:
+	##############################################
+	# CREATING ECLIPSE PROJECT FOR MGEN-COMPILER #
+	##############################################
+	sbt eclipse
+
 clean:
 	#########################################
 	#	 CLEANING MGEN-COMPILER		#

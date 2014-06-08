@@ -4,6 +4,12 @@ all:
 	#########################################
 	sbt compile package publish-local
 
+eclipse:
+	#########################################
+	# CREATING ECLIPSE PROJECT FOR MGEN-API #
+	#########################################
+	sbt eclipse
+
 clean: 	
 	#########################################
 	#	    CLEANING MGEN-API		#

@@ -4,6 +4,12 @@ all:
 	#########################################
 	sbt compile package publish-local
 
+eclipse:
+	###################################################
+	# CREATING ECLIPSE PROJECT FOR MGEN-JAVAGENERATOR #
+	###################################################
+	sbt eclipse
+
 clean: 	
 	#########################################
 	#	CLEANING MGEN-JAVAGENERATOR	#

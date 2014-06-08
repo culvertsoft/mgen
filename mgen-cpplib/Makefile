@@ -22,6 +22,12 @@ create-target-directory:
 	#########################################
 	mkdir -p target
 
+eclipse:
+	############################################
+	# CREATING ECLIPSE PROJECT FOR MGEN-CPPLIB #
+	############################################
+	echo - NOT YET IMPLEMENTED -
+
 clean:
 	#########################################
 	#	CLEANING MGEN-CPPLIB-TEST	#
