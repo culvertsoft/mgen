@@ -92,7 +92,7 @@ Project files are our variant of makefiles. They define what module files to inc
 
 Module files are where the actual data models are defined. The format we've come up with for doing this is very much work-in-progress, but it should be noted that it is intended to be easy to read and edit for humans - not necessarily conform to a particular markup standard. 
 
-As you may have guessed frome the project file above, the name of the module file defines what java package and c++ namespace the generated code will be placed in.
+As you may have guessed from the project file above, the name of the module file defines what java package and c++ namespace the generated code will be placed in.
 
 Below you see the first part of the data model definition for the visual editor which was referenced in the project file above (to view the full source [here](mgen-visualdesigner/model/se.culvertsoft.mgen.visualdesigner.model.xml) ):
 
