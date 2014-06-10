@@ -83,6 +83,8 @@ class CopyPasteController(controller: Controller) extends SubController(controll
 
   private def doPaste(tgt: Entity) {
 
+    controller.checkHasExactlySelected(1)
+
     getClipboardContents() foreach { text =>
 
       val o = modelSerializer.deSerializeAny(text.getBytes())
@@ -103,6 +105,12 @@ class CopyPasteController(controller: Controller) extends SubController(controll
       val inPaste = new ArrayBuffer[ChildParent]()
 
       for (e <- topLevelEntities) {
+
+        if (!tgt.canBeParentOf(e)) {
+          controller.viewMgr.popupPreconditionFailed(s"Incorrect paste target type. Cannot paste ${e.getName} into ${tgt.getName}")
+          return
+        }
+
         e.foreach { cp =>
           inPaste += cp
         }
