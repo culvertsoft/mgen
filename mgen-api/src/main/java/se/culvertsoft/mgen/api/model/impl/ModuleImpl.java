@@ -2,6 +2,7 @@ package se.culvertsoft.mgen.api.model.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,12 +14,12 @@ public class ModuleImpl implements Module {
 
 	private final String m_path;
 	private final Map<String, String> m_settings;
-	private HashMap<String, CustomTypeImpl> m_types;
+	private LinkedHashMap<String, CustomTypeImpl> m_types;
 
 	public ModuleImpl(final String path, final Map<String, String> settings) {
 		m_path = path;
 		m_settings = settings;
-		m_types = new HashMap<String, CustomTypeImpl>();
+		m_types = new LinkedHashMap<String, CustomTypeImpl>();
 	}
 
 	public Map<String, String> settings() {
