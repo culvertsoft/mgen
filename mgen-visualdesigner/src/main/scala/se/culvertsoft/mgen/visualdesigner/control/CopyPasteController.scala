@@ -172,8 +172,12 @@ class CopyPasteController(controller: Controller) extends SubController(controll
           case e: CustomType =>
 
             // Replace super type id if needed
-            if (e.hasSuperType() && idReplacements.contains(e.getSuperType())) {
-              e.setSuperType(idReplacements(e.getSuperType()))
+            if (e.hasSuperType()) {
+              if (idReplacements.contains(e.getSuperType())) {
+                e.setSuperType(idReplacements(e.getSuperType()))
+              } else {
+                controller.model.superTypeOf(e).get.getSubTypesMutable().add(e.getId())
+              }
             }
 
             // Replace sub type ids if needed
