@@ -16,6 +16,8 @@ clean:
 	#     CLEANING MGEN-VISUALDESIGNER	#
 	#########################################
 	rm src_generated -rf
+	touch .cache && rm .cache
+	touch .xyz~ && rm *~ && rm .*~
 	sbt clean
 
 eclipse:

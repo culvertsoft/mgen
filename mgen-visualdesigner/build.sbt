@@ -4,6 +4,8 @@
 // version := "SNAPSHOT"
 // scalaVersion := "2.10.4"
 
+EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
+
 version := System.getenv("MGEN_BUILD_VERSION")
 
 crossPaths := false
