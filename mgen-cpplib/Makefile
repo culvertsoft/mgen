@@ -7,7 +7,7 @@ build-test:	generated-model
 	#########################################
 	#	BUILDING MGEN-CPPLIB-TEST	#
 	#########################################
-	cd target && cmake ../src/test/cpp/src/
+	cd target && cmake -G "Unix Makefiles" ../src/test/cpp/src/
 	cd target && make all
 
 generated-model:	create-target-directory
