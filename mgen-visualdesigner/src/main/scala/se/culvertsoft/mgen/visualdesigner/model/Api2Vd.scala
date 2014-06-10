@@ -6,6 +6,7 @@ import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.JavaConversions.collectionAsScalaIterable
+import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 
@@ -95,41 +96,60 @@ class Api2VdConversionState {
 object Api2Vd {
   import ModelConversion._
 
-  def apply(apiProject: ApiProject): Model = {
+  def apply(apiProject: ApiProject)(implicit cache: HashMap[String, Model] = new HashMap[String, Model]): Model = {
 
-    // Create conversion state (lookup pairs)
-    val state = buildApi2VdObjLkUp(apiProject)
+    cache.getOrElseUpdate(apiProject.filePath, {
 
-    // Create our output model
-    val model = new Model(state.rootVd)
+      // Create conversion state (lookup pairs)
+      val state = buildApi2VdObjLkUp(apiProject)
 
-    // Add each entity to its parent (except root ofc)
-    addToModel(state, model, apiProject)
-    model.updateCache()
+      // Create our output model
+      val model = new Model(state.rootVd)
 
-    // Merge modules
-    mergeModules(model)
+      // Add each entity to its parent (except root ofc)
+      addToModel(state, model, apiProject)
+      model.updateCache()
 
-    // Link field types
-    linkTypes(state, model, apiProject)
+      // Merge modules
+      mergeModules(model)
 
-    // Add generators
-    addGenerators(state, model, apiProject)
+      // Add/load dependencies
+      loadDependencies(model, apiProject)
 
-    // Add settings
-    addSettings(state, model, apiProject)
+      // Add settings
+      addSettings(state, model, apiProject)
 
-    // Make Sizes and placement more useful :P
-    LayOutEntities(model.project, model, true)
+      // Root project specifics
+      if (apiProject.isRoot()) {
 
-    // TODO: Add/load dependencies
-    if (model.project.getDependencies().nonEmpty) {
-      throw new RuntimeException("Dependencies not yet implemented in the editor")
-      // val name = project.name
-      // val dependencies = project.dependencies.map(_.filePath)
+        // Link field types
+        linkTypes(state, model, apiProject)
+
+        // Add generators
+        addGenerators(state, model, apiProject)
+
+        // Make Sizes and placement more useful :P
+        LayOutEntities(model.project, model, true)
+
+      }
+
+      model
+
+    })
+  }
+
+  def loadDependencies(model: VdModel, apiProject: ApiProject)(implicit cache: HashMap[String, Model]) {
+    val deps = new ArrayBuffer[(String, VdProject)]
+    foreach(apiProject) { (eApi, eApiParent, isDependency) =>
+      eApi match {
+        case eApi: ApiProject if (isDependency) => deps += ((eApi.filePath, apply(eApi).project))
+        case _ =>
+      }
     }
 
-    model
+    for (pathDep <- deps) {
+      model.loadDependency(pathDep._1, pathDep._2)
+    }
   }
 
   def mergeModules(model: VdModel)(implicit done: HashSet[EntityIdBase] = new HashSet[EntityIdBase]) {

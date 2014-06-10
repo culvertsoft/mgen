@@ -54,7 +54,7 @@ object ParseProject {
 
   }
 
-  private def apply(
+  def apply(
     filePath: String,
     rootProject: ProjectImpl,
     settings: Map[String, String])(implicit cache: ParseState): ProjectImpl = {
