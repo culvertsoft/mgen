@@ -131,7 +131,7 @@ object VisualDesigner {
         println(" --- Happy modeling! --- ")
 
         // Load a default model
-        controller.saveMgr.load(new File("default_model.json"))
+        controller.saveMgr.load(new File("model/project.xml"))
 
       }
     })

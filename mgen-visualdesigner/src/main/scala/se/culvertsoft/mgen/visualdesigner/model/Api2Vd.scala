@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.visualdesigner.model
 
 import java.util.IdentityHashMap
-
 import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
@@ -9,7 +8,6 @@ import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
-
 import ModelConversion.ApiArrayType
 import ModelConversion.ApiBoolType
 import ModelConversion.ApiClass
@@ -38,6 +36,7 @@ import ModelConversion.VdProject
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
+import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 
 class Api2VdConversionState {
   import ModelConversion._
@@ -98,7 +97,7 @@ object Api2Vd {
 
   def apply(apiProject: ApiProject)(implicit cache: HashMap[String, Model] = new HashMap[String, Model]): Model = {
 
-    cache.getOrElseUpdate(apiProject.filePath, {
+    cache.getOrElseUpdate(apiProject.absoluteFilePath, {
 
       // Create conversion state (lookup pairs)
       val state = buildApi2VdObjLkUp(apiProject)
@@ -110,8 +109,8 @@ object Api2Vd {
       addToModel(state, model, apiProject)
       model.updateCache()
 
-      // Merge modules
-      mergeModules(model)
+      // Split modules
+      splitModules(model)
 
       // Add/load dependencies
       loadDependencies(model, apiProject)
@@ -139,25 +138,27 @@ object Api2Vd {
   }
 
   def loadDependencies(model: VdModel, apiProject: ApiProject)(implicit cache: HashMap[String, Model]) {
-    val deps = new ArrayBuffer[(String, VdProject)]
     foreach(apiProject) { (eApi, eApiParent, isDependency) =>
       eApi match {
-        case eApi: ApiProject if (isDependency) => deps += ((eApi.filePath, apply(eApi).project))
+        case eApi: ApiProject if (isDependency) => model.loadDependency(apply(eApi).project)
         case _ =>
       }
     }
-
-    for (pathDep <- deps) {
-      model.loadDependency(pathDep._1, pathDep._2)
-    }
   }
 
-  def mergeModules(model: VdModel)(implicit done: HashSet[EntityIdBase] = new HashSet[EntityIdBase]) {
+  /**
+   * What this does is that it splits the single api style full.module.name
+   * into vd modules (grandparent, parent, child).
+   */
+  def splitModules(model: VdModel) {
 
-    def mergeModules(source: Seq[VdModule]): java.util.ArrayList[VdModule] = {
+    def splitModules(source: Seq[VdModule]): java.util.ArrayList[VdModule] = {
 
       // Storage for this level
       val lkUp = new HashMap[String, VdModule]
+
+      val writtenDir = FileUtils.directoryOf(model.project.getFilePath().getWritten()).trim()
+      val absoluteDir = FileUtils.directoryOf(model.project.getFilePath().getAbsolute()).trim()
 
       // Merge this level
       for (m <- source.sortBy(_.getName)) {
@@ -166,25 +167,28 @@ object Api2Vd {
         val part0 = moduleNameParts(0)
 
         if (moduleNameParts.size == 1) {
+
           lkUp.put(part0, m)
+
         } else {
-          val trg = lkUp.getOrElseUpdate(part0, EntityFactory.mkModule(part0))
-          m.setName(m.getName.substring(trg.getName.length + 1))
-          trg.getSubmodulesMutable().add(m)
-          m.setParent(trg.getId())
+
+          val parent = lkUp.getOrElseUpdate(part0, EntityFactory.mkModule(part0, m.getSaveDir))
+          m.setName(m.getName.substring(parent.getName.length + 1))
+          parent.getSubmodulesMutable().add(m)
+          m.setParent(parent.getId())
         }
       }
 
       // Merge the next level
       for (m <- lkUp.values) {
-        m.setSubmodules(mergeModules(m.getSubmodules()))
+        m.setSubmodules(splitModules(m.getSubmodules()))
       }
 
       new java.util.ArrayList(lkUp.values)
     }
 
     def mergeProjectModules(project: VdProject) {
-      project.setModules(mergeModules(project.getModules))
+      project.setModules(splitModules(project.getModules))
     }
 
     // Start top down, with dependencies first
@@ -320,10 +324,10 @@ object Api2Vd {
             val vdProject = eVd.asInstanceOf[VdProject]
             val vdParentProject = eVdParent.asInstanceOf[VdProject]
 
-            vdParentProject.getDependenciesMutable().add(apiProject.filePath)
-            vdProject.setParent(vdParentProject.getId())
+            vdParentProject.getDependenciesMutable().add(vdProject.getFilePath)
+            vdProject.setParent(vdParentProject.getId)
 
-            model.loadDependency(apiProject.filePath, vdProject)
+            model.loadDependency(vdProject)
 
           case apiModule: ApiModule =>
             val vdModule = eVd.asInstanceOf[VdModule]
@@ -339,6 +343,21 @@ object Api2Vd {
     }
   }
 
+  def getFilePath(apiProject: ApiProject): FilePath = {
+    new FilePath(apiProject.filePath(), apiProject.absoluteFilePath())
+  }
+
+  def getFilePath(apiModule: ApiModule): FilePath = {
+    new FilePath(apiModule.filePath(), apiModule.absoluteFilePath())
+  }
+
+  private def extractSaveDir(apiModule: ApiModule): FilePath = {
+    val absoluteDir = FileUtils.directoryOf(apiModule.absoluteFilePath)
+    val nToDrop = apiModule.absoluteFilePath.length - absoluteDir.length
+    val writtenDir = apiModule.filePath.dropRight(nToDrop)
+    new FilePath(writtenDir, absoluteDir)
+  }
+  
   def buildApi2VdObjLkUp(apiProject: ApiProject): Api2VdConversionState = {
 
     val state = new Api2VdConversionState
@@ -354,9 +373,9 @@ object Api2Vd {
           EntityFactory.mkClass(eApi.name)
         case eApi: ApiProject =>
           val dependentProject = eApiParent.asInstanceOf[ApiProject]
-          EntityFactory.mkProject(eApi.name)
+          EntityFactory.mkProject(eApi.name, getFilePath(eApi))
         case eApi: ApiModule =>
-          EntityFactory.mkModule(eApi.path)
+          EntityFactory.mkModule(eApi.path, extractSaveDir(eApi))
       }
 
       if (isDependency)

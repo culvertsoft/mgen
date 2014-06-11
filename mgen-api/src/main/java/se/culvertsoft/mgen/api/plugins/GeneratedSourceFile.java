@@ -2,22 +2,9 @@ package se.culvertsoft.mgen.api.plugins;
 
 public class GeneratedSourceFile {
 
-	public GeneratedSourceFile(
-			final String folder,
-			final String fileName,
-			final String sourceCode) {
-		m_folder = folder;
-		m_fileName = fileName;
-		m_filePath = m_folder + "/" + m_fileName;
+	public GeneratedSourceFile(final String filePath, final String sourceCode) {
+		m_filePath = filePath;
 		m_sourceCode = sourceCode;
-	}
-
-	public String folder() {
-		return m_folder;
-	}
-
-	public String fileName() {
-		return m_fileName;
 	}
 
 	public String sourceCode() {
@@ -30,8 +17,8 @@ public class GeneratedSourceFile {
 
 	@Override
 	public String toString() {
-		return "GeneratedSourceFile [m_folder=" + m_folder + ", m_fileName="
-				+ m_fileName + ", m_sourceCode=" + m_sourceCode + "]";
+		return "GeneratedSourceFile [m_filePath=" + m_filePath
+				+ ", m_sourceCode=" + m_sourceCode + "]";
 	}
 
 	@Override
@@ -39,9 +26,7 @@ public class GeneratedSourceFile {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result
-				+ ((m_fileName == null) ? 0 : m_fileName.hashCode());
-		result = prime * result
-				+ ((m_folder == null) ? 0 : m_folder.hashCode());
+				+ ((m_filePath == null) ? 0 : m_filePath.hashCode());
 		result = prime * result
 				+ ((m_sourceCode == null) ? 0 : m_sourceCode.hashCode());
 		return result;
@@ -56,15 +41,10 @@ public class GeneratedSourceFile {
 		if (getClass() != obj.getClass())
 			return false;
 		GeneratedSourceFile other = (GeneratedSourceFile) obj;
-		if (m_fileName == null) {
-			if (other.m_fileName != null)
+		if (m_filePath == null) {
+			if (other.m_filePath != null)
 				return false;
-		} else if (!m_fileName.equals(other.m_fileName))
-			return false;
-		if (m_folder == null) {
-			if (other.m_folder != null)
-				return false;
-		} else if (!m_folder.equals(other.m_folder))
+		} else if (!m_filePath.equals(other.m_filePath))
 			return false;
 		if (m_sourceCode == null) {
 			if (other.m_sourceCode != null)
@@ -74,8 +54,6 @@ public class GeneratedSourceFile {
 		return true;
 	}
 
-	private final String m_folder;
-	private final String m_fileName;
 	private final String m_filePath;
 	private final String m_sourceCode;
 

@@ -13,6 +13,7 @@ public class ProjectImpl implements Project {
 
 	private String m_name;
 	private String m_filePath;
+	private String m_absoluteFilePath;
 	private Map<String, String> m_settings;
 	private List<ModuleImpl> m_modules;
 	private List<ProjectImpl> m_dependencies;
@@ -22,9 +23,11 @@ public class ProjectImpl implements Project {
 	public ProjectImpl(
 			final String name,
 			final String filePath,
+			final String absoluteFilePath,
 			final boolean isRoot) {
 		m_name = name;
 		m_filePath = filePath;
+		m_absoluteFilePath = absoluteFilePath;
 		m_settings = new HashMap<String, String>();
 		m_modules = new ArrayList<ModuleImpl>();
 		m_dependencies = new ArrayList<ProjectImpl>();
@@ -42,6 +45,11 @@ public class ProjectImpl implements Project {
 		return m_filePath;
 	}
 
+	@Override
+	public String absoluteFilePath() {
+		return m_absoluteFilePath;
+	}
+	
 	@Override
 	public Map<String, String> settings() {
 		return m_settings;
@@ -70,6 +78,10 @@ public class ProjectImpl implements Project {
 
 	public void setFilePath(String filePath) {
 		m_filePath = filePath;
+	}
+
+	public void setAbsoluteFilePath(String absolutefilePath) {
+		m_absoluteFilePath = absolutefilePath;
 	}
 
 	public void setSettings(Map<String, String> settings) {

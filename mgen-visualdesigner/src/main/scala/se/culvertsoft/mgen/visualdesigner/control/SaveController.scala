@@ -14,7 +14,6 @@ import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.compiler.Output
 import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
@@ -23,8 +22,10 @@ import se.culvertsoft.mgen.javapack.serialization.JsonReader
 import se.culvertsoft.mgen.javapack.serialization.JsonWriter
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.MGenClassRegistry
+import se.culvertsoft.mgen.visualdesigner.model.FilePath
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.ModelConversion
+import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.util.Util
 
@@ -38,14 +39,16 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
 
   val saveFileChooser = new JFileChooser(currentSaveLoadDir)
   val loadFileChooser = new JFileChooser(currentSaveLoadDir)
-  val xmlFilter = new FileNameExtensionFilter(".xml (mgen compiler/human readable)", "xml");
-  val jsonFilter = new FileNameExtensionFilter(".json (visual designer optimized)", "json");
-  val xmlOrJsonFilter = new FileNameExtensionFilter(".xml (mgen compiler), .json(visual designer optimized)", "xml", "json");
+  val xmlFilter = new FileNameExtensionFilter(".xml (mgen compiler)", "xml");
+  // val jsonFilter = new FileNameExtensionFilter(".json (visual designer optimized)", "json");
+  // val xmlOrJsonFilter = new FileNameExtensionFilter(".xml (mgen compiler), .json(visual designer optimized)", "xml", "json");
   saveFileChooser.setAcceptAllFileFilterUsed(false)
-  saveFileChooser.addChoosableFileFilter(jsonFilter)
+  // saveFileChooser.addChoosableFileFilter(jsonFilter)
   saveFileChooser.addChoosableFileFilter(xmlFilter)
   loadFileChooser.setAcceptAllFileFilterUsed(false)
-  loadFileChooser.addChoosableFileFilter(xmlOrJsonFilter)
+  loadFileChooser.addChoosableFileFilter(xmlFilter)
+  saveFileChooser.setFileFilter(xmlFilter)
+  loadFileChooser.setFileFilter(xmlFilter)
 
   /**
    * ***********************************************************
@@ -64,16 +67,8 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
     isFileType(file, "xml")
   }
 
-  def isJsonFile(file: File): Boolean = {
-    isFileType(file, "json")
-  }
-
   def isXmlFile(file: Option[File]): Boolean = {
     file.map(isXmlFile).getOrElse(false)
-  }
-
-  def isJsonFile(file: Option[File]): Boolean = {
-    file.map(isJsonFile).getOrElse(false)
   }
 
   def appendExtension(file: File, filter: FileNameExtensionFilter): File = {
@@ -110,12 +105,6 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
   def saveAs(): Boolean = {
 
     saveFileChooser.setCurrentDirectory(currentSaveLoadDir)
-
-    if (isXmlFile(_currentSaveFile)) {
-      saveFileChooser.setFileFilter(xmlFilter)
-    } else if (isJsonFile(_currentSaveFile)) {
-      saveFileChooser.setFileFilter(jsonFilter)
-    }
 
     val returnVal = controller.viewMgr.showSaveDialog(saveFileChooser)
     if (returnVal == JFileChooser.APPROVE_OPTION) {
@@ -193,9 +182,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
     println(s"Loading file: $file")
 
     val optLoadedModel =
-      if (isJsonFile(file)) {
-        tryLoadFromJson(file)
-      } else if (isXmlFile(file)) {
+      if (isXmlFile(file)) {
         tryLoadFromXml(file)
       } else {
         throw new RuntimeException(s"Tried to load unknown file type $file")
@@ -247,16 +234,36 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
 
         if (isXmlFile(file)) {
 
+          val newAbsPath = file.getCanonicalPath()
+
+          val project = controller.model.project
+          val needToMoveModules = project.getFilePath().getAbsolute() != newAbsPath
+
+          if (needToMoveModules) {
+            project.getFilePathMutable()
+              .setWritten("")
+              .setAbsolute(newAbsPath)
+            val saveDir = new FilePath("", FileUtils.directoryOf(newAbsPath))
+
+            def setSaveDirOfModules(ms: Seq[Module]) {
+              for (m <- ms) {
+                setSaveDirOfModules(m.getSubmodules())
+                m.setSaveDir(saveDir)
+              }
+            }
+
+            setSaveDirOfModules(project.getModules())
+          }
+
           val apiProject = ModelConversion.vd2Api(controller.model)
-          apiProject.setFilePath(file.getName)
+          apiProject.setFilePath(file.getPath())
+          apiProject.setAbsoluteFilePath(file.getCanonicalPath())
 
           val sources = Project2Xml(apiProject)
-          val dir = FileUtils.directoryOf(file.getPath)
-          val sourceWithFullPath = sources map { s => new GeneratedSourceFile(dir, s.fileName, s.sourceCode) }
 
-          Output.write(sourceWithFullPath)
+          Output.write(sources)
 
-        } else if (isJsonFile(file)) {
+        }/* else if (isJsonFile(file)) {
 
           val writer = new JsonWriter(bos, classRegistry, true)
           writer.writeMGenObject(controller.model.project)
@@ -268,7 +275,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
 
           Util.manageFileOut(file)(_.write(bos.toByteArray))
 
-        } else {
+        } */else {
           throw new RuntimeException("Trying to save with unknown file extension")
         }
 

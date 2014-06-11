@@ -2,7 +2,6 @@ package se.culvertsoft.mgen.visualdesigner
 
 import java.util.ArrayList
 import java.util.UUID
-
 import se.culvertsoft.mgen.visualdesigner.model.ClassPathEntityId
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
@@ -13,6 +12,7 @@ import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.Placement
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
+import se.culvertsoft.mgen.visualdesigner.model.FilePath
 
 object EntityFactory {
 
@@ -26,9 +26,11 @@ object EntityFactory {
     left: Int,
     top: Int,
     width: Int,
-    height: Int): Module = {
+    height: Int,
+    saveDir: FilePath): Module = {
     new Module()
       .setId(nextId())
+      .setSaveDir(saveDir)
       .setName(name)
       .setPlacement(new Placement(left, top, width, height))
       .setSettings(new java.util.HashMap)
@@ -47,13 +49,14 @@ object EntityFactory {
     f
   }
 
-  def mkModule(name: String): Module = {
+  def mkModule(name: String, saveDir: FilePath): Module = {
     mkModule(
       name,
       LayOutEntities.DEFAULT_WALL_OFFSET_X,
       LayOutEntities.DEFAULT_WALL_OFFSET_Y,
       LayOutEntities.DEFAULT_MODULE_WIDTH,
-      LayOutEntities.DEFAULT_MODULE_HEIGHT)
+      LayOutEntities.DEFAULT_MODULE_HEIGHT,
+      saveDir)
   }
 
   def mkId(path: String): ClassPathEntityId = {
@@ -83,9 +86,10 @@ object EntityFactory {
       LayOutEntities.DEFAULT_CLASS_HEIGHT)
   }
 
-  def mkProject(name: String): Project = {
+  def mkProject(name: String, filePath: FilePath): Project = {
     new Project()
       .setId(nextId())
+      .setFilePath(filePath)
       .setName(name)
       .setGenerators(new java.util.ArrayList)
       .setModules(new java.util.ArrayList)
@@ -95,7 +99,7 @@ object EntityFactory {
 
   def mkModel(): Model = {
 
-    new Model(mkProject("baseproject"))
+    new Model(mkProject("baseproject", new FilePath("baseproject.xml", "baseproject.xml")))
 
   }
 

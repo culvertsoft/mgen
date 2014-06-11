@@ -11,20 +11,29 @@ import se.culvertsoft.mgen.api.model.impl.ProjectImpl
 
 object ParseProject {
 
-  private def apply(
+  def apply(
     filePath: String,
-    project: ProjectImpl,
-    rootProject: ProjectImpl,
-    settings0: Map[String, String] = Map[String, String]())(implicit cache: ParseState): ProjectImpl = {
+    settings0: Map[String, String],
+    searchPaths0: Seq[String],
+    isRoot: Boolean)(implicit cache: ParseState): ProjectImpl = {
 
-    cache.fileParsing.projects.getOrElseUpdate(filePath, {
+    val file = FileUtils.findFile(filePath, searchPaths0)
+      .getOrElse(ThrowRTE(s"Could not find referenced project file: ${filePath}"))
 
-      println(s"parsing project: ${project.filePath} (${filePath})")
+    val absoluteFilePath = file.getCanonicalPath()
 
-      val dir = FileUtils.directoryOf(filePath) + File.separatorChar
+    cache.fileParsing.projects.getOrElseUpdate(absoluteFilePath, {
+
+      println(s"parsing project: ${absoluteFilePath}")
+
+      val projectName = FileUtils.removeFileEnding(FileUtils.nameOf(absoluteFilePath))
+      val projectDir = FileUtils.directoryOf(absoluteFilePath)
+      val project = new ProjectImpl(projectName, filePath, file.getAbsolutePath(), isRoot)
+
+      val searchPaths: Seq[String] = searchPaths0 ++ Seq(projectDir)
 
       // Read in project xml source code 
-      val projectXml = scala.xml.Utility.trim(loadFile(filePath))
+      val projectXml = scala.xml.Utility.trim(loadFile(file))
       if (projectXml.label.toLowerCase() != "project") {
         throw new RuntimeException(s"Tried to load $filePath as project, but it was not a project file!")
       }
@@ -33,15 +42,14 @@ object ParseProject {
       val settings = settings0 ++ projectXml.getSettings()
       project.setSettings(settings)
 
-      // Parse dependencies
-      val rootDir = FileUtils.directoryOf(rootProject.filePath) + File.separatorChar
-      val dependFilePaths = projectXml.getAllNodeContents("Depend").map { rootDir + _ }
-      val dependencies = dependFilePaths.map { ParseProject(_, rootProject, settings) }
+      // Parse dependenciesw
+      val dependFilePaths = projectXml.getAllNodeContents("Depend").map(_.toString)
+      val dependencies = dependFilePaths.map(ParseProject(_, settings, searchPaths, false))
       project.setDependencies(dependencies)
 
       // Parse modules
-      val moduleFilePaths = projectXml.getAllNodeContents("Module").map { dir + _ }
-      val modules = moduleFilePaths.map { ParseModule(_, settings) }
+      val moduleFilePaths = projectXml.getAllNodeContents("Module").map { _.toString }
+      val modules = moduleFilePaths.map { ParseModule(_, settings, searchPaths) }
       project.setModules(modules)
 
       // Parse Generators
@@ -51,33 +59,6 @@ object ParseProject {
       project
 
     })
-
-  }
-
-  def apply(
-    filePath: String,
-    rootProject: ProjectImpl,
-    settings: Map[String, String])(implicit cache: ParseState): ProjectImpl = {
-
-    FileUtils.checkiSsFileOrThrow(filePath)
-
-    val path = FileUtils.removeFileEnding(FileUtils.nameOf(filePath))
-    val project = new ProjectImpl(path, filePath, false)
-
-    ParseProject(filePath, project, rootProject, settings)
-
-  }
-
-  def apply(
-    filePath: String,
-    settings: Map[String, String])(implicit cache: ParseState): ProjectImpl = {
-
-    FileUtils.checkiSsFileOrThrow(filePath)
-
-    val path = FileUtils.removeFileEnding(FileUtils.nameOf(filePath))
-    val project = new ProjectImpl(path, filePath, true)
-
-    ParseProject(filePath, project, project, settings)
 
   }
 

@@ -36,10 +36,10 @@ object Project2Xml {
       <Project>
         { project.generators map generator2xml }
         { project.dependencies map dependency2xmlReference }
-        { project.modules.filter(_.types.values.nonEmpty) map module2xmlReference }
+        { project.modules.filter(_.types.values.nonEmpty) map { x => <Module>{ x.filePath() }</Module> } }
       </Project>
 
-    sources += XmlSourceFile(project.filePath, projectXml)
+    sources += XmlSourceFile(project.absoluteFilePath, projectXml)
     sources ++= project.modules.filter(_.types.values.nonEmpty) map module2xmlSource
 
     convert(sources)
@@ -53,8 +53,7 @@ object Project2Xml {
     sources.map { source =>
 
       val sourceCode = printer.format(source.xml)
-      val fileName = source.path
-      new GeneratedSourceFile("", fileName, sourceCode)
+      new GeneratedSourceFile(source.path, sourceCode)
 
     }
 
@@ -72,10 +71,6 @@ object Project2Xml {
     <Depend>{ dependency.filePath }</Depend>
   }
 
-  def module2xmlReference(module: Module): scala.xml.Node = {
-    <Module>{ s"${module.path}.xml" }</Module>
-  }
-
   def module2xmlSource(module: Module): XmlSourceFile = {
 
     implicit val _module = module
@@ -87,9 +82,7 @@ object Project2Xml {
         </Types>
       </Module>
 
-    val filePath = s"${module.path}.xml"
-
-    XmlSourceFile(filePath, xml)
+    XmlSourceFile(module.absoluteFilePath(), xml)
   }
 
   def type2xml(typ: CustomType)(implicit currentModule: Module): scala.xml.Node = {

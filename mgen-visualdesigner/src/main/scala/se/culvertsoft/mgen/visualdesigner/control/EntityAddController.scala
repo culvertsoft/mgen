@@ -2,7 +2,6 @@ package se.culvertsoft.mgen.visualdesigner.control
 
 import java.awt.Point
 import java.awt.Rectangle
-
 import javax.swing.JOptionPane
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
@@ -14,6 +13,8 @@ import se.culvertsoft.mgen.visualdesigner.model.PlacedEntity
 import se.culvertsoft.mgen.visualdesigner.util.Asof.RichFilterable
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 import se.culvertsoft.mgen.visualdesigner.view.ModuleView
+import se.culvertsoft.mgen.visualdesigner.model.FilePath
+import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 
 class EntityAddController(controller: Controller) extends SubController(controller) {
 
@@ -42,9 +43,15 @@ class EntityAddController(controller: Controller) extends SubController(controll
     controller.triggerObservers(_.onEntityTransferred(child, newParent, oldParent))
   }
 
+  def getNewModuleSaveDir(): FilePath = {
+    val writtenDir = FileUtils.directoryOf(controller.model.project.getFilePath().getWritten())
+    val absoluteDir = FileUtils.directoryOf(controller.model.project.getFilePath().getAbsolute())
+    new FilePath(writtenDir, absoluteDir)
+  }
+  
   def addModule() {
 
-    val module = EntityFactory.mkModule("NewModule")
+    val module = EntityFactory.mkModule("NewModule", getNewModuleSaveDir())
       .setSettings(new java.util.HashMap)
       .setSubmodules(new java.util.ArrayList)
       .setTypes(new java.util.ArrayList)

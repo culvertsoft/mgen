@@ -20,10 +20,27 @@ object FileUtils {
     new File(filePath).getParentFile().getPath()
   }
 
-  def directoryOf(filePath: String): String = {
-    new File(filePath).getParentFile().getPath()
+  def getAbsolutePath(filePath: String): String = {
+    new File(filePath).getCanonicalPath()
   }
-  
+
+  def directoryOf(filePath: String): String = {
+
+    val lastIdxSlash1 = filePath.lastIndexOf("\\")
+    val lastIdxSlash2 = filePath.lastIndexOf('/')
+
+    val fNameStartIndex = math.max(lastIdxSlash1, lastIdxSlash2) + 1
+    val fNameLen = filePath.length - fNameStartIndex
+
+    var out: String = filePath.dropRight(fNameLen)
+
+    while (out.nonEmpty && (out.last == '\\' || out.last == '/')) {
+      out = out.dropRight(1)
+    }
+
+    out
+  }
+
   def nameOf(filePath: String): String = {
     new File(filePath).getName()
   }
@@ -32,12 +49,21 @@ object FileUtils {
     filePath.split('.').dropRight(1).mkString(".")
   }
 
-  def checkiSsFileOrThrow(filePath: String) {
+  def findFile(filePath: String, searchPaths: Seq[String]): Option[File] = {
+    if (isFile(filePath)) {
+      Some(new File(filePath))
+    } else {
+      searchPaths.map(_ + File.separatorChar + filePath).find(isFile).map(new File(_))
+    }
+  }
+
+  def checkiSsFileOrThrow(filePath: String): File = {
     val file = new File(filePath)
     if (!file.exists)
       throw new RuntimeException(s"File does not exist: ${filePath}")
     if (!file.isFile)
       throw new RuntimeException(s"Path points to a directory: ${filePath}")
+    file
   }
 
   def readToString(filePath: String): String = {

@@ -13,11 +13,19 @@ import se.culvertsoft.mgen.api.model.Type;
 public class ModuleImpl implements Module {
 
 	private final String m_path;
+	private final String m_filePath;
+	private final String m_absoluteFilePath;
 	private final Map<String, String> m_settings;
 	private LinkedHashMap<String, CustomTypeImpl> m_types;
 
-	public ModuleImpl(final String path, final Map<String, String> settings) {
+	public ModuleImpl(
+			final String path, 
+			final String filePath,
+			final String absoluteFilePath, 
+			final Map<String, String> settings) {
 		m_path = path;
+		m_filePath = filePath;
+		m_absoluteFilePath = absoluteFilePath;
 		m_settings = settings;
 		m_types = new LinkedHashMap<String, CustomTypeImpl>();
 	}
@@ -28,6 +36,14 @@ public class ModuleImpl implements Module {
 
 	public String path() {
 		return m_path;
+	}
+
+	public String filePath() {
+		return m_filePath;
+	}
+
+	public String absoluteFilePath() {
+		return m_absoluteFilePath;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })

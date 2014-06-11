@@ -35,9 +35,16 @@ public interface Project {
 	public Map<String, String> settings();
 
 	/**
-	 * The file system search path of this project's definition file.
+	 * The file search path of this project's definition file, as written as 
+	 * command line argument for the compiler, or in a depender's project 
+	 * definition file.
 	 */
 	public String filePath();
+
+	/**
+	 * The file absolute search path of this project's definition file.
+	 */
+	public String absoluteFilePath();
 
 	/**
 	 * Returns the modules contained within this project.
@@ -73,6 +80,6 @@ public interface Project {
 	 * Helper singleton for some analysis steps and generators. Usually not
 	 * needed for generation. You'll know if you need it :).
 	 */
-	public static Project INSTANCE = new ProjectImpl("", "", true);
+	public static Project INSTANCE = new ProjectImpl("", "", "", true);
 
 }

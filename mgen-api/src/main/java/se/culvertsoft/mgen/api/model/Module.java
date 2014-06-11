@@ -25,12 +25,27 @@ public interface Module {
 	public Map<String, String> settings();
 
 	/**
-	 * Returns the module path of this module, i.e. the java package or c++
-	 * namespace of this module.
+	 * Returns the path of this module, i.e. the java package or c++ namespace
+	 * of this module.
 	 * 
 	 * @return The module path of this module.
 	 */
 	public String path();
+
+	/**
+	 * The written file path used to reference this module in its parent project
+	 * file.
+	 * 
+	 * @return The written file path to this module.
+	 */
+	public String filePath();
+
+	/**
+	 * The absolute file path calculated from \filePath().
+	 * 
+	 * @return The absolute file path to this module
+	 */
+	public String absoluteFilePath();
 
 	/**
 	 * Returns the types defined within this module. The types are returned in a
@@ -58,8 +73,7 @@ public interface Module {
 	 * Helper singleton for some analysis steps and generators. Usually not
 	 * needed for generation. You'll know if you need it :).
 	 */
-	public static Module INSTANCE = new ModuleImpl(
-			"",
+	public static Module INSTANCE = new ModuleImpl("", "", "",
 			new HashMap<String, String>());
 
 }

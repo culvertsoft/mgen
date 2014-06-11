@@ -71,7 +71,7 @@ class ViewManager(
   def toggleIconOverride() {
     setIconOverride(!isIconOverrideActive)
   }
-  
+
   def setIconOverride(state: Boolean) {
     if (_iconOverride != state) {
       _iconOverride = state
@@ -697,9 +697,11 @@ class ViewManager(
 
   def configureViewOnLoadedNewFile() {
     def setToLowestChildWithNonMultipleChildren(child: Entity) {
-      child.numFirstLevelChildren match {
-        case 1 => setToLowestChildWithNonMultipleChildren(child.firstLevelChildren()(0))
-        case _ => setViewRoot(child)
+      val children = child.firstLevelChildren
+      if (children.size == 1 && children.head.isInstanceOf[Module]) {
+        setToLowestChildWithNonMultipleChildren(children.head)
+      } else {
+        setViewRoot(child)
       }
     }
     setToLowestChildWithNonMultipleChildren(controller.model.project)

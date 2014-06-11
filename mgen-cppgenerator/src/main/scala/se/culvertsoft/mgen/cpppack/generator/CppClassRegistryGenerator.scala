@@ -1,69 +1,71 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
+import java.io.File
+
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 abstract class CppClassRegistryGenerator(fileEnding: String) {
 
-   implicit val txtBuffer = new SuperStringBuffer
-   var namespacesstring = ""
+  implicit val txtBuffer = new SuperStringBuffer
+  var namespacesstring = ""
 
-   def generate(folder: String,
-      packagePath: String,
-      referencedModules: Seq[Module],
-      generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {
-      val fileName = "ClassRegistry" + fileEnding
-      val sourceCode = generateSourceCode(packagePath, referencedModules, generatorSettings)
-      new GeneratedSourceFile(folder, fileName, sourceCode)
-   }
+  def generate(folder: String,
+    packagePath: String,
+    referencedModules: Seq[Module],
+    generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {
+    val fileName = "ClassRegistry" + fileEnding
+    val sourceCode = generateSourceCode(packagePath, referencedModules, generatorSettings)
+    new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+  }
 
-   def generateSourceCode(
-      packagePath: String,
-      referencedModules: Seq[Module],
-      generatorSettings: java.util.Map[String, String]): String = {
+  def generateSourceCode(
+    packagePath: String,
+    referencedModules: Seq[Module],
+    generatorSettings: java.util.Map[String, String]): String = {
 
-      val namespaces = packagePath.split("\\.")
-      namespacesstring = namespaces.mkString("::")
+    val namespaces = packagePath.split("\\.")
+    namespacesstring = namespaces.mkString("::")
 
-      txtBuffer.clear()
+    txtBuffer.clear()
 
-      CppGenUtils.mkFancyHeader()
-      mkIncludes(referencedModules, generatorSettings)
-      CppGenUtils.mkNameSpaces(namespaces)
-      mkClassStart(referencedModules, generatorSettings)
+    CppGenUtils.mkFancyHeader()
+    mkIncludes(referencedModules, generatorSettings)
+    CppGenUtils.mkNameSpaces(namespaces)
+    mkClassStart(referencedModules, generatorSettings)
 
-      mkDefaultCtor(referencedModules, generatorSettings)
-      mkDestructor(referencedModules, generatorSettings)
-      mkReadObjectFields(referencedModules, generatorSettings)
-      mkVisitObjectFields(referencedModules, generatorSettings)
+    mkDefaultCtor(referencedModules, generatorSettings)
+    mkDestructor(referencedModules, generatorSettings)
+    mkReadObjectFields(referencedModules, generatorSettings)
+    mkVisitObjectFields(referencedModules, generatorSettings)
 
-      mkClassEnd(referencedModules, generatorSettings)
-      CppGenUtils.mkNameSpacesEnd(namespaces)
+    mkClassEnd(referencedModules, generatorSettings)
+    CppGenUtils.mkNameSpacesEnd(namespaces)
 
-      txtBuffer.toString
+    txtBuffer.toString
 
-   }
+  }
 
-   def mkIncludes(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-   }
+  def mkIncludes(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
 
-   def mkClassStart(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-   }
+  def mkClassStart(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
 
-   def mkDefaultCtor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-   }
+  def mkDefaultCtor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
 
-   def mkDestructor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-   }
+  def mkDestructor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
 
-   def mkReadObjectFields(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-   }
+  def mkReadObjectFields(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
 
-   def mkVisitObjectFields(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-   }
+  def mkVisitObjectFields(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
 
-   def mkClassEnd(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-   }
+  def mkClassEnd(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
 
 }

@@ -11,19 +11,23 @@ object ParseModule {
 
   def apply(
     filePath: String,
-    settings0: Map[String, String])(implicit cache: ParseState): ModuleImpl = {
+    settings0: Map[String, String],
+    searchPaths0: Seq[String])(implicit cache: ParseState): ModuleImpl = {
 
-    cache.fileParsing.modules.getOrElseUpdate(filePath, {
+    val file = FileUtils.findFile(filePath, searchPaths0)
+      .getOrElse(ThrowRTE(s"Could not find referenced module file: ${filePath}"))
 
-      FileUtils.checkiSsFileOrThrow(filePath)
+    val absoluteFilePath = file.getCanonicalPath()
+
+    cache.fileParsing.modules.getOrElseUpdate(absoluteFilePath, {
+
+      println(s"parsing module: ${absoluteFilePath}")
 
       // Calculate module path
-      val path = FileUtils.removeFileEnding(FileUtils.nameOf(filePath))
-
-      println(s"parsing module: ${path} (${filePath})")
+      val modulePath = FileUtils.removeFileEnding(FileUtils.nameOf(filePath))
 
       // Read in module xml source code 
-      val moduleXml = scala.xml.Utility.trim(loadFile(filePath))
+      val moduleXml = scala.xml.Utility.trim(loadFile(file))
       if (moduleXml.label.toLowerCase() != "module") {
         throw new RuntimeException(s"Tried to load $filePath as module, but it was not a module file!")
       }
@@ -32,7 +36,11 @@ object ParseModule {
       val settings = settings0 ++ moduleXml.getSettings()
 
       // Create the module
-      val module = new ModuleImpl(path, settings)
+      val module = new ModuleImpl(
+        modulePath,
+        filePath,
+        absoluteFilePath,
+        settings)
 
       // Parse types
       val typesXml = moduleXml.getAllNodeContents("Types")

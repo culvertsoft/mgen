@@ -366,8 +366,8 @@ class Model(
     }
   }
 
-  def loadDependency(filePath: String, dependency: Project) {
-    loadedDepdendencies.put(filePath, dependency)
+  def loadDependency(dependency: Project) {
+    loadedDepdendencies.put(dependency.getFilePath().getAbsolute(), dependency)
 
     // Add all dependencies
     dependency.foreach { cp =>

@@ -6,7 +6,6 @@ import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
-
 import ModelConversion.ApiArrayTypeImpl
 import ModelConversion.ApiBoolTypeInstance
 import ModelConversion.ApiClassImpl
@@ -53,6 +52,8 @@ import se.culvertsoft.mgen.api.model.impl.UnknownCustomTypeImpl
 import se.culvertsoft.mgen.compiler.defaultparser.LinkTypes
 import se.culvertsoft.mgen.compiler.defaultparser.ParseState
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
+import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
+import java.io.File
 
 class Vd2ApiConversionState(val srcModel: Model) {
   import ModelConversion._
@@ -127,32 +128,59 @@ object Vd2Api {
     t
   }
 
+  private def getSavePath(
+    vdModule: VdModule,
+    fullModuleName: String): FilePath = {
+
+    val writtenDir = vdModule.getSaveDir.getWritten
+    val absoluteDir = vdModule.getSaveDir.getAbsolute
+
+    val writtenPrepend = if (writtenDir.nonEmpty) (writtenDir + File.separator) else ""
+    val absolutePrepend = absoluteDir + File.separator
+
+    new FilePath(
+      writtenPrepend + fullModuleName + ".xml",
+      absolutePrepend + fullModuleName + ".xml")
+  }
+
   private def cvtModule(vdModule: VdModule, parentPath: String = "")(implicit cvState: Vd2ApiConversionState): Seq[ApiModuleImpl] = {
 
     val out = new ArrayBuffer[ApiModuleImpl]
 
-    val fullPath = if (parentPath.nonEmpty) s"${parentPath}.${vdModule.getName()}" else vdModule.getName 
-    val root = new ApiModuleImpl(fullPath, vdModule.getSettings())
-    cvState.apiObjLkup.put(fullPath, root)
+    val fullModuleName = if (parentPath.nonEmpty) s"${parentPath}.${vdModule.getName()}" else vdModule.getName
+    val savePath = getSavePath(vdModule, fullModuleName)
 
-    root.setTypes(vdModule.getTypes().map(cvtType(_, root)))
+    val apiModule = new ApiModuleImpl(
+      fullModuleName,
+      savePath.getWritten(),
+      savePath.getAbsolute(),
+      vdModule.getSettings())
 
-    out += root
-    out ++= vdModule.getSubmodules().flatMap(cvtModule(_, fullPath))
+    cvState.apiObjLkup.put(fullModuleName, apiModule)
+
+    apiModule.setTypes(vdModule.getTypes().map(cvtType(_, apiModule)))
+
+    out += apiModule
+    out ++= vdModule.getSubmodules().flatMap(cvtModule(_, fullModuleName))
 
     out
   }
 
-  private def cvtDependency(path: String)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
-    cvtProject(cvState.srcModel.loadedDepdendencies(path), path, false)
+  private def cvtDependency(filePath: FilePath)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
+    cvtProject(cvState.srcModel.loadedDepdendencies(filePath.getAbsolute()), false)
   }
 
-  private def cvtProject(vdProject: VdProject, filePath: String, isRoot: Boolean)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
+  private def cvtProject(vdProject: VdProject, isRoot: Boolean)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
 
-    cvState.apiObjLkup.getOrElse(filePath, {
+    cvState.apiObjLkup.getOrElse(vdProject.getFilePath().getAbsolute(), {
 
-      val apiProject = new ApiProjectImpl(vdProject.getName(), filePath, isRoot)
-      cvState.apiObjLkup.put(filePath, apiProject)
+      val apiProject = new ApiProjectImpl(
+        vdProject.getName(),
+        vdProject.getFilePath().getWritten(),
+        vdProject.getFilePath().getAbsolute(),
+        isRoot)
+
+      cvState.apiObjLkup.put(vdProject.getFilePath().getAbsolute(), apiProject)
 
       if (vdProject.hasGenerators)
         apiProject.setGenerators(vdProject.getGenerators.map(cvtGenerator))
@@ -220,8 +248,8 @@ object Vd2Api {
   def apply(model: VdModel): ApiProjectImpl = {
 
     implicit val cvState = new Vd2ApiConversionState(model)
-
-    val out = cvtProject(model.project, s"${model.project.getName}.xml", true)
+    
+    val out = cvtProject(model.project, true)
 
     linkTypes(out)
 
