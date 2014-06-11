@@ -4,7 +4,7 @@
 // version := "SNAPSHOT"
 // scalaVersion := "2.10.4"
 
-version := System.getenv("MGEN_BUILD_VERSION")
+version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
 crossPaths := false
 

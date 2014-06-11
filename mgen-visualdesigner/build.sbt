@@ -6,7 +6,7 @@
 
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
-version := System.getenv("MGEN_BUILD_VERSION")
+version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
 crossPaths := false
 
