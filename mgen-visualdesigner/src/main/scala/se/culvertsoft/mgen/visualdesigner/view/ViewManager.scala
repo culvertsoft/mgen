@@ -34,6 +34,7 @@ import se.culvertsoft.mgen.visualdesigner.view.searchdialog.SearchDialog
 import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
 import se.culvertsoft.mgen.visualdesigner.control.ModelChangeListener
 import se.culvertsoft.mgen.visualdesigner.Actions
+import java.awt.Component
 
 class ViewManager(
   private val controller: Controller,
@@ -389,8 +390,8 @@ class ViewManager(
     }
   }
 
-  def popupGetString(message: String, defaultValue: String = ""): Option[String] = {
-    val o = JOptionPane.showInputDialog(topContainer, message, defaultValue);
+  def popupGetString(message: String, defaultValue: String = "", triggeringComponent: Component = topContainer): Option[String] = {
+    val o = JOptionPane.showInputDialog(triggeringComponent, message, defaultValue);
     if (o != null) Some(o) else None
   }
 

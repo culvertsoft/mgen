@@ -368,7 +368,8 @@ class Controller(
   def renameSelection() {
     if (checkHasExactlySelected(1)) {
       val e = selectedEntities()(0)
-      viewMgr.popupGetString("Enter new name", e.getName()) match {
+      val c = viewMgr.getView(e).innerPanel
+      viewMgr.popupGetString("Enter new name", e.getName(), c) match {
         case Some(name) => rename(e, name)
         case _ =>
       }
