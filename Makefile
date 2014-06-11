@@ -1,11 +1,11 @@
-
-export MGEN_BUILD_VERSION = 0.1-DEV-SNAPSHOT
+VERSION = 0.1-DEV-SNAPSHOT
+export MGEN_BUILD_VERSION = $(VERSION)
 
 all:
 	#########################################################
-	#	 					 	#
-	#	 	    BUILDING MGEN		 	#
-	#						 	#
+	#                                                       #
+	#           BUILDING MGEN                               #
+	#                                                       #
 	#########################################################
 	cd mgen-api && make all
 	cd mgen-compiler && make all
@@ -15,16 +15,16 @@ all:
 	cd mgen-javagenerator && make all
 	cd mgen-visualdesigner && make all
 	#########################################################
-	#							#
-	#	 	  DONE BUILDING MGEN		 	#
-	#							#
+	#                                                       #
+	#         DONE BUILDING MGEN                            #
+	#                                                       #
 	#########################################################
 
-clean:	
+clean:
 	#########################################################
-	#	 					 	#
-	#	 	    CLEANING MGEN		 	#
-	#	 					 	#
+	#                                                       #
+	#           CLEANING MGEN                               #
+	#                                                       #
 	#########################################################
 	cd mgen-api && make clean
 	cd mgen-compiler && make clean
@@ -34,16 +34,16 @@ clean:
 	cd mgen-javagenerator && make clean
 	cd mgen-visualdesigner && make clean
 	#########################################################
-	#							#
-	#	 	  DONE CLEANING MGEN		 	#
-	#							#
+	#                                                       #
+	#         DONE CLEANING MGEN                            #
+	#                                                       #
 	#########################################################
 
 eclipse:
 	#########################################################
-	#	 					 	#
-	#		CREATING ECLIPSE PROJECTS		#
-	#	 					 	#
+	#                                                       #
+	#       CREATING ECLIPSE PROJECTS                       #
+	#                                                       #
 	#########################################################
 	cd mgen-api && make eclipse
 	cd mgen-compiler && make eclipse
@@ -53,9 +53,9 @@ eclipse:
 	cd mgen-javagenerator && make eclipse
 	cd mgen-visualdesigner && make eclipse
 	#########################################################
-	#	 					 	#
-	#	     DONE CREATING ECLIPSE PROJECTS		#
-	#	 					 	#
+	#                                                       #
+	#        DONE CREATING ECLIPSE PROJECTS                 #
+	#                                                       #
 	#########################################################
 	
 
@@ -65,3 +65,43 @@ run-compiler:
 run-visualdesigner:
 	cd mgen-visualdesigner && make run
 
+test:
+	#########################################################
+	#                                                       #
+	#       RUNNING ALL TESTS                               #
+	#                                                       #
+	#########################################################
+	cd mgen-api && make test
+	cd mgen-compiler && make test
+	cd mgen-cppgenerator && make test
+	cd mgen-cpplib && make test
+	cd mgen-javalib && make test
+	cd mgen-javagenerator && make test
+	cd mgen-visualdesigner && make test
+	#########################################################
+	#                                                       #
+	#        DONE RUNNING ALL TEST                          #
+	#                                                       #
+	#########################################################
+
+
+doc:
+	#########################################################
+	#                                                       #
+	#       MAKING DOCUMENTATION                            #
+	#                                                       #
+	#########################################################
+	cd mgen-api && make doc
+	cd mgen-compiler && make doc
+	cd mgen-cppgenerator && make doc
+	cd mgen-cpplib && make doc
+	cd mgen-javalib && make doc
+	cd mgen-javagenerator && make doc
+	cd mgen-visualdesigner && make doc
+	#########################################################
+	#                                                       #
+	#        DONE MAKING DOCUMENTATION                      #
+	#                                                       #
+	#########################################################
+
+documentation: doc
