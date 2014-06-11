@@ -1,9 +1,7 @@
 package se.culvertsoft.mgen.visualdesigner.util
 
 import java.awt.Point
-
 import scala.collection.JavaConversions.asScalaBuffer
-
 import LayOutEntities.DEFAULT_SPACING_X
 import LayOutEntities.DEFAULT_SPACING_Y
 import LayOutEntities.DEFAULT_WALL_OFFSET_X
@@ -11,24 +9,32 @@ import LayOutEntities.DEFAULT_WALL_OFFSET_Y
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.Module
+import se.culvertsoft.mgen.visualdesigner.model.Entity
+import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
 
-abstract class LayoutNode(model: Model) {
+abstract class LayoutNode(model: Model, module: Module) {
   def parent(): Option[LayoutNode]
   def children(): Seq[LayoutNode]
   def width(): Double
   def height(): Double
   def placeAt(x: Double, y: Double)
   def name(): String
+
+  private val thisModulesIds = module.getTypes.map(_.getId).toSet
+
+  def isInThisModule(t: EntityIdBase): Boolean = {
+    thisModulesIds.contains(t)
+  }
 }
 
-class TopLayoutNode(xOffset: Double, module: Module, model: Model) extends LayoutNode(model) {
+class TopLayoutNode(xOffset: Double, module: Module, model: Model) extends LayoutNode(model, module) {
 
   import LayOutEntities._
 
   val children =
     module
       .getTypes()
-      .filterNot(_.hasSuperType)
+      .filter(e => !e.hasSuperType || !isInThisModule(e.getSuperType()))
       .map(new ClassLayoutNode(_, module, model, Some(this)))
 
   val parent: Option[LayoutNode] = None
@@ -59,7 +65,7 @@ class ClassLayoutNode(
   val clas: CustomType,
   val module: Module,
   val model: Model,
-  val parent: Option[LayoutNode]) extends LayoutNode(model) {
+  val parent: Option[LayoutNode]) extends LayoutNode(model, module) {
 
   import LayOutEntities._
 
@@ -67,7 +73,7 @@ class ClassLayoutNode(
 
   val children: Seq[ClassLayoutNode] =
     clas
-      .getSubTypes()
+      .getSubTypes().filter(isInThisModule)
       .map(id => model.getEntity(id).get.asInstanceOf[CustomType])
       .filter(_.getParent() == module.getId())
       .map(new ClassLayoutNode(_, module, model, Some(this)))
