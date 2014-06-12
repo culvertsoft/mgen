@@ -14,3 +14,6 @@ libraryDependencies += "default" % "mgen-api" % version.value
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
+EclipseKeys.withSource := true
+
+EclipseKeys.relativizeLibs := false

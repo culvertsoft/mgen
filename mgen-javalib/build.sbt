@@ -14,3 +14,6 @@ libraryDependencies += "default" % "mgen-api" % version.value
 
 libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
 
+EclipseKeys.withSource := true
+
+EclipseKeys.relativizeLibs := false

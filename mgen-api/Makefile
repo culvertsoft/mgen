@@ -1,6 +1,6 @@
 all: 	
 	#########################################
-	#	    BUILDING MGEN-API		#
+	#       BUILDING MGEN-API               #
 	#########################################
 	sbt compile package publish-local
 
@@ -12,7 +12,12 @@ eclipse:
 
 clean: 	
 	#########################################
-	#	    CLEANING MGEN-API		#
+	#       CLEANING MGEN-API               #
 	#########################################
 	sbt clean
 
+doc: 	
+	#########################################
+	#       DOCUMENTATION MGEN-API          #
+	#########################################
+	sbt doc

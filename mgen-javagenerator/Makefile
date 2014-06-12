@@ -1,6 +1,6 @@
 all: 	
 	#########################################
-	#	BUILDING MGEN-JAVAGENERATOR	#
+	#   BUILDING MGEN-JAVAGENERATOR         #
 	#########################################
 	sbt compile package publish-local
 
@@ -12,7 +12,12 @@ eclipse:
 
 clean: 	
 	#########################################
-	#	CLEANING MGEN-JAVAGENERATOR	#
+	#   CLEANING MGEN-JAVAGENERATOR         #
 	#########################################
 	sbt clean
 
+doc:
+	#########################################
+	#  DOCUMENTATION MGEN-JAVAGENERATOR     #
+	#########################################
+	sbt doc

@@ -1,6 +1,6 @@
 all: 	
 	#########################################
-	#	  BUILDING MGEN-JAVALIB		#
+	#     BUILDING MGEN-JAVALIB             #
 	#########################################
 	sbt compile package publish-local
 
@@ -12,7 +12,12 @@ eclipse:
 
 clean: 	
 	#########################################
-	#	  CLEANING MGEN-JAVALIB		#
+	#     CLEANING MGEN-JAVALIB             #
 	#########################################
 	sbt clean
 
+doc:
+	#########################################
+	#  DOCUMENTATION MGEN-JAVALIB           #
+	#########################################
+	sbt doc

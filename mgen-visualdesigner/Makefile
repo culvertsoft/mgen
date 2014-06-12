@@ -3,17 +3,17 @@ MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_
 
 all: 	
 	#########################################
-	# GENERATING MGEN-VISUALDESIGNER MODEL	#
+	# GENERATING MGEN-VISUALDESIGNER MODEL  #
 	#########################################
 	java -jar $(MGEN_COMPILER_JAR) -project="model/project.xml" -plugin_paths="../mgen-javagenerator/target/"
 	#########################################
-	#     BUILDING MGEN-VISUALDESIGNER 	#
+	#     BUILDING MGEN-VISUALDESIGNER      #
 	#########################################
 	sbt compile package assembly publish-local
 
 clean:
 	#########################################
-	#     CLEANING MGEN-VISUALDESIGNER	#
+	#     CLEANING MGEN-VISUALDESIGNER      #
 	#########################################
 	rm src_generated -rf
 	touch .cache && rm .cache
@@ -27,7 +27,12 @@ eclipse:
 
 run:	all
 	#########################################
-	#     STARTING MGEN-VISUALDESIGNER	#
+	#     STARTING MGEN-VISUALDESIGNER      #
 	#########################################
 	java -jar target/mgen-visualdesigner-assembly-$(MGEN_BUILD_VERSION).jar
 
+doc:
+	#########################################
+	#  DOCUMENTATION MGEN-VISUALDESIGNER    #
+	#########################################
+	sbt doc

@@ -1,6 +1,6 @@
 all: 	
 	#########################################
-	#	 BUILDING MGEN-COMPILER		#
+	#   BUILDING MGEN-COMPILER              #
 	#########################################
 	sbt compile package assembly publish-local
 
@@ -12,7 +12,7 @@ eclipse:
 
 clean:
 	#########################################
-	#	 CLEANING MGEN-COMPILER		#
+	#    CLEANING MGEN-COMPILER             #
 	#########################################
 	sbt clean
 
@@ -20,3 +20,8 @@ clean:
 run:	all
 	java -jar target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 
+doc:
+	#########################################
+	#  DOCUMENTATION MGEN-COMPILER          #
+	#########################################
+	sbt doc

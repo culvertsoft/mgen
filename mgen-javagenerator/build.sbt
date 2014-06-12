@@ -14,3 +14,6 @@ libraryDependencies += "default" % "mgen-api" % version.value
 
 libraryDependencies += "default" % "mgen-compiler" % version.value
 
+EclipseKeys.withSource := true
+
+EclipseKeys.relativizeLibs := false

@@ -2,18 +2,18 @@ package se.culvertsoft.mgen.jspack.generator
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsScalaMap
+
 import se.culvertsoft.mgen.api.exceptions.GenerationException
-import se.culvertsoft.mgen.api.generator.GeneratedSourceFile
-import se.culvertsoft.mgen.api.types.CustomType
-import se.culvertsoft.mgen.api.types.MGenBaseType
-import se.culvertsoft.mgen.api.types.MapType
-import se.culvertsoft.mgen.api.types.Type
-import se.culvertsoft.mgen.api.types.TypeEnum
-import se.culvertsoft.mgen.api.types.impl.ArrayTypeImpl
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.api.types.Module
+import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ListOrArrayType
+import se.culvertsoft.mgen.api.model.MGenBaseType
+import se.culvertsoft.mgen.api.model.MapType
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.api.model.TypeEnum
+import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.compiler.internal.BuiltInGenerator
-import se.culvertsoft.mgen.api.types.ListOrArrayType
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 class JavascriptGenerator extends BuiltInGenerator {
 
@@ -32,7 +32,7 @@ class JavascriptGenerator extends BuiltInGenerator {
       mkIntro(classregistryName);
       for (module <- modules) generateModule(module)
       mkOutro(classregistryName);
-      out += new GeneratedSourceFile(folder, fileName, txtBuffer.toString())
+      out += new GeneratedSourceFile(folder + fileName, txtBuffer.toString())
       out
    }
 

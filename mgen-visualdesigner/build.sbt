@@ -28,3 +28,6 @@ libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
 // libraryDependencies += "com.miglayout" % "miglayout" % "4.2"
 
+EclipseKeys.withSource := true
+
+EclipseKeys.relativizeLibs := false

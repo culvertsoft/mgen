@@ -10,3 +10,6 @@ crossPaths := false
 
 retrieveManaged := true
 
+EclipseKeys.withSource := true
+
+EclipseKeys.relativizeLibs := false

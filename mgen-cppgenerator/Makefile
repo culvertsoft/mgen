@@ -1,6 +1,6 @@
 all: 	
 	#########################################
-	#	BUILDING MGEN-CPPGENERATOR	#
+	#   BUILDING MGEN-CPPGENERATOR          #
 	#########################################
 	sbt compile package publish-local
 
@@ -12,7 +12,12 @@ eclipse:
 
 clean: 	
 	#########################################
-	#	CLEANING MGEN-CPPGENERATOR	#
+	#   CLEANING MGEN-CPPGENERATOR          #
 	#########################################
 	sbt clean
 
+doc:
+	#########################################
+	#  DOCUMENTATION MGEN-CPPGENERATOR      #
+	#########################################
+	sbt doc
