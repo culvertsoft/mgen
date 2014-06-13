@@ -1,18 +1,16 @@
 package se.culvertsoft.mgen.visualdesigner.model
 
 import java.util.ArrayList
-
 import scala.annotation.tailrec
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.reflect.ClassTag
-
 import se.culvertsoft.mgen.visualdesigner.model.ModelOps.toRichCustomType
+import scala.collection.mutable.HashSet
 
-class Model(
-  val project: Project,
-  val loadedDepdendencies: HashMap[String, Project] = new HashMap[String, Project]) {
+class Model(val project: Project) {
+  
   private val cache = new java.util.HashMap[EntityIdBase, Entity]
 
   def traverse(f: ChildParent => Boolean) = {
@@ -73,7 +71,7 @@ class Model(
     if (!(x.getClass() == classOf[Model])) return false
     if (x.asInstanceOf[Model] eq this) return true
     val otherModel = x.asInstanceOf[Model]
-    return project == otherModel.project && loadedDepdendencies == otherModel.loadedDepdendencies
+    return project == otherModel.project
   }
 
   def getEntity(id: EntityIdBase): Option[Entity] = {
@@ -168,7 +166,7 @@ class Model(
   }
 
   def deepCopy(): Model = {
-    new Model(project.deepCopy(), new HashMap[String, Project]() ++ loadedDepdendencies)
+    new Model(project.deepCopy())
   }
 
   final def superTypesOf(subType: CustomType): List[CustomType] = {
@@ -281,13 +279,6 @@ class Model(
       cache.put(cp.child.getId(), cp.child)
     }
 
-    // Add all dependencies
-    for (d <- loadedDepdendencies.values) {
-      d.foreach { cp =>
-        cache.put(cp.child.getId(), cp.child)
-      }
-    }
-
   }
 
   private def foreachReferencedClass[A](t: FieldType)(f: CustomType => A) {
@@ -365,15 +356,5 @@ class Model(
       case _ => ???
     }
   }
-
-  def loadDependency(dependency: Project) {
-    loadedDepdendencies.put(dependency.getFilePath().getAbsolute(), dependency)
-
-    // Add all dependencies
-    dependency.foreach { cp =>
-      cache.put(cp.child.getId(), cp.child)
-    }
-
-  }
-
+  
 }

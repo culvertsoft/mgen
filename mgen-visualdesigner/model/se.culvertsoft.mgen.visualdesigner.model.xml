@@ -48,7 +48,7 @@
         <Project extends="Entity">
             <generators type="list[Generator]" flags="required"/>
             <settings type="map[string, string]"/>
-            <dependencies type="list[FilePath]"/>
+            <dependencies type="list[Project]"/>
             <modules type="list[Module]"/>
             <filePath type="FilePath"/>
         </Project>

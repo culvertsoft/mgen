@@ -1,11 +1,14 @@
 package se.culvertsoft.mgen.visualdesigner.model
 
+import java.io.File
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
+
 import ModelConversion.ApiArrayTypeImpl
 import ModelConversion.ApiBoolTypeInstance
 import ModelConversion.ApiClassImpl
@@ -52,8 +55,6 @@ import se.culvertsoft.mgen.api.model.impl.UnknownCustomTypeImpl
 import se.culvertsoft.mgen.compiler.defaultparser.LinkTypes
 import se.culvertsoft.mgen.compiler.defaultparser.ParseState
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
-import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
-import java.io.File
 
 class Vd2ApiConversionState(val srcModel: Model) {
   import ModelConversion._
@@ -166,10 +167,6 @@ object Vd2Api {
     out
   }
 
-  private def cvtDependency(filePath: FilePath)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
-    cvtProject(cvState.srcModel.loadedDepdendencies(filePath.getAbsolute()), false)
-  }
-
   private def cvtProject(vdProject: VdProject, isRoot: Boolean)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
 
     cvState.apiObjLkup.getOrElse(vdProject.getFilePath().getAbsolute(), {
@@ -192,7 +189,7 @@ object Vd2Api {
         apiProject.setSettings(vdProject.getSettings)
 
       if (vdProject.hasDependencies)
-        apiProject.setDependencies(vdProject.getDependencies.map(cvtDependency))
+        apiProject.setDependencies(vdProject.getDependencies.map(cvtProject(_, false)))
 
       apiProject
 
@@ -248,7 +245,7 @@ object Vd2Api {
   def apply(model: VdModel): ApiProjectImpl = {
 
     implicit val cvState = new Vd2ApiConversionState(model)
-    
+
     val out = cvtProject(model.project, true)
 
     linkTypes(out)

@@ -269,7 +269,7 @@ class ViewManager(
   override def onEntityAdded(child: Entity, parent: Entity) {
 
     mkViewFor(child)
-
+    
     val parentView = getView(parent)
     parentView.add(getView(child))
     if (!controller.isBulkOperationActive) {

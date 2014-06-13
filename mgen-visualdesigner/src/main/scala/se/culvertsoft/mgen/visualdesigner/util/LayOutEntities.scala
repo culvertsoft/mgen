@@ -90,6 +90,7 @@ object LayOutEntities {
   }
 
   private def project(project: Project, model: Model, allowResize: Boolean) {
+    project.getDependencies().foreach(apply(_, model, allowResize))
     modules(project, model, allowResize)
   }
 

@@ -1,18 +1,13 @@
 package se.culvertsoft.mgen.visualdesigner.model
 
-import java.util.IdentityHashMap
 import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.JavaConversions.collectionAsScalaIterable
-import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
-import scala.collection.mutable.HashSet
+
 import ModelConversion.ApiArrayType
 import ModelConversion.ApiBoolType
-import ModelConversion.ApiClass
 import ModelConversion.ApiCustomType
-import ModelConversion.ApiEntity
 import ModelConversion.ApiField
 import ModelConversion.ApiFloat32Type
 import ModelConversion.ApiFloat64Type
@@ -30,135 +25,95 @@ import ModelConversion.VdClass
 import ModelConversion.VdEntity
 import ModelConversion.VdField
 import ModelConversion.VdGenerator
-import ModelConversion.VdModel
 import ModelConversion.VdModule
 import ModelConversion.VdProject
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.visualdesigner.EntityFactory
-import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
+import se.culvertsoft.mgen.visualdesigner.EntityFactory
+import se.culvertsoft.mgen.visualdesigner.model.ModelConversion.VdModule
+import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 
-class Api2VdConversionState {
-  import ModelConversion._
-
-  var rootApi: ApiProject = null
-  var rootVd: VdProject = null
-
-  val api2vd_nonDeps = new IdentityHashMap[ApiEntity, VdEntity]
-  val api2vd_deps = new IdentityHashMap[ApiEntity, VdEntity]
-
-  val vd2api_nonDeps = new IdentityHashMap[VdEntity, ApiEntity]
-  val vd2api_deps = new IdentityHashMap[VdEntity, ApiEntity]
-
-  def add(eApi: ApiEntity, eVd: VdEntity, isDependency: Boolean) {
-
-    if (rootApi == null) {
-      rootApi = eApi.asInstanceOf[ApiProject]
-      rootVd = eVd.asInstanceOf[VdProject]
-    }
-
-    if (isDependency) {
-      api2vd_deps.put(eApi, eVd)
-      vd2api_deps.put(eVd, eApi)
-    } else {
-      api2vd_nonDeps.put(eApi, eVd)
-      vd2api_nonDeps.put(eVd, eApi)
-    }
-  }
-
-  def isDependency(eApi: ApiEntity): Boolean = {
-    api2vd_deps.containsKey(eApi)
-  }
-
-  def isDependency(eVd: VdEntity): Boolean = {
-    vd2api_deps.containsKey(eVd)
-  }
-
-  def getVd(eApi: ApiEntity): VdEntity = {
-    if (isDependency(eApi)) {
-      api2vd_deps.get(eApi)
-    } else {
-      api2vd_nonDeps.get(eApi)
-    }
-  }
-
-  def getApi(eVd: VdEntity): ApiEntity = {
-    if (isDependency(eVd)) {
-      vd2api_deps.get(eVd)
-    } else {
-      vd2api_nonDeps.get(eVd)
-    }
-  }
-
-}
+case class UnlinkedId(val apiType: ModelConversion.ApiCustomType) extends EntityId
 
 object Api2Vd {
   import ModelConversion._
 
-  def apply(apiProject: ApiProject)(implicit cache: HashMap[String, Model] = new HashMap[String, Model]): Model = {
+  def apply(apiProject: ApiProject): Model = {
+    val state = new Api2VdConversionState
+    val out = new Model(cvtProject(apiProject, None, state))
+    out.updateCache()
 
-    cache.getOrElseUpdate(apiProject.absoluteFilePath, {
+    linkTypes(state, out, apiProject)
 
-      // Create conversion state (lookup pairs)
-      val state = buildApi2VdObjLkUp(apiProject)
+    LayOutEntities(out.project, out, true)
 
-      // Create our output model
-      val model = new Model(state.rootVd)
-
-      // Add each entity to its parent (except root ofc)
-      addToModel(state, model, apiProject)
-      model.updateCache()
-
-      // Split modules
-      splitModules(model)
-
-      // Add/load dependencies
-      loadDependencies(model, apiProject)
-
-      // Add settings
-      addSettings(state, model, apiProject)
-
-      // Root project specifics
-      if (apiProject.isRoot()) {
-
-        // Link field types
-        linkTypes(state, model, apiProject)
-
-        // Add generators
-        addGenerators(state, model, apiProject)
-
-        // Make Sizes and placement more useful :P
-        LayOutEntities(model.project, model, true)
-
-      }
-
-      model
-
-    })
+    out
   }
 
-  def loadDependencies(model: VdModel, apiProject: ApiProject)(implicit cache: HashMap[String, Model]) {
-    foreach(apiProject) { (eApi, eApiParent, isDependency) =>
-      eApi match {
-        case eApi: ApiProject if (isDependency) => model.loadDependency(apply(eApi).project)
-        case _ =>
-      }
+  def toJava[T](seq: Iterable[T]) = new java.util.ArrayList(seq)
+
+  def toJava[K, V](map: java.util.Map[K, V]) = new java.util.HashMap[K, V](map)
+
+  def cvtProject(apiProject: ApiProject, parent: Option[VdProject], state: Api2VdConversionState): VdProject = {
+
+    state.converted(apiProject) match {
+      case Some(done) =>
+        done
+
+      case _ =>
+
+        val vdProject = EntityFactory.mkProject(apiProject.name, getFilePath(apiProject))
+        state.markConverted(apiProject, vdProject)
+
+        parent.foreach { parent =>
+          vdProject.setParent(parent.getId())
+          parent.getDependenciesMutable().add(vdProject)
+        }
+
+        // Set FilePath
+        vdProject.setFilePath(getFilePath(apiProject))
+
+        // Convert settings
+        vdProject.setSettings(toJava(apiProject.settings))
+
+        // Convert generators
+        vdProject.setGenerators(toJava(apiProject.generators().map(cvtGenerator)))
+
+        // Convert dependencies
+        vdProject.setDependencies(toJava(apiProject.dependencies.map(cvtProject(_, Some(vdProject), state))))
+
+        // Convert Modules
+        vdProject.setModules(toJava(apiProject.modules().map(cvtModule(_, vdProject, state))))
+
+        // Split modules
+        splitModules(vdProject, state)
+
+        vdProject
+
     }
+
   }
 
   /**
    * What this does is that it splits the single api style full.module.name
    * into vd modules (grandparent, parent, child).
    */
-  def splitModules(model: VdModel) {
+  def splitModules(project: VdProject, state: Api2VdConversionState) {
+
+    val writtenFilePath = project.getFilePath().getWritten()
+    val absoluteFilePath = project.getFilePath().getAbsolute()
+
+    if (state.isModuleSplitDone(project))
+      return
+    state.markProjectModulesSplitDone(project)
 
     def splitModules(source: Seq[VdModule]): java.util.ArrayList[VdModule] = {
 
       // Storage for this level
       val lkUp = new HashMap[String, VdModule]
 
-      val writtenDir = FileUtils.directoryOf(model.project.getFilePath().getWritten()).trim()
-      val absoluteDir = FileUtils.directoryOf(model.project.getFilePath().getAbsolute()).trim()
+      val writtenDir = FileUtils.directoryOf(writtenFilePath).trim()
+      val absoluteDir = FileUtils.directoryOf(absoluteFilePath).trim()
 
       // Merge this level
       for (m <- source.sortBy(_.getName)) {
@@ -184,7 +139,7 @@ object Api2Vd {
         m.setSubmodules(splitModules(m.getSubmodules()))
       }
 
-      new java.util.ArrayList(lkUp.values)
+      toJava(lkUp.values)
     }
 
     def mergeProjectModules(project: VdProject) {
@@ -192,18 +147,60 @@ object Api2Vd {
     }
 
     // Start top down, with dependencies first
-    model.loadedDepdendencies.values foreach mergeProjectModules
-    mergeProjectModules(model.project)
+    project.getDependencies foreach mergeProjectModules
+    mergeProjectModules(project)
+
   }
 
-  def addGenerators(state: Api2VdConversionState, model: Model, apiProject: ApiProject) {
-    val apiProject = state.rootApi
-    val vdProject = state.rootVd
-    val srcGenerators = apiProject.generators()
-    vdProject.setGenerators(new java.util.ArrayList(srcGenerators.map(apiGen2Vd)))
+  def cvtModule(apiModule: ApiModule, parent: VdEntity, state: Api2VdConversionState): VdModule = {
+
+    state.converted(apiModule) match {
+      case Some(done) =>
+        done
+
+      case _ =>
+        val vdModule = EntityFactory.mkModule(apiModule.path, getSaveDir(apiModule))
+        state.markConverted(apiModule, vdModule)
+
+        vdModule.setParent(parent.getId)
+        parent match {
+          case p: VdProject => p.getModulesMutable().add(vdModule)
+          case m: VdModule => m.getSubmodulesMutable().add(vdModule)
+        }
+        vdModule.setSaveDir(getSaveDir(apiModule))
+        vdModule.setSettings(toJava(apiModule.settings()))
+        vdModule.setTypes(toJava(apiModule.types.values.map(cvtClass(_, vdModule, state))))
+        vdModule
+    }
   }
 
-  def apiGen2Vd(apiGenerator: ApiGenerator): VdGenerator = {
+  def cvtClass(apiClass: ApiCustomType, parent: VdModule, state: Api2VdConversionState): VdClass = {
+    val cls = EntityFactory.mkClass(apiClass.name)
+    state.markConverted(apiClass, cls)
+
+    if (apiClass.hasSuperType) {
+      cls.setSuperType(new UnlinkedId(apiClass.superType.asInstanceOf[ApiCustomType]))
+      state.addUnlinked(cls)
+    }
+
+    parent.getTypesMutable().add(cls)
+    cls.setParent(parent.getId)
+
+    cls.setFields(toJava(apiClass.fields().map(cvtField(_, cls, state))))
+
+    cls
+  }
+
+  def cvtField(apiField: ApiField, parent: VdClass, state: Api2VdConversionState): VdField = {
+    val fld = EntityFactory.mkField(apiField.name)
+    fld.setFlags(toJava(apiField.flags()))
+    fld.setParent(parent.getId)
+    parent.getFieldsMutable().add(fld)
+    fld.setType(cvtFieldType(apiField, state))
+    fld
+  }
+
+  def cvtGenerator(apiGenerator: ApiGenerator): VdGenerator = {
     val out = new VdGenerator
     out.setClassRegistryPath(apiGenerator.getGeneratorSettings().get("classregistry_path"))
     out.setGeneratorClassName(apiGenerator.getGeneratorClassPath())
@@ -219,44 +216,8 @@ object Api2Vd {
     out
   }
 
-  def linkTypes(state: Api2VdConversionState, model: Model, apiProject: ApiProject) {
-
-    foreach(apiProject) { (eApi, eApiParent, isDependency) =>
-
-      val eVd = state.getVd(eApi)
-      val eVdParent = state.getVd(eApiParent)
-
-      if (!(eApi eq apiProject)) {
-
-        eApi match {
-
-          case apiField: ApiField =>
-            val vdField = eVd.asInstanceOf[VdField]
-            vdField.setFlags(new java.util.ArrayList(apiField.flags().filter(_.nonEmpty)))
-            vdField.setType(apiType2Vd(apiField, state, model, apiProject))
-
-          case apiClass: ApiClass =>
-            val apiParentModule = eApiParent.asInstanceOf[ApiModule]
-            val vdClass = eVd.asInstanceOf[VdClass]
-            val vdParentModule = eVdParent.asInstanceOf[VdModule]
-
-            if (apiClass.hasSuperType()) {
-              val subType = vdClass
-              val superType = state.getVd(apiClass.superType()).asInstanceOf[VdClass]
-              model.attachSubType(subType, superType)
-            }
-
-          case _ =>
-
-        }
-
-      }
-
-    }
-  }
-
-  def apiType2Vd(apiField: ApiField, state: Api2VdConversionState, model: Model, apiProject: ApiProject): FieldType = {
-    def cvtType(t: Type): FieldType = {
+  def cvtFieldType(apiField: ApiField, state: Api2VdConversionState): FieldType = {
+    def cv(t: Type): FieldType = {
       t match {
         case t: ApiBoolType => new BoolType
         case t: ApiInt8Type => new Int8Type
@@ -266,89 +227,40 @@ object Api2Vd {
         case t: ApiFloat32Type => new Float32Type
         case t: ApiFloat64Type => new Float64Type
         case t: ApiStringType => new StringType
-        case t: ApiListType => new ListType(cvtType(t.elementType))
-        case t: ApiArrayType => new ArrayType(cvtType(t.elementType))
-        case t: ApiMapType => new MapType(cvtType(t.keyType).asInstanceOf[SimpleType], cvtType(t.valueType))
-        case t: ApiCustomType => new CustomTypeRef(state.getVd(t).getId())
+        case t: ApiListType => new ListType(cv(t.elementType))
+        case t: ApiArrayType => new ArrayType(cv(t.elementType))
+        case t: ApiMapType => new MapType(cv(t.keyType).asInstanceOf[SimpleType], cv(t.valueType))
+        case t: ApiCustomType =>
+          val fld = new CustomTypeRef(new UnlinkedId(t))
+          state.addUnlinked(fld)
+          fld
       }
     }
-    cvtType(apiField.typ)
+    cv(apiField.typ)
   }
 
-  def addSettings(state: Api2VdConversionState, model: Model, apiProject: ApiProject) {
+  def linkTypes(state: Api2VdConversionState, model: Model, apiProject: ApiProject) {
 
-    foreach(apiProject) { (eApi, eApiParent, isDependency) =>
-
-      val eVd = state.getVd(eApi)
-
-      if (!(eApi eq apiProject)) {
-        eApi match {
-          case apiProject: ApiProject =>
-            val vdProject = eVd.asInstanceOf[VdProject]
-            vdProject.setSettings(new java.util.HashMap(apiProject.settings()))
-          case apiModule: ApiModule =>
-            val vdModule = eVd.asInstanceOf[VdModule]
-            vdModule.setSettings(new java.util.HashMap(apiModule.settings()))
-          case _ =>
-        }
-      }
+    for (c <- state.unlinkedClasses) {
+      val id = c.getSuperType().asInstanceOf[UnlinkedId]
+      val superType = state.getLinked(id.apiType)
+      superType.getSubTypesMutable().add(c.getId())
+      c.setSuperType(superType.getId)
     }
-  }
 
-  def addToModel(state: Api2VdConversionState, model: Model, apiProject: ApiProject) {
-
-    foreach(apiProject) { (eApi, eApiParent, isDependency) =>
-
-      val eVd = state.getVd(eApi)
-      val eVdParent = state.getVd(eApiParent)
-
-      if (!(eApi eq apiProject)) {
-
-        eApi match {
-
-          case apiField: ApiField =>
-            val vdField = eVd.asInstanceOf[VdField]
-            val vdParentClass = eVdParent.asInstanceOf[VdClass]
-
-            vdParentClass.getFieldsMutable().add(vdField)
-            vdField.setParent(vdParentClass.getId())
-
-          case apiClass: ApiClass =>
-            val vdClass = eVd.asInstanceOf[VdClass]
-            val vdParentModule = eVdParent.asInstanceOf[VdModule]
-
-            vdParentModule.getTypesMutable().add(vdClass)
-            vdClass.setParent(vdParentModule.getId())
-
-          case apiProject: ApiProject =>
-            val vdProject = eVd.asInstanceOf[VdProject]
-            val vdParentProject = eVdParent.asInstanceOf[VdProject]
-
-            vdParentProject.getDependenciesMutable().add(vdProject.getFilePath)
-            vdProject.setParent(vdParentProject.getId)
-
-            model.loadDependency(vdProject)
-
-          case apiModule: ApiModule =>
-            val vdModule = eVd.asInstanceOf[VdModule]
-            val vdParentProject = eVdParent.asInstanceOf[VdProject]
-
-            vdParentProject.getModulesMutable().add(vdModule)
-            vdModule.setParent(vdParentProject.getId())
-
-        }
-
-      }
-
+    for (f <- state.unlinkedFieldTypes) {
+      val id = f.getId().asInstanceOf[UnlinkedId]
+      f.setId(state.getLinked(id.apiType).getId)
     }
+
   }
 
   def getFilePath(apiProject: ApiProject): FilePath = {
     new FilePath(apiProject.filePath(), apiProject.absoluteFilePath())
   }
 
-  def getFilePath(apiModule: ApiModule): FilePath = {
-    new FilePath(apiModule.filePath(), apiModule.absoluteFilePath())
+  def getSaveDir(apiModule: ApiModule): FilePath = {
+    new FilePath(FileUtils.directoryOf(apiModule.filePath()), FileUtils.directoryOf(apiModule.absoluteFilePath()))
   }
 
   private def extractSaveDir(apiModule: ApiModule): FilePath = {
@@ -356,60 +268,6 @@ object Api2Vd {
     val nToDrop = apiModule.absoluteFilePath.length - absoluteDir.length
     val writtenDir = apiModule.filePath.dropRight(nToDrop)
     new FilePath(writtenDir, absoluteDir)
-  }
-  
-  def buildApi2VdObjLkUp(apiProject: ApiProject): Api2VdConversionState = {
-
-    val state = new Api2VdConversionState
-
-    foreach(apiProject) { (eApi, eApiParent, isDependency) =>
-
-      val eVd = eApi match {
-        case eApi: ApiField =>
-          val parentClass = eApiParent.asInstanceOf[ApiClass]
-          EntityFactory.mkField(eApi.name)
-        case eApi: ApiClass =>
-          val parentModule = eApiParent.asInstanceOf[ApiModule]
-          EntityFactory.mkClass(eApi.name)
-        case eApi: ApiProject =>
-          val dependentProject = eApiParent.asInstanceOf[ApiProject]
-          EntityFactory.mkProject(eApi.name, getFilePath(eApi))
-        case eApi: ApiModule =>
-          EntityFactory.mkModule(eApi.path, extractSaveDir(eApi))
-      }
-
-      if (isDependency)
-        replaceDependencyId(eVd, eApi, eApiParent)
-
-      state.add(eApi, eVd, isDependency)
-
-    }
-
-    state
-
-  }
-
-  def replaceDependencyId(eVd: VdEntity, eApi: ApiEntity, eApiParent: ApiEntity) {
-    eApi match {
-      case eApi: ApiProject => eVd.setId(EntityFactory.mkId(eApi.name()))
-      case eApi: ApiModule => eVd.setId(EntityFactory.mkId(eApi.path()))
-      case eApi: ApiClass => eVd.setId(EntityFactory.mkId(eApi.fullName()))
-      case eApi: ApiField => eVd.setId(EntityFactory.mkId(s"${eApiParent.asInstanceOf[ApiClass].name}.${eApi.name}"))
-    }
-  }
-
-  def foreach(e: ApiEntity, p: ApiEntity = null, dep: Boolean = false)(implicit f: (ApiEntity, ApiEntity, Boolean) => Unit) {
-    f(e, p, dep)
-    e match {
-      case e: ApiProject =>
-        e.dependencies foreach { foreach(_, e, true) }
-        e.modules foreach { foreach(_, e, dep) }
-      case e: ApiModule =>
-        e.types.values foreach { foreach(_, e, dep) }
-      case e: ApiClass =>
-        e.fields foreach { foreach(_, e, dep) }
-      case e: ApiField =>
-    }
   }
 
 }

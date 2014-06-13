@@ -17,10 +17,12 @@ class RichEntity(base: Entity) {
 
   def canBeParentOf(e: Entity): Boolean = { throw new RuntimeException(s"Cannot call canBeParentOf(..,..) on $this") }
 
+  def add(e: Project) { throw new RuntimeException(s"Cannot add $e to $this") }
   def add(e: Module) { throw new RuntimeException(s"Cannot add $e to $this") }
   def add(e: CustomType) { throw new RuntimeException(s"Cannot add $e to $this") }
   def add(e: CustomTypeField) { throw new RuntimeException(s"Cannot add $e to $this") }
 
+  def remove(e: Project) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
   def remove(e: Module) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
   def remove(e: CustomType) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
   def remove(e: CustomTypeField) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
@@ -66,6 +68,7 @@ class RichEntity(base: Entity) {
 
   def add(e: Entity) {
     e match {
+      case e: Project => add(e)
       case e: Module => add(e)
       case e: CustomType => add(e)
       case e: CustomTypeField => add(e)
@@ -74,6 +77,7 @@ class RichEntity(base: Entity) {
 
   def remove(e: Entity) {
     e match {
+      case e: Project => remove(e)
       case e: Module => remove(e)
       case e: CustomType => remove(e)
       case e: CustomTypeField => remove(e)
@@ -91,6 +95,9 @@ class RichProject(base: Project) extends RichEntity(base) {
 
   override def traverse(parent: Entity, f: ChildParent => Boolean) {
     if (f(ChildParent(base, parent))) {
+      for (d <- base.getDependencies()) {
+        d.traverse(base, f)
+      }
       for (m <- base.getModules()) {
         m.traverse(base, f)
       }
@@ -104,7 +111,10 @@ class RichProject(base: Project) extends RichEntity(base) {
     }
   }
 
+  override def add(e: Project) { base.getDependenciesMutable().add(e) }
   override def add(e: Module) { base.getModulesMutable().add(e) }
+    
+  override def remove(e: Project) { base.getDependenciesMutable().remove(e) }
   override def remove(e: Module) { base.getModulesMutable().remove(e) }
 
   override def moveChildUp(child: Entity) {

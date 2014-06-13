@@ -3,9 +3,12 @@ package se.culvertsoft.mgen.visualdesigner.view;
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Container
+
+import scala.Array.canBuildFrom
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
+
 import javax.swing.InputMap
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -25,12 +28,11 @@ import se.culvertsoft.mgen.visualdesigner.control.ControllerListener
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
 import se.culvertsoft.mgen.visualdesigner.model.Entity
-import se.culvertsoft.mgen.visualdesigner.model.EntityId
+import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
 import se.culvertsoft.mgen.visualdesigner.model.ModelOps.toRichCustomType
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.util.OperationStatus
-import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
 
 class PackageExplorer(
 
@@ -43,6 +45,8 @@ class PackageExplorer(
   private val id2node = new HashMap[EntityIdBase, DefaultMutableTreeNode]
   private val id2entity = new HashMap[EntityIdBase, Entity]
   private val mouseInputStatus = new OperationStatus
+  
+  javax.swing.ToolTipManager.sharedInstance().registerComponent(tree);
 
   initialize()
   controller.addObserver(this)
@@ -207,6 +211,7 @@ class PackageExplorer(
       id2entity.put(child.getId(), child)
       reAddChildrenSorted(parent)
       expand(parentNode)
+      
     } else {
       val usrObj = new StrEntity(child)
       root.setUserObject(usrObj)
@@ -284,15 +289,25 @@ class PackageExplorer(
         leaf,
         row,
         hasFocus);
+      
+      implicit val model = controller.model
 
       val strEntity = value.asInstanceOf[DefaultMutableTreeNode].getUserObject().asInstanceOf[StrEntity]
 
       if (strEntity != null) {
         strEntity.entity match {
-          case project: Project => setIcon(Icons.TreeView.Dash.PROJECT_ICON)
-          case module: Module => setIcon(Icons.TreeView.Dash.MODULE_ICON)
-          case cls: CustomType => setIcon(Icons.TreeView.Dash.CLASS_ICON)
-          case field: CustomTypeField => setIcon(Icons.TreeView.Dash.FIELD_ICON)
+          case project: Project => 
+            setToolTipText(project.getFilePath.getAbsolute)
+            setIcon(Icons.TreeView.Dash.PROJECT_ICON)
+          case module: Module =>
+            setToolTipText(Type2String.getClassPath(module))
+            setIcon(Icons.TreeView.Dash.MODULE_ICON)
+          case cls: CustomType => 
+            setToolTipText(Type2String.getClassPath(cls))
+            setIcon(Icons.TreeView.Dash.CLASS_ICON)
+          case field: CustomTypeField => 
+           setToolTipText(Type2String.getClassPath(field))
+            setIcon(Icons.TreeView.Dash.FIELD_ICON)
         }
 
       }

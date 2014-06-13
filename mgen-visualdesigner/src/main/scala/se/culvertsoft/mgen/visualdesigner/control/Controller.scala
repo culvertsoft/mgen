@@ -250,7 +250,11 @@ class Controller(
       for (v <- keepableClassViews)
         viewMgr.injectView(v._1, v._2)
 
-      viewMgr.root.foreach(cp => entityAddMgr.add(cp.child, cp.parent))
+      model.foreach(cp => {
+        val parentName = if (cp.parent != null) cp.parent.getName() else "null"
+        val childName = cp.child.getName()
+        entityAddMgr.add(cp.child, cp.parent)
+      })
 
       if (clearUndoBuffer)
         undoMgr.resetUndoBuffer()
