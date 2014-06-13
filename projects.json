@@ -6,7 +6,7 @@
 		"cpp": ["%PROJECT-test"]
 	},
 
-	"path_to_projects": "~/culvertsoft/mgen/",
+	"path_to_projects": "./",
 
 	"projects": {
 		"mgen-api": {
