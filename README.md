@@ -176,7 +176,7 @@ License
 ----
 Dual-Licensed under:
  * GPL v2
- * Commercially compatible license (will be available after initial release)
+ * Commercial license (will be available after initial release)
 
 Version
 ----
