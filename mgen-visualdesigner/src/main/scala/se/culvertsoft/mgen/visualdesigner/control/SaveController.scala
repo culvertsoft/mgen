@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.visualdesigner.control
 
 import java.io.BufferedInputStream
-import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 
@@ -19,7 +18,6 @@ import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
 import se.culvertsoft.mgen.javapack.serialization.JsonReader
-import se.culvertsoft.mgen.javapack.serialization.JsonWriter
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.MGenClassRegistry
 import se.culvertsoft.mgen.visualdesigner.model.FilePath
@@ -39,11 +37,8 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
 
   val saveFileChooser = new JFileChooser(currentSaveLoadDir)
   val loadFileChooser = new JFileChooser(currentSaveLoadDir)
-  val xmlFilter = new FileNameExtensionFilter(".xml (mgen compiler)", "xml");
-  // val jsonFilter = new FileNameExtensionFilter(".json (visual designer optimized)", "json");
-  // val xmlOrJsonFilter = new FileNameExtensionFilter(".xml (mgen compiler), .json(visual designer optimized)", "xml", "json");
+  val xmlFilter = new FileNameExtensionFilter(".xml (mgen compiler)", "xml")
   saveFileChooser.setAcceptAllFileFilterUsed(false)
-  // saveFileChooser.addChoosableFileFilter(jsonFilter)
   saveFileChooser.addChoosableFileFilter(xmlFilter)
   loadFileChooser.setAcceptAllFileFilterUsed(false)
   loadFileChooser.addChoosableFileFilter(xmlFilter)
@@ -199,7 +194,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
         println(s"Loaded project file file: $file")
 
       case Failure(failure) =>
-        System.err.println(s"Could not load project file: $file");
+        System.err.println(s"Could not load project file: $file")
         failure.printStackTrace()
 
     }
@@ -228,56 +223,37 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
     _currentSaveFile match {
       case Some(file) if (isModified()) =>
 
-        println("Saving model to : " + file.getAbsolutePath)
+        val project = controller.model.project
+        val newAbsPath = file.getCanonicalPath()
+        val oldAbsPath = project.getFilePath().getAbsolute()
 
-        val bos = new ByteArrayOutputStream
+        println(s"Saving model to: $newAbsPath")
 
-        if (isXmlFile(file)) {
+        if (!isXmlFile(file))
+          throw new RuntimeException("Trying to save with unknown file extension")
 
-          val newAbsPath = file.getCanonicalPath()
+        if (FileUtils.directoryOf(newAbsPath) != FileUtils.directoryOf(oldAbsPath)) {
 
-          val project = controller.model.project
-          val needToMoveModules = project.getFilePath().getAbsolute() != newAbsPath
+          project.getFilePathMutable().setWritten("").setAbsolute(newAbsPath)
 
-          if (needToMoveModules) {
-            project.getFilePathMutable()
-              .setWritten("")
-              .setAbsolute(newAbsPath)
-            val saveDir = new FilePath("", FileUtils.directoryOf(newAbsPath))
-
-            def setSaveDirOfModules(ms: Seq[Module]) {
-              for (m <- ms) {
-                setSaveDirOfModules(m.getSubmodules())
-                m.setSaveDir(saveDir)
-              }
+          val saveDir = new FilePath("", FileUtils.directoryOf(newAbsPath))
+          def setSaveDirOfModules(ms: Seq[Module]) {
+            for (m <- ms) {
+              setSaveDirOfModules(m.getSubmodules())
+              m.setSaveDir(saveDir)
             }
-
-            setSaveDirOfModules(project.getModules())
           }
 
-          val apiProject = ModelConversion.vd2Api(controller.model)
-          apiProject.setFilePath(file.getPath())
-          apiProject.setAbsoluteFilePath(file.getCanonicalPath())
-
-          val sources = Project2Xml(apiProject)
-
-          Output.write(sources)
-
-        }/* else if (isJsonFile(file)) {
-
-          val writer = new JsonWriter(bos, classRegistry, true)
-          writer.writeMGenObject(controller.model.project)
-
-          if (file.exists)
-            file.delete()
-
-          file.createNewFile()
-
-          Util.manageFileOut(file)(_.write(bos.toByteArray))
-
-        } */else {
-          throw new RuntimeException("Trying to save with unknown file extension")
+          setSaveDirOfModules(project.getModules())
         }
+
+        val apiProject = ModelConversion.vd2Api(controller.model)
+        apiProject.setFilePath(file.getPath())
+        apiProject.setAbsoluteFilePath(file.getCanonicalPath())
+
+        val sources = Project2Xml(apiProject)
+
+        Output.write(sources)
 
         _currentSavedModel = Some(controller.model.deepCopy())
         updateWindowTitle()
@@ -348,7 +324,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
       "Exit",
       JOptionPane.YES_NO_OPTION,
       JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
-      System.exit(0);
+      System.exit(0)
     }
   }
 
