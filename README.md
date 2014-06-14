@@ -27,7 +27,7 @@ MGen currently provides code generators and runtime libraries for the following 
  * C++
  * JavaScript
 
-Currently our planned future languages to support are LUA and Python.
+Our next step is to add support for LUA and Python.
 
 If you prefer graphical tools instead of command line, we are also working on a visual data model editor.
 
