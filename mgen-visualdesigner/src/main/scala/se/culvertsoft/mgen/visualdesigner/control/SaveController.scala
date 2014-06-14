@@ -1,8 +1,6 @@
 package se.culvertsoft.mgen.visualdesigner.control
 
-import java.io.BufferedInputStream
 import java.io.File
-import java.io.FileInputStream
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.util.Failure
@@ -17,15 +15,12 @@ import se.culvertsoft.mgen.compiler.Output
 import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
-import se.culvertsoft.mgen.javapack.serialization.JsonReader
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.MGenClassRegistry
 import se.culvertsoft.mgen.visualdesigner.model.FilePath
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.ModelConversion
 import se.culvertsoft.mgen.visualdesigner.model.Module
-import se.culvertsoft.mgen.visualdesigner.model.Project
-import se.culvertsoft.mgen.visualdesigner.util.Util
 
 class SaveController(controller: Controller, window: JFrame) extends SubController(controller) {
 
@@ -44,6 +39,14 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
   loadFileChooser.addChoosableFileFilter(xmlFilter)
   saveFileChooser.setFileFilter(xmlFilter)
   loadFileChooser.setFileFilter(xmlFilter)
+
+  controller.addObserver(new ModelChangeListener() {
+    override def onModelModified(isPreview: Boolean) {
+      if (!controller.isBulkOperationActive) {
+        updateWindowTitle()
+      }
+    }
+  })
 
   /**
    * ***********************************************************
@@ -74,14 +77,6 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
       new File(s"${file.getPath()}.$ext")
     }
   }
-
-  controller.addObserver(new ModelChangeListener() {
-    override def onModelModified(isPreview: Boolean) {
-      if (!controller.isBulkOperationActive) {
-        updateWindowTitle()
-      }
-    }
-  })
 
   def confirmOverwrite(): Boolean = {
 
@@ -325,19 +320,6 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
       JOptionPane.YES_NO_OPTION,
       JOptionPane.QUESTION_MESSAGE) == JOptionPane.YES_OPTION) {
       System.exit(0)
-    }
-  }
-
-  private def tryLoadFromJson(file: File): Try[Model] = {
-
-    Try {
-      Util.manage(new BufferedInputStream(new FileInputStream(file))) { fileInputStream =>
-
-        val jsonReader = new JsonReader(fileInputStream, classRegistry)
-        val model = new Model(jsonReader.readMGenObject().asInstanceOf[Project])
-
-        model
-      }
     }
   }
 
