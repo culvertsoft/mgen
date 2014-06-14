@@ -1,8 +1,9 @@
-// Settings
+
 // Remember, sbt needs empty lines between active settings
-// name := "hello"
-// version := "SNAPSHOT"
-// scalaVersion := "2.10.4"
+
+name := "mgen-visualdesigner"
+
+organization := "se.culvertsoft"
 
 EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
@@ -14,13 +15,13 @@ retrieveManaged := true
 
 unmanagedSourceDirectories in Compile += baseDirectory.value / "src_generated/main/java"
 
-libraryDependencies += "default" % "mgen-api" % version.value
+libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
-libraryDependencies += "default" % "mgen-compiler" % version.value
+libraryDependencies += "se.culvertsoft" % "mgen-compiler" % version.value
 
-libraryDependencies += "default" % "mgen-javalib" % version.value
+libraryDependencies += "se.culvertsoft" % "mgen-javalib" % version.value
 
-libraryDependencies += "default" % "mgen-javagenerator" % version.value
+libraryDependencies += "se.culvertsoft" % "mgen-javagenerator" % version.value
 
 libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
 

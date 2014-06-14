@@ -1,8 +1,9 @@
-// Settings
+
 // Remember, sbt needs empty lines between active settings
-// name := "hello"
-// version := "SNAPSHOT"
-// scalaVersion := "2.10.4"
+
+name := "mgen-api"
+
+organization := "se.culvertsoft"
 
 version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
