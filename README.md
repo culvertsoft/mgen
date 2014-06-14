@@ -176,12 +176,13 @@ License
 ----
 Dual-Licensed under:
  * GPL v2
- * Commercial License (will be available after initial release)
+ * Commercially compatible license (will be available after initial release)
 
 Version
 ----
- - Alpha v0.x -
-(pre-release experimental code)
+
+Development is slightly passed half-way to the first beta release, but at this point we're not putting any version numbers on it yet. So you could call it Alpha v0.x (pre-release experimental code).
+
 
 Help
 ----
