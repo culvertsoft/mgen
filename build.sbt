@@ -11,6 +11,10 @@ crossPaths := false
 
 retrieveManaged := true
 
+scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
+
+javacOptions ++= Seq("-Werror")
+
 lazy val mgen_api = project in file("mgen-api")
 
 lazy val mgen_compiler = (project in file("mgen-compiler")).dependsOn(mgen_api)

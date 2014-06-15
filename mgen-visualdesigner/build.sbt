@@ -23,7 +23,7 @@ libraryDependencies += "se.culvertsoft" % "mgen-javalib" % version.value
 
 libraryDependencies += "se.culvertsoft" % "mgen-javagenerator" % version.value
 
-libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
+libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1.1"
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
