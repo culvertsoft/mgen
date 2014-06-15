@@ -61,7 +61,7 @@ MGen's common use case is defining a data model, generating source code and prov
 
 ### Building a data model
 
-The standard way to write a data model is to use the MGen IDL, which is our way of definition data models. You can also use the MGen Visual Designer application to build them without having to write the IDL yourself.
+The standard way to write a data model is to use the MGen IDL. You can also use the MGen Visual Designer application to build them without having to write the IDL yourself.
 
 Our data models consist of modules, types and fields. Modules define what c++ namespace or java package a type will be generated to. Types specify the classes you want to generate, and fields the data members of your classes.
 
