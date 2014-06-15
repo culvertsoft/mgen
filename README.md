@@ -1,14 +1,119 @@
-MGen
-====
+# MGen
 
-MGen is a toolkit for source code generation and creating data models that are easy to use and communicate with other software, across language-, version- and system barriers.
+-- HEADS UP: This README is Work-In-Progress. It's about 20% finished! -- 
+
+MGen is a toolkit for source code generation and creating data models that are easy to communicate across language and version barriers.
 
 Inspired by [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), MGen aims to reduce the work required to build, maintain and extend cross-language data models. MGen models are defined in an extendable [IDL](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia") and the MGen compiler produces code that is simple and fast enough to use as the internal model for many applications.
 
-MGen's own source code is designed to be customizable: IDL parsers, code generators, runtime libraries can all be extended and/or replaced. There is nothing stopping you from plugging in protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
+The MGen tools and libraries are also designed to simplify collaboration between devepment teams and companies that wish to communicate data and share common components in their data models and programming interfaces, by allowing each team to work on and rebuild their parts separately without forcing the other teams to rebuild their software.
+
+MGen's structure is modular and customizable: IDL parsers, code generators, runtime libraries can be extended and/or replaced without rebuilding MGen. There is nothing stopping you from plugging in a protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
 
 
-Components
+## Table of Contents
+
+* [Basic Usage](#basic-usage)
+  * [Building a data model](#building-a-data-model)
+  * [Generating source code](#generating-source-code)
+  * [Serializing and deserializing](#serializing-and-deserializing)
+* [Download links](#download-links)
+  * [Stable](#stable)
+  * [Nightly](#nightly)
+  * [Snapshot](#snapshot)
+* [Installation](#installation)
+  * [Java](#java)
+  * [CPP](#cpp)
+  * [JavaScript](#javascript)
+  * [Other Languages](#other-languages)
+* [Under the Hood](#under-the-hood)
+  * [Components](#components)
+    * [The MGen API](#the-mgen-api)
+    * [The MGen compiler](#the-mgen-compiler)
+    * [The MGen runtime libraries](#the-mgen-runtime-libraries)
+    * [The MGen Visual Designer](#the-mgen-visual-designer)
+  * [Wire formats](#Wire-formats)
+    * [The MGen binary format](#the-mgen-api)
+    * [The MGen json format](#the-mgen-compiler)
+* [Advanced Usage](#advanced-usage)
+  * [Adjusting the built-in serializers](#adjusting-the-built-in-serializers)
+  * [Adding code generators](#adding-code-generators)
+  * [Adding IDL parsers](#adding-idl-parsers)
+  * [Adding wire formats and serializers](#add-wire-formats-and-serializers)
+  * [Communication with the non-MGen world](#communication-with-the-non-mgen-world)
+  * [Ideas for adding new data model mappings](#ideas-for-adding-new-data-model-mappings)
+    * [C Structs](#c-structs)
+    * [Memory mapped data types](#memory-mapped-data-types)
+    * [GPU data types](#gpu-data-types)
+    * [Database tables](#database-tables)
+* [Building MGen](#building-mgen)
+  * [Build Time Tools](#build-build-time-tools)
+  * [Runtime Libraries](#build-runtime-libraries)
+  * [Tests](#tests)
+* [Version History](#version-history)
+* [Future Plants](#future-plans)
+  * [RPC Interfaces](#rpc-interfaces)
+  * [Transport Layers](#transport-layers)
+
+## Basic Usage
+
+MGen's common use case is defining a data model, generating source code and providing serializers/deserializers.
+
+### Building a data model
+
+The standard way to write a data model is to use the MGen IDL, which is our way of definition data models. You can also use the MGen Visual Designer application to build them without having to write the IDL yourself.
+
+Our data models consist of modules, types and fields. Modules define what c++ namespace or java package a type will be generated to. Types specify the classes you want to generate, and fields the data members of your classes.
+
+Here is an example of two types defined in MGen's IDL:
+    
+    <MyType1>
+      <myField1 type="int32"/>
+      <myField2 type="string"/>
+    </MyType1>
+        
+    <MyType2>
+      <myField1 type="float64"/>
+      <myField2 type="map[string, list[MyType1]]"/>
+    </MyType2>
+
+There is a little more work required before these can be passed to the MGen Compiler for source code generation. 
+
+1. The module above must be defined in a module file
+2. A Project file must be created. It defines which module files to load, which code generators to use and other settings.
+
+To create a module file we create a text file called for example "se.culvertsoft.mymodule.xml", containing:
+
+    <Module>
+      <Types>
+        <MyType1>
+          <myField1 type="int32"/>
+          <myField2 type="string"/>
+        </MyType1>
+        <MyType2>
+          <myField1 type="float64"/>
+          <myField2 type="map[string, list[MyType1]]"/>
+        </MyType2>
+      </Types>
+    </Module>
+
+We will call the project file "MyProject.xml", containing:
+    
+    <Project>
+      <Generator name="Java">
+        <generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</generator_class_path>
+        <output_path>src_generated/main/java</output_path>
+        <classregistry_path>se.culvertsoft.mymodule</classregistry_path>
+      </Generator>
+      <Module>model.xml</Module>
+    </Project>
+
+The IDL file(s) will then be passed to the MGen compiler to generate source code in langauges you specify - we will get to that later (in the next section).
+
+
+## Under the Hood
+
+### Components
 ----
 
 MGen's core components consist of:
