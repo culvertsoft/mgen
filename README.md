@@ -223,8 +223,6 @@ To access the generated types we include the headers of the types we need, or th
 
     #include "mgen/serialization/VectorInputStream.h"
     #include "mgen/serialization/VectorOutputStream.h"
-    #include "mgen/serialization/BinaryWriter.h"
-    #include "mgen/serialization/BinaryReader.h"
     #include "mgen/serialization/JSONWriter.h"
     #include "mgen/serialization/JSONReader.h"
     
