@@ -1,6 +1,26 @@
 
 // Remember, sbt needs empty lines between active settings
 
+import sbt._
+import Process._
+import Process.stringToProcess
+import Keys._
+
+lazy val generateCodeTask = taskKey[Unit]("Generate the data model for mgen-visualdesigner.")
+
+generateCodeTask := { 
+  println("Generating the data model code for mgen-visualdesigner")
+  val compiler = s"../mgen-compiler/target/mgen-compiler-assembly-${version.value}.jar"
+  val args = "-project=\"model/project.xml\" -plugin_paths=\"/home/johan/git/mgen/mgen-javagenerator/target\""
+  val command = s"java -jar $compiler $args"
+  command !
+} 
+
+compile in Compile := {
+  generateCodeTask.value;
+  (compile in Compile).value
+}
+
 name := "mgen-visualdesigner"
 
 organization := "se.culvertsoft"

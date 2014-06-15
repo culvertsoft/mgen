@@ -130,12 +130,26 @@ object MGen {
     println("  -plugin_paths=\"my/external/path1, my/external/path2\": specify additional plugin paths (Optional) ")
   }
 
+  def trimKeyVal(in: String): String = {
+    
+    if (in == null)
+      return ""
+    
+    val out = in.trim
+    if (out.startsWith("\"") && out.endsWith("\""))
+      out.substring(1, out.length() - 1)
+    else
+      out
+  }
+
   def parseKeyValuePairs(params: Seq[String]): Map[String, String] = {
 
     print("Parsing command line args...")
     try {
       val settings = params.map(_.split("="))
-        .map(arr => (arr(0).filter(_ != '-').toLowerCase(), arr(1)))
+        .map(arr => (
+          trimKeyVal(arr(0).filter(_ != '-').toLowerCase()),
+          trimKeyVal(arr(1))))
         .toMap
       println("ok")
       for ((key, value) <- settings) {
