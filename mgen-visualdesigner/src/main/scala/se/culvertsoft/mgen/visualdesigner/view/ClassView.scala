@@ -3,6 +3,7 @@ package se.culvertsoft.mgen.visualdesigner.view
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Graphics2D
+import scala.language.reflectiveCalls
 
 import javax.swing.JCheckBox
 import javax.swing.JLabel

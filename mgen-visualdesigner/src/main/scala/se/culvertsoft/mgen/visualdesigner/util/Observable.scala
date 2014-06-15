@@ -4,6 +4,7 @@ import java.util.IdentityHashMap
 
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.mutable.ArrayBuffer
+import scala.language.postfixOps
 
 trait Observable[ObserverType] {
 
