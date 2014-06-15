@@ -2,9 +2,9 @@
 	"__COMMENT__": " This file is used for the nightly build script to specify what files should be uploaded. ",
 
 	"def_files": {
-      "java-assembly" : [ "%PROJECT-assembly-%VERSION.jar" ],
+		"java-assembly": [ "%PROJECT-assembly-%VERSION.jar" ],
 		"java": ["%PROJECT-%VERSION.jar", "%PROJECT-%VERSION-javadoc.jar", "%PROJECT-%VERSION-sources.jar"],
-	  	 "cpp": ["%PROJECT-test"]
+		"cpp": ["%PROJECT-test"]
 	},
 
 	"path_to_projects": "./",
