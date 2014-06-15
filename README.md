@@ -6,7 +6,7 @@ MGen is a toolkit for source code generation and creating data models that are e
 
 Inspired by [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), MGen aims to reduce the work required to build, maintain and extend cross-language data models. MGen models are defined in an extendable [IDL](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia") and the MGen compiler produces code that is simple and fast enough to use as the internal model for many applications.
 
-The MGen tools and libraries are also designed to simplify collaboration between devepment teams and companies that wish to communicate data and share common components in their data models and programming interfaces, by allowing each team to work on and rebuild their parts separately without forcing the other teams to rebuild their software.
+The MGen tools and libraries are designed to simplify collaboration between software teams and companies that wish to communicate data and share common software components, allowing each team to work on and their parts separately without forcing other teams to rebuild their software.
 
 MGen's structure is modular and customizable: IDL parsers, code generators, runtime libraries can be extended and/or replaced without rebuilding MGen. There is nothing stopping you from plugging in a protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
 
@@ -14,7 +14,7 @@ MGen's structure is modular and customizable: IDL parsers, code generators, runt
 ## Table of Contents
 
 * [Basic Usage](#basic-usage)
-  * [Building a data model](#building-a-data-model)
+  * [Defining a data model](#defining-a-data-model)
   * [Generating source code](#generating-source-code)
   * [Serializing and deserializing](#serializing-and-deserializing)
 * [Download links](#download-links)
@@ -30,6 +30,7 @@ MGen's structure is modular and customizable: IDL parsers, code generators, runt
   * [Components](#components)
     * [The MGen API](#the-mgen-api)
     * [The MGen compiler](#the-mgen-compiler)
+      * [The MGen code generators](#the-mgen-code-generators)
     * [The MGen runtime libraries](#the-mgen-runtime-libraries)
     * [The MGen Visual Designer](#the-mgen-visual-designer)
   * [Wire formats](#Wire-formats)
@@ -59,7 +60,7 @@ MGen's structure is modular and customizable: IDL parsers, code generators, runt
 
 MGen's common use case is defining a data model, generating source code and providing serializers/deserializers.
 
-### Building a data model
+### Defining a data model
 
 The standard way to write a data model is to use the MGen IDL. You can also use the MGen Visual Designer application to build them without having to write the IDL yourself.
 
@@ -79,25 +80,28 @@ Here is an example of two types defined in MGen's IDL:
 
 There is a little more work required before these can be passed to the MGen Compiler for source code generation. 
 
-1. The module above must be defined in a module file
+1. The module above must be defined in a module file. The name of the module file defines the namespace/package of the types defined within.
 2. A Project file must be created. It defines which module files to load, which code generators to use and other settings.
 
-To create a module file we create a text file called for example "se.culvertsoft.mymodule.xml", containing:
+Module and project files are normal text files with xml contents.
+
+In this example we create a module file named "se.culvertsoft.mymodule.xml", containing:
 
     <Module>
       <Types>
         <MyType1>
           <myField1 type="int32"/>
-          <myField2 type="string"/>
+          <myField2 type="string" flags="required"/>
         </MyType1>
         <MyType2>
           <myField1 type="float64"/>
           <myField2 type="map[string, list[MyType1]]"/>
+          <myField3 type="MyType1" flags="polymorphic"/>
         </MyType2>
       </Types>
     </Module>
 
-We will call the project file "MyProject.xml", containing:
+We create a project file named "MyProject.xml", containing:
     
     <Project>
       <Generator name="Java">
@@ -105,11 +109,28 @@ We will call the project file "MyProject.xml", containing:
         <output_path>src_generated/main/java</output_path>
         <classregistry_path>se.culvertsoft.mymodule</classregistry_path>
       </Generator>
-      <Module>model.xml</Module>
+      <Module>se.culvertsoft.mymodule.xml</Module>
     </Project>
+    
+Some explanation of the above project file and other contents may be required.
+Keywords in the project file are:
+- name: Just there to make it easier to deal with debugging. You can call it whatever you like.
+- generator_class_path: The classpath to the source code generator to be used.
+- output_path: The folder where generator output will be placed.
+- classregistry_path: The namespace/package of the generated class registry (we will get to this later)
 
-The IDL file(s) will then be passed to the MGen compiler to generate source code in langauges you specify - we will get to that later (in the next section).
+In the next section we will explain how to run time MGen compiler.
 
+### Generating source code
+
+In the previous section, we explained how to define a data model. This section will explain how to generate code from it.
+Code generation is performed by executing the MGen compiler. The mgen compiler is a java JAR file which can be executed from the command line by typing.
+
+java -jar MGenCompiler.jar -project="MyProject.xml" -plugin_paths="generators/"
+
+Here we run the compiler with two arguments, project and plugin_paths. 
+ - project: which project file to load (see the previous section to learn more about project files).
+ - plugin_paths: where the compiler should search for java JAR files containing IDL parsers and code generators.
 
 ## Under the Hood
 
