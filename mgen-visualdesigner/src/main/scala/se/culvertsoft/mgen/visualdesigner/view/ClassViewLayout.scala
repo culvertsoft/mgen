@@ -33,7 +33,7 @@ class ClassViewLayout(
       controller.bulkOperation {
          for ((field, i) <- fields.zipWithIndex) {
             val y = y0 + i * outerFieldHeight
-            val view = controller.viewMgr.getView(field)
+            val view = controller.viewMgr.view(field)
             view.setBounds(x, y, w, h)
          }
       }

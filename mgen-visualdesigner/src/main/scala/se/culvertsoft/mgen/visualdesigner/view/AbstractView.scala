@@ -78,7 +78,7 @@ abstract class AbstractView(
   def isRootView(): Boolean = controller.viewMgr.isRoot(entity)
 
   def getParent(): Option[AbstractView] = {
-    controller.model.parentOf(entity).map(controller.viewMgr.getView)
+    controller.model.parentOf(entity).map(controller.viewMgr.view)
   }
 
   def setX(x: Int) { setPos(x, y) }

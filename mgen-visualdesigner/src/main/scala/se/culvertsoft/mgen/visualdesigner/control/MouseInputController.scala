@@ -99,7 +99,7 @@ class MouseInputController(controller: Controller) extends SubController(control
       val p = lastMousePressPos()
       val entityPos = controller.viewMgr.getUiPosOf(entity)
       val selectedEntities = controller.selectedPlacedEntities
-      val selectedViews = selectedEntities map controller.viewMgr.getView
+      val selectedViews = selectedEntities map controller.viewMgr.view
       val entitiesToMove = selectedViews.map(x =>
         new MouseMoveEntity(
           p,
@@ -166,7 +166,7 @@ class MouseInputController(controller: Controller) extends SubController(control
 
       _action.entities.foreach { action =>
 
-        val view = controller.viewMgr.getView(action.entity)
+        val view = controller.viewMgr.view(action.entity)
 
         val oldParent = controller.model.parentOf(action.entity).get
         val entityMouseOffset = action.entityInitPos.onScreen - action.initPos.onScreen
@@ -178,7 +178,7 @@ class MouseInputController(controller: Controller) extends SubController(control
 
           case Some(newParent) =>
 
-            val newParentView = controller.viewMgr.getView(newParent)
+            val newParentView = controller.viewMgr.view(newParent)
             val pNewNewComp = UiPos.getCompCoordFromScreen(pEntityNewPtOnScreen, newParentView.innerPanel)
 
             controller.entityAddMgr.transfer(action.entity, newParent, oldParent)
@@ -190,7 +190,7 @@ class MouseInputController(controller: Controller) extends SubController(control
               false)
 
           case None =>
-            val oldParentView = controller.viewMgr.getView(oldParent)
+            val oldParentView = controller.viewMgr.view(oldParent)
             val pEntityNewPtOnComp = UiPos.getCompCoordFromScreen(pEntityNewPtOnScreen, oldParentView.innerPanel)
             controller.boundsMgr.moveTo(
               action.entity,
@@ -212,7 +212,7 @@ class MouseInputController(controller: Controller) extends SubController(control
   def handleMouseDragResizeEntity(mouseEvent: MouseEvent, action: MouseResizeAction) {
 
     val parent = controller.model.parentOf(action.entity).get
-    val view = controller.viewMgr.getView(action.entity)
+    val view = controller.viewMgr.view(action.entity)
 
     controller.bulkOperation {
 
@@ -245,7 +245,7 @@ class MouseInputController(controller: Controller) extends SubController(control
       val hoverableChildren = action
         .containerEntity
         .firstLevelChildren()
-        .map(controller.viewMgr.getView)
+        .map(controller.viewMgr.view)
         .filterOfType[Selectable]()
         .asInstanceOf[Seq[AbstractView with Selectable]]
 
@@ -350,7 +350,7 @@ class MouseInputController(controller: Controller) extends SubController(control
     controller.viewMgr.findDeepestEntityAt(
       screenPos,
       x => {
-        controller.viewMgr.getView(x) match {
+        controller.viewMgr.view(x) match {
           case x: ScrollableView =>
             if (x.scrollpane.getHorizontalScrollBar().isShowing() || x.scrollpane.getVerticalScrollBar().isShowing()) {
               out = x

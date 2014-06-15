@@ -45,7 +45,7 @@ class PackageExplorer(
   private val id2node = new HashMap[EntityIdBase, DefaultMutableTreeNode]
   private val id2entity = new HashMap[EntityIdBase, Entity]
   private val mouseInputStatus = new OperationStatus
-  
+
   javax.swing.ToolTipManager.sharedInstance().registerComponent(tree);
 
   initialize()
@@ -96,7 +96,7 @@ class PackageExplorer(
                   .map(_.getUserObject().asInstanceOf[StrEntity])
 
                 for (strEntity <- selectedEntities.filter(_ != null)) {
-                  controller.viewMgr.getView(strEntity.entity) match {
+                  controller.viewMgr.view(strEntity.entity) match {
                     case selectable: Selectable => selectable.setSelected(true)
                     case _ =>
                   }
@@ -211,7 +211,7 @@ class PackageExplorer(
       id2entity.put(child.getId(), child)
       reAddChildrenSorted(parent)
       expand(parentNode)
-      
+
     } else {
       val usrObj = new StrEntity(child)
       root.setUserObject(usrObj)
@@ -237,11 +237,12 @@ class PackageExplorer(
   }
 
   override def onEntityDeleted(child: Entity, parent: Option[Entity]) {
-    val childNode = id2node(child.getId())
-    parent foreach { parent =>
-      val oldParentNode = id2node(parent.getId())
-      oldParentNode.remove(childNode)
-      expand(oldParentNode);
+    id2node.remove(child.getId()) foreach { childNode =>
+      parent foreach { parent =>
+        val oldParentNode = id2node(parent.getId())
+        oldParentNode.remove(childNode)
+        expand(oldParentNode);
+      }
     }
   }
 
@@ -289,24 +290,24 @@ class PackageExplorer(
         leaf,
         row,
         hasFocus);
-      
+
       implicit val model = controller.model
 
       val strEntity = value.asInstanceOf[DefaultMutableTreeNode].getUserObject().asInstanceOf[StrEntity]
 
       if (strEntity != null) {
         strEntity.entity match {
-          case project: Project => 
+          case project: Project =>
             setToolTipText(project.getFilePath.getAbsolute)
             setIcon(Icons.TreeView.Dash.PROJECT_ICON)
           case module: Module =>
             setToolTipText(Type2String.getClassPath(module))
             setIcon(Icons.TreeView.Dash.MODULE_ICON)
-          case cls: CustomType => 
+          case cls: CustomType =>
             setToolTipText(Type2String.getClassPath(cls))
             setIcon(Icons.TreeView.Dash.CLASS_ICON)
-          case field: CustomTypeField => 
-           setToolTipText(Type2String.getClassPath(field))
+          case field: CustomTypeField =>
+            setToolTipText(Type2String.getClassPath(field))
             setIcon(Icons.TreeView.Dash.FIELD_ICON)
         }
 

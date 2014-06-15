@@ -26,6 +26,7 @@ import se.culvertsoft.mgen.visualdesigner.model.ModelOps.toRichCustomType
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
+import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
 
 class CopyPasteController(controller: Controller) extends SubController(controller) {
 
@@ -183,8 +184,6 @@ class CopyPasteController(controller: Controller) extends SubController(controll
             if (e.hasSuperType()) {
               if (idReplacements.contains(e.getSuperType())) {
                 e.setSuperType(idReplacements(e.getSuperType()))
-              } else {
-                controller.model.superTypeOf(e).get.getSubTypesMutable().add(e.getId())
               }
             }
 

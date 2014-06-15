@@ -34,7 +34,7 @@ class BoundsController(controller: Controller) extends SubController(controller)
     _h: Int,
     rp: ResizePoint = ResizePointSE) {
 
-    val view = controller.viewMgr.getView(entity)
+    val view = controller.viewMgr.view(entity)
 
     val _dx = (entityInitBounds.width - _w) * rp.xMove
     val _dy = (entityInitBounds.height - _h) * rp.yMove

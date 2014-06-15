@@ -86,8 +86,8 @@ class ModuleView(module: Module, controller: Controller)
 
   def drawInheritanceArrow(subType: CustomType, superType: CustomType, g: Graphics2D) {
 
-    val subTypeView = controller.viewMgr.getView(subType).asInstanceOf[AbstractView with Selectable]
-    val superTypeView = controller.viewMgr.getView(superType).asInstanceOf[AbstractView with Selectable]
+    val subTypeView = controller.viewMgr.view(subType).asInstanceOf[AbstractView with Selectable]
+    val superTypeView = controller.viewMgr.view(superType).asInstanceOf[AbstractView with Selectable]
 
     import se.culvertsoft.mgen.visualdesigner.util.Asof._
 

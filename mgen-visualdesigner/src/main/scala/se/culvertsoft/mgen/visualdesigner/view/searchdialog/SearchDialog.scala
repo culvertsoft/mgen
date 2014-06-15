@@ -166,7 +166,7 @@ class ByNamePanel(controller: Controller) extends JPanel with FocusFordwardingTa
 
   def firstSelectedAmong(es: Seq[Entity]): Option[Int] = {
     es
-      .map(controller.viewMgr.getView)
+      .map(controller.viewMgr.view)
       .zipWithIndex
       .find(_._1 match {
         case e: Selectable => e.isSelected()

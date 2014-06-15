@@ -40,7 +40,7 @@ class ViewManager(
   private val controller: Controller,
   private val topContainer: ContentPane) extends ControllerListener {
   private val topView = new TopContainerView(controller, topContainer)
-  private val views = new IdentityHashMap[Entity, AbstractView]
+  private val views = new HashMap[EntityIdBase, AbstractView]
   private var _root: Entity = controller.model().project
   private var _scaleFactor = 1.0
   private var _iconOverride: Boolean = false
@@ -50,7 +50,7 @@ class ViewManager(
 
   controller.addObserver(this)
   controller.addObserver(topView)
-
+  
   /**
    * ************************************************************************
    *
@@ -61,7 +61,7 @@ class ViewManager(
    */
 
   def rootView(): ScrollableView = {
-    getView(root).asInstanceOf[ScrollableView]
+    view(root).asInstanceOf[ScrollableView]
   }
 
   def isIconOverrideActive(): Boolean = {
@@ -79,11 +79,8 @@ class ViewManager(
     }
   }
 
-  def parentOf(view: AbstractView): Option[AbstractView] = {
-    controller.model.parentOf(view.entity) match {
-      case Some(parentEntity) => Some(getView(parentEntity))
-      case _ => None
-    }
+  def parentOf(v: AbstractView): Option[AbstractView] = {
+    controller.model.parentOf(v.entity).map(view)
   }
 
   def validateAll() {
@@ -130,23 +127,31 @@ class ViewManager(
     entity eq root()
   }
 
-  def isViewRoot(view: AbstractView) = {
-    getView(root()) eq view
+  def isViewRoot(v: AbstractView): Boolean = {
+    view(_root) eq v
+  }
+  
+  def hasView(entity: Entity): Boolean = {
+    views.contains(entity.getId)
+  }
+  
+  def viewOption(entity: Entity): Option[AbstractView] = {
+    if (entity != null) {
+      views.get(entity.getId)
+    } else {
+      Some(topView)
+    }
   }
 
-  def getView(entity: Entity): AbstractView = {
-    if (entity != null) {
-      views.get(entity)
-    } else {
-      topView
-    }
+  def view(entity: Entity): AbstractView = {
+    viewOption(entity).get
   }
 
   def getAllViews[T: ClassTag](): Seq[T with AbstractView] = {
     val out = new ArrayBuffer[T]
     controller.model.project.foreach { cp =>
-      views.get(cp.child) match {
-        case x: T => out += x
+      views.get(cp.child.getId) match {
+        case Some(x: T) => out += x
         case _ =>
       }
     }
@@ -154,22 +159,22 @@ class ViewManager(
   }
 
   def getUiPosOf(entity: Entity): UiPos = {
-    val view = views.get(entity)
+    val view = views.get(entity.getId).get
     new UiPos(view.pos(), view.boundingComponent.getParent())
   }
 
   def getBoundsOf(entity: Entity): Rectangle = {
-    val view = views.get(entity)
+    val view = views.get(entity.getId).get
     view.bounds()
   }
 
   def getSizeOf(entity: Entity): Dimension = {
-    val view = views.get(entity)
+    val view = views.get(entity.getId).get
     view.size()
   }
 
   def getMidPtOf(entity: Entity): Point = {
-    val view = views.get(entity)
+    val view = views.get(entity.getId).get
     view.midPt()
   }
 
@@ -178,8 +183,8 @@ class ViewManager(
     entity match {
       case project: Project => new Rectangle(uiPos.onScreen.x, uiPos.onScreen.y, topContainer.getWidth(), topContainer.getHeight())
       case _ =>
-        val view = getView(entity)
-        new Rectangle(uiPos.onScreen.x, uiPos.onScreen.y, view.width(), view.height())
+        val v = view(entity)
+        new Rectangle(uiPos.onScreen.x, uiPos.onScreen.y, v.width(), v.height())
     }
   }
 
@@ -208,13 +213,13 @@ class ViewManager(
       // Add the previous root back to its correct parent
       if (prevRootView != null) {
         for (properParent <- controller.model.parentOf(prevRootView.entity)) {
-          val properParentView = getView(properParent)
+          val properParentView = view(properParent)
           prevRootView.updateBounds()
           properParentView.add(prevRootView)
         }
       }
 
-      topView.add(getView(root))
+      topView.add(rootView)
 
     }
 
@@ -233,9 +238,9 @@ class ViewManager(
 
   override def onSelectionChanged(selection: Seq[Entity], focused: Option[Entity]) {
     for (e <- focused) {
-      val view = getView(e)
-      if (!view.hasFocus()) {
-        view.requestFocus()
+      val v = view(e)
+      if (!v.hasFocus()) {
+        v.requestFocus()
       }
     }
     if (!controller.isBulkOperationActive) {
@@ -245,7 +250,7 @@ class ViewManager(
 
   private def mkViewFor(entity: Entity) {
 
-    if (getView(entity) != null)
+    if (views.contains(entity.getId))
       return
 
     println(s"created new view for ${entity.getName()}")
@@ -260,18 +265,22 @@ class ViewManager(
       case entity: CustomTypeField =>
         new FieldView(entity, controller)
     }
-    views.put(entity, newItem)
+    views.put(entity.getId, newItem)
 
     controller.addObserver(newItem)
 
+  }
+  
+  def existsView(entity: Entity): Boolean = {
+    views.contains(entity.getId)
   }
 
   override def onEntityAdded(child: Entity, parent: Entity) {
 
     mkViewFor(child)
-    
-    val parentView = getView(parent)
-    parentView.add(getView(child))
+
+    val parentView = view(parent)
+    parentView.add(view(child))
     if (!controller.isBulkOperationActive) {
       parentView.validate()
       parentView.repaint()
@@ -280,9 +289,9 @@ class ViewManager(
 
   override def onEntityTransferred(child: Entity, newParent: Entity, oldParent: Entity) {
 
-    val childView = getView(child)
-    val oldParentView = getView(oldParent)
-    val newParentView = getView(newParent)
+    val childView = view(child)
+    val oldParentView = view(oldParent)
+    val newParentView = view(newParent)
 
     val childHadFocus = childView.hasFocus()
 
@@ -308,8 +317,8 @@ class ViewManager(
   override def onEntityDeleted(child: Entity, parent: Option[Entity]) {
 
     for (parent <- parent) {
-      val parentView = getView(parent)
-      val childView = getView(child)
+      val parentView = view(parent)
+      val childView = view(child)
 
       parentView.remove(childView)
       if (!controller.isBulkOperationActive) {
@@ -319,25 +328,22 @@ class ViewManager(
     }
 
     child.foreach { cp =>
-      val xView = views.remove(getView(cp.child))
-      if (xView != null) {
-        controller.removeObserver(xView)
-      }
+      views.remove(cp.child.getId) foreach controller.removeObserver
     }
 
   }
 
   override def onEntityMoved(e: PlacedEntity, parent: Entity) {
-    getView(e).updateBounds()
+    view(e).updateBounds()
     if (!controller.isBulkOperationActive) {
-      getView(parent).validate()
+      view(parent).validate()
     }
   }
 
   override def onEntityResized(e: PlacedEntity, parent: Entity) {
-    getView(e).updateBounds()
+    view(e).updateBounds()
     if (!controller.isBulkOperationActive) {
-      getView(parent).validate()
+      view(parent).validate()
     }
   }
 
@@ -356,22 +362,19 @@ class ViewManager(
 
   override def onFocusGained(entity: Entity) {
     if (!controller.isBulkOperationActive) {
-      getView(entity).repaint()
+      viewOption(entity) foreach (_.repaint())
     }
   }
 
   override def onFocusLost(entity: Entity) {
     if (!controller.isBulkOperationActive) {
-      val x = getView(entity)
-      if (x != null)
-        x.repaint()
+      viewOption(entity) foreach (_.repaint())
     }
   }
 
   override def onEntityModified(child: Entity, validate: Boolean = false, parent: Option[Entity] = None) {
     if (!controller.isBulkOperationActive) {
-      val v = getView(child)
-      if (v != null) {
+      viewOption(child) foreach { v =>
         if (validate)
           v.validate()
         v.repaint()
@@ -381,12 +384,12 @@ class ViewManager(
 
   override def onChildrenReordered(parent: Entity) {
     if (!controller.isBulkOperationActive) {
-      val view = getView(parent)
+      val v = view(parent)
       val children = parent.firstLevelChildren()
-      val childViews = children map getView
-      childViews foreach view.remove
-      childViews foreach view.add
-      view.validate()
+      val childViews = children map (view)
+      childViews foreach v.remove
+      childViews foreach v.add
+      v.validate()
     }
   }
 
@@ -405,7 +408,7 @@ class ViewManager(
   }
 
   def getCurrentScrollPane(): JScrollPane = {
-    getView(root()).asInstanceOf[ScrollableView].scrollpane
+    rootView.scrollpane
   }
 
   def keepScrollbarPos(f: => Unit) {
@@ -503,13 +506,13 @@ class ViewManager(
   def getCachedViews(): HashMap[EntityIdBase, AbstractView] = {
     val out = new HashMap[EntityIdBase, AbstractView]
     for (v <- views) {
-      out.put(v._1.getId(), v._2)
+      out.put(v._1, v._2)
     }
     out
   }
 
   def injectView(e: Entity, v: AbstractView) {
-    views.put(e, v)
+    views.put(e.getId, v)
     v.register()
   }
 
@@ -566,7 +569,7 @@ class ViewManager(
     if (!controller.isBulkOperationActive) {
 
       controller.model.foreach(_ match {
-        case ChildParent(child: PlacedEntity, _) => getView(child).updateBounds()
+        case ChildParent(child: PlacedEntity, _) => view(child).updateBounds()
         case _ =>
       })
 
@@ -601,7 +604,7 @@ class ViewManager(
         case _ => List(view)
       }
     }
-    gvh(getView(entity)).reverse
+    gvh(view(entity)).reverse
   }
 
   def find(entity: Entity) {
@@ -617,7 +620,7 @@ class ViewManager(
     controller.select(entity, true, false)
 
     val hierarchy = getViewHierarchy(entity)
-    val tgt = getView(entity)
+    val tgt = view(entity)
 
     for (
       _view <- hierarchy.tail.reverse;

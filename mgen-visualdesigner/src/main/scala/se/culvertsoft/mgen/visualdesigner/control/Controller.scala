@@ -90,7 +90,7 @@ class Controller(
     bulkOperation {
       viewMgr
         .selectedViews()
-        .filterNot(_ eq viewMgr.getView(exception))
+        .filterNot(_ eq viewMgr.view(exception))
         .foreach(_.setSelected(false))
     }
 
@@ -105,7 +105,7 @@ class Controller(
       if (deselectOthers)
         deselectAll(entity)
 
-      viewMgr.getView(entity) match {
+      viewMgr.view(entity) match {
         case s: Selectable if (!s.isSelected()) => s.setSelected(true)
         case _ =>
       }
@@ -139,7 +139,7 @@ class Controller(
       if (deselectOthers)
         deselectAll(entity)
 
-      viewMgr.getView(entity) match {
+      viewMgr.view(entity) match {
         case selectable: Selectable => selectable.setSelected(false)
         case _ =>
       }
@@ -204,7 +204,7 @@ class Controller(
             val idx = newParent.getTypes().indexOf(newClass)
             newParent.getTypes().set(idx, oldClass)
 
-            val clsView = viewMgr.getView(oldClass)
+            val clsView = viewMgr.view(oldClass)
 
             // Ensure the view is resized properly
             clsView.updateBounds()
@@ -212,7 +212,7 @@ class Controller(
             out += ((oldClass, clsView))
 
             for (oldField <- oldClass.getFields()) {
-              val fldView = viewMgr.getView(oldField)
+              val fldView = viewMgr.view(oldField)
               out += ((oldField, fldView))
             }
 
@@ -370,7 +370,7 @@ class Controller(
   def renameSelection() {
     if (checkHasExactlySelected(1)) {
       val e = selectedEntities()(0)
-      val c = viewMgr.getView(e).innerPanel
+      val c = viewMgr.view(e).innerPanel
       viewMgr.popupGetString("Enter new name", e.getName(), c) match {
         case Some(name) => rename(e, name)
         case _ =>
