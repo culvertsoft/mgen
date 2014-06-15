@@ -1,7 +1,7 @@
 
 // Remember, sbt needs empty lines between active settings
 
-name := "mgen-javalib"
+name := "mgen-javascriptlib"
 
 organization := "se.culvertsoft"
 
@@ -12,10 +12,6 @@ isSnapshot := version.value.contains("SNAPSHOT")
 crossPaths := false
 
 retrieveManaged := true
-
-libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
-
-libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
 
 EclipseKeys.withSource := true
 

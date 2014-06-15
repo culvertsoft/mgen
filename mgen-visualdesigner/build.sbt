@@ -9,6 +9,8 @@ EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
 version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
+isSnapshot := version.value.contains("SNAPSHOT")
+
 crossPaths := false
 
 retrieveManaged := true
