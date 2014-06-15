@@ -10,7 +10,6 @@ import java.awt.Toolkit
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
-
 import EntityFactory.mkModel
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -27,15 +26,26 @@ import se.culvertsoft.mgen.visualdesigner.uiInit.ToolbarsInit
 import se.culvertsoft.mgen.visualdesigner.util.ConsolePipe
 import se.culvertsoft.mgen.visualdesigner.view.AddressField
 import se.culvertsoft.mgen.visualdesigner.view.PackageExplorer
+import java.io.PrintStream
+import java.io.ByteArrayOutputStream
 
 object VisualDesigner {
 
   def main(args: Array[String]) {
 
+    // Redirect stdOut and stdErr first
+    val consolePanel = PanelsInit.mkTextPanel()
+    val msgConsole = new ConsolePipe(consolePanel)
+    msgConsole.redirectOut(Color.BLACK, System.out)
+    msgConsole.redirectErr(Color.RED, System.err)
+
+    // Parse cmd line arguments
     val cmdLineArgs = se.culvertsoft.mgen.compiler.MGen.parseKeyValuePairs(args)
 
+    // This will be required for a later gui call
     var controller: Controller = null
 
+    // Create the gui
     SwingUtilities.invokeLater(new Runnable() {
       override def run() {
 
@@ -50,12 +60,6 @@ object VisualDesigner {
         val rightPanel = PanelsInit.mkContentPane("rightPanelBase")
         val dashBoard = PanelsInit.mkContentPane("drawArea")
         val rightTopPanel = new JPanel { setLayout(new MigLayout("insets 0 0 0 0")) }
-
-        // Configure console
-        val consolePanel = PanelsInit.mkTextPanel()
-        val msgConsole = new ConsolePipe(consolePanel)
-        msgConsole.redirectOut(Color.BLACK, System.out)
-        msgConsole.redirectErr(Color.RED, System.err)
 
         // Configure splitters
         val leftRightPanelSplitter = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, true, leftPanel, rightPanelBase)
