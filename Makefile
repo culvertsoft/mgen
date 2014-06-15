@@ -47,14 +47,8 @@ eclipse:
 	#       CREATING ECLIPSE PROJECTS                       #
 	#                                                       #
 	#########################################################
-	cd mgen-api && make eclipse
-	cd mgen-compiler && make eclipse
-	cd mgen-cppgenerator && make eclipse
+	sbt eclipse
 	cd mgen-cpplib && make eclipse
-	cd mgen-javalib && make eclipse
-	cd mgen-javagenerator && make eclipse
-	cd mgen-javascriptgenerator && make eclipse
-	cd mgen-visualdesigner && make eclipse
 	#########################################################
 	#                                                       #
 	#        DONE CREATING ECLIPSE PROJECTS                 #
