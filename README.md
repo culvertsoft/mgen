@@ -28,14 +28,15 @@ MGen's structure is modular and customizable: IDL parsers, code generators, runt
   * [Other Languages](#other-languages)
 * [Under the Hood](#under-the-hood)
   * [Components](#components)
-    * [The MGen API](#the-mgen-api)
-    * [The MGen compiler](#the-mgen-compiler)
-      * [The MGen code generators](#the-mgen-code-generators)
-    * [The MGen runtime libraries](#the-mgen-runtime-libraries)
-    * [The MGen Visual Designer](#the-mgen-visual-designer)
-  * [Wire formats](#Wire-formats)
+    * [The MGen API](#mgen-api)
+    * [The MGen Compiler](#mgen-compiler)
+    * [The MGen Code Generators](#mgen-code-generators)
+    * [The MGen Runtime Libraries](#mgen-runtime-libraries)
+    * [The MGen Visual Designer](#mgen-visual-designer)
+  * [Wire Formats](#Wire-formats)
     * [The MGen binary format](#the-mgen-api)
     * [The MGen json format](#the-mgen-compiler)
+  * [Performance](#performance)
 * [Advanced Usage](#advanced-usage)
   * [Adjusting the built-in serializers](#adjusting-the-built-in-serializers)
   * [Adding code generators](#adding-code-generators)
@@ -55,6 +56,7 @@ MGen's structure is modular and customizable: IDL parsers, code generators, runt
 * [Future Plants](#future-plans)
   * [RPC Interfaces](#rpc-interfaces)
   * [Transport Layers](#transport-layers)
+* [Final Words](#final-words)
 
 ## Basic Usage
 
@@ -318,28 +320,21 @@ Now we can read these objects back from the stream in the following manner:
 MGen's core components consist of:
  * The MGen API
  * The MGen Compiler
+ * The MGen Code Generators
  * The MGen Runtime libraries
+ * The MGen Visual Designer
+
+#### The MGen API
 
 The MGen API, as well as the interfaces to the compiler, are written entirely in Java, although under the hood much of the compiler is written in Scala.
 
 The API defines the standard data types supported by the compiler and runtime libraries. The API also defines the Parser and Generator interfaces used by the compiler.
 
+#### The MGen Compiler
+
 The Compiler is a command line executable which parses IDL code and produces classes in your programming language of choice. It is capable of dynamically loading new parsers and code generators on startup, either the default MGen implementations or your own custom supplied libraries (just place a JAR file containing Java classes implementing the Generator or Parser interfaces on the Compiler's plugin search path, and they will become available to use through the compiler).
 
-MGen currently provides code generators and runtime libraries for the following languages: 
- * Java
- * C++
- * JavaScript
-
-Our next step is to add support for LUA and Python.
-
-If you prefer graphical tools instead of command line, we are also working on a visual data model editor.
-
-
-MGen Compiler
-----
-
-The compiler is divided into two parts, the parser and the code generators.
+The compiler loads two main components, the parser and the code generators.
 
 Parsers and code generators are what we call plug-ins, that is, they are loaded dynamically on compiler startup. If the user wants to extend or replace parsers or code generators, he/she provides command line arguments to the compiler for where to search for JAR files containing his own parser and/or generator classes. The only requirement is that the custom classes implement the Parser and/or Generator interfaces specified in the MGen Java API.
 
@@ -352,26 +347,23 @@ Key features for the compiler, standard parser and standard generators are:
  * Plug-in architecture for loading custom parsers and generators
  * Ability to extend to new languages
 
-MGen Runtime Libraries
-----
-Out of the box, MGen supplies standard code generators for C++, Java and JavaScript. These produce two things:
- * Classes (or class-like structures in JavaScript)
- * ClassRegistries (registry for all generated classes)
+#### The MGen Code Generators
 
-By default classes are java-beans and C++ data containers with getters and setters or class-like structures in the case of JavaScript. Generated classes work together with the runtime libraries to provide utilities for:
- * Serialization
- * Deep Copying
- * Equality Testing
- * Automatic type instantiation
- * Type metadata
- * Stringification
- * Hashing
+MGen currently provides code generators for the following languages: 
+ * Java
+ * C++
+ * JavaScript
 
+You can of course modify, extend and/or replace these yourself.
+
+By default generated classes are java-beans and C++ data containers with getters and setters or class-like structures in the case of JavaScript. 
 The runtime libraries provide two default serializers:
  * The MGen Binary format Serializer
  * The MGen JSON format Serializer
 
-You can of course modify, extend and/or replace these by extending or replacing the runtime library classes.
+These produce two things:
+ * Classes (or class-like structures in JavaScript)
+ * ClassRegistries (registry for all generated classes)
 
 ClassRegistries are used to dynamically instantiate and identify data types over data streams during deserialization.
 In some cases they may also be used during serialization. Some language implementations rely on ClassRegistries more than others. One could argue that Java for example  does not really need one (because of reflection), however for performance reasons and API uniformity, they are created for Java as well.
@@ -380,93 +372,38 @@ One feature that ClassRegistries provide in C++ is the ability to call template 
 
 MGen does not rely on Java reflection or C++ RTTI.
 
+We plan to add support for LUA and Python.
+
+
+#### MGen Runtime libraries
+
+MGen currently provides runtime libraries for the following languages: 
+ * Java
+ * C++
+ * JavaScript
+
+The runtime libraries work together with generated classes to provide:
+ * Serialization
+ * Deep Copying
+ * Equality Testing
+ * Automatic type identification and instantiation
+ * Type metadata
+ * Stringification
+ * Hashing
+
+You can of course modify, extend and/or replace these yourself.
+
+#### MGen Visual Designer
+
+If you prefer graphical tools instead of command line, we are also working on a visual data model editor.
+
+### Performance
+
 We have measured binary serialization performances of some polymorphic objects in C++ on a single ivy bridge i7 core to more than 1,5 Gbit/s (g++ 4.8.1 o3). Performance in the other direction was roughly 30% less. Performance is important to us, however it should be made clear that performance is NOT the primary focus of MGen.
 
 
-MGen Standard IDL
-----
-MGen currently uses xml for its standard IDL. We say this because in the future (before official release) we may switch or support multiple IDLs out-of-the-box. 
+## Final Words
 
-There are two types of IDL files required by MGen compiler to run:
- * Project files
- * Module files
-
-Project files are our variant of makefiles. They define what module files to include but also what code generators to use, and settings for these. Below is the project file used in defining the data model used by our visual data model editor:
-
-    <Project>
-
-     <Generator name="Java">
-      <generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</generator_class_path>
-      <output_path>src_generated/main/java</output_path>
-      <classregistry_path>se.culvertsoft.mgen.visualdesigner</classregistry_path>
-     </Generator>
-
-     <Module>se.culvertsoft.mgen.visualdesigner.model.xml</Module>
-
-    </Project>
-
-Module files are where the actual data models are defined. The format we've come up with for doing this is very much work-in-progress, but it should be noted that it is intended to be easy to read and edit for humans - not necessarily conform to a particular markup standard. 
-
-As you may have guessed from the project file above, the name of the module file defines what java package and c++ namespace the generated code will be placed in.
-
-Below you see the first part of the data model definition for the visual editor which was referenced in the project file above (to view the full source [here](mgen-visualdesigner/model/se.culvertsoft.mgen.visualdesigner.model.xml) ):
-
-    <Module>
-
-     <Types>
-
-      <!-- = = = = = = = -->
-      <!-- = = = = = = = -->
-      <!-- Utility Types -->
-      <!-- = = = = = = = -->
-
-      <EntityIdBase />
-
-      <EntityId extends="EntityIdBase">
-       <lsb type="int64" flags="required" />
-       <msb type="int64" flags="required" />
-      </EntityId>
-
-      <ClassPathEntityId extends="EntityIdBase">
-       <path type="string" flags="required" />
-      </ClassPathEntityId>
-
-      <Placement>
-       <x type="int32" />
-       <y type="int32" />
-       <width type="int32" />
-       <height type="int32" />
-      </Placement>
-
-      <Generator>
-       <name type="string" flags="required" />
-       <generatorClassName type="string" flags="required" />
-       <generatorJarFileFolder type="string" flags="required" />
-       <classRegistryPath type="string" flags="required" />
-       <outputFolder type="string" flags="required" />
-       <settings type="map[string, string]" />
-      </Generator>
-
-
-      <!-- = = = = = = -->
-      <!-- = = = = = = -->
-      <!-- Base Types -->
-      <!-- = = = = = = -->
-
-      <Entity>
-       <id type="EntityIdBase" />
-       <name type="string" />
-       <parent type="EntityIdBase" />
-      </Entity>
-
-      <PlacedEntity extends="Entity">
-       <placement type="Placement" flags="required" />
-      </PlacedEntity>
-
-
-
-What MGen is and is not
-----
 MGen serializers and utilities are designed to be state-less. There is no common object graph preservation or node-to-node implementation with synchronization. This is a conscious design choice and also implies that the standard implementation of serializers do not support circular references. MGen serializers consider all data to be just that - data. MGen serializers have no concept of references or object identities (Although generated polymorphic code and data types in most languages are of reference types - during serialization they are treated as nothing more than data containers).
 
 However, what this does is it gives us the advantage of supporting lossy and reordering protocols, priority based messaging etc without worrying about objects having all the necessary information to be reconstructed on receiving side. If you wish to send one message over http, another over a UDP socket and a third with smoke signals, in the opposite order, MGen won't really care.
