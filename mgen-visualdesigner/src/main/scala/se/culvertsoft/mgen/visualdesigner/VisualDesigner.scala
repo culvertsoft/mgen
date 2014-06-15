@@ -31,6 +31,8 @@ object VisualDesigner {
 
   def main(args: Array[String]) {
 
+    val cmdLineArgs = se.culvertsoft.mgen.compiler.MGen.parseKeyValuePairs(args)
+
     var controller: Controller = null
 
     SwingUtilities.invokeLater(new Runnable() {
@@ -105,7 +107,7 @@ object VisualDesigner {
         rightPanelSplitter.setResizeWeight(0.9)
         leftRightPanelSplitter.setDividerLocation(200)
         rightPanelSplitter.setDividerLocation(window.getHeight() - 200)
-        
+
         // Configure our AWT event filter 
         Toolkit.getDefaultToolkit().getSystemEventQueue().push(new EventQueue() {
           override def dispatchEvent(event: AWTEvent) {
@@ -131,7 +133,8 @@ object VisualDesigner {
         println(" --- Happy modeling! --- ")
 
         // Load a default model
-        controller.saveMgr.load(new File("model/project.xml"))
+        if (cmdLineArgs.contains("project"))
+          controller.saveMgr.load(new File(cmdLineArgs("project")))
 
       }
     })
