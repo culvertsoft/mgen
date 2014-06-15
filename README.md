@@ -334,10 +334,6 @@ The API defines the standard data types supported by the compiler and runtime li
 
 The Compiler is a command line executable which parses IDL code and produces classes in your programming language of choice. It is capable of dynamically loading new parsers and code generators on startup, either the default MGen implementations or your own custom supplied libraries (just place a JAR file containing Java classes implementing the Generator or Parser interfaces on the Compiler's plugin search path, and they will become available to use through the compiler).
 
-The compiler loads two main components, the parser and the code generators.
-
-Parsers and code generators are what we call plug-ins, that is, they are loaded dynamically on compiler startup. If the user wants to extend or replace parsers or code generators, he/she provides command line arguments to the compiler for where to search for JAR files containing his own parser and/or generator classes. The only requirement is that the custom classes implement the Parser and/or Generator interfaces specified in the MGen Java API.
-
 Key features for the compiler, standard parser and standard generators are:
  * Support for generic types 
  * Heterogeneous containers
