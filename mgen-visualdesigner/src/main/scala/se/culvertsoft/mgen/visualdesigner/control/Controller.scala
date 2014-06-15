@@ -56,8 +56,6 @@ class Controller(
   val viewMgr = new ViewManager(this, topContainer)
   val settingsMgr = new SettingsController(this)
 
-  setModel(_model, true)
-
   /**
    * *****************************************************
    *
