@@ -2,8 +2,9 @@
 	"__COMMENT__": " This file is used for the nightly build script to specify what files should be uploaded. ",
 
 	"def_files": {
-		"java": ["%PROJECT-%VERSION.jar", "%PROJECT-assembly-%VERSION.jar", "%PROJECT-%VERSION-javadoc.jar", "%PROJECT-%VERSION-sources.jar"],
-		"cpp": ["%PROJECT-test"]
+      "java-assembly" : [ "%PROJECT-assembly-%VERSION.jar" ],
+		"java": ["%PROJECT-%VERSION.jar", "%PROJECT-%VERSION-javadoc.jar", "%PROJECT-%VERSION-sources.jar"],
+	  	 "cpp": ["%PROJECT-test"]
 	},
 
 	"path_to_projects": "./",
@@ -13,7 +14,7 @@
 			"def_files": "java"
 		},
 		"mgen-compiler": {
-			"def_files": "java"
+			"def_files": [ "java", "java-assembly" ]
 		},
 		"mgen-cppgenerator": {
 			"def_files": "java"
@@ -31,7 +32,7 @@
 			"def_files": "java"
 		},
 		"mgen-visualdesigner": {
-			"def_files": "java"
+			"def_files": [ "java", "java-assembly" ]
 		}
 	}
 }
