@@ -5,10 +5,12 @@ import java.awt.BorderLayout
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.EventQueue
+import java.awt.Frame
 import java.awt.Toolkit
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
+
 import EntityFactory.mkModel
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -25,7 +27,6 @@ import se.culvertsoft.mgen.visualdesigner.uiInit.ToolbarsInit
 import se.culvertsoft.mgen.visualdesigner.util.ConsolePipe
 import se.culvertsoft.mgen.visualdesigner.view.AddressField
 import se.culvertsoft.mgen.visualdesigner.view.PackageExplorer
-import java.awt.Frame
 
 object VisualDesigner {
 
@@ -132,11 +133,11 @@ object VisualDesigner {
         println(" --- Welcome to MGen Visual Designer ---")
         println(" --- Happy modeling! --- ")
 
-        // Load a default model
-        if (cmdLineArgs.contains("project"))
-          controller.saveMgr.load(new File(cmdLineArgs("project")))
-        else
-          controller.saveMgr.forceStartNewProject()
+        // Load project or start new one 
+        cmdLineArgs.get("project") match {
+          case Some(filePath) => controller.saveMgr.load(new File(filePath))
+          case _ => controller.saveMgr.forceStartNewProject()
+        }
 
       }
     })
