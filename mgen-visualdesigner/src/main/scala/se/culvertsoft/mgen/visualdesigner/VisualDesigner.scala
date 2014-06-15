@@ -135,6 +135,8 @@ object VisualDesigner {
         // Load a default model
         if (cmdLineArgs.contains("project"))
           controller.saveMgr.load(new File(cmdLineArgs("project")))
+        else
+          controller.saveMgr.forceStartNewProject()
 
       }
     })

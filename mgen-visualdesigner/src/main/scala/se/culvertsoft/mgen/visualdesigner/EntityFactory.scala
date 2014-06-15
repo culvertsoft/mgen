@@ -99,7 +99,7 @@ object EntityFactory {
 
   def mkModel(): Model = {
 
-    new Model(mkProject("baseproject", new FilePath("baseproject.xml", "baseproject.xml")))
+    new Model(mkProject("project", new FilePath("project.xml", "project.xml")))
 
   }
 
