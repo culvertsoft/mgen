@@ -323,7 +323,10 @@ Now we can read these objects back from the stream in the following manner:
 
 ## Download links
 
-The following are links where you can download MGen pre-built. 
+The following are links where you can download MGen pre-built. You will notice that the compiler and visual designer also have variants named _assembly_. These are the ones you want to download if you want to use them as standalone executable JAR files.
+
+ * JAR files intended to be used as standalone executables are marked _assembly_. They are packaged with all library dependencies included. 
+ * JAR files intended as programming libraries are NOT marked _assembly_.
 
 ### Stable
 
@@ -356,7 +359,7 @@ At this early stage installation is manual (there is currently no installer avai
 
 ### Installing the compiler
 
-The MGen Compiler is just an executable java JAR file. Check the downloads section and download a release of the version you want. You could for example try out [the latest build compiler](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-compiler/mgen-compiler-assembly-SNAPSHOT.jar).
+The MGen Compiler is just an executable java JAR file. Check the [downloads section](#download-links) and download a release of the version you want. You could for example try out [the latest build compiler](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-compiler/mgen-compiler-assembly-SNAPSHOT.jar).
 
 There is no installation required. Just put it where you like and follow the instructions in the sections above on how to use it. Rename it as you see fit.
 
@@ -376,9 +379,20 @@ If you want to include the runtime libries by source instead or build them yours
 
 ### Installing the C++ runtime libraries
 
+The C++ runtime libraries are 100% header only, so there is no installation required. Right now we're not packaging them, so the easiest way to try them out at this point is to clone this git repository and browse to the cpplib/src/main/ folder where you will find it. Just add this folder to your build's include paths.
+
+
 ### Installing the JavaScript runtime libraries
 
+- Work in progress -
+
+
 ### Installing the Visual Designer
+
+The Visual Designer is just an executable java JAR file. Check the [downloads section](#download-links) to try out the latest version.
+[Here](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-visualdesigner/mgen-visualdesigner-assembly-SNAPSHOT.jar) a direct link for convenience.
+
+Just place and rename the jar file where you like. It should be possible to launch by double clicking if you have a Java JRE correctly installed.
 
 
 ## Under the Hood
