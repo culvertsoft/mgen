@@ -448,6 +448,8 @@ By default generated classes are java-beans and C++ data containers with getters
 * Getters and Setters
 * Query methods for asking if a member is set
 * Type IDs (name, 16 bit and 32 bit hash codes) based on the qualified (i.e. com.myorg.myproduct.ClassName) class name
+* Methods for testing equality (c++: == operator, java: equals(..))
+* Stringification and object Hash Code methods (Java Only)
 
 ClassRegistries are used to dynamically instantiate and identify data types over data streams during deserialization.
 In some cases they may also be used during serialization. Some language implementations rely on ClassRegistries more than others. One could argue that Java for example does not really need one (because of reflection), however for performance reasons and API uniformity, they are created for Java as well.
