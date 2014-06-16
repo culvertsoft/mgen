@@ -13,7 +13,7 @@
 		<DepPositioning>
 			<position type="DepVectorR3" flags="required" />
 			<velocity type="DepVectorR3" />
-			<acceleration type="DepVectorR3" flags="polymorphic, nullable" />
+			<acceleration type="DepVectorR3" flags="polymorphic" />
 		</DepPositioning>
 
 		<DepEntity>
@@ -36,18 +36,18 @@
 
 		<DepEntityHolder>
 			<!-- Polymorphic field -->
-			<entity type="DepEntity" />
+			<entity type="DepEntity" flags="polymorphic"/>
 		</DepEntityHolder>
 
 		<DepGarageViewer>
 			<!-- Nonpolymorphic field -->
-			<vehicles type="array[DepVehicle]" flags="nonpolymorphic" />
+			<vehicles type="array[DepVehicle]" />
 		</DepGarageViewer>
 
 		<DepWorld>
 			<name type="String" />
 			<entities type="map[int64, DepEntity]" />
-			<loadedFromDataBase type="String" flags="polymorphic, nullable" />
+			<loadedFromDataBase type="String" flags="polymorphic" />
 		</DepWorld>
 
 	</Types>
