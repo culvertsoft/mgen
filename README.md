@@ -374,12 +374,14 @@ Add both to your java projects class path and you should be good to go.
 
 There are also source attachments available. 
 
-If you want to include the runtime libries by source instead or build them yourself, [just check out this repository and build it](#building-mgen).
+If you want to include the runtime libries by source instead or build them yourself, [just clone this repository and build it](#building-mgen).
 
 
 ### Installing the C++ runtime libraries
 
 The C++ runtime libraries are 100% header only, so there is no installation required. Right now we're not packaging them, so the easiest way to try them out at this point is to clone this git repository and browse to the cpplib/src/main/ folder where you will find it. Just add this folder to your build's include paths.
+
+Another way of getting them is clicking the Download Zip button on the right side of this page, which will [download a copy of this repository](https://github.com/culvertsoft/mgen/archive/master.zip) - then look in the folder _mgen-cpplib/src/main/cpp/_.
 
 
 ### Installing the JavaScript runtime libraries
