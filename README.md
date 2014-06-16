@@ -70,7 +70,7 @@ Data models are defined using the MGen IDL. You can write them in a text editor 
 * Fields
   * Define the data members of your classes
 * Modules
-  * Define the c++ namespace and/or java package of your classes
+  * Define a namespace/package and the classes within
 
 Below is an example of how a type definition may look:
     
