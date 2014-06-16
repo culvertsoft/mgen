@@ -20,6 +20,7 @@ MGen is inspired by several existing tools, such as [Protocol Buffers](https://c
   * [Stable](#stable)
   * [Nightly](#nightly)
   * [Snapshot](#snapshot)
+  * [Maven](#maven)
   * [Sample Projects](#sample-projects)
 * [Installation](#installation)
   * [Installing the compiler](#installing-the-compiler)
@@ -335,6 +336,10 @@ Represents the latest built development version, built once per night. You can d
 ### Snapshot
 
 Represents the latest built development version, built after each git push. You can download it from http://snapshot.culvertsoft.se
+
+### Maven
+
+We plan on making the MGen tools and libraries available on Maven Central or a similar repository. However at this early stage you will need to download jar files manually or clone this repository and build from source.
 
 ### Sample Projects
 
