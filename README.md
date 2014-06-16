@@ -443,6 +443,7 @@ By default generated classes are java-beans and C++ data containers with getters
 * Generic visitor methods that will visit all set fields
 * Read methods
 * Field identification methods
+* Field metadata accessible while visiting an object and through method calls
 * Type metadata accessible through both virtual and static methods
 * Getters and Setters
 * Query methods for asking if a member is set
