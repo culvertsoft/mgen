@@ -98,7 +98,7 @@ Compiling the type above with the MGen compiler will produce source code for a c
       </Types>
     </Module>
 
-We may want to generate source code for types defined in multiple modules, and need some way to group these together. We do this by creating a project file. The path to the project file is the only required parameter to pass to the MGen compiler. The following code is an example of what a project file may look like:
+We probably want to specify which code generators to run, and if there is more than one module to generate code for. We do this by creating a project file. Here is an example of what a project file may look like:
     
     <Project>
     
@@ -108,19 +108,44 @@ We may want to generate source code for types defined in multiple modules, and n
         <classregistry_path>se.culvertsoft.mymodule</classregistry_path>
       </Generator>
       
-      <Depend>../models/com.othercompany.modelX.xml</Depend>
+      <Depend>../models/libX/libX.xml</Depend>
       
       <Module>se.culvertsoft.mymodule.xml</Module>
       <Module>se.culvertsoft.mymodule2.xml</Module>
       
     </Project>
     
-Some explanation of the above project file and other contents may be required.
-Keywords in the project file are:
-- name: Just there to make it easier to deal with debugging. You can call it whatever you like.
-- generator_class_path: The classpath to the source code generator to be used.
-- output_path: The folder where generator output will be placed.
-- classregistry_path: The namespace/package of the generated class registry (we will get to this later)
+Here we have specified:
+* Generator
+  * Defines the settings to use for source code generation.
+    * generator_class_path
+      * The class path of the source code generator (In this case the default MGen java generator).
+    * output_path
+      * specifies the output folder where generated code will be placed
+    * classregistry_path
+      * The namespace/package where the genrated class registry will be placed (see the next section for information about class registries)
+    * name
+      * Simply a name identifier for debugging purposes. Can be anything.
+* Depend
+  * Specifies another project file to depend on
+* Module
+  * Specifies a module file to include in this project
+
+To summarize:
+ * Model definition
+   * Types -> classes
+   * Fields -> members
+   * Modules -> namespaces/packages
+ * Source code generation requires
+   * Projects files -> specify which modules to generate code for
+     * Projects are specified in project files (e.g. abc.xml)
+   * Module files -> define the data model
+
+The file structure of the above project will look something like:
+* ..../se.culvertsoft.mymodule.xml (the module file for se.culvertsoft.mymodule)
+* ..../se.culvertsoft.mymodule2.xml (the module file for se.culvertsoft.mymodule2)
+* ..../myproject.xml (the project file)
+* ..../../models/libX/libX.xml (The other project we depend on)
 
 In the next section we will explain how to run the MGen compiler.
 
