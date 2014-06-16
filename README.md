@@ -1,15 +1,14 @@
 # MGen
 
--- HEADS UP: This README is Work-In-Progress. It's about 20% finished! -- 
+-- HEADS UP: This README is Work-In-Progress. It's about 35% finished! -- 
 
-MGen is a toolkit for source code generation and creating data models that are easy to communicate across language and version barriers.
+MGen is a toolkit for designing cross-language data models, data mappings and serialization. MGen models are defined in a flexible [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code in multiple languages may be generated using the MGen Compiler. The MGen Runtime Libraries then provides utility functions for generated code such as serialization, deep copying, equality testing and type identification. 
 
-Inspired by [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), MGen aims to reduce the work required to build, maintain and extend cross-language data models. MGen models are defined in an extendable [IDL](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia") and the MGen compiler produces code that is simple and fast enough to use as the internal model for many applications.
+The goal of MGen is to to simplify cross-language collaboration between software components and software teams that wish to share common data structures and software components, allowing each team to modify data models without forcing other teams to adapt or rebuild their software.
 
-The MGen tools and libraries are designed to simplify collaboration between software teams and companies that wish to communicate data and share common software components, allowing each team to work on both theirs and common software parts without forcing other teams to rebuild their software.
+MGen aims to be as flexible as possible, and provide ways for adding new code generation and library features to fit different applications. These additions can be made without recompiling the MGen tools or libraries through a plug-in based architecture. Modular components include IDL parsers, source code generators, runtime libraries. You could plug in a protobuf IDL parser, a thrift wire protocol serializer. You could also adapt the code generators for completely different purposes, such as as generate code that maps to your particular in-house data structures.
 
-MGen's structure is modular and customizable: IDL parsers, code generators, runtime libraries can be extended and/or replaced without rebuilding MGen. There is nothing stopping you from plugging in a protobuf IDL parser, thrift wire protocol serializer, and adding custom functionality to any of the supplied code generators, or attach a code generator for your own proprietary system.
-
+MGen is inspired by several existing tools, such as [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/). 
 
 ## Table of Contents
 
