@@ -60,58 +60,59 @@ MGen is inspired by several existing tools, such as [Protocol Buffers](https://c
 
 ## Basic Usage
 
-MGen's common use case is defining a data model, generating source code and providing serializers/deserializers.
+MGen's basic use case is defining a data model, generating source code and providing serializers and deserializers.
 
 ### Defining a data model
 
-The standard way to write a data model is to use the MGen IDL. You can also use the MGen Visual Designer application to build them without having to write the IDL yourself.
+Data models are defined using the MGen IDL. You can write them in a text editor or use the MGen Visual Designer. Data models consist of three main components:
+* Types
+  * Define the classes you want to generate
+* Fields
+  * Define the data members of your classes
+* Modules
+  * Define the c++ namespace and/or java package of your classes
 
-Our data models consist of modules, types and fields. Modules define what c++ namespace or java package a type will be generated to. Types specify the classes you want to generate, and fields the data members of your classes.
-
-Here is an example of two types defined in MGen's IDL:
+Below is an example of how a type definition may look:
     
-    <MyType1>
-      <myField1 type="int32"/>
-      <myField2 type="string"/>
-    </MyType1>
-        
-    <MyType2>
-      <myField1 type="float64"/>
-      <myField2 type="map[string, list[MyType1]]"/>
-    </MyType2>
+    <Apple>
+      <size type="int32"/>
+      <brand type="string"/>
+    </Apple>
 
-There is a little more work required before these can be passed to the MGen Compiler for source code generation. 
-
-1. The module above must be defined in a module file. The name of the module file defines the namespace/package of the types defined within.
-2. A Project file must be created. It defines which module files to load, which code generators to use and other settings.
-
-Module and project files are normal text files with xml contents.
-
-In this example we create a module file named "se.culvertsoft.mymodule.xml", containing:
+Compiling the type above with the MGen compiler will produce source code for a class called Apple with two member variables: _size_ (a 32 bit signed integer) and _brand_ (a string). To do this we must save it in a module file. A module file is simply an xml file with a sequence of type definitions. For example, we could create a file called _se.culvertsoft.mymodule.xml_ with the following contents:
 
     <Module>
       <Types>
-        <MyType1>
-          <myField1 type="int32"/>
-          <myField2 type="string" flags="required"/>
-        </MyType1>
-        <MyType2>
-          <myField1 type="float64"/>
-          <myField2 type="map[string, list[MyType1]]"/>
-          <myField3 type="MyType1" flags="polymorphic"/>
-        </MyType2>
+        
+        <Apple>
+          <size type="int32"/>
+          <brand type="string"/>
+        </Apple>
+        
+        <Store>
+          <stock type="list[Apple]"/>
+          <price type="int32"/>
+          <name type="string"/>
+        </Store>
+        
       </Types>
     </Module>
 
-We create a project file named "MyProject.xml", containing:
+We may want to generate source code for types defined in multiple modules, and need some way to group these together. We do this by creating a project file. The path to the project file is the only required parameter to pass to the MGen compiler. The following code is an example of what a project file may look like:
     
     <Project>
+    
       <Generator name="Java">
         <generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</generator_class_path>
         <output_path>src_generated/main/java</output_path>
         <classregistry_path>se.culvertsoft.mymodule</classregistry_path>
       </Generator>
+      
+      <Depend>../models/com.othercompany.modelX.xml</Depend>
+      
       <Module>se.culvertsoft.mymodule.xml</Module>
+      <Module>se.culvertsoft.mymodule2.xml</Module>
+      
     </Project>
     
 Some explanation of the above project file and other contents may be required.
