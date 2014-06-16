@@ -124,13 +124,9 @@ Here we have specified:
   * Specifies a module file to include in this project
 
 To summarize:
- * Model definition
-   * Types -> classes
-   * Fields -> members
-   * Modules -> namespaces/packages
  * Source code generation requires
-   * Projects files -> specify which modules to generate code for
    * Module files -> define the data model
+   * Projects files -> specify which modules to generate code for
 
 The file structure of the above project will look something like:
 * ..../se.culvertsoft.mymodule.xml (the module file for se.culvertsoft.mymodule)
