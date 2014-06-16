@@ -22,10 +22,11 @@ MGen is inspired by several existing tools, such as [Protocol Buffers](https://c
   * [Snapshot](#snapshot)
   * [Sample Projects](#sample-projects)
 * [Installation](#installation)
-  * [Java](#java)
-  * [CPP](#cpp)
-  * [JavaScript](#javascript)
-  * [Other Languages](#other-languages)
+  * [Installing the compiler](#installing-the-compiler)
+  * [Installing the Java runtime libraries](#installing-the-java-runtime-libraries)
+  * [Installing the C++ runtime libraries](#installing-the-c++-runtime-libraries)
+  * [Installing the JavaScript runtime libraries](#installing-the-javascript-libraries)
+  * [Installing the Visual Designer](#installing-the-visual-designer)
 * [Under the Hood](#under-the-hood)
   * [Components](#components)
     * [The MGen API](#the-mgen-api)
@@ -340,6 +341,30 @@ Represents the latest built development version, built after each git push. You 
 Currently we haven't had time to produce any dedicated sample projects. But two projects that might of interest are:
  * [The data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources)
  * [The data model of the MGen Visual Designer](https://github.com/culvertsoft/mgen/tree/master/mgen-visualdesigner/model)
+
+
+## Installation
+
+The MGen build time tools (MGen Compiler and MGen Visual Designer) require Java to be installed on your computer, such as OpenJRE/OpenJDK or the Oracle JRE. At this point in development we require a java 7 JRE to be installed, but we plan to lower this requirement to java 5 or 6.
+
+At this early stage installation is manual (there is currently no installer available).
+
+### Installing the compiler
+
+The MGen Compiler is just an executable java JAR file. Check the downloads section and download a release of the version you want. You could for example try out [the latest build compiler](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-compiler/mgen-compiler-assembly-SNAPSHOT.jar).
+
+There is no installation required. Just put it where you like and follow the instructions in the sections above on how to use it. Rename it as you see fit.
+
+See [Generating source code](#generating-source-code) for how to use it.
+
+### Installing the Java runtime libraries
+
+### Installing the C++ runtime libraries
+
+### Installing the JavaScript runtime libraries
+
+### Installing the Visual Designer
+
 
 ## Under the Hood
 
