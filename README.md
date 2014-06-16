@@ -434,19 +434,16 @@ MGen currently provides code generators for the following languages:
  * C++
  * JavaScript
 
-You can of course modify, extend and/or replace these yourself.
-
-By default generated classes are java-beans and C++ data containers with getters and setters or class-like structures in the case of JavaScript. 
-The runtime libraries provide two default serializers:
- * The MGen Binary format Serializer
- * The MGen JSON format Serializer
-
 These produce two things:
  * Classes (or class-like structures in JavaScript)
  * ClassRegistries (registry for all generated classes)
 
 ClassRegistries are used to dynamically instantiate and identify data types over data streams during deserialization.
-In some cases they may also be used during serialization. Some language implementations rely on ClassRegistries more than others. One could argue that Java for example  does not really need one (because of reflection), however for performance reasons and API uniformity, they are created for Java as well.
+In some cases they may also be used during serialization. Some language implementations rely on ClassRegistries more than others. One could argue that Java for example does not really need one (because of reflection), however for performance reasons and API uniformity, they are created for Java as well.
+
+You can of course modify, extend and/or replace these yourself.
+
+By default generated classes are java-beans and C++ data containers with getters and setters or class-like structures in the case of JavaScript. 
 
 One feature that ClassRegistries provide in C++ is the ability to call template methods with dynamic dispatch. This means you for example can use the ClassRegistry to access a derived visitor method through a call on the base type with a templated argument, such as a custom serializer, and the method will be called with full type preservation on the most derived class. What this type preservation also means is that during (de)serialization, once the serializer has been dispatched to the visitor method of the object it should serialize (which isn't much more than a switch-table) there's not much need for virtual calls - which can substantially improve performance.
 
@@ -470,6 +467,10 @@ The runtime libraries work together with generated classes to provide:
  * Type metadata
  * Stringification
  * Hashing
+
+The runtime libraries provide two default serializers:
+ * The MGen Binary format Serializer
+ * The MGen JSON format Serializer
 
 You can of course modify, extend and/or replace these yourself.
 
