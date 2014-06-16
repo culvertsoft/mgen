@@ -64,15 +64,7 @@ MGen's basic use case is defining a data model, generating source code and provi
 
 ### Defining a data model
 
-Data models are defined using the MGen IDL. You can write them in a text editor or use the MGen Visual Designer. Data models consist of three main components:
-* Types
-  * Define the classes you want to generate
-* Fields
-  * Define the data members of your classes
-* Modules
-  * Define a namespace/package and the classes within
-
-Below is an example of how a type definition may look:
+Data models are defined using the MGen IDL. You can write them in a text editor or use the MGen Visual Designer. Below is an example of how a type definition may look:
     
     <Apple>
       <size type="int32"/>
