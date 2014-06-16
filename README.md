@@ -130,7 +130,6 @@ To summarize:
    * Modules -> namespaces/packages
  * Source code generation requires
    * Projects files -> specify which modules to generate code for
-     * Projects are specified in project files (e.g. abc.xml)
    * Module files -> define the data model
 
 The file structure of the above project will look something like:
