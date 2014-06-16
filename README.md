@@ -226,7 +226,6 @@ Example: Here is how we generate a data model for testing the MGen Compiler:
       target/src_generated/gameworld/types/ClassRegistry.h
       target/src_generated/gameworld/types/ClassRegistry.cpp
 
-
 ### Using generated code
 
 To access the generated types we include the headers of the types we need, or the generated ClassRegistry.h header file which will let us access all the types that were just generated. We will also include some mgen headers for serialization.
