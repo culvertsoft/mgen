@@ -47,7 +47,7 @@
 
 		<GarageViewer>
 			<!-- Nonpolymorphic field -->
-			<vehicles type="array[Vehicle]" >
+			<vehicles type="array[Vehicle]" />
 		</GarageViewer>
 
 		<World>
