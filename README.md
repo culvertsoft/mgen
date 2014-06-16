@@ -2,7 +2,7 @@
 
 -- HEADS UP: This README is Work-In-Progress. It's about 35% finished! -- 
 
-MGen is a toolkit for designing cross-language data models, data mappings and serialization. MGen models are defined in a flexible [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code in multiple languages may be generated using the MGen Compiler. The MGen Runtime Libraries then provide functions such as serialization, deep copying, equality testing and type identification. 
+MGen is a toolkit for designing cross-language data models, data mapping and serialization. MGen models are defined in a flexible [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code in multiple languages may be generated using the MGen Compiler. The MGen Runtime Libraries then provide functions such as serialization, deep copying, equality testing and type identification. 
 
 The goal of MGen is to to simplify type-safe cross-language collaboration between software components and software teams that wish to share common data structures, allowing data model modifications without forcing everyone to adapt or rebuild their software.
 
@@ -20,6 +20,7 @@ MGen is inspired by several existing tools, such as [Protocol Buffers](https://c
   * [Stable](#stable)
   * [Nightly](#nightly)
   * [Snapshot](#snapshot)
+  * [Sample Projects](#sample-projects)
 * [Installation](#installation)
   * [Java](#java)
   * [CPP](#cpp)
@@ -107,17 +108,16 @@ We probably want to specify which code generators to run, and if there is more t
       
     </Project>
     
-Here we have specified:
+Here we have specified one code generator, one project dependency and two modules:
 * Generator
-  * Defines the settings to use for source code generation.
-    * generator_class_path
-      * The class path of the source code generator (In this case the default MGen java generator).
-    * output_path
-      * specifies the output folder where generated code will be placed
-    * classregistry_path
-      * The namespace/package where the genrated class registry will be placed (see the next section for information about class registries)
-    * name
-      * Simply a name identifier for debugging purposes. Can be anything.
+  * generator_class_path
+    * The class path of the source code generator (Here the default MGen java generator).
+  * output_path
+    * specifies the output folder where generated code will be placed
+  * classregistry_path
+    * The namespace/package where the genrated class registry will be placed
+  * name
+    * Simply a name identifier for debugging purposes. Can be anything.
 * Depend
   * Specifies another project file to depend on
 * Module
@@ -319,6 +319,28 @@ Now we can read these objects back from the stream in the following manner:
       // // do something. mgen::Exception extends std::runtime_error
       // }
 
+## Download links
+
+The following are links where you can download MGen pre-built. 
+
+### Stable
+
+Represents the latest non-beta release. As we're currently in alpha phase, there are yet no entries here.
+
+### Nightly 
+
+Represents the latest built development version, built once per night. You can download it from http://nightly.culvertsoft.se
+
+### Snapshot
+
+Represents the latest built development version, built after each git push. You can download it from http://snapshot.culvertsoft.se
+
+### Sample Projects
+
+Currently we haven't had time to produce any dedicated sample projects. But two projects that might of interest are:
+ * [The data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources)
+ * [The data model of the MGen Visual Designer](https://github.com/culvertsoft/mgen/tree/master/mgen-visualdesigner/model)
+
 ## Under the Hood
 
 ### Components
@@ -403,7 +425,7 @@ If you prefer graphical tools instead of command line, we are also working on a 
 
 ### Performance
 
-We have measured binary serialization performances of some polymorphic objects in C++ on a single ivy bridge i7 core to more than 1,5 Gbit/s (g++ 4.8.1 o3). Performance in the other direction was roughly 30% less. Performance is important to us, however it should be made clear that performance is NOT the primary focus of MGen.
+So far we've only performed some very basic performance tests, but results are promising. We have measured binary serialization performance of polymorphic objects in C++ on a single ivy bridge i7 core to more than 1,5 Gbit/s (g++ 4.8.1 o3). Performance in the other direction was roughly 30% less. Performance is important to us, however it should be made clear that performance is NOT the primary focus of MGen.
 
 
 
