@@ -53,7 +53,7 @@ MGen's structure is modular and customizable: IDL parsers, code generators, runt
   * [Runtime Libraries](#build-runtime-libraries)
   * [Tests](#tests)
 * [Version History](#version-history)
-* [Future Plants](#future-plans)
+* [Future Plans](#future-plans)
   * [RPC Interfaces](#rpc-interfaces)
   * [Transport Layers](#transport-layers)
 * [License](#license)
