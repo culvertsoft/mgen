@@ -123,11 +123,6 @@ Here we have specified:
 * Module
   * Specifies a module file to include in this project
 
-To summarize:
- * Source code generation requires
-   * Module files -> define the data model
-   * Projects files -> specify which modules to generate code for
-
 The file structure of the above project will look something like:
 * ..../se.culvertsoft.mymodule.xml (the module file for se.culvertsoft.mymodule)
 * ..../se.culvertsoft.mymodule2.xml (the module file for se.culvertsoft.mymodule2)
