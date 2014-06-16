@@ -16,8 +16,8 @@
 
 		<Positioning>
 			<position type="VectorR3" flags="required" />
-			<velocity type="VectorR3" flags="optional" />
-			<acceleration type="VectorR3" flags="polymorphic, optional" />
+			<velocity type="VectorR3" />
+			<acceleration type="VectorR3" flags="polymorphic" />
 		</Positioning>
 
 		<Entity>
@@ -47,13 +47,13 @@
 
 		<GarageViewer>
 			<!-- Nonpolymorphic field -->
-			<vehicles type="array[Vehicle]" flags="nonpolymorphic" />
+			<vehicles type="array[Vehicle]" >
 		</GarageViewer>
 
 		<World>
 			<name type="String" />
 			<entities type="map[int64, Entity]" />
-			<loadedFromDataBase type="String" flags="polymorphic, optional" />
+			<loadedFromDataBase type="String" flags="polymorphic" />
 		</World>
 
 	</Types>
