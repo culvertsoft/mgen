@@ -357,7 +357,17 @@ There is no installation required. Just put it where you like and follow the ins
 
 See [Generating source code](#generating-source-code) for how to use it.
 
+
 ### Installing the Java runtime libraries
+
+The latest [java runtime libraries](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/) are compiled to a java jar file. This file depends on [the mgen API](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/) (also a jar file). Both can be downloaded from the [downloads section](#download-links).
+
+Add both to your java projects class path and you should be good to go.
+
+There are also source attachments available. 
+
+If you want to include the runtime libries by source instead or build them yourself, [just check out this repository and build it](#building-mgen).
+
 
 ### Installing the C++ runtime libraries
 
