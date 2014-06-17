@@ -1,0 +1,1 @@
+/* SBT jasmine requires this file but mgen-javascript library does not need any dependepcies */
