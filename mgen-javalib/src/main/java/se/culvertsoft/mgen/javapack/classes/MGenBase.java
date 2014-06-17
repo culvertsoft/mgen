@@ -35,19 +35,17 @@ public abstract class MGenBase {
 	 * 
 	 * **********************************************************************/
 
+	public abstract int localTypeId();
+	
+	public abstract int[] localTypeIdHierarchy();
+	
 	public abstract short _typeHash16bit();
-
-	public abstract int _typeHash32bit();
 
 	public abstract String _typeName();
 
 	public abstract short[] _typeHashes16bit();
 
-	public abstract int[] _typeHashes32bit();
-
 	public abstract Collection<String> _typeHashes16bitBase64();
-
-	public abstract Collection<String> _typeHashes32bitBase64();
 
 	public abstract Collection<String> _typeNames();
 
@@ -62,8 +60,6 @@ public abstract class MGenBase {
 
 	public abstract Field _fieldBy16BitHash(final short hash);
 
-	public abstract Field _fieldBy32BitHash(final int hash);
-
 	public Field _fieldByName(final String memberName) {
 		return memberName != null ? _fieldBy16BitHash(Hasher
 				.static_16bit(memberName)) : null;
@@ -71,21 +67,17 @@ public abstract class MGenBase {
 
 	public abstract int _nFieldsSet(final FieldSetDepth fieldSetDepth);
 
-	public abstract boolean _isFieldSet(
-			final Field field,
+	public abstract boolean _isFieldSet(final Field field,
 			final FieldSetDepth depth);
 
-	public abstract MGenBase _setAllFieldsSet(
-			final boolean state,
+	public abstract MGenBase _setAllFieldsSet(final boolean state,
 			final FieldSetDepth depth);
 
 	public abstract boolean _validate(final FieldSetDepth depth);
 
 	public abstract void _accept(final FieldVisitor visitor) throws IOException;
 
-	public abstract boolean _readField(
-			final Field field,
-			final Object context,
+	public abstract boolean _readField(final Field field, final Object context,
 			final Reader reader) throws IOException;
 
 	public List<Field> _missingRequiredFields() {
@@ -97,6 +89,15 @@ public abstract class MGenBase {
 			}
 		}
 		return missingFields;
+	}
+	
+	public boolean isInstanceOfLocalId(final int potentialBase) {
+		for (int id: localTypeIdHierarchy()) {
+			if (id == potentialBase) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 }

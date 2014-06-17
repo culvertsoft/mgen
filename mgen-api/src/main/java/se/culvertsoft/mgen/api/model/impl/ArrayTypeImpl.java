@@ -20,7 +20,7 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 
 	public ArrayTypeImpl(final String writtenElemType) {
 		super(TypeEnum.ARRAY);
-		m_elementType = new UnknownCustomTypeImpl(writtenElemType);
+		m_elementType = new UnknownCustomTypeImpl(writtenElemType, -1);
 	}
 
 	public Type elementType() {

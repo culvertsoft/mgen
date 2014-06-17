@@ -145,18 +145,14 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
       // Own type data
       txtBuffer.tabs(1).textln("static const std::string& _TYPE_NAME();")
       txtBuffer.tabs(1).textln("static const std::vector<short>& _TYPE_HASHES_16BIT();")
-      txtBuffer.tabs(1).textln("static const std::vector<int>& _TYPE_HASHES_32BIT();")
       txtBuffer.tabs(1).textln("static const std::vector<std::string>& _TYPE_NAMES();")
       txtBuffer.tabs(1).textln("static const std::vector<std::string>& _TYPE_HASHES_16BIT_BASE64();")
-      txtBuffer.tabs(1).textln("static const std::vector<std::string>& _TYPE_HASHES_32BIT_BASE64();")
       txtBuffer.endl()
       txtBuffer.tabs(1).textln(s"enum _TYPE_HASHES {")
       txtBuffer.tabs(2).textln(s"_TYPE_HASH_16BIT = ${t.typeHash16bit()},")
-      txtBuffer.tabs(2).textln(s"_TYPE_HASH_32BIT = ${t.typeHash32bit()}")
       txtBuffer.tabs(1).textln(s"};")
       txtBuffer.endl()
       txtBuffer.tabs(1).textln("static const std::string& _TYPE_HASH_16BIT_BASE64();")
-      txtBuffer.tabs(1).textln("static const std::string& _TYPE_HASH_32BIT_BASE64();")
       txtBuffer.endl()
 
       // Field type data
@@ -171,15 +167,6 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
       txtBuffer.tabs(1).textln(s"enum _TYPE_HASHES_16BIT {")
       for ((field, i) <- allFields.zipWithIndex) {
          txtBuffer.tabs(2).text(s"${hash16(field)} = ${field.fieldHash16bit()}")
-         txtBuffer.textln(if (i + 1 == allFields.size) "" else ",")
-      }
-      txtBuffer.tabs(1).textln(s"};")
-      txtBuffer.endl()
-
-      // 32 bit hashes
-      txtBuffer.tabs(1).textln(s"enum _TYPE_HASHES_32BIT {")
-      for ((field, i) <- allFields.zipWithIndex) {
-         txtBuffer.tabs(2).text(s"${hash32(field)} = ${field.fieldHash32bit()}")
          txtBuffer.textln(if (i + 1 == allFields.size) "" else ",")
       }
       txtBuffer.tabs(1).textln(s"};")
@@ -237,10 +224,6 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
       txtBuffer.tabs(1).textln(s"const mgen::Field * _fieldBy16BitHash(const short hash) const;")
    }
 
-   override def mkFieldBy32BitHash(t: CustomType) {
-      txtBuffer.tabs(1).textln(s"const mgen::Field * _fieldBy32BitHash(const int hash) const;")
-   }
-
    override def mkFieldByName(t: CustomType) {
       txtBuffer.tabs(1).textln(s"const mgen::Field * _fieldByName(const std::string& name) const;")
       txtBuffer.endl()
@@ -249,15 +232,11 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
    override def mkMetadataGetters(t: CustomType) {
       txtBuffer.tabs(1).textln(s"const std::string& _typeName() const;")
       txtBuffer.tabs(1).textln(s"const short _typeHash16bit() const;")
-      txtBuffer.tabs(1).textln(s"const int _typeHash32bit() const;")
       txtBuffer.tabs(1).textln(s"const std::string& _typeHash16bitBase64() const;")
-      txtBuffer.tabs(1).textln(s"const std::string& _typeHash32bitBase64() const;")
       txtBuffer.endl()
       txtBuffer.tabs(1).textln(s"const std::vector<short>& _typeHashes16bit() const;")
-      txtBuffer.tabs(1).textln(s"const std::vector<int>& _typeHashes32bit() const;")
       txtBuffer.tabs(1).textln(s"const std::vector<std::string>& _typeNames() const;")
       txtBuffer.tabs(1).textln(s"const std::vector<std::string>& _typeHashes16bitBase64() const;")
-      txtBuffer.tabs(1).textln(s"const std::vector<std::string>& _typeHashes32bitBase64() const;")
       txtBuffer.endl()
 
       txtBuffer.tabs(1).textln(s"const std::vector<mgen::Field>& _fields() const;")
@@ -285,10 +264,8 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
       for (field <- t.getAllFieldsInclSuper())
          txtBuffer.tabs(1).textln(s"static std::vector<std::string> ${meta(field, false)}_FLAGS_make();")
       txtBuffer.tabs(1).textln("static std::vector<short> _TYPE_HASHES_16BIT_make();");
-      txtBuffer.tabs(1).textln("static std::vector<int> _TYPE_HASHES_32BIT_make();");
       txtBuffer.tabs(1).textln("static std::vector<std::string> _TYPE_NAMES_make();");
       txtBuffer.tabs(1).textln("static std::vector<std::string> _TYPE_HASHES_16BIT_BASE64_make();");
-      txtBuffer.tabs(1).textln("static std::vector<std::string> _TYPE_HASHES_32BIT_BASE64_make();");
       txtBuffer.tabs(1).textln("static std::vector<mgen::Field> _FIELDS_make();");
       txtBuffer.endl()
 

@@ -3,16 +3,23 @@ package se.culvertsoft.mgen.javapack.classes;
 public class ClassRegistryEntry {
 
 	public ClassRegistryEntry(
+			final int localTypeId, 
 			final String className,
-			final short typeHash16bit,
-			final int typeHash32bit,
-			final Class<?> cls,
+			final short typeHash16bit, 
 			final Ctor ctor) {
+		m_cls = lkupClass(className);
+		m_localTypeId = localTypeId;
 		m_clsName = className;
 		m_typeHash16bit = typeHash16bit;
-		m_typeHash32bit = typeHash32bit;
-		m_class = cls;
 		m_ctor = ctor;
+	}
+	
+	private static Class<?> lkupClass(final String className) {
+		try {
+			return Class.forName(className);
+		} catch (ClassNotFoundException e) {
+			throw new RuntimeException("Failed to init class " + className, e);
+		}
 	}
 
 	public MGenBase construct() {
@@ -27,22 +34,22 @@ public class ClassRegistryEntry {
 		return m_typeHash16bit;
 	}
 
-	public int typeHash32bit() {
-		return m_typeHash32bit;
-	}
-
-	public Class<?> cls() {
-		return m_class;
+	public int localTypeId() {
+		return m_localTypeId;
 	}
 
 	public Ctor ctor() {
 		return m_ctor;
 	}
 
+	public Class<?> cls() {
+		return m_cls;
+	}
+
+	private final Class<?> m_cls;
+	private final int m_localTypeId;
 	private final String m_clsName;
 	private final short m_typeHash16bit;
-	private final int m_typeHash32bit;
-	private final Class<?> m_class;
 	private final Ctor m_ctor;
 
 }

@@ -14,6 +14,8 @@ import se.culvertsoft.mgen.api.model.TypeEnum;
 
 public class CustomTypeImpl extends TypeImpl implements CustomType {
 
+	private final int m_localTypeId;
+	
 	private String m_name;
 	private String m_fullName;
 	private Module m_module;
@@ -31,11 +33,13 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	private Set<CustomType> m_directDependencies;
 
 	public CustomTypeImpl(
+			final int localTypeId,
 			final String name,
 			final Module module,
 			final Type superType,
 			final List<Field> fields) {
 		super(TypeEnum.CUSTOM);
+		m_localTypeId = localTypeId;
 		m_name = name;
 		m_fullName = module.path() + "." + m_name;
 		m_module = module;
@@ -53,10 +57,11 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	}
 
 	public CustomTypeImpl(
+			final int localId,
 			final String name,
 			final Module module,
 			final Type superType) {
-		this(name, module, superType, new ArrayList<Field>());
+		this(localId, name, module, superType, new ArrayList<Field>());
 	}
 
 	public void setSuperType(final Type superType) {
@@ -74,6 +79,10 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 		resetHashCaches();
 	}
 
+	public int localTypeId() {
+		return m_localTypeId;
+	}
+	
 	public String name() {
 		return m_name;
 	}

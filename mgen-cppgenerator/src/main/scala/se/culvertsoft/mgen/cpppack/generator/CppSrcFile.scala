@@ -159,24 +159,6 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
    }
 
-   override def mkFieldBy32BitHash(t: CustomType) {
-
-      val allFields = t.getAllFieldsInclSuper()
-
-      txtBuffer.tabs(0).textln(s"const mgen::Field * ${t.shortName()}::_fieldBy32BitHash(const int hash) const {")
-      txtBuffer.tabs(1).textln(s"switch (hash) {")
-      for (field <- allFields) {
-         txtBuffer.tabs(1).textln(s"case ${hash32(field)}:")
-         txtBuffer.tabs(2).textln(s"return &${meta(field)};")
-      }
-      txtBuffer.tabs(1).textln(s"default:")
-      txtBuffer.tabs(2).textln(s"return 0;");
-      txtBuffer.tabs(1).textln(s"}")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
-   }
-
    override def mkFieldByName(t: CustomType) {
 
       val allFields = t.getAllFieldsInclSuper()
@@ -303,28 +285,13 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()
 
-      txtBuffer.tabs(0).textln(s"const int ${t.shortName()}::_typeHash32bit() const {")
-      txtBuffer.tabs(1).textln(s"return _TYPE_HASH_32BIT;")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
       txtBuffer.tabs(0).textln(s"const std::vector<short>& ${t.shortName()}::_typeHashes16bit() const {")
       txtBuffer.tabs(1).textln(s"return _TYPE_HASHES_16BIT();")
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()
 
-      txtBuffer.tabs(0).textln(s"const std::vector<int>& ${t.shortName()}::_typeHashes32bit() const {")
-      txtBuffer.tabs(1).textln(s"return _TYPE_HASHES_32BIT();")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
       txtBuffer.tabs(0).textln(s"const std::string& ${t.shortName()}::_typeHash16bitBase64() const {")
       txtBuffer.tabs(1).textln(s"return _TYPE_HASH_16BIT_BASE64();")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
-      txtBuffer.tabs(0).textln(s"const std::string& ${t.shortName()}::_typeHash32bitBase64() const {")
-      txtBuffer.tabs(1).textln(s"return _TYPE_HASH_32BIT_BASE64();")
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()
 
@@ -335,11 +302,6 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
       txtBuffer.tabs(0).textln(s"const std::vector<std::string>& ${t.shortName()}::_typeHashes16bitBase64() const {")
       txtBuffer.tabs(1).textln(s"return _TYPE_HASHES_16BIT_BASE64();")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
-      txtBuffer.tabs(0).textln(s"const std::vector<std::string>& ${t.shortName()}::_typeHashes32bitBase64() const {")
-      txtBuffer.tabs(1).textln(s"return _TYPE_HASHES_32BIT_BASE64();")
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()
 
@@ -367,12 +329,6 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()
 
-      txtBuffer.tabs(0).textln(s"const std::vector<int>& ${t.shortName()}::_TYPE_HASHES_32BIT() {")
-      txtBuffer.tabs(1).textln(s"static const std::vector<int> out = _TYPE_HASHES_32BIT_make();")
-      txtBuffer.tabs(1).textln(s"return out;")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
       txtBuffer.tabs(0).textln(s"const std::vector<std::string>& ${t.shortName()}::_TYPE_NAMES() {")
       txtBuffer.tabs(1).textln(s"static const std::vector<std::string> out = _TYPE_NAMES_make();")
       txtBuffer.tabs(1).textln(s"return out;")
@@ -385,20 +341,8 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()
 
-      txtBuffer.tabs(0).textln(s"const std::vector<std::string>& ${t.shortName()}::_TYPE_HASHES_32BIT_BASE64() {")
-      txtBuffer.tabs(1).textln(s"static const std::vector<std::string> out = _TYPE_HASHES_32BIT_BASE64_make();")
-      txtBuffer.tabs(1).textln(s"return out;")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
       txtBuffer.tabs(0).textln(s"const std::string& ${t.shortName()}::_TYPE_HASH_16BIT_BASE64() {")
       txtBuffer.tabs(1).textln(s"static const std::string out = ${quote(t.typeHash16bitBase64String())};")
-      txtBuffer.tabs(1).textln(s"return out;")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
-      txtBuffer.tabs(0).textln(s"const std::string& ${t.shortName()}::_TYPE_HASH_32BIT_BASE64() {")
-      txtBuffer.tabs(1).textln(s"static const std::string out = ${quote(t.typeHash32bitBase64String())};")
       txtBuffer.tabs(1).textln(s"return out;")
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()
@@ -417,7 +361,7 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
          txtBuffer.tabs(0).textln(s"const mgen::Field& ${t.shortName()}::${meta(field)} {")
          txtBuffer.tabs(1).textln(s"static const std::vector<std::string>& flags = ${meta(field, false)}_FLAGS_make();")
          txtBuffer.tabs(1).textln(
-            s"static const mgen::Field out(${field.fieldHash16bit()}, ${field.fieldHash32bit()}, ${quote(field.name())}, mgen::Type(mgen::Type::ENUM_$enumString, mgen::Type::TAG_$enumString, flags), flags);")
+            s"static const mgen::Field out(${field.fieldHash16bit()}, ${quote(field.name())}, mgen::Type(mgen::Type::ENUM_$enumString, mgen::Type::TAG_$enumString, flags), flags);")
          txtBuffer.tabs(1).textln(s"return out;")
          txtBuffer.tabs(0).textln(s"}")
          txtBuffer.endl()
@@ -445,14 +389,6 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()
 
-      txtBuffer.tabs(0).textln(s"std::vector<int> ${t.shortName()}::_TYPE_HASHES_32BIT_make() {");
-      txtBuffer.tabs(1).textln(s"std::vector<int> out;")
-      for (t <- t.superTypeHierarchy())
-         txtBuffer.tabs(1).textln(s"out.push_back(${t.typeHash32bit()});")
-      txtBuffer.tabs(1).textln(s"return out;")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
       txtBuffer.tabs(0).textln(s"std::vector<std::string> ${t.shortName()}::_TYPE_NAMES_make() {");
       txtBuffer.tabs(1).textln(s"std::vector<std::string> out;")
       for (t <- t.superTypeHierarchy())
@@ -465,14 +401,6 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
       txtBuffer.tabs(1).textln(s"std::vector<std::string> out;")
       for (t <- t.superTypeHierarchy())
          txtBuffer.tabs(1).textln(s"out.push_back(${quote(t.typeHash16bitBase64String())});")
-      txtBuffer.tabs(1).textln(s"return out;")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
-
-      txtBuffer.tabs(0).textln(s"std::vector<std::string> ${t.shortName()}::_TYPE_HASHES_32BIT_BASE64_make() {");
-      txtBuffer.tabs(1).textln(s"std::vector<std::string> out;")
-      for (t <- t.superTypeHierarchy())
-         txtBuffer.tabs(1).textln(s"out.push_back(${quote(t.typeHash32bitBase64String())});")
       txtBuffer.tabs(1).textln(s"return out;")
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()

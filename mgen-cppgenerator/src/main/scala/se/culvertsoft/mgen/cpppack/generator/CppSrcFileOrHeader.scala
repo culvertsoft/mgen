@@ -61,7 +61,6 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     mkReadField(t)
     mkAcceptVisitor(t)
     mkFieldBy16BitHash(t)
-    mkFieldBy32BitHash(t)
     mkFieldByName(t)
     mkMetadataGetters(t)
     mkSetFieldsSet(t)
@@ -138,7 +137,6 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   def mkReadField(t: CustomType) {}
   def mkGetFields(t: CustomType) {}
   def mkFieldBy16BitHash(t: CustomType) {}
-  def mkFieldBy32BitHash(t: CustomType) {}
   def mkFieldByName(t: CustomType) {}
   def mkTypeHierarchyMethods(t: CustomType) {}
   def mkNewInstance(t: CustomType) {}
@@ -185,10 +183,6 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
   def hash16(field: Field): String = {
     s"_${field.name()}_HASH_16BIT"
-  }
-
-  def hash32(field: Field): String = {
-    s"_${field.name()}_HASH_32BIT"
   }
 
   def meta(field: Field, inclParan: Boolean = true): String = {

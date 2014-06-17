@@ -8,13 +8,11 @@ public class SerializationSettings {
 
 	public enum TypeIdType {
 		HASH_16_BIT, // DEFAULT
-		HASH_32_BIT,
 		CLASS_NAME_QUALIFIED,
 	}
 
 	public enum FieldIdType {
 		HASH_16_BIT, // DEFAULT
-		HASH_32_BIT,
 		FIELD_NAME
 	}
 

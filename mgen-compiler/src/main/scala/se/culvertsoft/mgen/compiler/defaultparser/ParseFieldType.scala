@@ -60,7 +60,7 @@ object ParseFieldType {
           new MapTypeImpl(ParseFieldType(keyTypeString), ParseFieldType(valueTypeString))
 
         } else {
-          new UnknownCustomTypeImpl(typeString)
+          new UnknownCustomTypeImpl(typeString, -1)
         }
 
     }

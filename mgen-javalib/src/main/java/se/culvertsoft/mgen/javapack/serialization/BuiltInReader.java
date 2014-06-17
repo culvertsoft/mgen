@@ -12,16 +12,14 @@ public abstract class BuiltInReader implements Reader {
 		m_classRegistry = classRegistry;
 	}
 
-	protected MGenBase instantiate(final short[] typeIds) {
+	protected MGenBase instantiate(final short[] globalTypeIds) {
 
-		for (int i = (typeIds.length - 1); i >= 0; i--) {
-			final ClassRegistryEntry classRegEntry = m_classRegistry
-					.getBy16bitHash(typeIds[i]);
-			if (classRegEntry != null)
-				return classRegEntry.construct();
-		}
+		final int localTypeId = m_classRegistry.globalIds2Local(globalTypeIds);
+		final ClassRegistryEntry entry = m_classRegistry
+				.getByLocalId(localTypeId);
 
-		// TODO: Handle failed constraint
+		if (entry != null)
+			return entry.construct();
 
 		return null;
 	}

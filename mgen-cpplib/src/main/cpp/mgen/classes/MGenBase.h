@@ -38,17 +38,13 @@ public:
 
     // Keep flat or wrap with some 'Type' object?
     virtual const short _typeHash16bit() const = 0;
-    virtual const int _typeHash32bit() const = 0;
     virtual const std::string& _typeName() const = 0;
     virtual const std::string& _typeHash16bitBase64() const = 0;
-    virtual const std::string& _typeHash32bitBase64() const = 0;
 
     // Keep flat or wrap with some 'Type' objects?
     virtual const std::vector<short>& _typeHashes16bit() const = 0;
-    virtual const std::vector<int>& _typeHashes32bit() const = 0;
     virtual const std::vector<std::string>& _typeNames() const = 0;
     virtual const std::vector<std::string>& _typeHashes16bitBase64() const = 0;
-    virtual const std::vector<std::string>& _typeHashes32bitBase64() const = 0;
 
     /************************************************************************
      *
@@ -60,8 +56,6 @@ public:
     virtual const std::vector<mgen::Field>& _fields() const = 0;
 
     virtual const mgen::Field * _fieldBy16BitHash(const short hash) const = 0;
-
-    virtual const mgen::Field * _fieldBy32BitHash(const int hash) const = 0;
 
     virtual const mgen::Field * _fieldByName(const std::string& name) const = 0;
 

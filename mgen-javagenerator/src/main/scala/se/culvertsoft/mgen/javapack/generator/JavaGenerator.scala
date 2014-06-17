@@ -1,17 +1,42 @@
 package se.culvertsoft.mgen.javapack.generator
 
+import java.io.File
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaSet
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.JavaConversions.mapAsScalaMap
 import scala.collection.JavaConversions.seqAsJavaList
-import JavaConstants._
-import JavaConstruction.defaultConstruct
+
+import JavaConstants.arrayListClsString
+import JavaConstants.clsRegistryClsString
+import JavaConstants.colClsString
+import JavaConstants.deepCopyerClsString
+import JavaConstants.deepCopyerClsStringQ
+import JavaConstants.eqTesterClsString
+import JavaConstants.eqTesterClsStringQ
+import JavaConstants.fieldClsString
+import JavaConstants.fieldClsStringQ
+import JavaConstants.fieldHasherClsString
+import JavaConstants.fieldHasherClsStringQ
+import JavaConstants.fieldSetDepthClsString
+import JavaConstants.fieldSetDepthClsStringQ
+import JavaConstants.fieldVisitorClsString
+import JavaConstants.fieldVisitorClsStringQ
+import JavaConstants.fileHeader
+import JavaConstants.metadataSectionHeader
+import JavaConstants.modelPkg
+import JavaConstants.readerClsString
+import JavaConstants.readerClsStringQ
+import JavaConstants.serializationSectionHeader
+import JavaConstants.setFieldSetClsString
+import JavaConstants.setFieldSetClsStringQ
+import JavaConstants.validatorClsString
+import JavaConstants.validatorClsStringQ
 import JavaConstruction.defaultConstructNull
 import JavaReadCalls.mkReadCall
 import JavaTypeNames.getTypeName
 import se.culvertsoft.mgen.api.exceptions.GenerationException
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Field
@@ -20,10 +45,10 @@ import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.compiler.internal.BuiltInJavaCppGenerator
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
-import java.io.File
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 class JavaGenerator extends BuiltInJavaCppGenerator {
   import JavaConstants._
@@ -74,6 +99,41 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
       txtBuffer.tabs(2).textln(s"add(new ${fullRegistryClassName}());")
     }
     txtBuffer.tabs(1).textln("}")
+    txtBuffer.endl()
+
+    val allTypes = referencedModules.flatMap(_.types()).map(_._2)
+    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+
+    txtBuffer.tabs(1).textln("@Override")
+    txtBuffer.tabs(1).textln("public int globalIds2Local(final short[] globalIds) {")
+
+    def mkSwitch(
+      nTabs: Int,
+      localId: String,
+      possibleTypes: Seq[CustomType]) {
+
+      txtBuffer.tabs(nTabs).textln("switch(globalIds[i++]) {")
+
+      for (t <- possibleTypes) {
+
+        txtBuffer.tabs(nTabs + 1).textln(s"case ${hash16(t)}:")
+
+        if (t.subTypes().nonEmpty) {
+          txtBuffer.tabs(nTabs + 2).textln(s"if (i == globalIds.length) return ${localIdStr(t)};")
+          mkSwitch(nTabs + 2, hash16(t), t.subTypes());
+        } else {
+          txtBuffer.tabs(nTabs + 2).textln(s"return ${localIdStr(t)};")
+        }
+      }
+
+      txtBuffer.tabs(nTabs + 1).textln("default:")
+      txtBuffer.tabs(nTabs + 2).textln(s"return $localId;")
+      txtBuffer.tabs(nTabs).textln("}")
+    }
+
+    txtBuffer.tabs(2).textln("int i = 0;")
+    mkSwitch(2, "-1", topLevelTypes)
+    txtBuffer.tabs(1).textln("}")
 
     mkClassEnd()
 
@@ -95,10 +155,9 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     txtBuffer.tabs(1).textln("public MGenModuleClassRegistry() {")
     for ((_, typ) <- currentModule.types()) {
       txtBuffer.tabs(2).textln(s"add(")
+      txtBuffer.tabs(3).textln(s"(int)${typ.localTypeId()},")
       txtBuffer.tabs(3).textln(s"${quote(typ.fullName())},")
       txtBuffer.tabs(3).textln(s"(short)${typ.typeHash16bit()},")
-      txtBuffer.tabs(3).textln(s"(int)${typ.typeHash32bit()},")
-      txtBuffer.tabs(3).textln(s"${typ.fullName()}.class,")
       txtBuffer.tabs(3).textln(s"new Ctor() { public MGenBase create() { return new ${typ.fullName()}(); } }")
       txtBuffer.tabs(2).textln(s");")
     }
@@ -118,6 +177,9 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     mkPackage(currentModule.path())
     mkImports(t)
     mkClassStart(t)
+
+    mkLocalTypeId(t)
+
     mkMembers(t)
     mkDefaultCtor(t)
     mkRequiredMembersCtor(t)
@@ -141,7 +203,6 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     mkValidate(t)
     mkNFieldsSet(t)
     mkFieldBy16BitHash(t)
-    mkFieldBy32BitHash(t)
     mkTypeHierarchyMethods(t)
 
     mkMetadataComment(t)
@@ -153,6 +214,14 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     mkClassEnd()
 
     txtBuffer.toString()
+  }
+
+  def mkLocalTypeId(t: CustomType) {
+
+    txtBuffer.tabs(1).textln(s"public static final int LOCAL_TYPE_ID = ${t.localTypeId()};").endl()
+
+    val allLocalIds = t.superTypeHierarchy.map(t => localIdStr(t.asInstanceOf[CustomType]))
+    txtBuffer.tabs(1).textln(s"public static final int[] LOCAL_TYPE_ID_HIERARCHY = { ${allLocalIds.mkString(", ")} };").endl()
   }
 
   def mkToString(t: CustomType) {
@@ -263,12 +332,7 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
   }
 
   def mkDefaultCtor(t: CustomType) {
-    /*
-      txtBuffer.tabs(1).textln(s"public ${t.name()}() {")
-      txtBuffer.tabs(2).textln(s"this(${fieldDefValueClsString}.NULL);");
-      txtBuffer.tabs(1).textln("}")
-      txtBuffer.endl()
-*/
+
     txtBuffer.tabs(1).textln(s"public ${t.name()}() {")
     txtBuffer.tabs(2).textln(s"super();");
     for (field <- t.fields()) {
@@ -409,13 +473,6 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
       txtBuffer.tabs(1).textln(s"}").endl()
     }
 
-    /*
-      for (field <- t.fields()) {
-         txtBuffer.tabs(1).textln(s"public ${getTypeName(field.typ())} ${set(field, "")} {")
-         txtBuffer.tabs(2).textln(s"${setFieldSet(field, s"true, ${fieldSetDepthClsString}.SHALLOW")};")
-         txtBuffer.tabs(2).textln(s"return ${get(field)};")
-         txtBuffer.tabs(1).textln(s"}").endl()
-      }*/
   }
 
   def mkHashCode(t: CustomType) {
@@ -453,11 +510,6 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     txtBuffer.tabs(1).textln("@Override")
     txtBuffer.tabs(1).textln("public short _typeHash16bit() {")
     txtBuffer.tabs(2).textln(s"return _TYPE_HASH_16BIT;")
-    txtBuffer.tabs(1).textln("}").endl()
-
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public int _typeHash32bit() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_HASH_32BIT;")
     txtBuffer.tabs(1).textln("}").endl()
 
   }
@@ -603,16 +655,8 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
       txtBuffer.endl()
     }
 
-    if (fields.nonEmpty) {
-      for (field <- fields) {
-        txtBuffer.tabs(1).textln(s"public static final int ${hash32(field)} = ${field.fieldHash32bit()};")
-      }
-      txtBuffer.endl()
-    }
-
     txtBuffer.tabs(1).textln(s"public static final String _TYPE_NAME = ${quote(t.fullName())};");
     txtBuffer.tabs(1).textln(s"public static final short _TYPE_HASH_16BIT = ${t.typeHash16bit()};");
-    txtBuffer.tabs(1).textln(s"public static final int _TYPE_HASH_32BIT = ${t.typeHash32bit()};");
     txtBuffer.endl()
 
     txtBuffer.tabs(1).textln(s"public static final $colClsString<$fieldClsString> FIELDS;");
@@ -645,7 +689,7 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
         s"new ${modelPkg}.impl.ArrayTypeImpl(${mkMetaData(ta.elementType())})"
       case TypeEnum.CUSTOM =>
         val tc = t.asInstanceOf[CustomType]
-        s"new ${modelPkg}.impl.UnknownCustomTypeImpl(${quote(tc.fullName())})"
+        s"new ${modelPkg}.impl.UnknownCustomTypeImpl(${quote(tc.fullName())}, ${tc.localTypeId()})"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }
   }
@@ -679,21 +723,6 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     txtBuffer.tabs(2).textln(s"switch(hash) {")
     for (field <- allFields) {
       txtBuffer.tabs(3).textln(s"case (${hash16(field)}):")
-      txtBuffer.tabs(4).textln(s"return ${meta(field)};")
-    }
-    txtBuffer.tabs(3).textln(s"default:")
-    txtBuffer.tabs(4).textln(s"return null;")
-    txtBuffer.tabs(2).textln(s"}")
-    txtBuffer.tabs(1).textln("}").endl()
-  }
-
-  def mkFieldBy32BitHash(t: CustomType) {
-    val allFields = t.getAllFieldsInclSuper()
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln(s"public $fieldClsString _fieldBy32BitHash(final int hash) {")
-    txtBuffer.tabs(2).textln(s"switch(hash) {")
-    for (field <- allFields) {
-      txtBuffer.tabs(3).textln(s"case (${hash32(field)}):")
       txtBuffer.tabs(4).textln(s"return ${meta(field)};")
     }
     txtBuffer.tabs(3).textln(s"default:")
@@ -739,15 +768,20 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
   }
 
   def mkTypeHierarchyMethods(t: CustomType) {
+    
+    txtBuffer.tabs(1).textln("@Override")
+    txtBuffer.tabs(1).textln("public int localTypeId() {")
+    txtBuffer.tabs(2).textln(s"return LOCAL_TYPE_ID;")
+    txtBuffer.tabs(1).textln("}").endl()
+
+    txtBuffer.tabs(1).textln("@Override")
+    txtBuffer.tabs(1).textln("public int[] localTypeIdHierarchy() {")
+    txtBuffer.tabs(2).textln(s"return LOCAL_TYPE_ID_HIERARCHY;")
+    txtBuffer.tabs(1).textln("}").endl()
 
     txtBuffer.tabs(1).textln("@Override")
     txtBuffer.tabs(1).textln("public short[] _typeHashes16bit() {")
     txtBuffer.tabs(2).textln(s"return _TYPE_HASHES_16BIT;")
-    txtBuffer.tabs(1).textln("}").endl()
-
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public int[] _typeHashes32bit() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_HASHES_32BIT;")
     txtBuffer.tabs(1).textln("}").endl()
 
     txtBuffer.tabs(1).textln("@Override")
@@ -758,11 +792,6 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     txtBuffer.tabs(1).textln("@Override")
     txtBuffer.tabs(1).textln("public java.util.Collection<String> _typeHashes16bitBase64() {")
     txtBuffer.tabs(2).textln(s"return _TYPE_HASHES_16BIT_BASE64;")
-    txtBuffer.tabs(1).textln("}").endl()
-
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public java.util.Collection<String> _typeHashes32bitBase64() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_HASHES_32BIT_BASE64;")
     txtBuffer.tabs(1).textln("}").endl()
 
   }
@@ -785,29 +814,23 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
 
     txtBuffer.tabs(1).textln("static {")
     txtBuffer.tabs(2).textln(s"_TYPE_HASHES_16BIT = new short[${t.superTypeHierarchy().size()}];")
-    txtBuffer.tabs(2).textln(s"_TYPE_HASHES_32BIT = new int[${t.superTypeHierarchy().size()}];")
     txtBuffer.tabs(2).textln(s"final java.util.ArrayList<String> names = new java.util.ArrayList<String>();")
     txtBuffer.tabs(2).textln(s"final java.util.ArrayList<String> base6416bit = new java.util.ArrayList<String>();")
-    txtBuffer.tabs(2).textln(s"final java.util.ArrayList<String> base6432bit = new java.util.ArrayList<String>();")
+
     for ((ht, i) <- t.superTypeHierarchy().zipWithIndex) {
       txtBuffer.tabs(2).textln(s"_TYPE_HASHES_16BIT[$i] = ${ht.typeHash16bit()};")
-      txtBuffer.tabs(2).textln(s"_TYPE_HASHES_32BIT[$i] = ${ht.typeHash32bit()};")
       txtBuffer.tabs(2).textln(s"names.add(${quote(ht.fullName())});")
       txtBuffer.tabs(2).textln(s"base6416bit.add(${quote(ht.typeHash16bitBase64String())});")
-      txtBuffer.tabs(2).textln(s"base6432bit.add(${quote(ht.typeHash32bitBase64String())});")
     }
     txtBuffer.tabs(2).textln(s"_TYPE_NAMES = names;")
     txtBuffer.tabs(2).textln(s"_TYPE_HASHES_16BIT_BASE64 = base6416bit;")
-    txtBuffer.tabs(2).textln(s"_TYPE_HASHES_32BIT_BASE64 = base6432bit;")
     txtBuffer.tabs(1).textln("}").endl()
   }
 
   def mkTypeHierarchyFields(t: CustomType) {
     txtBuffer.tabs(1).textln("public static final short[] _TYPE_HASHES_16BIT;")
-    txtBuffer.tabs(1).textln("public static final int[] _TYPE_HASHES_32BIT;")
     txtBuffer.tabs(1).textln("public static final java.util.Collection<String> _TYPE_NAMES;")
     txtBuffer.tabs(1).textln("public static final java.util.Collection<String> _TYPE_HASHES_16BIT_BASE64;")
-    txtBuffer.tabs(1).textln("public static final java.util.Collection<String> _TYPE_HASHES_32BIT_BASE64;").endl()
   }
 
   def mkMetadataMethodsComment(t: CustomType) {
@@ -838,12 +861,16 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     s"_${field.name()}_HASH_16BIT"
   }
 
-  def hash32(field: Field): String = {
-    s"_${field.name()}_HASH_32BIT"
-  }
-
   def meta(field: Field): String = {
     s"_${field.name()}_METADATA"
+  }
+
+  def hash16(t: CustomType): String = {
+    s"${t.fullName()}._TYPE_HASH_16BIT"
+  }
+
+  def localIdStr(t: CustomType): String = {
+    s"${t.fullName()}.LOCAL_TYPE_ID"
   }
 
 }

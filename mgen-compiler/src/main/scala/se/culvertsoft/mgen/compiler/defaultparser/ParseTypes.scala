@@ -18,11 +18,11 @@ object ParseType {
 
     val superType =
       node.getAttribString("extends") match {
-        case Some(superTypeName) => new UnknownCustomTypeImpl(superTypeName)
+        case Some(superTypeName) => new UnknownCustomTypeImpl(superTypeName, -1)
         case _ => MGenBaseType.INSTANCE
       }
 
-    val clas = new CustomTypeImpl(name, module, superType)
+    val clas = new CustomTypeImpl(cache.nextLocalId(), name, module, superType)
     val fields = node.child.map { ParseField(_, clas.fullName) }
     clas.setFields(fields)
 

@@ -25,8 +25,8 @@ public class MapTypeImpl extends TypeImpl implements MapType {
 			final String writtenKeyType,
 			final String writtenValueType) {
 		super(TypeEnum.MAP);
-		m_keyType = new UnknownCustomTypeImpl(writtenKeyType);
-		m_valueType = new UnknownCustomTypeImpl(writtenValueType);
+		m_keyType = new UnknownCustomTypeImpl(writtenKeyType, -1);
+		m_valueType = new UnknownCustomTypeImpl(writtenValueType, -1);
 	}
 
 	public Type keyType() {

@@ -12,10 +12,17 @@ public class UnknownCustomTypeImpl extends TypeImpl implements
 		UnknownCustomType {
 
 	private final String m_writtenType;
+	private final int m_localTypeId;
 
-	public UnknownCustomTypeImpl(final String writtenType) {
+	public UnknownCustomTypeImpl(final String writtenType, final int localTypeId) {
 		super(TypeEnum.UNKNOWN);
 		m_writtenType = writtenType;
+		m_localTypeId = localTypeId;
+	}
+
+	@Override
+	public int localTypeId() {
+		return m_localTypeId;
 	}
 
 	@Override
@@ -40,7 +47,8 @@ public class UnknownCustomTypeImpl extends TypeImpl implements
 	@Override
 	public int hashCode() {
 		final int prime = 31;
-		int result = 1;
+		int result = super.hashCode();
+		result = prime * result + m_localTypeId;
 		result = prime * result
 				+ ((m_writtenType == null) ? 0 : m_writtenType.hashCode());
 		return result;
@@ -55,6 +63,8 @@ public class UnknownCustomTypeImpl extends TypeImpl implements
 		if (getClass() != obj.getClass())
 			return false;
 		UnknownCustomTypeImpl other = (UnknownCustomTypeImpl) obj;
+		if (m_localTypeId != other.m_localTypeId)
+			return false;
 		if (m_writtenType == null) {
 			if (other.m_writtenType != null)
 				return false;
@@ -78,17 +88,6 @@ public class UnknownCustomTypeImpl extends TypeImpl implements
 	@Override
 	public Set<CustomType> getAllReferencedTypesInclSuper() {
 		return Collections.EMPTY_SET;
-	}
-
-	@Override
-	public boolean matchesOneOf(final short[] typeIds) {
-		final short myTypeId = typeHash16bit();
-		for (final short typeId : typeIds) {
-			if (myTypeId == typeId) {
-				return true;
-			}
-		}
-		return false;
 	}
 
 	@Override

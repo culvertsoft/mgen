@@ -59,6 +59,15 @@ import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
 class Vd2ApiConversionState(val srcModel: Model) {
   import ModelConversion._
   val apiObjLkup = new HashMap[String, ApiEntity] // classpath -> Entity
+
+  private var _nextLocalId = 0
+
+  def nextLocalId() = synchronized {
+    val out = _nextLocalId
+    _nextLocalId += 1
+    out
+  }
+
 }
 
 object Vd2Api {
@@ -74,7 +83,7 @@ object Vd2Api {
   }
 
   private def getApiCustomType(fullClassPath: String)(implicit cvState: Vd2ApiConversionState): ApiType = {
-    cvState.apiObjLkup.getOrElseUpdate(fullClassPath, new UnknownCustomTypeImpl(fullClassPath)).asInstanceOf[ApiType]
+    cvState.apiObjLkup.getOrElseUpdate(fullClassPath, new UnknownCustomTypeImpl(fullClassPath, -1)).asInstanceOf[ApiType]
   }
 
   private def getApiCustomType(vdType: VdClass)(implicit cvState: Vd2ApiConversionState): ApiType = {
@@ -121,7 +130,7 @@ object Vd2Api {
       else
         MGenBaseType.INSTANCE
 
-    val t = new ApiClassImpl(vdClass.getName(), parentModule, apiSuperType)
+    val t = new ApiClassImpl(cvState.nextLocalId(), vdClass.getName(), parentModule, apiSuperType)
     cvState.apiObjLkup.put(Type2String.getClassPath(vdClass), t)
 
     t.setFields(vdClass.getFields.map(cvtField(_, t)))

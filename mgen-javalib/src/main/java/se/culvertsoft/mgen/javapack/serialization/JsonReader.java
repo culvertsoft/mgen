@@ -33,8 +33,7 @@ public class JsonReader extends BuiltInReader {
 	@SuppressWarnings("unused")
 	private final ReadErrorListener errorHandler;
 
-	public JsonReader(
-			final InputStream stream,
+	public JsonReader(final InputStream stream,
 			final ClassRegistry classRegistry,
 			final ReaderSettings readerSettings,
 			final ReadErrorListener errorHandler) {
@@ -45,13 +44,9 @@ public class JsonReader extends BuiltInReader {
 		this.errorHandler = errorHandler;
 	}
 
-	public JsonReader(
-			final InputStream stream,
+	public JsonReader(final InputStream stream,
 			final ClassRegistry classRegistry) {
-		this(
-				stream,
-				classRegistry,
-				ReaderSettings.DEFAULT,
+		this(stream, classRegistry, ReaderSettings.DEFAULT,
 				new ReadErrorAdapter());
 	}
 
@@ -162,11 +157,9 @@ public class JsonReader extends BuiltInReader {
 	}
 
 	@Override
-	public final MGenBase readMgenObjectField(
-			final Field field,
+	public final MGenBase readMgenObjectField(final Field field,
 			final Object context) throws IOException {
-		return readMGenObject(
-				getJsonObj(field, context),
+		return readMGenObject(getJsonObj(field, context),
 				(UnknownCustomType) field.typ());
 	}
 
@@ -191,16 +184,17 @@ public class JsonReader extends BuiltInReader {
 
 	}
 
-	private MGenBase readMGenObject(
-			final JSONObject node,
+	private MGenBase readMGenObject(final JSONObject node,
 			final UnknownCustomType constraint) throws IOException {
 
 		final MGenBase out = readMGenObject(node);
-		if (out != null && constraint != null
-				&& !constraint.matchesOneOf(out._typeHashes16bit()))
-			return null;
 
-		// TODO: Handle failed constraints
+		if (out != null && constraint != null) {
+			if (!out.isInstanceOfLocalId(constraint.localTypeId())) {
+				// TODO: Handle constraints failure
+				return null;
+			}
+		}
 
 		return out;
 	}
@@ -500,8 +494,7 @@ public class JsonReader extends BuiltInReader {
 						+ "'");
 	}
 
-	protected void throwMissingFieldIfNull(
-			final Object o,
+	protected void throwMissingFieldIfNull(final Object o,
 			final String fieldName) {
 		if (o == null) {
 			throwMissingField(fieldName);

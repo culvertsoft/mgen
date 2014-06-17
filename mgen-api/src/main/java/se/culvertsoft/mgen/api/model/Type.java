@@ -8,11 +8,7 @@ public interface Type {
 
 	public TypeEnum typeEnum();
 
-	public int typeHash32bit();
-
 	public short typeHash16bit();
-
-	public String typeHash32bitBase64String();
 
 	public String typeHash16bitBase64String();
 

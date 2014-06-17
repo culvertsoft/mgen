@@ -20,7 +20,7 @@ public class ListTypeImpl extends TypeImpl implements ListType {
 
 	public ListTypeImpl(final String writtenElemType) {
 		super(TypeEnum.LIST);
-		m_elementType = new UnknownCustomTypeImpl(writtenElemType);
+		m_elementType = new UnknownCustomTypeImpl(writtenElemType, -1);
 	}
 
 	public Type elementType() {
