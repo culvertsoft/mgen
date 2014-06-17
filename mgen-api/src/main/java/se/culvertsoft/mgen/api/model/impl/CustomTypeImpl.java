@@ -18,7 +18,8 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	private String m_fullName;
 	private Module m_module;
 	private Type m_superType;
-	private List<Type> m_typeHierarchy;
+	private List<Type> m_superTypeHierarchy;
+	private List<CustomType> m_subTypes;
 	private ArrayList<Field> m_fields;
 
 	private ArrayList<Field> m_allFieldsInclSuper;
@@ -40,6 +41,8 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 		m_module = module;
 		m_superType = superType;
 		m_fields = new ArrayList<Field>(fields);
+		m_superTypeHierarchy = null;
+		m_subTypes = new ArrayList<CustomType>();
 		m_allFieldsInclSuper = null;
 		m_allReferencedModules = null;
 		m_allReferencedExtModules = null;
@@ -53,16 +56,7 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 			final String name,
 			final Module module,
 			final Type superType) {
-		super(TypeEnum.CUSTOM);
-		m_name = name;
-		m_fullName = module.path() + "." + m_name;
-		m_module = module;
-		m_superType = superType;
-		m_fields = new ArrayList<Field>();
-		m_allReferencedModules = null;
-		m_allReferencedExtModules = null;
-		m_allReferencedTypes = null;
-		m_allReferencedExtTypes = null;
+		this(name, module, superType, new ArrayList<Field>());
 	}
 
 	public void setSuperType(final Type superType) {
@@ -253,21 +247,22 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public List<Type> typeHierarchy() {
+	public List<Type> superTypeHierarchy() {
 
-		if (m_typeHierarchy == null) {
+		if (m_superTypeHierarchy == null) {
 
-			m_typeHierarchy = new ArrayList<Type>();
+			final List<Type> l = new ArrayList<Type>();
 
 			if (superType().typeEnum() == TypeEnum.CUSTOM)
-				m_typeHierarchy.addAll(((CustomType) superType())
-						.typeHierarchy());
+				l.addAll(((CustomType) superType()).superTypeHierarchy());
 
-			m_typeHierarchy.add(this);
+			l.add(this);
+			
+			m_superTypeHierarchy = l;
 
 		}
 
-		return m_typeHierarchy;
+		return m_superTypeHierarchy;
 	}
 
 	@Override
@@ -287,6 +282,21 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	@Override
 	public boolean hasSuperType() {
 		return superType() != MGenBaseType.INSTANCE;
+	}
+
+	@Override
+	public boolean hasSubTypes() {
+		return !subTypes().isEmpty();
+	}
+
+	@Override
+	public List<CustomType> subTypes() {
+		return m_subTypes;
+	}
+	
+	public CustomType addSubType(final CustomType t) {
+		m_subTypes.add(t);
+		return this;
 	}
 
 }

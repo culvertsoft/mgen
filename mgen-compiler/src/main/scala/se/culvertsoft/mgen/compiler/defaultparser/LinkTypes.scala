@@ -80,6 +80,13 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
       t.setFields(t.fields().map { f => f.transformToType(replace(f.typ)) })
     }
 
+    for (t <- cache.typeLookup.typesFullName.values) {
+      t.superType() match {
+        case s: CustomTypeImpl => s.addSubType(t);
+        case _ =>
+      }
+    }
+
   }
 
 }

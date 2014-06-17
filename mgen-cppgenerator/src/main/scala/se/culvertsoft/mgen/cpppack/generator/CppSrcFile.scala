@@ -439,7 +439,7 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
       txtBuffer.tabs(0).textln(s"std::vector<short> ${t.shortName()}::_TYPE_HASHES_16BIT_make() {");
       txtBuffer.tabs(1).textln(s"std::vector<short> out;")
-      for (t <- t.typeHierarchy())
+      for (t <- t.superTypeHierarchy())
          txtBuffer.tabs(1).textln(s"out.push_back(${t.typeHash16bit()});")
       txtBuffer.tabs(1).textln(s"return out;")
       txtBuffer.tabs(0).textln(s"}")
@@ -447,7 +447,7 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
       txtBuffer.tabs(0).textln(s"std::vector<int> ${t.shortName()}::_TYPE_HASHES_32BIT_make() {");
       txtBuffer.tabs(1).textln(s"std::vector<int> out;")
-      for (t <- t.typeHierarchy())
+      for (t <- t.superTypeHierarchy())
          txtBuffer.tabs(1).textln(s"out.push_back(${t.typeHash32bit()});")
       txtBuffer.tabs(1).textln(s"return out;")
       txtBuffer.tabs(0).textln(s"}")
@@ -455,7 +455,7 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
       txtBuffer.tabs(0).textln(s"std::vector<std::string> ${t.shortName()}::_TYPE_NAMES_make() {");
       txtBuffer.tabs(1).textln(s"std::vector<std::string> out;")
-      for (t <- t.typeHierarchy())
+      for (t <- t.superTypeHierarchy())
          txtBuffer.tabs(1).textln(s"out.push_back(${quote(t.fullName())});")
       txtBuffer.tabs(1).textln(s"return out;")
       txtBuffer.tabs(0).textln(s"}")
@@ -463,7 +463,7 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
       txtBuffer.tabs(0).textln(s"std::vector<std::string> ${t.shortName()}::_TYPE_HASHES_16BIT_BASE64_make() {");
       txtBuffer.tabs(1).textln(s"std::vector<std::string> out;")
-      for (t <- t.typeHierarchy())
+      for (t <- t.superTypeHierarchy())
          txtBuffer.tabs(1).textln(s"out.push_back(${quote(t.typeHash16bitBase64String())});")
       txtBuffer.tabs(1).textln(s"return out;")
       txtBuffer.tabs(0).textln(s"}")
@@ -471,7 +471,7 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
       txtBuffer.tabs(0).textln(s"std::vector<std::string> ${t.shortName()}::_TYPE_HASHES_32BIT_BASE64_make() {");
       txtBuffer.tabs(1).textln(s"std::vector<std::string> out;")
-      for (t <- t.typeHierarchy())
+      for (t <- t.superTypeHierarchy())
          txtBuffer.tabs(1).textln(s"out.push_back(${quote(t.typeHash32bitBase64String())});")
       txtBuffer.tabs(1).textln(s"return out;")
       txtBuffer.tabs(0).textln(s"}")

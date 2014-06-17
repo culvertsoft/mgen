@@ -15,8 +15,12 @@ public interface CustomType extends Type {
 	public Type superType();
 	
 	public boolean hasSuperType();
+	
+	public boolean hasSubTypes();
+	
+	public List<CustomType> subTypes();
 
-	public List<Type> typeHierarchy();
+	public List<Type> superTypeHierarchy();
 
 	public List<Field> fields();
 

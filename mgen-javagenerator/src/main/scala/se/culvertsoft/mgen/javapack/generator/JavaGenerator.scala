@@ -784,12 +784,12 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
   def mkTypeHierarchyStatic(t: CustomType) {
 
     txtBuffer.tabs(1).textln("static {")
-    txtBuffer.tabs(2).textln(s"_TYPE_HASHES_16BIT = new short[${t.typeHierarchy().size()}];")
-    txtBuffer.tabs(2).textln(s"_TYPE_HASHES_32BIT = new int[${t.typeHierarchy().size()}];")
+    txtBuffer.tabs(2).textln(s"_TYPE_HASHES_16BIT = new short[${t.superTypeHierarchy().size()}];")
+    txtBuffer.tabs(2).textln(s"_TYPE_HASHES_32BIT = new int[${t.superTypeHierarchy().size()}];")
     txtBuffer.tabs(2).textln(s"final java.util.ArrayList<String> names = new java.util.ArrayList<String>();")
     txtBuffer.tabs(2).textln(s"final java.util.ArrayList<String> base6416bit = new java.util.ArrayList<String>();")
     txtBuffer.tabs(2).textln(s"final java.util.ArrayList<String> base6432bit = new java.util.ArrayList<String>();")
-    for ((ht, i) <- t.typeHierarchy().zipWithIndex) {
+    for ((ht, i) <- t.superTypeHierarchy().zipWithIndex) {
       txtBuffer.tabs(2).textln(s"_TYPE_HASHES_16BIT[$i] = ${ht.typeHash16bit()};")
       txtBuffer.tabs(2).textln(s"_TYPE_HASHES_32BIT[$i] = ${ht.typeHash32bit()};")
       txtBuffer.tabs(2).textln(s"names.add(${quote(ht.fullName())});")

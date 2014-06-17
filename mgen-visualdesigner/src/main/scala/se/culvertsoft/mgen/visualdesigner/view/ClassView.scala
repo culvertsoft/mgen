@@ -39,9 +39,11 @@ class ClassView(override val entity: CustomType, controller: Controller)
     super.onEntityModified(child, validate, parent)
 
     if (child eq entity) {
+      nameLabel.setText(nameLabel.getText())
       nameLabel.updateTooltipText()
       superTypeComboBox.onNewSuperType(entity.getSuperType())
-      super.validate()
+      if (validate)
+        super.validate()
       super.repaint()
     }
 
@@ -128,7 +130,7 @@ class ClassView(override val entity: CustomType, controller: Controller)
   innerPanel().setLayout(layout)
 
   resetViewComplexity()
-  
+
   /**
    * ***************************************************************************
    *

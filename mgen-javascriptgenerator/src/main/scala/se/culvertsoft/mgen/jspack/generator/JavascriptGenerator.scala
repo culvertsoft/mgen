@@ -98,7 +98,7 @@ class JavascriptGenerator extends BuiltInGenerator {
    }
 
    def mkmgType(t: CustomType) {
-      var hashes = t.typeHierarchy().map(x => "\"" + x.typeHash16bitBase64String().toString() + "\"").mkString(", ")
+      var hashes = t.superTypeHierarchy().map(x => "\"" + x.typeHash16bitBase64String().toString() + "\"").mkString(", ")
       txtBuffer.tabs(2).text("\"mGenTypeHash\": [" + hashes + "],").endl()
    }
 
