@@ -502,16 +502,15 @@ If you prefer graphical tools instead of command line, we are also working on a 
 So far we've only performed some very basic performance tests, but results are promising. We have measured binary serialization performance of polymorphic objects in C++ on a single ivy bridge i7 core to more than 1,5 Gbit/s (g++ 4.8.1 o3). Performance in the other direction was roughly 30% less. Performance is important to us, however it should be made clear that performance is NOT the primary focus of MGen.
 
 
-
 ## Building MGen
 
-Wait. Do you really need to 
+If you're not satisfied with downloading pre-built libraries (see [the downloads section](#downloads)), this is how you build MGen from source.
 
 Build Requirements:
   * Java JDK >= 1.7
   * CMAKE >= 2.8
-  * g++/MinGW >= 4. Visual studio support coming! The library already works with VS, but currently not building the tests
-  * make (use gnuwin32 on windows)
+  * g++/MinGW >= 4. (MGen C++ runtime libraries work with Visual Studio, but currently not building the C++ tests.)
+  * make (on windows: use gnuwin32 or cygwin)
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
 Build Instructions:
