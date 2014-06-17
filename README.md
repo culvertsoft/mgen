@@ -267,12 +267,12 @@ Now let us try to serialize these cars to JSON. This is how we do it:
       VectorOutputStream out(buffer);
       
       // Now create our serializer
-      JSONWriter<VectorOutputStream, ClassRegistry> * writer = mgen::new_JSONWriter(out, classRegistry);
+      JSONWriter<VectorOutputStream, ClassRegistry> writer(out, classRegistry);
       
       // Write the objects
-      writer->writeMgenObject(car1);
-      writer->writeMgenObject(car2);
-      writer->writeMgenObject(car3);
+      writer.writeMgenObject(car1);
+      writer.writeMgenObject(car2);
+      writer.writeMgenObject(car3);
       
 Now we can read these objects back from the stream in the following manner:
 
@@ -280,14 +280,14 @@ Now we can read these objects back from the stream in the following manner:
       VectorInputStream in(buffer);
       
       // Create our deserializer
-      JSONReader<VectorInputStream, ClassRegistry> * reader = mgen::new_JSONReader(in, classRegistry);
+      JSONReader<VectorInputStream, ClassRegistry> reader(in, classRegistry);
      
       // Read back the objects. 
       // Note that here the root objects read back are placed on the free store, 
       // so they eventually need to be manually deleted. 
-      MGenBase * obj1 = reader->readMgenObject();
-      MGenBase * obj2 = reader->readMgenObject();
-      MGenBase * obj3 = reader->readMgenObject();
+      MGenBase * obj1 = reader.readMgenObject();
+      MGenBase * obj2 = reader.readMgenObject();
+      MGenBase * obj3 = reader.readMgenObject();
       
       std::vector<MGenBase*> objects;
       objects.push_back(obj1);
