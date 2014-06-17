@@ -74,7 +74,7 @@ Data models are defined using the MGen IDL. You can write them in a text editor 
       <brand type="string"/>
     </Apple>
 
-Compiling the type above with the MGen compiler will produce source code for a class called Apple with two member variables: _size_ (a 32 bit signed integer) and _brand_ (a string). To do this we must save it in a module file. A module file is simply an xml file with a sequence of type definitions. For example, we could create a file called _se.culvertsoft.mymodule.xml_ with the following contents:
+Compiling the type above with the MGen compiler will produce source code for a class called Apple with two member variables: _size_ (a 32 bit signed integer) and _brand_ (a string). To do this we must save the above type definition in a module file. A module file is simply an xml file with a sequence of type definitions. For example, we could create a file called _se.culvertsoft.mymodule.xml_ with the following contents:
 
     <Module>
       <Types>
