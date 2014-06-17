@@ -57,9 +57,9 @@ object ToolbarsInit {
     toolbar.add(Actions.DashBoard.Top.SPACE_OUT_X)
 
     toolbar.addSeparator()
-    
+
     toolbar.add(Actions.DashBoard.Top.LAY_OUT)
-    
+
     toolbar.addSeparator()
     toolbar.addSeparator()
     toolbar.addSeparator()
@@ -74,11 +74,7 @@ object ToolbarsInit {
 
     val toolbar = new JToolBar()
     toolbar.addSeparator()
-    /*
-      toolbar.add(Actions.TreeView.PROJECT_BTN)
-      toolbar.add(Actions.TreeView.MODULE_BTN)
-      toolbar.add(Actions.TreeView.CLASS_BTN)
-      */
+
     toolbar.add(Actions.TreeView.MOVE_UP)
     toolbar.add(Actions.TreeView.MOVE_DOWN)
     toolbar.add(Actions.TreeView.RENAME)
@@ -95,13 +91,12 @@ object ToolbarsInit {
     toolbar.setOrientation(SwingConstants.VERTICAL)
     toolbar.setFloatable(false)
 
-    //toolbar.addSeparator(new Dimension(5, 15))
-
     toolbar.add(Actions.DashBoard.Left.GO_UP)
     toolbar.add(Actions.DashBoard.Left.GO_BACK)
     toolbar.add(Actions.DashBoard.Left.GO_FORWARD)
-    toolbar.add(Actions.DashBoard.Left.FULL_SCREEN)
-    toolbar.add(Actions.DashBoard.Left.RESET_VIEW)
+    toolbar.add(Actions.DashBoard.Left.SET_VIEW_ROOT)
+    toolbar.add(Actions.DashBoard.Left.MAXIMIZE)
+    toolbar.add(Actions.DashBoard.Left.RESET_VIEW_ROOT)
 
     toolbar.addSeparator()
     toolbar.addSeparator()

@@ -92,13 +92,15 @@ object Actions {
       def GO_FORWARD(implicit c: Controller) = MkAction("Go Forward", Icons.DashBoard.Left.GO_FORWARD, "Go forward to the next view root") {
         c.viewMgr.goForward()
       }
-      def FULL_SCREEN(implicit c: Controller) = MkAction("Full Screen", Icons.DashBoard.Left.FULL_SREEN, "View the selected item in full screen") {
+      def SET_VIEW_ROOT(implicit c: Controller) = MkAction("Set as View Root", Icons.DashBoard.Left.FULL_SREEN, "Set View Root: Sets the selected entity as the view root") {
         c.viewMgr.setSelectedAsRootView()
       }
-      def RESET_VIEW(implicit c: Controller) = MkAction("Reset View", Icons.DashBoard.Left.RESET_VIEW, "Reset the view") {
-        c.viewMgr.resetView()
+      def MAXIMIZE(implicit c: Controller) = MkAction("Maximize", Icons.DashBoard.Left.FULL_SREEN, "Maximize: Removes toolbars and package explorer (left side column)") {
+        c.viewMgr.maximize()
       }
-
+      def RESET_VIEW_ROOT(implicit c: Controller) = MkAction("Reset View Root", Icons.DashBoard.Left.RESET_VIEW, "Reset the view root back to the top level project") {
+        c.viewMgr.resetViewRoot()
+      }
       def NEW_MODULE(implicit c: Controller) = MkAction("New Module", Icons.DashBoard.Left.NEW_MODULE) {
         c.entityAddMgr.addModule()
       }
@@ -194,11 +196,16 @@ object Actions {
         c.viewMgr.goForward()
       }
 
-      def FULL_SCREEN(implicit c: Controller) = MkAction("Full Screen", Icons.MainMenu.View.FULL_SREEN, HotKey.alt(KeyEvent.VK_ENTER), "View the selected item in full screen") {
+
+      def SET_VIEW_ROOT(implicit c: Controller) = MkAction("Set as View Root", Icons.DashBoard.Left.FULL_SREEN, HotKey.ctrl(KeyEvent.VK_ENTER), "Set View Root: Sets the selected entity as the view root") {
         c.viewMgr.setSelectedAsRootView()
       }
-      def RESET_VIEW(implicit c: Controller) = MkAction("Reset View", Icons.MainMenu.View.RESET_VIEW, HotKey.alt(KeyEvent.VK_BACK_SPACE), "Reset the view") {
-        c.viewMgr.resetView()
+      def MAXIMIZE(implicit c: Controller) = MkAction("Maximize", Icons.DashBoard.Left.FULL_SREEN, HotKey.alt(KeyEvent.VK_ENTER), "Maximize: Removes toolbars and package explorer (left side column)") {
+        c.viewMgr.maximize()
+      }
+      
+      def RESET_VIEW_ROOT(implicit c: Controller) = MkAction("Reset View Root", Icons.MainMenu.View.RESET_VIEW, HotKey.alt(KeyEvent.VK_BACK_SPACE), "Reset the view root to the top level project") {
+        c.viewMgr.resetViewRoot()
       }
 
       def ICONS_ONLY_VIEW(implicit c: Controller) = {

@@ -35,22 +35,25 @@ import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
 import se.culvertsoft.mgen.visualdesigner.control.ModelChangeListener
 import se.culvertsoft.mgen.visualdesigner.Actions
 import java.awt.Component
+import javax.swing.WindowConstants
+import java.awt.Frame
+import javax.swing.JComponent
 
 class ViewManager(
   private val controller: Controller,
-  private val topContainer: ContentPane) extends ControllerListener {
-  private val topView = new TopContainerView(controller, topContainer)
+  private val dashBoard: ContentPane) extends ControllerListener {
+  private val topView = new TopContainerView(controller, dashBoard)
   private val views = new HashMap[EntityIdBase, AbstractView]
   private var _root: Entity = controller.model().project
   private var _scaleFactor = 1.0
-  private var _iconOverride: Boolean = false
+  private var _iconOverride = false
   private val searchDialog: SearchDialog = new SearchDialog(controller)
   private val viewHistory = new UndoBuffer[EntityIdBase](_root.getId, _ => 32)
   private val movingThroughHistory = new OperationStatus
 
   controller.addObserver(this)
   controller.addObserver(topView)
-  
+
   /**
    * ************************************************************************
    *
@@ -84,31 +87,31 @@ class ViewManager(
   }
 
   def validateAll() {
-    topContainer.validate()
+    dashBoard.validate()
   }
 
   def repaintAll() {
-    topContainer.repaint()
+    dashBoard.repaint()
   }
 
   def setCursor(c: Cursor) {
-    topContainer.setCursor(c)
+    dashBoard.setCursor(c)
   }
 
   def showConfirmDialog(msg: String, title: String, qType: Int, diaType: Int): Int = {
-    JOptionPane.showConfirmDialog(topContainer, msg, title, qType, diaType)
+    JOptionPane.showConfirmDialog(dashBoard, msg, title, qType, diaType)
   }
 
   def showSaveDialog(fc: JFileChooser): Int = {
-    fc.showSaveDialog(topContainer)
+    fc.showSaveDialog(dashBoard)
   }
 
   def showOpenDialog(fc: JFileChooser): Int = {
-    fc.showOpenDialog(topContainer)
+    fc.showOpenDialog(dashBoard)
   }
 
   def getWindow(): JFrame = {
-    SwingUtilities.getWindowAncestor(topContainer).asInstanceOf[JFrame]
+    SwingUtilities.getWindowAncestor(dashBoard).asInstanceOf[JFrame]
   }
 
   def scaleFactor(): Double = {
@@ -130,11 +133,11 @@ class ViewManager(
   def isViewRoot(v: AbstractView): Boolean = {
     view(_root) eq v
   }
-  
+
   def hasView(entity: Entity): Boolean = {
     views.contains(entity.getId)
   }
-  
+
   def viewOption(entity: Entity): Option[AbstractView] = {
     if (entity != null) {
       views.get(entity.getId)
@@ -181,7 +184,7 @@ class ViewManager(
   def getScreenBoundsOf(entity: Entity): Rectangle = {
     val uiPos = getUiPosOf(entity)
     entity match {
-      case project: Project => new Rectangle(uiPos.onScreen.x, uiPos.onScreen.y, topContainer.getWidth(), topContainer.getHeight())
+      case project: Project => new Rectangle(uiPos.onScreen.x, uiPos.onScreen.y, dashBoard.getWidth(), dashBoard.getHeight())
       case _ =>
         val v = view(entity)
         new Rectangle(uiPos.onScreen.x, uiPos.onScreen.y, v.width(), v.height())
@@ -244,7 +247,7 @@ class ViewManager(
       }
     }
     if (!controller.isBulkOperationActive) {
-      topContainer.repaint()
+      dashBoard.repaint()
     }
   }
 
@@ -270,7 +273,7 @@ class ViewManager(
     controller.addObserver(newItem)
 
   }
-  
+
   def existsView(entity: Entity): Boolean = {
     views.contains(entity.getId)
   }
@@ -393,13 +396,13 @@ class ViewManager(
     }
   }
 
-  def popupGetString(message: String, defaultValue: String = "", triggeringComponent: Component = topContainer): Option[String] = {
+  def popupGetString(message: String, defaultValue: String = "", triggeringComponent: Component = dashBoard): Option[String] = {
     val o = JOptionPane.showInputDialog(triggeringComponent, message, defaultValue);
     if (o != null) Some(o) else None
   }
 
   def popupFailed(message: String, label: String): Boolean = {
-    JOptionPane.showMessageDialog(topContainer, message, label, JOptionPane.INFORMATION_MESSAGE)
+    JOptionPane.showMessageDialog(dashBoard, message, label, JOptionPane.INFORMATION_MESSAGE)
     false
   }
 
@@ -521,7 +524,7 @@ class ViewManager(
       val e = controller.selectedEntities()(0)
 
       if (e eq root) {
-        resetView()
+        resetViewRoot()
       } else {
 
         e match {
@@ -535,6 +538,42 @@ class ViewManager(
       }
 
     }
+  }
+
+  private lazy val maximizeState = new Object {
+    var maximized = false
+    val realContentPane = getWindow.getContentPane
+    val realChild = realContentPane.getComponent(0)
+    val realTopContainerParent = dashBoard.getParent()
+
+    def toggle() {
+
+      def setWindowTopLevelComponent(newTopLevelComponent: Component) {
+        realContentPane.removeAll()
+        realContentPane.add(newTopLevelComponent)
+        realContentPane.validate()
+        realContentPane.repaint()
+      }
+
+      if (!maximized) {
+
+        maximized = true
+        setWindowTopLevelComponent(dashBoard)
+
+      } else {
+
+        maximized = false
+
+        realTopContainerParent.add(dashBoard)
+        setWindowTopLevelComponent(realChild)
+
+      }
+
+    }
+  }
+
+  def maximize() {
+    maximizeState.toggle()
   }
 
   def goBack() {
@@ -558,7 +597,7 @@ class ViewManager(
     }
   }
 
-  def resetView() {
+  def resetViewRoot() {
     setViewRoot(controller.model.project)
   }
 
@@ -594,7 +633,7 @@ class ViewManager(
   }
 
   def isInsideDashBoard(p: UiPos): Boolean = {
-    UiPos.getScreenBoundsOfComp(topContainer).contains(p.onScreen)
+    UiPos.getScreenBoundsOfComp(dashBoard).contains(p.onScreen)
   }
 
   def getViewHierarchy(entity: Entity): Seq[AbstractView] = {
