@@ -33,6 +33,14 @@ public abstract class ClassRegistry {
 		throw new RuntimeException("Cannot call globalIds2Local on " + this);
 	}
 
+	public int globalNames2Local(final String[] globalNames) {
+		throw new RuntimeException("Cannot call globalNames2Local on " + this);
+	}
+
+	public int globalBase64Ids2Local(final String[] globalBase64Ids) {
+		throw new RuntimeException("Cannot call globalBase64Ids2Local on " + this);
+	}
+	
 	public ClassRegistryEntry getByName(final String fullClassName) {
 		return m_clsName2Entry.get(fullClassName);
 	}

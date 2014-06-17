@@ -104,23 +104,21 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     val allTypes = referencedModules.flatMap(_.types()).map(_._2)
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public int globalIds2Local(final short[] globalIds) {")
-
     def mkSwitch(
       nTabs: Int,
       localId: String,
-      possibleTypes: Seq[CustomType]) {
+      possibleTypes: Seq[CustomType],
+      caser: CustomType => String) {
 
-      txtBuffer.tabs(nTabs).textln("switch(globalIds[i++]) {")
+      txtBuffer.tabs(nTabs).textln("switch(ids[i++]) {")
 
       for (t <- possibleTypes) {
 
-        txtBuffer.tabs(nTabs + 1).textln(s"case ${hash16(t)}:")
+        txtBuffer.tabs(nTabs + 1).textln(s"case ${caser(t)}:")
 
         if (t.subTypes().nonEmpty) {
-          txtBuffer.tabs(nTabs + 2).textln(s"if (i == globalIds.length) return ${localIdStr(t)};")
-          mkSwitch(nTabs + 2, hash16(t), t.subTypes());
+          txtBuffer.tabs(nTabs + 2).textln(s"if (i == ids.length) return ${localIdStr(t)};")
+          mkSwitch(nTabs + 2, localIdStr(t), t.subTypes(), caser);
         } else {
           txtBuffer.tabs(nTabs + 2).textln(s"return ${localIdStr(t)};")
         }
@@ -131,9 +129,20 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
       txtBuffer.tabs(nTabs).textln("}")
     }
 
-    txtBuffer.tabs(2).textln("int i = 0;")
-    mkSwitch(2, "-1", topLevelTypes)
-    txtBuffer.tabs(1).textln("}")
+    def mkLkupFunc(
+      funcName: String,
+      inpTypeStr: String, 
+      caser: CustomType => String) {
+      txtBuffer.tabs(1).textln("@Override")
+      txtBuffer.tabs(1).textln(s"public int $funcName(final $inpTypeStr[] ids) {")
+      txtBuffer.tabs(2).textln("int i = 0;")
+      mkSwitch(2, "-1", topLevelTypes, caser)
+      txtBuffer.tabs(1).textln("}").endl()
+    }
+
+    mkLkupFunc("globalIds2Local", "short", hash16)
+    mkLkupFunc("globalNames2Local", "String", name)
+    mkLkupFunc("globalBase64Ids2Local", "String", has16base64)
 
     mkClassEnd()
 
@@ -657,6 +666,7 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
 
     txtBuffer.tabs(1).textln(s"public static final String _TYPE_NAME = ${quote(t.fullName())};");
     txtBuffer.tabs(1).textln(s"public static final short _TYPE_HASH_16BIT = ${t.typeHash16bit()};");
+    txtBuffer.tabs(1).textln(s"public static final String _TYPE_HASH_16BIT_BASE64 = ${quote(t.typeHash16bitBase64String())};");
     txtBuffer.endl()
 
     txtBuffer.tabs(1).textln(s"public static final $colClsString<$fieldClsString> FIELDS;");
@@ -768,7 +778,7 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
   }
 
   def mkTypeHierarchyMethods(t: CustomType) {
-    
+
     txtBuffer.tabs(1).textln("@Override")
     txtBuffer.tabs(1).textln("public int localTypeId() {")
     txtBuffer.tabs(2).textln(s"return LOCAL_TYPE_ID;")
@@ -867,6 +877,14 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
 
   def hash16(t: CustomType): String = {
     s"${t.fullName()}._TYPE_HASH_16BIT"
+  }
+
+  def name(t: CustomType): String = {
+    s"${t.fullName()}._TYPE_NAME"
+  }
+
+  def has16base64(t: CustomType): String = {
+    s"${t.fullName()}._TYPE_HASH_16BIT_BASE64"
   }
 
   def localIdStr(t: CustomType): String = {

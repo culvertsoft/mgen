@@ -19,8 +19,6 @@ import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.UnknownCustomType;
-import se.culvertsoft.mgen.api.util.Base64;
-import se.culvertsoft.mgen.api.util.Hasher;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
@@ -69,8 +67,8 @@ public class JsonReader extends BuiltInReader {
 		final JSONArray typeNames = (JSONArray) node.get("__t");
 		throwMissingFieldIfNull(typeNames, "__t");
 
-		final short[] readTypeIds = fieldIdsFrom(typeNames);
-		final MGenBase out = instantiate(readTypeIds);
+		final int localTypeId = getLocalIdFromGlobalIds(typeNames);
+		final MGenBase out = instantiate(localTypeId);
 
 		if (out != null) {
 			readObjectFields(out, node);
@@ -199,18 +197,15 @@ public class JsonReader extends BuiltInReader {
 		return out;
 	}
 
-	protected short[] fieldIdsFrom(final JSONArray array) throws IOException {
-		final short[] out = new short[array.size()];
+	protected int getLocalIdFromGlobalIds(final JSONArray array)
+			throws IOException {
+		@SuppressWarnings("unchecked")
+		final String[] ids = ((ArrayList<String>) array).toArray(new String[array.size()]);
 		if (readerSettings.typeIdType() == TypeIdType.HASH_16_BIT) {
-			for (int i = 0; i < array.size(); i++) {
-				out[i] = Base64.decodeShort((String) array.get(i));
-			}
+			return m_classRegistry.globalBase64Ids2Local(ids);
 		} else {
-			for (int i = 0; i < array.size(); i++) {
-				out[i] = Hasher.static_16bit((String) array.get(i));
-			}
+			return m_classRegistry.globalNames2Local(ids);
 		}
-		return out;
 	}
 
 	private HashMap<?, ?> readMap(MapType typ, JSONObject node)

@@ -74,8 +74,7 @@ public class BinaryReader extends BuiltInReader {
 			ensureTypeTag(null, TAG_CUSTOM, readTypeTag());
 
 		final short[] typeIds = readTypeIds();
-
-		final MGenBase out = instantiate(typeIds);
+		final MGenBase out = instantiateFromHash16(typeIds);
 
 		readFields(out);
 
