@@ -93,7 +93,7 @@ Compiling the type above with the MGen compiler will produce source code for a c
       </Types>
     </Module>
 
-We probably want to specify which code generators to run, and if there is more than one module to generate code for. We do this by creating a project file. Here is an example of what a project file may look like:
+Before passing this file to the MGen compiler, we probably want to specify which code generators to run, and if there is more than one module to generate code for. We do this by creating a project file. Here is an example of what a project file may look like:
     
     <Project>
     
