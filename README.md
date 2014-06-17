@@ -23,6 +23,7 @@ MGen is inspired by several existing tools, such as [Protocol Buffers](https://c
   * [Maven](#maven)
   * [Sample Projects](#sample-projects)
 * [Installation](#installation)
+  * [System Requirements](#system-requirements)
   * [Installing the compiler](#installing-the-compiler)
   * [Installing the Java runtime libraries](#installing-the-java-runtime-libraries)
   * [Installing the C++ runtime libraries](#installing-the-c++-runtime-libraries)
@@ -143,7 +144,7 @@ Here we run the compiler with two arguments, project and plugin_paths.
  - project: which project file to load (see the previous section to learn more about project files).
  - plugin_paths: where the compiler should search for java JAR files containing IDL parsers and code generators.
 
-Example: Here is how we generate a data model for testing the MGen Compiler:
+Example: Here is how we generate [the data model for testing the MGen Compiler](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources):
 
     java -jar ../mgen-compiler/target/mgen-compiler-assembly-SNAPSHOT.jar -project="../mgen-compiler/src/test/resources/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
                                            
@@ -353,9 +354,14 @@ Currently we haven't had time to produce any dedicated sample projects. But two 
 
 ## Installation
 
-The MGen build time tools (MGen Compiler and MGen Visual Designer) require Java to be installed on your computer, such as OpenJRE/OpenJDK or the Oracle JRE. At this point in development we require a java 7 JRE to be installed, but we plan to lower this requirement to java 5 or 6.
+At this early stage installation is manual (there is currently no installer available). Below you can find installation instructions for each language we currently support. Read the later chapters if you would like to try to add support for more languages.
 
-At this early stage installation is manual (there is currently no installer available).
+### System Requirements
+
+The MGen standalone applications (MGen Compiler and MGen Visual Designer) require Java 7 or later to be installed on your computer, such as OpenJRE/OpenJDK or the [Oracle JRE](http://java.com/en/download/index.jsp). We are currently not planning to support any earlier versions than java7.
+
+If you want to build MGen from source, see [Building MGen](#building-mgen) for build requirements.
+
 
 ### Installing the compiler
 
@@ -496,23 +502,22 @@ If you prefer graphical tools instead of command line, we are also working on a 
 So far we've only performed some very basic performance tests, but results are promising. We have measured binary serialization performance of polymorphic objects in C++ on a single ivy bridge i7 core to more than 1,5 Gbit/s (g++ 4.8.1 o3). Performance in the other direction was roughly 30% less. Performance is important to us, however it should be made clear that performance is NOT the primary focus of MGen.
 
 
-
 ## Building MGen
 
+If you're not satisfied with downloading pre-built libraries (see [the downloads section](#download-links)), this section will explain how you build MGen from source.
+
 Build Requirements:
-  * Java >= 1.7 (We will release with 1.6 and potentially 1.5 support later)
-  * CMAKE >= 2.10
-  * g++/MinGW >= 4. Visual studio support coming! The library already works with VS, but currently not building the tests
-  * make (use gnuwin32 on windows)
+  * Java JDK >= 1.7
+  * CMAKE >= 2.8
+  * g++/MinGW >= 4. (MGen C++ runtime libraries work with Visual Studio, but currently not building the C++ tests.)
+  * make (on windows: use gnuwin32 or cygwin)
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
 Build Instructions:
-  * clone the repo: git clone git@github.com:/culvertsoft/mgen mgen
-  * cd mgen
-  * make all
+  * clone the repo
+  * make
 
-Target dirs:
-  * mgen/mgen-...../target
+Output will be placed inside each mgen-component's target/ directory (e.g. mgen-api/target/).
  
 
 ## Version History
