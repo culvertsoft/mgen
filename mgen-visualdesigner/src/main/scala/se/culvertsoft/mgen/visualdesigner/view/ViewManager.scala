@@ -1,17 +1,19 @@
 package se.culvertsoft.mgen.visualdesigner.view
 
+import java.awt.Component
 import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Point
 import java.awt.Rectangle
-import java.util.IdentityHashMap
-import scala.collection.JavaConversions.mapAsScalaMap
+
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.reflect.ClassTag
+
 import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
+import javax.swing.JPanel
 import javax.swing.JScrollPane
 import javax.swing.SwingUtilities
 import se.culvertsoft.mgen.visualdesigner.control.Controller
@@ -22,7 +24,7 @@ import se.culvertsoft.mgen.visualdesigner.model.ChildParent
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
 import se.culvertsoft.mgen.visualdesigner.model.Entity
-import se.culvertsoft.mgen.visualdesigner.model.EntityId
+import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
 import se.culvertsoft.mgen.visualdesigner.model.ModelOps.toRichCustomType
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.PlacedEntity
@@ -31,13 +33,6 @@ import se.culvertsoft.mgen.visualdesigner.util.AwtMath.RichDimension
 import se.culvertsoft.mgen.visualdesigner.util.AwtMath.RichPoint
 import se.culvertsoft.mgen.visualdesigner.util.OperationStatus
 import se.culvertsoft.mgen.visualdesigner.view.searchdialog.SearchDialog
-import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
-import se.culvertsoft.mgen.visualdesigner.control.ModelChangeListener
-import se.culvertsoft.mgen.visualdesigner.Actions
-import java.awt.Component
-import javax.swing.WindowConstants
-import java.awt.Frame
-import javax.swing.JComponent
 
 class ViewManager(
   private val controller: Controller,
@@ -540,9 +535,9 @@ class ViewManager(
     }
   }
 
-  private lazy val maximizeState = new Object {
-    var maximized = false
-    val realContentPane = getWindow.getContentPane
+  private object maximizeState {
+
+    val realContentPane = getWindow.getContentPane.asInstanceOf[JPanel]
     val realChild = realContentPane.getComponent(0)
     val realTopContainerParent = dashBoard.getParent()
 
@@ -555,21 +550,15 @@ class ViewManager(
         realContentPane.repaint()
       }
 
-      if (!maximized) {
-
-        maximized = true
+      if (realContentPane != dashBoard.getParent()) {
         setWindowTopLevelComponent(dashBoard)
-
       } else {
-
-        maximized = false
-
         realTopContainerParent.add(dashBoard)
         setWindowTopLevelComponent(realChild)
-
       }
 
     }
+
   }
 
   def maximize() {
