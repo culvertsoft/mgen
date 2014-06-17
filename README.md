@@ -504,7 +504,7 @@ So far we've only performed some very basic performance tests, but results are p
 
 ## Building MGen
 
-If you're not satisfied with downloading pre-built libraries (see [the downloads section](#downloads)), this is how you build MGen from source.
+If you're not satisfied with downloading pre-built libraries (see [the downloads section](#download-links)), this section will explain how you build MGen from source.
 
 Build Requirements:
   * Java JDK >= 1.7
