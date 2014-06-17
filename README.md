@@ -515,11 +515,9 @@ Build Requirements:
 
 Build Instructions:
   * clone the repo
-  * cd mgen
-  * make all
+  * make
 
-Target dirs:
-  * mgen/mgen-...../target
+Output will be placed inside each mgen-component's target/ directory (e.g. mgen-api/target/).
  
 
 ## Version History
