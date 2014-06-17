@@ -23,6 +23,7 @@ MGen is inspired by several existing tools, such as [Protocol Buffers](https://c
   * [Maven](#maven)
   * [Sample Projects](#sample-projects)
 * [Installation](#installation)
+  * [System Requirements](#system-requirements)
   * [Installing the compiler](#installing-the-compiler)
   * [Installing the Java runtime libraries](#installing-the-java-runtime-libraries)
   * [Installing the C++ runtime libraries](#installing-the-c++-runtime-libraries)
@@ -353,9 +354,14 @@ Currently we haven't had time to produce any dedicated sample projects. But two 
 
 ## Installation
 
-The MGen build time tools (MGen Compiler and MGen Visual Designer) require Java to be installed on your computer, such as OpenJRE/OpenJDK or the Oracle JRE. At this point in development we require a java 7 JRE to be installed, but we plan to lower this requirement to java 5 or 6.
+At this early stage installation is manual (there is currently no installer available). Below you can find installation instructions for each language we currently support. Read the later chapters if you would like to try to add support for more languages.
 
-At this early stage installation is manual (there is currently no installer available).
+### System Requirements
+
+The MGen standalone applications (MGen Compiler and MGen Visual Designer) require Java 7 or later to be installed on your computer, such as OpenJRE/OpenJDK or the [Oracle JRE](http://java.com/en/download/index.jsp). We are currently not planning to support any earlier versions than java7.
+
+If you want to build MGen from source, see [Building MGen](#building-mgen) for build requirements.
+
 
 ### Installing the compiler
 
@@ -499,15 +505,17 @@ So far we've only performed some very basic performance tests, but results are p
 
 ## Building MGen
 
+Wait. Do you really need to 
+
 Build Requirements:
-  * Java >= 1.7 (We will release with 1.6 and potentially 1.5 support later)
-  * CMAKE >= 2.10
+  * Java JDK >= 1.7
+  * CMAKE >= 2.8
   * g++/MinGW >= 4. Visual studio support coming! The library already works with VS, but currently not building the tests
   * make (use gnuwin32 on windows)
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
 Build Instructions:
-  * clone the repo: git clone git@github.com:/culvertsoft/mgen mgen
+  * clone the repo
   * cd mgen
   * make all
 
