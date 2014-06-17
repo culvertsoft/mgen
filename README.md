@@ -500,7 +500,7 @@ So far we've only performed some very basic performance tests, but results are p
 ## Building MGen
 
 Build Requirements:
-  * Java >= 1.6
+  * Java >= 1.7 (We will release with 1.6 and potentially 1.5 support later)
   * CMAKE >= 2.10
   * g++/MinGW >= 4. Visual studio support coming! The library already works with VS, but currently not building the tests
   * make (use gnuwin32 on windows)
