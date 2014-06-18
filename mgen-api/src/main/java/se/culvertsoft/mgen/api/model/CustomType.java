@@ -17,8 +17,6 @@ public interface CustomType extends Type {
 	public boolean hasSuperType();
 
 	public boolean hasSubTypes();
-	
-	public int localTypeId();
 
 	public List<CustomType> subTypes();
 
@@ -36,7 +34,7 @@ public interface CustomType extends Type {
 
 	public Set<CustomType> getDirectDependencies();
 
-	public static CustomType INSTANCE = new CustomTypeImpl(-1, "",
-			Module.INSTANCE, null, new ArrayList<Field>());
+	public static CustomType INSTANCE = new CustomTypeImpl("<dummy>", Module.INSTANCE,
+			null, new ArrayList<Field>());
 
 }

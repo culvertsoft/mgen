@@ -187,7 +187,7 @@ public class JsonReader extends BuiltInReader {
 		final MGenBase out = readMGenObject(node);
 
 		if (out != null && constraint != null) {
-			if (!out.isInstanceOfLocalId(constraint.localTypeId())) {
+			if (!out.isInstanceOfLocalId(constraint.typeId())) {
 				// TODO: Handle constraints failure
 				return null;
 			}
@@ -201,9 +201,9 @@ public class JsonReader extends BuiltInReader {
 		@SuppressWarnings("unchecked")
 		final String[] ids = ((ArrayList<String>) array).toArray(new String[array.size()]);
 		if (readerSettings.typeIdType() == TypeIdType.HASH_16_BIT) {
-			return m_classRegistry.instantiateFromHash16Base64Ids(ids);
+			return m_classRegistry.instantiateByTypeIds16BitBase64(ids);
 		} else {
-			return m_classRegistry.instantiateFromNames(ids);
+			return m_classRegistry.instantiateByNames(ids);
 		}
 	}
 

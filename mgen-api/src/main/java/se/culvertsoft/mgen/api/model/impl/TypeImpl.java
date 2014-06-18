@@ -8,13 +8,16 @@ import se.culvertsoft.mgen.api.util.Hasher;
 public abstract class TypeImpl implements Type {
 
 	private final TypeEnum m_enum;
-	private Short m_16bitHash;
-	private String m_16BitHashBase64;
+	private Long m_typeId;
+	private Short m_typeId16Bit;
+	private String m_typeId16BitBase64;
 	private Class<?> m_class;
 
 	public TypeImpl(final TypeEnum enm) {
 		m_enum = enm;
-		m_16bitHash = null;
+		m_typeId = null;
+		m_typeId16Bit = null;
+		m_typeId16BitBase64 = null;
 		m_class = null;
 	}
 
@@ -22,16 +25,23 @@ public abstract class TypeImpl implements Type {
 		return m_enum;
 	}
 
-	public short typeHash16bit() {
-		if (m_16bitHash == null)
-			m_16bitHash = Hasher.static_16bit(fullName());
-		return m_16bitHash;
+	@Override
+	public long typeId() {
+		if (m_typeId == null)
+			m_typeId = Hasher.static_64bit(fullName());
+		return m_typeId;
 	}
 
-	public String typeHash16bitBase64String() {
-		if (m_16BitHashBase64 == null)
-			m_16BitHashBase64 = Base64.encode(typeHash16bit());
-		return m_16BitHashBase64;
+	public short typeId16Bit() {
+		if (m_typeId16Bit == null)
+			m_typeId16Bit = Hasher.static_16bit(fullName());
+		return m_typeId16Bit;
+	}
+
+	public String typeId16BitBase64() {
+		if (m_typeId16BitBase64 == null)
+			m_typeId16BitBase64 = Base64.encode(typeId16Bit());
+		return m_typeId16BitBase64;
 	}
 
 	public boolean isPrimitive() {
@@ -45,12 +55,14 @@ public abstract class TypeImpl implements Type {
 	public abstract String fullName();
 
 	protected void resetHashCaches() {
-		m_16bitHash = null;
+		m_typeId = null;
+		m_typeId16Bit = null;
+		m_typeId16BitBase64 = null;
 	}
 
 	@Override
 	public int hashCode() {
-		return typeHash16bit();
+		return typeId16Bit();
 	}
 
 	@Override

@@ -14,8 +14,6 @@ import se.culvertsoft.mgen.api.model.TypeEnum;
 
 public class CustomTypeImpl extends TypeImpl implements CustomType {
 
-	private final int m_localTypeId;
-	
 	private String m_name;
 	private String m_fullName;
 	private Module m_module;
@@ -32,14 +30,9 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	private Set<CustomType> m_allReferencedExtTypes;
 	private Set<CustomType> m_directDependencies;
 
-	public CustomTypeImpl(
-			final int localTypeId,
-			final String name,
-			final Module module,
-			final Type superType,
-			final List<Field> fields) {
+	public CustomTypeImpl(final String name, final Module module,
+			final Type superType, final List<Field> fields) {
 		super(TypeEnum.CUSTOM);
-		m_localTypeId = localTypeId;
 		m_name = name;
 		m_fullName = module.path() + "." + m_name;
 		m_module = module;
@@ -56,12 +49,9 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 		m_directDependencies = null;
 	}
 
-	public CustomTypeImpl(
-			final int localId,
-			final String name,
-			final Module module,
+	public CustomTypeImpl(final String name, final Module module,
 			final Type superType) {
-		this(localId, name, module, superType, new ArrayList<Field>());
+		this(name, module, superType, new ArrayList<Field>());
 	}
 
 	public void setSuperType(final Type superType) {
@@ -79,10 +69,6 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 		resetHashCaches();
 	}
 
-	public int localTypeId() {
-		return m_localTypeId;
-	}
-	
 	public String name() {
 		return m_name;
 	}
@@ -145,8 +131,7 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 					.getAllReferencedModulesInclSuper());
 
 			for (final Field field : m_fields)
-				m_allReferencedModules.addAll(field
-						.typ()
+				m_allReferencedModules.addAll(field.typ()
 						.getAllReferencedModulesInclSuper());
 
 		}
@@ -166,8 +151,7 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 					.getAllReferencedTypesInclSuper());
 
 			for (final Field field : m_fields)
-				m_allReferencedTypes.addAll(field
-						.typ()
+				m_allReferencedTypes.addAll(field.typ()
 						.getAllReferencedTypesInclSuper());
 
 		}
@@ -184,8 +168,7 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 			m_allReferencedTypesExclSuper = new HashSet<CustomType>();
 
 			for (final Field field : m_fields)
-				m_allReferencedTypesExclSuper.addAll(field
-						.typ()
+				m_allReferencedTypesExclSuper.addAll(field.typ()
 						.getAllReferencedTypesInclSuper());
 
 		}
@@ -266,7 +249,7 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 				l.addAll(((CustomType) superType()).superTypeHierarchy());
 
 			l.add(this);
-			
+
 			m_superTypeHierarchy = l;
 
 		}
@@ -302,7 +285,7 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	public List<CustomType> subTypes() {
 		return m_subTypes;
 	}
-	
+
 	public CustomType addSubType(final CustomType t) {
 		m_subTypes.add(t);
 		return this;

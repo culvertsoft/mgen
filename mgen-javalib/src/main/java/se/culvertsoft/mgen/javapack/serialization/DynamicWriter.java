@@ -30,7 +30,7 @@ public abstract class DynamicWriter extends BuiltInWriter {
 	protected List<String> typeIdsOf(final MGenBase o) {
 		final ArrayList<String> out = new ArrayList<String>();
 		if (m_useHashes) {
-			for (final String base64Hash : o._typeHashes16bitBase64()) {
+			for (final String base64Hash : o._typeIds16BitBase64()) {
 				out.add(base64Hash);
 			}
 		} else {
@@ -43,7 +43,7 @@ public abstract class DynamicWriter extends BuiltInWriter {
 
 	protected String typeIdOf(final Type type) {
 		if (m_useHashes) {
-			return type.typeHash16bitBase64String();
+			return type.typeId16BitBase64();
 		} else {
 			return type.fullName();
 		}

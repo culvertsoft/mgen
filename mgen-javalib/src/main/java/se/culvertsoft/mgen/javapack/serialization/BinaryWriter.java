@@ -56,7 +56,7 @@ public class BinaryWriter extends BuiltInWriter {
 	public void beginWrite(final MGenBase parent, final int nFieldsSet)
 			throws IOException {
 		if (parent != null) {
-			final short[] typeIds = parent._typeHashes16bit();
+			final short[] typeIds = parent._typeIds16Bit();
 			writeSize(typeIds.length);
 			for (final short typeId : typeIds)
 				writeInt16(typeId, false);
@@ -73,7 +73,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_BOOL);
+			writeFieldStart(field.id(), TAG_BOOL);
 			writeBoolean(b, false);
 		}
 	}
@@ -84,7 +84,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_INT8);
+			writeFieldStart(field.id(), TAG_INT8);
 			writeInt8(b, false);
 		}
 	}
@@ -95,7 +95,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_INT16);
+			writeFieldStart(field.id(), TAG_INT16);
 			writeInt16(s, false);
 		}
 	}
@@ -106,7 +106,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_INT32);
+			writeFieldStart(field.id(), TAG_INT32);
 			writeInt32(i, false);
 		}
 	}
@@ -117,7 +117,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_INT64);
+			writeFieldStart(field.id(), TAG_INT64);
 			writeInt64(l, false);
 		}
 	}
@@ -128,7 +128,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_FLOAT32);
+			writeFieldStart(field.id(), TAG_FLOAT32);
 			writeFloat32(f, false);
 		}
 	}
@@ -139,7 +139,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_FLOAT64);
+			writeFieldStart(field.id(), TAG_FLOAT64);
 			writeFloat64(d, false);
 		}
 	}
@@ -150,7 +150,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_STRING);
+			writeFieldStart(field.id(), TAG_STRING);
 			writeString(s, false);
 		}
 	}
@@ -161,7 +161,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_LIST);
+			writeFieldStart(field.id(), TAG_LIST);
 			writeList(list, (ListType) field.typ(), false);
 		}
 	}
@@ -172,7 +172,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_MAP);
+			writeFieldStart(field.id(), TAG_MAP);
 			writeMap(map, (MapType) field.typ(), false);
 		}
 	}
@@ -183,7 +183,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_ARRAY);
+			writeFieldStart(field.id(), TAG_ARRAY);
 			writeArray(arrayObj, (ArrayType) field.typ(), false);
 		}
 	}
@@ -194,7 +194,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final Field field,
 			final boolean isSet) throws IOException {
 		if (isSet) {
-			writeFieldStart(field.fieldHash16bit(), TAG_CUSTOM);
+			writeFieldStart(field.id(), TAG_CUSTOM);
 			writeMGenObject(o, false);
 		}
 	}
@@ -210,9 +210,9 @@ public class BinaryWriter extends BuiltInWriter {
 	 * 
 	 ******************************************************************/
 
-	private void writeFieldStart(final short fieldHash16bit, final byte tag)
+	private void writeFieldStart(final short id, final byte tag)
 			throws IOException {
-		writeInt16(fieldHash16bit, false);
+		writeInt16(id, false);
 		writeTypeTag(tag);
 	}
 

@@ -1,9 +1,9 @@
 package se.culvertsoft.mgen.javapack.generator
 
-import se.culvertsoft.mgen.compiler.internal.BuiltInJavaCppGenerator
+import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 
 object JavaConstants {
-
+  
    val colClsString = "java.util.Collection"
    val listClsString = "java.util.List"
    val arrayListClsString = "java.util.ArrayList"
@@ -40,8 +40,8 @@ object JavaConstants {
    val fieldSetDepthClsString = s"FieldSetDepth"
    val fieldSetDepthClsStringQ = s"${metadataPkg}.${fieldSetDepthClsString}"
 
-   val fileHeader = BuiltInJavaCppGenerator.fileHeader
-   val serializationSectionHeader = BuiltInJavaCppGenerator.serializationSectionHeader
-   val metadataSectionHeader = BuiltInJavaCppGenerator.metadataSectionHeader
+   val fileHeader = FancyHeaders.fileHeader
+   val serializationSectionHeader = FancyHeaders.serializationSectionHeader
+   val metadataSectionHeader = FancyHeaders.metadataSectionHeader
 
 }

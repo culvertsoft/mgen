@@ -3,12 +3,12 @@ package se.culvertsoft.mgen.compiler.defaultparser
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.ArrayBuffer
-
 import XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.api.model.MGenBaseType
 import se.culvertsoft.mgen.api.model.impl.CustomTypeImpl
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
 import se.culvertsoft.mgen.api.model.impl.UnknownCustomTypeImpl
+import se.culvertsoft.mgen.api.util.CRC64
 
 object ParseType {
 
@@ -22,7 +22,7 @@ object ParseType {
         case _ => MGenBaseType.INSTANCE
       }
 
-    val clas = new CustomTypeImpl(cache.nextLocalId(), name, module, superType)
+    val clas = new CustomTypeImpl(name, module, superType)
     val fields = node.child.map { ParseField(_, clas.fullName) }
     clas.setFields(fields)
 

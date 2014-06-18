@@ -35,19 +35,21 @@ public abstract class MGenBase {
 	 * 
 	 * **********************************************************************/
 
-	public abstract int localTypeId();
-	
-	public abstract int[] localTypeIdHierarchy();
-	
-	public abstract short _typeHash16bit();
+	public abstract long _typeId();
+
+	public abstract long[] _typeIds();
+
+	public abstract short _typeId16Bit();
+
+	public abstract short[] _typeIds16Bit();
+
+	public abstract String _typeId16BitBase64();
+
+	public abstract String[] _typeIds16BitBase64();
 
 	public abstract String _typeName();
 
-	public abstract short[] _typeHashes16bit();
-
-	public abstract Collection<String> _typeHashes16bitBase64();
-
-	public abstract Collection<String> _typeNames();
+	public abstract String[] _typeNames();
 
 	/************************************************************************
 	 * 
@@ -56,13 +58,13 @@ public abstract class MGenBase {
 	 * 
 	 * **********************************************************************/
 
-	public abstract Collection<Field> _fields();
+	public abstract Field[] _fields();
 
-	public abstract Field _fieldBy16BitHash(final short hash);
+	public abstract Field _fieldById(final short hash);
 
 	public Field _fieldByName(final String memberName) {
-		return memberName != null ? _fieldBy16BitHash(Hasher
-				.static_16bit(memberName)) : null;
+		return memberName != null ? _fieldById(Hasher.static_16bit(memberName))
+				: null;
 	}
 
 	public abstract int _nFieldsSet(final FieldSetDepth fieldSetDepth);
@@ -90,9 +92,9 @@ public abstract class MGenBase {
 		}
 		return missingFields;
 	}
-	
-	public boolean isInstanceOfLocalId(final int potentialBase) {
-		for (int id: localTypeIdHierarchy()) {
+
+	public boolean isInstanceOfLocalId(final long potentialBase) {
+		for (long id : _typeIds()) {
 			if (id == potentialBase) {
 				return true;
 			}

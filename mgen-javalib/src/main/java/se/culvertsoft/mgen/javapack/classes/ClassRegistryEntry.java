@@ -3,14 +3,12 @@ package se.culvertsoft.mgen.javapack.classes;
 public class ClassRegistryEntry {
 
 	public ClassRegistryEntry(
-			final int localTypeId, 
+			final long typeId, 
 			final String className,
-			final short typeHash16bit, 
 			final Ctor ctor) {
 		m_cls = lkupClass(className);
-		m_localTypeId = localTypeId;
+		m_typeId = typeId;
 		m_clsName = className;
-		m_typeHash16bit = typeHash16bit;
 		m_ctor = ctor;
 	}
 	
@@ -30,12 +28,8 @@ public class ClassRegistryEntry {
 		return m_clsName;
 	}
 
-	public short typeHash16bit() {
-		return m_typeHash16bit;
-	}
-
-	public int localTypeId() {
-		return m_localTypeId;
+	public long typeId() {
+		return m_typeId;
 	}
 
 	public Ctor ctor() {
@@ -47,9 +41,8 @@ public class ClassRegistryEntry {
 	}
 
 	private final Class<?> m_cls;
-	private final int m_localTypeId;
+	private final long m_typeId;
 	private final String m_clsName;
-	private final short m_typeHash16bit;
 	private final Ctor m_ctor;
 
 }

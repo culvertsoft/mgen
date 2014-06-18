@@ -12,17 +12,17 @@ public class UnknownCustomTypeImpl extends TypeImpl implements
 		UnknownCustomType {
 
 	private final String m_writtenType;
-	private final int m_localTypeId;
+	private final long m_typeId;
 
-	public UnknownCustomTypeImpl(final String writtenType, final int localTypeId) {
+	public UnknownCustomTypeImpl(final String writtenType, final long typeId) {
 		super(TypeEnum.UNKNOWN);
 		m_writtenType = writtenType;
-		m_localTypeId = localTypeId;
+		m_typeId = typeId;
 	}
 
 	@Override
-	public int localTypeId() {
-		return m_localTypeId;
+	public long typeId() {
+		return m_typeId;
 	}
 
 	@Override
@@ -42,35 +42,6 @@ public class UnknownCustomTypeImpl extends TypeImpl implements
 	@Override
 	public String toString() {
 		return fullName();
-	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + m_localTypeId;
-		result = prime * result
-				+ ((m_writtenType == null) ? 0 : m_writtenType.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		UnknownCustomTypeImpl other = (UnknownCustomTypeImpl) obj;
-		if (m_localTypeId != other.m_localTypeId)
-			return false;
-		if (m_writtenType == null) {
-			if (other.m_writtenType != null)
-				return false;
-		} else if (!m_writtenType.equals(other.m_writtenType))
-			return false;
-		return true;
 	}
 
 	@Override

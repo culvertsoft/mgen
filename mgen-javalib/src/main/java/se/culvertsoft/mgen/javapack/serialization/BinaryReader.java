@@ -73,8 +73,8 @@ public class BinaryReader extends BuiltInReader {
 		if (readTypeTag)
 			ensureTypeTag(null, TAG_CUSTOM, readTypeTag());
 
-		final short[] typeIds = readTypeIds();
-		final MGenBase out = instantiateFromHash16(typeIds);
+		final short[] typeIds16Bit = readTypeIdsBit();
+		final MGenBase out = m_classRegistry.instantiateByTypeIds16Bit(typeIds16Bit);
 
 		readFields(out);
 
@@ -85,7 +85,7 @@ public class BinaryReader extends BuiltInReader {
 		if (object != null) {
 			// TODO: Handle fieldIdType settings
 			final short fieldId = readFieldId();
-			return object._fieldBy16BitHash(fieldId);
+			return object._fieldById(fieldId);
 		} else {
 			return null;
 		}
@@ -136,7 +136,7 @@ public class BinaryReader extends BuiltInReader {
 		final MGenBase out = readMGenObject(readTypeTag);
 
 		if (out != null && constraint != null) {
-			if (!out.isInstanceOfLocalId(constraint.localTypeId())) {
+			if (!out.isInstanceOfLocalId(constraint.typeId())) {
 				// TODO: Handle constraints failure
 				return null;
 			}
@@ -146,7 +146,7 @@ public class BinaryReader extends BuiltInReader {
 
 	}
 
-	private short[] readTypeIds() throws IOException {
+	private short[] readTypeIdsBit() throws IOException {
 
 		final int nTypeIds = readSize();
 

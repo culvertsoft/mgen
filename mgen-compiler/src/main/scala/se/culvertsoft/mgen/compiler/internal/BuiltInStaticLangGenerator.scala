@@ -7,11 +7,11 @@ import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.JavaConversions.mapAsScalaMap
 import scala.collection.JavaConverters.mapAsScalaMapConverter
 import scala.collection.mutable.ArrayBuffer
-
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
+import se.culvertsoft.mgen.api.plugins.Generator
 
 object BuiltInStaticLangGenerator {
 
@@ -24,7 +24,7 @@ object BuiltInStaticLangGenerator {
 
 }
 
-abstract class BuiltInStaticLangGenerator extends BuiltInGenerator {
+abstract class BuiltInStaticLangGenerator extends Generator {
 
    implicit var currentModule: Module = null
 

@@ -29,12 +29,16 @@ public class Hasher {
 		return h;
 	}
 
+	public static short static_16bit(final String txt) {
+		return CRC16.calc(txt.getBytes(charset));
+	}
+
 	public static int static_32bit(final String txt) {
 		return CRC32.calc(txt.getBytes(charset));
 	}
 
-	public static short static_16bit(final String txt) {
-		return CRC16.calc(txt.getBytes(charset));
+	public static long static_64bit(final String txt) {
+		return CRC64.calc(txt.getBytes(charset));
 	}
 
 }

@@ -15,8 +15,8 @@ public class Field {
 	private final Type m_type;
 	private final List<String> m_flags;
 	private final Set<CustomType> m_directDependencies;
-	private final short m_16bitHash;
-	private final String m_16bitHashBase64;
+	private final short m_id;
+	private final String m_idBase64;
 	private final boolean m_required;
 	private final boolean m_polymorphic;
 	private final boolean m_parked;
@@ -32,8 +32,8 @@ public class Field {
 		m_type = type;
 		m_flags = flags != null ? flags : (List<String>) Collections.EMPTY_LIST;
 		m_directDependencies = new HashSet<CustomType>();
-		m_16bitHash = Hasher.static_16bit(m_name);
-		m_16bitHashBase64 = Base64.encode(m_16bitHash);
+		m_id = Hasher.static_16bit(m_name);
+		m_idBase64 = Base64.encode(m_id);
 		m_required = m_flags.contains("required");
 		m_polymorphic = m_flags.contains("polymorphic");
 		m_parked = m_flags.contains("parked");
@@ -78,12 +78,12 @@ public class Field {
 		return new Field(m_ownerClassName, m_name, type, m_flags);
 	}
 
-	public short fieldHash16bit() {
-		return m_16bitHash;
+	public short id() {
+		return m_id;
 	}
 
-	public String fieldHash16bitBase64() {
-		return m_16bitHashBase64;
+	public String idBase64() {
+		return m_idBase64;
 	}
 	
 	public boolean isRequired() {

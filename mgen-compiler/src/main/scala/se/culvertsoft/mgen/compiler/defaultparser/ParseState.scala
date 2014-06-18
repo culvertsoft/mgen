@@ -23,12 +23,4 @@ class ParseState {
     val types = new ArrayBuffer[CustomTypeImpl]
   }
 
-  private var _nextLocalId = 0
-
-  def nextLocalId() = synchronized {
-    val out = _nextLocalId
-    _nextLocalId += 1
-    out
-  }
-
 }
