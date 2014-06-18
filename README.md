@@ -37,6 +37,7 @@ MGen is inspired by several existing tools, such as [Protocol Buffers](https://c
     * [The MGen Runtime Libraries](#the-mgen-runtime-libraries)
     * [The MGen Visual Designer](#the-mgen-visual-designer)
   * [Wire Formats](#Wire-formats)
+    * [Type IDs](#type-ids)
     * [The MGen binary format](#the-mgen-api)
     * [The MGen json format](#the-mgen-compiler)
   * [Performance](#performance)
