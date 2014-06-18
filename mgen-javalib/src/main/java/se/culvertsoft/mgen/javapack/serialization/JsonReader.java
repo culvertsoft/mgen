@@ -67,7 +67,7 @@ public class JsonReader extends BuiltInReader {
 		final JSONArray typeNames = (JSONArray) node.get("__t");
 		throwMissingFieldIfNull(typeNames, "__t");
 
-		final MGenBase out = instantiateFromGlobalIds(typeNames);
+		final MGenBase out = instantiateFromStreamIds(typeNames);
 
 		if (out != null) {
 			readObjectFields(out, node);
@@ -196,7 +196,7 @@ public class JsonReader extends BuiltInReader {
 		return out;
 	}
 
-	protected MGenBase instantiateFromGlobalIds(final JSONArray array)
+	protected MGenBase instantiateFromStreamIds(final JSONArray array)
 			throws IOException {
 		@SuppressWarnings("unchecked")
 		final String[] ids = ((ArrayList<String>) array).toArray(new String[array.size()]);
