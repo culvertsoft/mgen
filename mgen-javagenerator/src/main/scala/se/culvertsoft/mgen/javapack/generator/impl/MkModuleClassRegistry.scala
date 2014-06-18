@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.javapack.generator.makers
+package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.mapAsScalaMap
 

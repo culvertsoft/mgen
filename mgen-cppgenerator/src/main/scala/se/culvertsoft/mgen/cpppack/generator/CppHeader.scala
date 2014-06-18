@@ -149,7 +149,7 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
       txtBuffer.tabs(1).textln("static const std::vector<std::string>& _TYPE_HASHES_16BIT_BASE64();")
       txtBuffer.endl()
       txtBuffer.tabs(1).textln(s"enum _TYPE_HASHES {")
-      txtBuffer.tabs(2).textln(s"_TYPE_HASH_16BIT = ${t.typeHash16bit()},")
+      txtBuffer.tabs(2).textln(s"_TYPE_HASH_16BIT = ${t.typeId16Bit()},")
       txtBuffer.tabs(1).textln(s"};")
       txtBuffer.endl()
       txtBuffer.tabs(1).textln("static const std::string& _TYPE_HASH_16BIT_BASE64();")
@@ -166,7 +166,7 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
       // 16 bit hashes
       txtBuffer.tabs(1).textln(s"enum _TYPE_HASHES_16BIT {")
       for ((field, i) <- allFields.zipWithIndex) {
-         txtBuffer.tabs(2).text(s"${hash16(field)} = ${field.fieldHash16bit()}")
+         txtBuffer.tabs(2).text(s"${hash16(field)} = ${field.id()}")
          txtBuffer.textln(if (i + 1 == allFields.size) "" else ",")
       }
       txtBuffer.tabs(1).textln(s"};")

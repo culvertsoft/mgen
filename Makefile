@@ -9,8 +9,8 @@ all:
 	#########################################################
 	cd mgen-api && make all
 	cd mgen-compiler && make all
-	#cd mgen-cppgenerator && make all
-	#cd mgen-cpplib && make all
+	cd mgen-cppgenerator && make all
+	cd mgen-cpplib && make all
 	cd mgen-javalib && make all
 	cd mgen-javagenerator && make all
 	#cd mgen-javascriptgenerator && make all
@@ -29,8 +29,8 @@ clean:
 	#########################################################
 	cd mgen-api && make clean
 	cd mgen-compiler && make clean
-	#cd mgen-cppgenerator && make clean
-	#cd mgen-cpplib && make clean
+	cd mgen-cppgenerator && make clean
+	cd mgen-cpplib && make clean
 	cd mgen-javalib && make clean
 	cd mgen-javagenerator && make clean
 	#cd mgen-javascriptgenerator && make clean
@@ -48,7 +48,7 @@ eclipse:
 	#                                                       #
 	#########################################################
 	sbt eclipse
-	#cd mgen-cpplib && make eclipse
+	cd mgen-cpplib && make eclipse
 	#########################################################
 	#                                                       #
 	#        DONE CREATING ECLIPSE PROJECTS                 #
@@ -69,8 +69,8 @@ test:
 	#########################################################
 	cd mgen-api && make test
 	cd mgen-compiler && make test
-	#cd mgen-cppgenerator && make test
-	#cd mgen-cpplib && make test
+	cd mgen-cppgenerator && make test
+	cd mgen-cpplib && make test
 	cd mgen-javalib && make test
 	cd mgen-javagenerator && make test
 	#cd mgen-javascriptgenerator && make test
@@ -90,8 +90,8 @@ doc:
 	#########################################################
 	cd mgen-api && make doc
 	cd mgen-compiler && make doc
-	#cd mgen-cppgenerator && make doc
-	#cd mgen-cpplib && make doc
+	cd mgen-cppgenerator && make doc
+	cd mgen-cpplib && make doc
 	cd mgen-javalib && make doc
 	cd mgen-javagenerator && make doc
 	#cd mgen-javascriptgenerator && make doc

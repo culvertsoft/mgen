@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.cpppack.generator
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.compiler.internal.BuiltInJavaCppGenerator
+import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 
 object CppGenUtils {
 
@@ -40,7 +40,7 @@ object CppGenUtils {
    }
 
    def mkFancyHeader()(implicit txtBuffer: SuperStringBuffer) {
-      txtBuffer.textln(BuiltInJavaCppGenerator.fileHeader).endl()
+      txtBuffer.textln(FancyHeaders.fileHeader).endl()
    }
 
    def getIncludeGuardTypeString(typeName: String): String = {

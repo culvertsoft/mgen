@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.javapack.generator.makers
+package se.culvertsoft.mgen.javapack.generator.impl
 
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._

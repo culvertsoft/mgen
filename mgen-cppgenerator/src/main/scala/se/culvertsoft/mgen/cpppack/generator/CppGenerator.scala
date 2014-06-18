@@ -1,13 +1,12 @@
 package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.JavaConversions.seqAsJavaList
-
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.compiler.internal.BuiltInJavaCppGenerator
+import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 
-class CppGenerator extends BuiltInJavaCppGenerator {
+class CppGenerator extends BuiltInStaticLangGenerator {
 
   def generateTopLevelMetaSources(
     folder: String,

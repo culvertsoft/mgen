@@ -9,6 +9,7 @@
 #define CLASSREGISTRYBASE_H_
 
 #include "mgen/classes/ClassRegistryEntry.h"
+#include "mgen/exceptions/Exception.h"
 
 namespace mgen {
 
@@ -54,11 +55,6 @@ public:
 
     const std::map<std::string, ClassRegistryEntry>& getEntriesHash16bitBase64() const {
         return m_hash16bitBase642Entry;
-    }
-
-    void throwIfConflictsWith(const ClassRegistryBase& other) const {
-        throwIfConflicts(m_hash16bit2Entry, other.m_hash16bit2Entry, "16bit hash");
-        throwIfConflicts(m_typename2Entry, other.m_typename2Entry, "type name");
     }
 
 private:

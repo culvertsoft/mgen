@@ -36,7 +36,53 @@ public:
      *
      * **********************************************************************/
 
-    // Keep flat or wrap with some 'Type' object?
+    /** FUTURE API:
+
+	virtual const   long long                   _typeId()                               const = 0;
+	virtual const   std::vector<long long>&     _typeIds()                              const = 0;
+    
+	virtual const   short                       _typeId16Bit()                          const = 0;
+	virtual const   std::vector<short>&         _typeIds16Bit()                         const = 0;
+    
+	virtual const   std::string&                _typeId16BitBase64()                    const = 0;
+	virtual const   std::vector<std::string>    _typeIds16BitBase64()                   const = 0;
+    
+	virtual const   std::string                 _typeName()                             const = 0;
+	virtual const   std::vector<std::string>    _typeNames()                            const = 0;
+     
+    virtual const   std::vector<mgen::Field>&   _fields_()                            const = 0;
+
+     *  Generated classes will also have fields with this data
+     *      const   long long                   T::_type_id                 <.>
+     *      const   std::vector<long long>      T::_type_ids                <.>
+     *
+     *      const   short                       T::_type_id_16bit           <.>
+     *      const   std::vector<short>          T::_type_ids_16bit          <.>
+     *
+     *      const   std::string                 T::_type_id_16bit_base64    <.>
+     *      const   std::vector<std::string>    T::_type_ids_16bit_base64   <.>
+     *
+     *      const   std::string                 T::_type_name               <.>
+     *      const   std::vector<std::string>    T::_type_names              <.>
+     *
+     *      const   std::vector<mgen::Field>    T::_fields                  <.>
+     *
+     
+     
+    virtual const   mgen::Field *               _fieldById(const short id)              const = 0;
+    virtual const   mgen::Field *               _fieldByName(const std::string& name)   const = 0;
+
+    virtual         int                         _nFieldsSet(const FieldSetDepth depth)  const = 0;
+    virtual         bool                        _isFieldSet(const mgen::Field& field, const FieldSetDepth depth) const = 0;
+
+    virtual const   void                        _setAllFieldsSet(const bool state, const FieldSetDepth depth) = 0;
+    virtual         bool                        _validate(const FieldSetDepth depth) const = 0;    
+    virtual         bool                        _equals(const mgen::MGenBase& other) const = 0;
+    virtual         MGenBase *                  _deepCopy() const = 0;
+ */
+ 
+    // ------------------------------------------------------------------- //
+ 
     virtual const short _typeHash16bit() const = 0;
     virtual const std::string& _typeName() const = 0;
     virtual const std::string& _typeHash16bitBase64() const = 0;
@@ -49,7 +95,7 @@ public:
     /************************************************************************
      *
      *
-     * - - - - - - - - - - FIELD DATA EXTRACTORS/SETTERS - - - - - - - - -
+     * - - - - - - - - - - OTHER META METHODS - - - - - - - - -
      *
      * **********************************************************************/
 

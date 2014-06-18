@@ -8,9 +8,9 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.compiler.internal.BuiltInGenerator.upFirst
-import se.culvertsoft.mgen.compiler.internal.BuiltInJavaCppGenerator
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
+import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 abstract class CppSrcFileOrHeader(val fileEnding: String) {
@@ -125,7 +125,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   def mkDeepCopy(t: CustomType) {}
   def mkEquals(t: CustomType) {}
   def mkMetadataMethodsComment(t: CustomType) {
-    txtBuffer.textln(BuiltInJavaCppGenerator.serializationSectionHeader);
+    txtBuffer.textln(FancyHeaders.serializationSectionHeader);
   }
 
   def mkEqOperator(t: CustomType) {}
@@ -141,7 +141,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   def mkTypeHierarchyMethods(t: CustomType) {}
   def mkNewInstance(t: CustomType) {}
   def mkMetadataComment(t: CustomType) {
-    txtBuffer.textln(BuiltInJavaCppGenerator.metadataSectionHeader);
+    txtBuffer.textln(FancyHeaders.metadataSectionHeader);
   }
   def mkMetaDataFields(t: CustomType) {}
   def mkMetaDataFieldMakers(t: CustomType) {}
