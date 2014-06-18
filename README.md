@@ -297,8 +297,7 @@ Now we can read these objects back from the stream in the following manner:
       
       // What we could do now is dynamic_cast to identify the types, or use one 
       // of the type ids supplied for generated classes:
-      // Here using Car::TYPE_ID, which is a generated globally unique 64bit hash code 
-      // (see [wire formats](#wire-formats)).
+      // Here using Car::TYPE_ID, which is a generated globally unique 64bit hash code.
       for (MGenBase obj * : objects) {
         switch(obj->typeId()) {
           case Car::TYPE_ID:
