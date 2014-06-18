@@ -295,9 +295,10 @@ Now we can read these objects back from the stream in the following manner:
       objects.push_back(obj2);
       objects.push_back(obj3);
       
-      // What we could do now is dynamic_cast to identify the types, or use one of the type id methods 
-      // that are supplied for all generated classes:
-      // Using a bit of c++ 11 here
+      // What we could do now is dynamic_cast to identify the types, or use one 
+      // of the type ids supplied for generated classes:
+      // Here using Car::TYPE_ID, which is a generated globally unique 64bit hash code 
+      // (see [wire formats](#wire-formats)).
       for (MGenBase obj * : objects) {
         switch(obj->typeId()) {
           case Car::TYPE_ID:
@@ -453,7 +454,8 @@ By default generated classes are java-beans and C++ data containers with getters
 * Type metadata accessible through both virtual and static methods
 * Getters and Setters
 * Query methods for asking if a member is set
-* Type IDs (name, 16 bit and 64 bit hash codes) based on the qualified (i.e. com.myorg.myproduct.ClassName) class name
+* Type IDs (name, 16 bit and 64 bit hash codes) based on the qualified class name (i.e. com.myorg.myproduct.ClassName)
+  * The reason for having this many type IDs is explained in the [wire formats](#wire-formats) section.
 * Methods for testing equality (c++: == operator, java: equals(..))
 * Stringification and object Hash Code methods (Java Only)
 
