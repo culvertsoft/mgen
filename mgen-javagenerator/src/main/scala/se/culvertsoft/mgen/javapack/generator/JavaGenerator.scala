@@ -101,7 +101,7 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     txtBuffer.tabs(1).textln("}")
     txtBuffer.endl()
 
-    val allTypes = referencedModules.flatMap(_.types()).map(_._2)
+    val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     def mkSwitch(
@@ -159,6 +159,19 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
     mkInstantiateFunc("instantiateFromHash16Ids", "short", hash16)
     mkInstantiateFunc("instantiateFromHash16Base64Ids", "String", has16base64)
     mkInstantiateFunc("instantiateFromNames", "String", name)
+
+    // Instantiate by local type id
+    txtBuffer.tabs(1).textln(s"@Override")
+    txtBuffer.tabs(1).textln(s"public ${JavaConstants.mgenBaseClsString} instantiateFromLocalId(final int localId) {")
+    txtBuffer.tabs(2).textln("switch(localId) {")
+    for (t <- allTypes) {
+      txtBuffer.tabs(3).textln(s"case ${localIdStr(t)}:")
+      txtBuffer.tabs(4).textln(s"return ${instantiate(t)};")
+    }
+    txtBuffer.tabs(3).textln("default:")
+    txtBuffer.tabs(4).textln(s"return null;")
+    txtBuffer.tabs(2).textln("}")
+    txtBuffer.tabs(1).textln("}").endl()
 
     mkClassEnd()
 

@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 
 public abstract class BuiltInReader implements Reader {
@@ -13,8 +12,7 @@ public abstract class BuiltInReader implements Reader {
 	}
 
 	protected MGenBase instantiate(final int localId) {
-		final ClassRegistryEntry entry = m_classRegistry.getByLocalId(localId);
-		return entry != null ? entry.construct() : null;
+		return m_classRegistry.instantiateFromLocalId(localId);
 	}
 
 	protected MGenBase instantiateFromHash16(final short[] ids) {

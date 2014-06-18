@@ -41,6 +41,10 @@ public class ClassRegistry {
 		return -1;
 	}
 
+	public MGenBase instantiateFromLocalId(final int localId) {
+		return null;
+	}
+	
 	public MGenBase instantiateFromHash16Ids(final short[] ids) {
 		return null;
 	}
