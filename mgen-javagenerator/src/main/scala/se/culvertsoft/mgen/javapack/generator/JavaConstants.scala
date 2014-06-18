@@ -24,6 +24,7 @@ object JavaConstants {
    val deepCopyerClsStringQ = s"${utilPkg}.${deepCopyerClsString}"
    val fieldHasherClsStringQ = s"${utilPkg}.${fieldHasherClsString}"
 
+   val mgenBaseClsString =  s"${javapackPkg}.classes.MGenBase"
    val clsRegistryClsString = s"${javapackPkg}.classes.ClassRegistry"
    val eqTesterClsString = s"EqualityTester"
    val eqTesterClsStringQ = s"${javapackPkg}.util.${eqTesterClsString}"

@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Set;
 
-public abstract class ClassRegistry {
+public class ClassRegistry {
 
 	private final HashMap<Integer, ClassRegistryEntry> m_localTypeId2Entry;
 	private final HashMap<String, ClassRegistryEntry> m_clsName2Entry;
@@ -29,18 +29,30 @@ public abstract class ClassRegistry {
 			add(entry);
 	}
 
-	public int globalIds2Local(final short[] globalIds) {
-		throw new RuntimeException("Cannot call globalIds2Local on " + this);
+	public int hash16Ids2LocalTypeId(final short[] ids) {
+		return -1;
 	}
 
-	public int globalNames2Local(final String[] globalNames) {
-		throw new RuntimeException("Cannot call globalNames2Local on " + this);
+	public int hash16Base64Ids2LocalTypeId(final String[] ids) {
+		return -1;
 	}
 
-	public int globalBase64Ids2Local(final String[] globalBase64Ids) {
-		throw new RuntimeException("Cannot call globalBase64Ids2Local on " + this);
+	public int names2LocalTypeId(final String[] ids) {
+		return -1;
 	}
-	
+
+	public MGenBase instantiateFromHash16Ids(final short[] ids) {
+		return null;
+	}
+
+	public MGenBase instantiateFromHash16Base64Ids(final String[] ids) {
+		return null;
+	}
+
+	public MGenBase instantiateFromNames(final String[] ids) {
+		return null;
+	}
+
 	public ClassRegistryEntry getByName(final String fullClassName) {
 		return m_clsName2Entry.get(fullClassName);
 	}

@@ -18,15 +18,15 @@ public abstract class BuiltInReader implements Reader {
 	}
 
 	protected MGenBase instantiateFromHash16(final short[] ids) {
-		return instantiate(m_classRegistry.globalIds2Local(ids));
+		return m_classRegistry.instantiateFromHash16Ids(ids);
 	}
 
 	protected MGenBase instantiateFromNames(final String[] ids) {
-		return instantiate(m_classRegistry.globalNames2Local(ids));
+		return m_classRegistry.instantiateFromNames(ids);
 	}
 
 	protected MGenBase instantiateFromHash16Base64(final String[] ids) {
-		return instantiate(m_classRegistry.globalBase64Ids2Local(ids));
+		return m_classRegistry.instantiateFromHash16Base64Ids(ids);
 	}
-	
+
 }

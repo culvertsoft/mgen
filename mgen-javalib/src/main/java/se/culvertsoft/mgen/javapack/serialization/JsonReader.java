@@ -67,8 +67,7 @@ public class JsonReader extends BuiltInReader {
 		final JSONArray typeNames = (JSONArray) node.get("__t");
 		throwMissingFieldIfNull(typeNames, "__t");
 
-		final int localTypeId = getLocalIdFromGlobalIds(typeNames);
-		final MGenBase out = instantiate(localTypeId);
+		final MGenBase out = instantiateFromGlobalIds(typeNames);
 
 		if (out != null) {
 			readObjectFields(out, node);
@@ -197,14 +196,14 @@ public class JsonReader extends BuiltInReader {
 		return out;
 	}
 
-	protected int getLocalIdFromGlobalIds(final JSONArray array)
+	protected MGenBase instantiateFromGlobalIds(final JSONArray array)
 			throws IOException {
 		@SuppressWarnings("unchecked")
 		final String[] ids = ((ArrayList<String>) array).toArray(new String[array.size()]);
 		if (readerSettings.typeIdType() == TypeIdType.HASH_16_BIT) {
-			return m_classRegistry.globalBase64Ids2Local(ids);
+			return m_classRegistry.instantiateFromHash16Base64Ids(ids);
 		} else {
-			return m_classRegistry.globalNames2Local(ids);
+			return m_classRegistry.instantiateFromNames(ids);
 		}
 	}
 

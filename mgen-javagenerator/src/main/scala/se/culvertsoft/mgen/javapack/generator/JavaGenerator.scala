@@ -108,7 +108,8 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
       nTabs: Int,
       localId: String,
       possibleTypes: Seq[CustomType],
-      caser: CustomType => String) {
+      caser: CustomType => String,
+      returner: CustomType => String) {
 
       txtBuffer.tabs(nTabs).textln("switch(ids[i++]) {")
 
@@ -117,10 +118,10 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
         txtBuffer.tabs(nTabs + 1).textln(s"case ${caser(t)}:")
 
         if (t.subTypes().nonEmpty) {
-          txtBuffer.tabs(nTabs + 2).textln(s"if (i == ids.length) return ${localIdStr(t)};")
-          mkSwitch(nTabs + 2, localIdStr(t), t.subTypes(), caser);
+          txtBuffer.tabs(nTabs + 2).textln(s"if (i == ids.length) return ${returner(t)};")
+          mkSwitch(nTabs + 2, returner(t), t.subTypes(), caser, returner);
         } else {
-          txtBuffer.tabs(nTabs + 2).textln(s"return ${localIdStr(t)};")
+          txtBuffer.tabs(nTabs + 2).textln(s"return ${returner(t)};")
         }
       }
 
@@ -129,20 +130,35 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
       txtBuffer.tabs(nTabs).textln("}")
     }
 
-    def mkLkupFunc(
+    def mkFunc(
+      defaultVal: String,
+      returnType: String,
       funcName: String,
-      inpTypeStr: String, 
-      caser: CustomType => String) {
-      txtBuffer.tabs(1).textln("@Override")
-      txtBuffer.tabs(1).textln(s"public int $funcName(final $inpTypeStr[] ids) {")
+      inpTypeStr: String,
+      caser: CustomType => String,
+      returner: CustomType => String) {
+      txtBuffer.tabs(1).textln(s"@Override")
+      txtBuffer.tabs(1).textln(s"public $returnType $funcName(final $inpTypeStr[] ids) {")
       txtBuffer.tabs(2).textln("int i = 0;")
-      mkSwitch(2, "-1", topLevelTypes, caser)
+      mkSwitch(2, defaultVal, topLevelTypes, caser, returner)
       txtBuffer.tabs(1).textln("}").endl()
     }
 
-    mkLkupFunc("globalIds2Local", "short", hash16)
-    mkLkupFunc("globalNames2Local", "String", name)
-    mkLkupFunc("globalBase64Ids2Local", "String", has16base64)
+    def mkLkupFunc(funcName: String, inpTypeStr: String, caser: CustomType => String) {
+      mkFunc("-1", "int", funcName, inpTypeStr, caser, localIdStr)
+    }
+
+    def mkInstantiateFunc(funcName: String, inpTypeStr: String, caser: CustomType => String) {
+      mkFunc("null", JavaConstants.mgenBaseClsString, funcName, inpTypeStr, caser, instantiate)
+    }
+
+    mkLkupFunc("hash16Ids2LocalTypeId", "short", hash16)
+    mkLkupFunc("hash16Base64Ids2LocalTypeId", "String", has16base64)
+    mkLkupFunc("names2LocalTypeId", "String", name)
+
+    mkInstantiateFunc("instantiateFromHash16Ids", "short", hash16)
+    mkInstantiateFunc("instantiateFromHash16Base64Ids", "String", has16base64)
+    mkInstantiateFunc("instantiateFromNames", "String", name)
 
     mkClassEnd()
 
@@ -333,7 +349,10 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
   }
 
   def mkClassStart(clsName: String, superTypeName: String) {
-    txtBuffer.text(s"public class $clsName extends $superTypeName {").endl2()
+    if (superTypeName != null && superTypeName.nonEmpty)
+      txtBuffer.text(s"public class $clsName extends $superTypeName {").endl2()
+    else
+      txtBuffer.text(s"public class $clsName {").endl2()
   }
 
   def mkClassStart(t: CustomType) {
@@ -889,6 +908,10 @@ class JavaGenerator extends BuiltInJavaCppGenerator {
 
   def localIdStr(t: CustomType): String = {
     s"${t.fullName()}.LOCAL_TYPE_ID"
+  }
+
+  def instantiate(t: CustomType): String = {
+    s"new ${t.fullName()}()"
   }
 
 }
