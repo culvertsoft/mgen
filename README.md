@@ -299,8 +299,8 @@ Now we can read these objects back from the stream in the following manner:
       // that are supplied for all generated classes:
       // Using a bit of c++ 11 here
       for (MGenBase obj * : objects) {
-        switch(obj->localTypeId()) {
-          case Car::LOCAL_TYPE_ID:
+        switch(obj->typeId()) {
+          case Car::TYPE_ID:
             Car * car = reinterpret_cast<Car*>(obj);
             std::cout << "Yay we got a car!" << std::endl;
             break;
