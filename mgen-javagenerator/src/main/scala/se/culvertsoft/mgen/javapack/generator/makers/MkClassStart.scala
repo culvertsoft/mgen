@@ -1,16 +1,11 @@
 package se.culvertsoft.mgen.javapack.generator.makers
 
 import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
 
 object MkClassStart {
-  import BuiltInGeneratorUtil._
-  import JavaConstants._
-  import JavaTypeNames._
 
   def apply(clsName: String, superTypeName: String)(implicit txtBuffer: SuperStringBuffer) {
     if (superTypeName != null && superTypeName.nonEmpty)

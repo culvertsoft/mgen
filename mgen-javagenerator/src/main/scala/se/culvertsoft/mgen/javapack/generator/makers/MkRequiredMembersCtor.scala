@@ -1,26 +1,23 @@
 package se.culvertsoft.mgen.javapack.generator.makers
 
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConversions.bufferAsJavaList
+
+import Alias.isSetName
 import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.javapack.generator.JavaConstruction._
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames._
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.fieldTypeName
 
 object MkRequiredMembersCtor {
-  import BuiltInGeneratorUtil._
-  import JavaConstants._
-  import Alias._
 
   def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val m = module
-    
+
     val reqAndOptFields = t.getAllFieldsInclSuper().toBuffer
     val reqFields = t.getAllFieldsInclSuper().filter(_.isRequired())
-    
+
     if (reqFields.nonEmpty && reqAndOptFields != reqFields) {
       txtBuffer.tabs(1).text(s"public ${t.name()}(")
       for (i <- 0 until reqFields.size()) {

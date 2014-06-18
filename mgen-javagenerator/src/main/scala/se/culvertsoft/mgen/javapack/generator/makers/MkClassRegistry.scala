@@ -1,23 +1,20 @@
 package se.culvertsoft.mgen.javapack.generator.makers
 
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.javapack.generator.JavaConstants
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.javapack.generator.JavaConstants
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames
-import se.culvertsoft.mgen.api.model.Module
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConversions.mapAsScalaMap
 
-import scala.collection.JavaConversions._
+import Alias.instantiate
+import Alias.name
+import Alias.typeIdStr
+import Alias.typeIdStr16BitBase64
+import Alias.typeIdStr16bit
+import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.javapack.generator.JavaConstants
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.clsRegistryClsString
 
 object MkClassRegistry {
-
-  import BuiltInGeneratorUtil._
-  import JavaConstants._
-  import JavaTypeNames._
-  import Alias._
 
   def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
 

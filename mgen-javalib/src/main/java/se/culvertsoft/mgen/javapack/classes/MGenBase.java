@@ -2,7 +2,6 @@ package se.culvertsoft.mgen.javapack.classes;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import se.culvertsoft.mgen.api.model.Field;

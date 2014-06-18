@@ -1,18 +1,22 @@
 package se.culvertsoft.mgen.javapack.generator.makers
 
-import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames
-import se.culvertsoft.mgen.api.model.Module
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConversions.asScalaSet
 
-import scala.collection.JavaConversions._
+import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.eqTesterClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldHasherClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldVisitorClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.readerClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.setFieldSetClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.validatorClsStringQ
 
 object MkImports {
-  import BuiltInGeneratorUtil._
-  import JavaConstants._
-  import JavaTypeNames._
 
   def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
     val allReferencedExtTypes = t.getAllReferencedExtTypesInclSuper()

@@ -1,23 +1,23 @@
 package se.culvertsoft.mgen.javapack.generator.makers
 
+import scala.collection.JavaConversions.asScalaBuffer
+
+import Alias.get
+import Alias.isFieldSet
+import Alias.isSetName
 import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.javapack.generator.JavaConstruction._
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames._
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
 
 object MkGetters {
-  import BuiltInGeneratorUtil._
-  import JavaConstants._
-  import Alias._
 
   def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
-    
+
     implicit val m = module
-    
+
     for (field <- t.fields()) {
       txtBuffer.tabs(1).textln(s"public ${getTypeName(field.typ())} ${get(field)} {")
       txtBuffer.tabs(2).textln(s"return m_${field.name()};")
