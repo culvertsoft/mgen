@@ -453,7 +453,7 @@ By default generated classes are java-beans and C++ data containers with getters
 * Type metadata accessible through both virtual and static methods
 * Getters and Setters
 * Query methods for asking if a member is set
-* Type IDs (name, 16 bit and 32 bit hash codes) based on the qualified (i.e. com.myorg.myproduct.ClassName) class name
+* Type IDs (name, 16 bit and 64 bit hash codes) based on the qualified (i.e. com.myorg.myproduct.ClassName) class name
 * Methods for testing equality (c++: == operator, java: equals(..))
 * Stringification and object Hash Code methods (Java Only)
 
