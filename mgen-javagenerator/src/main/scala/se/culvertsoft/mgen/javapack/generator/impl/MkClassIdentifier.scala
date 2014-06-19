@@ -38,7 +38,8 @@ object MkClassIdentifier {
     // pub handle(MGenBase o)
     //  if (o != null)
     //  --> switch(o....)
-    // 		--> handle((TypeCasted)o)
+    //      --> if (o.typeId == T::_TYPE_ID)
+    // 			--> handle((T)o)
     //      --> handleUnknown(o)
     //  else
     //      --> handleNull(o)
