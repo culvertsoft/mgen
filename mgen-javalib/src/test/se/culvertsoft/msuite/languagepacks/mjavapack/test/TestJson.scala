@@ -20,7 +20,7 @@ class TestJson {
    def modifiedObject() {
 
       val bos = new ByteArrayOutputStream
-      val registry = new gameworld.types.MGenClassRegistry
+      val registry = new gameworld.types.ClassRegistry
       val writer = new JsonWriter(bos, registry)
 
       val car = new Car

@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.visualdesigner.classlookup
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.collectionAsScalaIterable
 
-import se.culvertsoft.mgen.visualdesigner.MGenClassRegistry
+import se.culvertsoft.mgen.visualdesigner.ClassRegistry
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
@@ -26,7 +26,7 @@ object FieldTypeLookup {
       searchString: String, onlySimpleType: Boolean,
       model: Model, parentModule: Option[Module]): Seq[(FieldType, Int)] = {
 
-      val cr = new MGenClassRegistry()
+      val cr = new ClassRegistry()
 
       val fieldTypes = model.findEach[CustomType]().map(x => new CustomTypeRef(x.getId()))
 

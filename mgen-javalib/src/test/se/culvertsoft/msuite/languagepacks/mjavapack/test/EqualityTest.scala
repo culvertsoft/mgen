@@ -14,7 +14,7 @@ class EqualityTest {
    @Test
    def checkEquality() {
 
-      val classRegistry = new gameworld.types.MGenClassRegistry
+      val classRegistry = new gameworld.types.ClassRegistry
       val entries = classRegistry.entries()
 
       assert(entries.size() > 5)

@@ -10,7 +10,7 @@ class RegistryTest {
    @Test
    def checkRegistry() {
 
-      val classRegistry = new gameworld.types.MGenClassRegistry
+      val classRegistry = new gameworld.types.ClassRegistry
 
       val entries = classRegistry.entries()
       val names = classRegistry.registeredClassNames()

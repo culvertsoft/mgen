@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.visualdesigner.view.autobox2
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
 
-import se.culvertsoft.mgen.visualdesigner.MGenClassRegistry
+import se.culvertsoft.mgen.visualdesigner.ClassRegistry
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
@@ -15,7 +15,7 @@ import se.culvertsoft.mgen.visualdesigner.model.SimpleType
 
 object FieldTypes {
 
-  val cr = new MGenClassRegistry()
+  val cr = new ClassRegistry()
 
   val simpleTypeEntries = cr.entries()
     .filter(e => classOf[SimpleType].isAssignableFrom(e.cls()))

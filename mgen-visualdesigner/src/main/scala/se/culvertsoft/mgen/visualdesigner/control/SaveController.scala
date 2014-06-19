@@ -16,7 +16,7 @@ import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
-import se.culvertsoft.mgen.visualdesigner.MGenClassRegistry
+import se.culvertsoft.mgen.visualdesigner.ClassRegistry
 import se.culvertsoft.mgen.visualdesigner.model.FilePath
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.ModelConversion
@@ -24,7 +24,7 @@ import se.culvertsoft.mgen.visualdesigner.model.Module
 
 class SaveController(controller: Controller, window: JFrame) extends SubController(controller) {
 
-  val classRegistry = new MGenClassRegistry
+  val classRegistry = new ClassRegistry
 
   private var _currentSelectDirectory: Option[File] = None
   private var _currentSaveFile: Option[File] = None

@@ -13,6 +13,7 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.impl.MkAcceptVisitor
 import se.culvertsoft.mgen.javapack.generator.impl.MkAllMembersCtor
 import se.culvertsoft.mgen.javapack.generator.impl.MkClassEnd
+import se.culvertsoft.mgen.javapack.generator.impl.MkClassIdentifier
 import se.culvertsoft.mgen.javapack.generator.impl.MkClassRegistry
 import se.culvertsoft.mgen.javapack.generator.impl.MkClassStart
 import se.culvertsoft.mgen.javapack.generator.impl.MkDeepCopy
@@ -50,9 +51,24 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     packagePath: String,
     referencedModules: Seq[Module],
     generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    val fileName = "MGenClassRegistry" + ".java"
-    val sourceCode = MkClassRegistry(referencedModules, packagePath)
-    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
+
+    def mkClasReg(): GeneratedSourceFile = {
+      val fileName = "ClassRegistry" + ".java"
+      val sourceCode = MkClassRegistry(referencedModules, packagePath)
+      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+    }
+
+    def mkIdentifier(): GeneratedSourceFile = {
+      val fileName = "ClassIdentifier" + ".java"
+      val sourceCode = MkClassIdentifier(referencedModules, packagePath)
+      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+    }
+
+    val clsRegistry = mkClasReg()
+    val identifier = mkIdentifier()
+
+    List(clsRegistry, identifier)
+
   }
 
   override def generateModuleMetaSources(

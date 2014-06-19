@@ -20,7 +20,7 @@ class RWTest {
    def modifiedObject() {
 
       val bos = new ByteArrayOutputStream
-      val registry = new gameworld.types.MGenClassRegistry
+      val registry = new gameworld.types.ClassRegistry
       val writer = new BinaryWriter(bos, registry)
 
       val car = new Car
@@ -63,7 +63,7 @@ class RWTest {
 
       val bos = new ByteArrayOutputStreamExposed(10 * 1024)
       val bis = new ByteArrayInputStream(bos.backingArray())
-      val registry = new gameworld.types.MGenClassRegistry
+      val registry = new gameworld.types.ClassRegistry
       val writer = new BinaryWriter(bos, registry)
       val reader = new BinaryReader(bis, registry)
 

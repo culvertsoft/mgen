@@ -14,7 +14,7 @@ class WriterTest {
    def writeXml() {
 
       val bos = new ByteArrayOutputStream
-      val registry = new gameworld.types.MGenClassRegistry
+      val registry = new gameworld.types.ClassRegistry
       val useHashes = true
 
       val xmlWriter = new XmlWriter(bos, registry, useHashes)
