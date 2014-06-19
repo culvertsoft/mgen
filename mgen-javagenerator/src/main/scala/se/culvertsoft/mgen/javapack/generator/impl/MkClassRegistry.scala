@@ -3,7 +3,6 @@ package se.culvertsoft.mgen.javapack.generator.impl
 import scala.collection.JavaConversions.mapAsScalaMap
 
 import Alias.instantiate
-import Alias.name
 import Alias.typeIdStr
 import Alias.typeIdStr16BitBase64
 import Alias.typeIdStr16bit
@@ -60,11 +59,9 @@ object MkClassRegistry {
 
     mkLkupFunc("typeIds16Bit2TypeId", "short", typeIdStr16bit)
     mkLkupFunc("typeIds16Base64Bit2TypeId", "String", typeIdStr16BitBase64)
-    mkLkupFunc("names2TypeId", "String", name)
 
     mkInstantiateFunc("instantiateByTypeIds16Bit", "short", typeIdStr16bit)
     mkInstantiateFunc("instantiateByTypeIds16BitBase64", "String", typeIdStr16BitBase64)
-    mkInstantiateFunc("instantiateByNames", "String", name)
 
     MkClassEnd()
 

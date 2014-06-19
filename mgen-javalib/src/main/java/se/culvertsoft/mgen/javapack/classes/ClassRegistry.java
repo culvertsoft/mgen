@@ -37,14 +37,15 @@ public class ClassRegistry {
 	}
 
 	public long names2TypeId(final String[] ids) {
-		return -1;
+		final ClassRegistryEntry entry = getEntryByNames(ids);
+		return entry != null ? entry.typeId() : -1;
 	}
 
 	public final MGenBase instantiateByTypeId(final long typeId) {
 		final ClassRegistryEntry entry = m_typeId2Entry.get(typeId);
 		return entry != null ? entry.construct() : null;
 	}
-	
+
 	public MGenBase instantiateByTypeIds16Bit(final short[] ids) {
 		return null;
 	}
@@ -54,9 +55,21 @@ public class ClassRegistry {
 	}
 
 	public MGenBase instantiateByNames(final String[] ids) {
-		return null;
+		final ClassRegistryEntry entry = getEntryByNames(ids);
+		return entry != null ? entry.construct() : null;
 	}
 
+	public ClassRegistryEntry getEntryByNames(final String[] ids) {
+		for (int i = ids.length - 1; i >= 0; i--) {
+			final String name = ids[i];
+			final ClassRegistryEntry entry = getByName(name);
+			if (entry != null) {
+				return entry;
+			}
+		}
+		return null;
+	}
+	
 	public ClassRegistryEntry getByName(final String fullClassName) {
 		return m_name2Entry.get(fullClassName);
 	}
