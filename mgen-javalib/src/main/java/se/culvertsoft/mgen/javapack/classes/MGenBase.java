@@ -92,7 +92,7 @@ public abstract class MGenBase {
 		return missingFields;
 	}
 
-	public boolean isInstanceOfLocalId(final long potentialBase) {
+	public boolean isInstanceOfTypeWithId(final long potentialBase) {
 		for (long id : _typeIds()) {
 			if (id == potentialBase) {
 				return true;

@@ -136,7 +136,7 @@ public class BinaryReader extends BuiltInReader {
 		final MGenBase out = readMGenObject(readTypeTag);
 
 		if (out != null && constraint != null) {
-			if (!out.isInstanceOfLocalId(constraint.typeId())) {
+			if (!out.isInstanceOfTypeWithId(constraint.typeId())) {
 				// TODO: Handle constraints failure
 				return null;
 			}

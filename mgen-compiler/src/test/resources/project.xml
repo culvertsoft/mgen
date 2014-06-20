@@ -4,13 +4,13 @@
 
 	<Generator name="Java">
 		<generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</generator_class_path>
-		<output_path>target/src_generated</output_path>
+		<output_path>src_generated/test/java</output_path>
 		<classregistry_path>gameworld.types</classregistry_path>
 	</Generator>
 
 	<Generator name="C++">
 		<generator_class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</generator_class_path>
-		<output_path>target/src_generated</output_path>
+		<output_path>src_generated/test/cpp</output_path>
 		<classregistry_path>gameworld.types</classregistry_path>
 		<generate_unity_build>true</generate_unity_build>
 	</Generator>

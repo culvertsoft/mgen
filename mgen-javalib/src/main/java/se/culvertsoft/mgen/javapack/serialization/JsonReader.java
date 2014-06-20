@@ -187,7 +187,7 @@ public class JsonReader extends BuiltInReader {
 		final MGenBase out = readMGenObject(node);
 
 		if (out != null && constraint != null) {
-			if (!out.isInstanceOfLocalId(constraint.typeId())) {
+			if (!out.isInstanceOfTypeWithId(constraint.typeId())) {
 				// TODO: Handle constraints failure
 				return null;
 			}

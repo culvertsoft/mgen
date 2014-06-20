@@ -13,9 +13,13 @@ crossPaths := false
 
 retrieveManaged := true
 
+unmanagedSourceDirectories in Test += baseDirectory.value / "src_generated/test/java"
+
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
 libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
+
+libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
 
 EclipseKeys.withSource := true
 

@@ -32,6 +32,7 @@ clean:
 	#########################################
 	#   CLEANING MGEN-CPPLIB-TEST           #
 	#########################################
+	rm src_generated/* -rf
 	rm target/* -rf
 
 doc:
