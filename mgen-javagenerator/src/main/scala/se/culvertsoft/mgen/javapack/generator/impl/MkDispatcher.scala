@@ -9,7 +9,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants
 
-object MkClassIdentifier {
+object MkDispatcher {
 
   def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
 
@@ -22,11 +22,11 @@ object MkClassIdentifier {
 
     ln(0, s"import ${JavaConstants.mgenBaseClsString};").endl()
 
-    MkClassStart("ClassIdentifier", null)
+    MkClassStart("Dispatcher", null)
 
     def mkIdentify() {
 
-      ln(1, "public void identify(MGenBase o) {").endl()
+      ln(1, "public void dispatch(MGenBase o) {").endl()
 
       ln(2, "if (o==null) {")
       ln(3, "handleNull(o);")
@@ -36,7 +36,7 @@ object MkClassIdentifier {
       ln(2, "final short[] ids = o._typeIds16Bit();")
       ln(2, "int i = 0;")
 
-      MkTypeIdSwitch.apply(2, "handleUnknown(o);", topLevelTypes, typeIdStr16bit, t => s"handle((${t.fullName()})o);")
+      MkTypeIdSwitch.apply(true, 2, "handleUnknown(o);", topLevelTypes, typeIdStr16bit, t => s"handle((${t.fullName()})o);")
 
       ln(1, "}").endl()
 
@@ -53,7 +53,7 @@ object MkClassIdentifier {
       if (t.hasSuperType) {
         ln(2, s"handle((${t.superType.fullName})o);")
       } else {
-        ln(2, s"handleUnknown(o);")
+        ln(2, s"handleDiscard(o);")
       }
       ln(1, s"}").endl()
     }

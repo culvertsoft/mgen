@@ -13,11 +13,11 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.impl.MkAcceptVisitor
 import se.culvertsoft.mgen.javapack.generator.impl.MkAllMembersCtor
 import se.culvertsoft.mgen.javapack.generator.impl.MkClassEnd
-import se.culvertsoft.mgen.javapack.generator.impl.MkClassIdentifier
 import se.culvertsoft.mgen.javapack.generator.impl.MkClassRegistry
 import se.culvertsoft.mgen.javapack.generator.impl.MkClassStart
 import se.culvertsoft.mgen.javapack.generator.impl.MkDeepCopy
 import se.culvertsoft.mgen.javapack.generator.impl.MkDefaultCtor
+import se.culvertsoft.mgen.javapack.generator.impl.MkDispatcher
 import se.culvertsoft.mgen.javapack.generator.impl.MkEquals
 import se.culvertsoft.mgen.javapack.generator.impl.MkFancyHeader
 import se.culvertsoft.mgen.javapack.generator.impl.MkFancyHeader.MkMetadataComment
@@ -58,14 +58,14 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
       new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
-    def mkIdentifier(): GeneratedSourceFile = {
-      val fileName = "ClassIdentifier" + ".java"
-      val sourceCode = MkClassIdentifier(referencedModules, packagePath)
+    def mkDispatcher(): GeneratedSourceFile = {
+      val fileName = "Dispatcher" + ".java"
+      val sourceCode = MkDispatcher(referencedModules, packagePath)
       new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
     val clsRegistry = mkClasReg()
-    val identifier = mkIdentifier()
+    val identifier = mkDispatcher()
 
     List(clsRegistry, identifier)
 

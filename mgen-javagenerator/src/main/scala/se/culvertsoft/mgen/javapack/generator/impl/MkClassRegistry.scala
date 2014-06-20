@@ -44,7 +44,7 @@ object MkClassRegistry {
       txtBuffer.tabs(1).textln(s"public $returnType $funcName(final $inpTypeStr[] ids) {")
       txtBuffer.tabs(2).textln("int i = 0;")
 
-      MkTypeIdSwitch(2, defaultVal, topLevelTypes, caser, returner)
+      MkTypeIdSwitch(false, 2, defaultVal, topLevelTypes, caser, returner)
 
       txtBuffer.tabs(1).textln("}").endl()
     }
