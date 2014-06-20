@@ -26,6 +26,7 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkFieldById
 import se.culvertsoft.mgen.javapack.generator.impl.MkFieldMetaData
 import se.culvertsoft.mgen.javapack.generator.impl.MkGetFields
 import se.culvertsoft.mgen.javapack.generator.impl.MkGetters
+import se.culvertsoft.mgen.javapack.generator.impl.MkHandler
 import se.culvertsoft.mgen.javapack.generator.impl.MkHashCode
 import se.culvertsoft.mgen.javapack.generator.impl.MkImports
 import se.culvertsoft.mgen.javapack.generator.impl.MkIsFieldSet
@@ -64,10 +65,17 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
       new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
-    val clsRegistry = mkClasReg()
-    val identifier = mkDispatcher()
+    def mkHandler(): GeneratedSourceFile = {
+      val fileName = "Handler" + ".java"
+      val sourceCode = MkHandler(referencedModules, packagePath)
+      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+    }
 
-    List(clsRegistry, identifier)
+    val clsRegistry = mkClasReg()
+    val dispatcher = mkDispatcher()
+    val handler = mkHandler()
+
+    List(clsRegistry, dispatcher, handler)
 
   }
 

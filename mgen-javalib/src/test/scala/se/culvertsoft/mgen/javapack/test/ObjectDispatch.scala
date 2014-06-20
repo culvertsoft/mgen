@@ -4,15 +4,18 @@ import scala.annotation.elidable
 import scala.annotation.elidable.ASSERTION
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
+
 import org.junit.Test
+
 import gameworld.dependency.depmodule1.DepCar
 import gameworld.types.ClassRegistry
+import gameworld.types.Dispatcher.dispatch
+import gameworld.types.Handler
 import gameworld.types.basemodule1.Car
 import gameworld.types.basemodule1.Entity
 import gameworld.types.basemodule1.GarageViewer
 import gameworld.types.basemodule1.Vehicle
 import se.culvertsoft.mgen.javapack.classes.MGenBase
-import gameworld.types.Dispatcher
 
 class ClassIdentification {
 
@@ -28,7 +31,7 @@ class ClassIdentification {
   def testNoClassUnknown() {
     val objects = classRegEntries.map(_.construct())
 
-    val ident = new Dispatcher() {
+    val handler = new Handler() {
 
       override def handleUnknown(o: MGenBase) {
         assert(false)
@@ -39,7 +42,7 @@ class ClassIdentification {
       }
     }
 
-    objects foreach ident.dispatch
+    objects foreach (dispatch(_, handler))
 
   }
 
@@ -52,27 +55,27 @@ class ClassIdentification {
 
     val car = new Car
 
-    val identDiscard = new Dispatcher() {
+    val discardHandler = new Handler() {
       override def handleDiscard(o: MGenBase) {
         discardOk = true
       }
     }
 
-    val identVehicle = new Dispatcher() {
+    val vehicleHandler = new Handler() {
       override def handle(v: Vehicle) {
         vehicleOk = true
       }
     }
 
-    val identCar = new Dispatcher() {
+    val carHandler = new Handler() {
       override def handle(v: Car) {
         carOk = true
       }
     }
 
-    identDiscard.dispatch(car)
-    identVehicle.dispatch(car)
-    identCar.dispatch(car)
+    dispatch(car, discardHandler)
+    dispatch(car, vehicleHandler)
+    dispatch(car, carHandler)
 
     assert(discardOk)
     assert(vehicleOk)
@@ -91,7 +94,7 @@ class ClassIdentification {
       new DepCar)
     val out = new ArrayBuffer[MGenBase]
 
-    val ident = new Dispatcher() {
+    val handler = new Handler() {
       override def handle(o: Car) { out += o }
       override def handle(o: Vehicle) { out += o }
       override def handle(o: GarageViewer) { out += o }
@@ -99,7 +102,7 @@ class ClassIdentification {
       override def handle(o: DepCar) { out += o }
     }
 
-    in foreach ident.dispatch
+    in foreach (dispatch(_, handler))
 
     assert(in == out)
 
