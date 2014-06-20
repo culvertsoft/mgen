@@ -50,11 +50,11 @@ object MkClassRegistry {
     }
 
     def mkLkupFunc(funcName: String, inpTypeStr: String, caser: CustomType => String) {
-      mkFunc("-1", "long", funcName, inpTypeStr, caser, typeIdStr)
+      mkFunc("return -1;", "long", funcName, inpTypeStr, caser, s => s"return ${typeIdStr(s)};")
     }
 
     def mkInstantiateFunc(funcName: String, inpTypeStr: String, caser: CustomType => String) {
-      mkFunc("null", JavaConstants.mgenBaseClsString, funcName, inpTypeStr, caser, instantiate)
+      mkFunc("return null;", JavaConstants.mgenBaseClsString, funcName, inpTypeStr, caser, s => s"return ${instantiate(s)};")
     }
 
     mkLkupFunc("typeIds16Bit2TypeId", "short", typeIdStr16bit)

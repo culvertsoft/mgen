@@ -21,15 +21,15 @@ object MkTypeIdSwitch {
       txtBuffer.tabs(nTabs + 1).textln(s"case ${caser(t)}:")
 
       if (t.subTypes().nonEmpty) {
-        txtBuffer.tabs(nTabs + 2).textln(s"if (i == ids.length) return ${returner(t)};")
+        txtBuffer.tabs(nTabs + 2).textln(s"if (i == ids.length) ${returner(t)}")
         apply(nTabs + 2, returner(t), t.subTypes(), caser, returner);
       } else {
-        txtBuffer.tabs(nTabs + 2).textln(s"return ${returner(t)};")
+        txtBuffer.tabs(nTabs + 2).textln(returner(t))
       }
     }
 
     txtBuffer.tabs(nTabs + 1).textln("default:")
-    txtBuffer.tabs(nTabs + 2).textln(s"return $defaultValue;")
+    txtBuffer.tabs(nTabs + 2).textln(defaultValue)
     txtBuffer.tabs(nTabs).textln("}")
 
   }
