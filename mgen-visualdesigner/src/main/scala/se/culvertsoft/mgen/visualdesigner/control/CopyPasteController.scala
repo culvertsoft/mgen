@@ -164,6 +164,7 @@ class CopyPasteController(controller: Controller) extends SubController(controll
 
         val e = cp.child
         val id = e.getId()
+        val oldParent = controller.model.parentOf(e)
 
         // Replace own id if needed
         if (idReplacements.contains(id)) {
@@ -171,48 +172,61 @@ class CopyPasteController(controller: Controller) extends SubController(controll
         }
 
         // Replace parent id if needed
-        if (e.hasParent() && idReplacements.contains(e.getParent())) {
-          e.setParent(idReplacements(e.getParent()))
+        if (e.hasParent) {
+          if (idReplacements.contains(e.getParent())) {
+            e.setParent(idReplacements(e.getParent()))
+          }
         }
 
-        e match {
-          case e: Project =>
-          case e: Module =>
-          case e: CustomType =>
+        // add to any already existing parent
+        if (e.hasParent())
 
-            // Replace super type id if needed
-            if (e.hasSuperType()) {
-              if (idReplacements.contains(e.getSuperType())) {
-                e.setSuperType(idReplacements(e.getSuperType()))
-              }
-            }
+          e match {
+            case e: Project =>
+            case e: Module =>
+            case e: CustomType =>
 
-            // Replace sub type ids if needed
-            if (e.hasSubTypes()) {
-              val oldSubTypes = e.getSubTypes()
-              val newSubTypes = oldSubTypes map { id =>
-                if (idReplacements.contains(id)) {
-                  idReplacements(id)
+              if (e.hasSuperType()) {
+                if (idReplacements.contains(e.getSuperType())) {
+                  // Replace super type id if needed
+                  e.setSuperType(idReplacements(e.getSuperType()))
                 } else {
-                  id
+                  // Re-add to super type if needed
+                  controller.model.superTypeOf(e) match {
+                    case Some(superType) =>
+                      if (!superType.getSubTypes().contains(e))
+                        superType.getSubTypesMutable().add(e.getId())
+                    case _ =>
+                  }
                 }
               }
-              e.setSubTypes(new ArrayList(newSubTypes))
-            }
 
-          // Replace field type references as needed
-          case e: CustomTypeField =>
-            def replace(t: FieldType): FieldType = {
-              t match {
-                case t: CustomTypeRef if (idReplacements.contains(t.getId())) => new CustomTypeRef(idReplacements(t.getId()))
-                case t: ListType => new ListType(replace(t.getElementType()))
-                case t: ArrayType => new ArrayType(replace(t.getElementType()))
-                case t: MapType => new MapType(t.getKeyType(), replace(t.getValueType()))
-                case _ => t
+              // Replace sub type ids if needed
+              if (e.hasSubTypes()) {
+                val oldSubTypes = e.getSubTypes()
+                val newSubTypes = oldSubTypes map { id =>
+                  if (idReplacements.contains(id)) {
+                    idReplacements(id)
+                  } else {
+                    id
+                  }
+                }
+                e.setSubTypes(new ArrayList(newSubTypes))
               }
-            }
-            e.setType(replace(e.getType()))
-        }
+
+            // Replace field type references as needed
+            case e: CustomTypeField =>
+              def replace(t: FieldType): FieldType = {
+                t match {
+                  case t: CustomTypeRef if (idReplacements.contains(t.getId())) => new CustomTypeRef(idReplacements(t.getId()))
+                  case t: ListType => new ListType(replace(t.getElementType()))
+                  case t: ArrayType => new ArrayType(replace(t.getElementType()))
+                  case t: MapType => new MapType(t.getKeyType(), replace(t.getValueType()))
+                  case _ => t
+                }
+              }
+              e.setType(replace(e.getType()))
+          }
       }
 
       // Add to model
