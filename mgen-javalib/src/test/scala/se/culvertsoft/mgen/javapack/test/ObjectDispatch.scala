@@ -1,7 +1,5 @@
 package se.culvertsoft.mgen.javapack.test
 
-import scala.annotation.elidable
-import scala.annotation.elidable.ASSERTION
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 
@@ -29,16 +27,12 @@ class ClassIdentification {
 
   @Test
   def testNoClassUnknown() {
+
     val objects = classRegEntries.map(_.construct())
 
     val handler = new Handler() {
-
       override def handleUnknown(o: MGenBase) {
         assert(false)
-      }
-
-      override def handle(car: Car) {
-
       }
     }
 
@@ -92,6 +86,7 @@ class ClassIdentification {
       new GarageViewer,
       new Entity,
       new DepCar)
+
     val out = new ArrayBuffer[MGenBase]
 
     val handler = new Handler() {

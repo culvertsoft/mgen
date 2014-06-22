@@ -42,7 +42,7 @@ public:
     template<typename ClassType>
     void readFields(ClassType& object, const int /*context*/) {
 
-        const int nFields = readNFields();
+        const int nFields = readNumFields();
 
         for (int i = 0; i < nFields; i++) {
             const short fieldId = readFieldId();
@@ -63,41 +63,37 @@ public:
 
 private:
 
-    int readNFields() {
+    int readNumFields() {
         const int out = readSize();
         if (out < 0)
-            throw StreamCorruptedException("BinaryReader::readNFields: Unexpected field count(<0)");
+            throw StreamCorruptedException("BinaryReader::readNumFields: Unexpected field count(<0)");
         return out;
     }
 
     MGenBase * readMgenObject(
             const bool verifyTag,
             const bool constrained = false,
-            const short constraint = 0,
+            const long long constraintTypeId = -1,
             MGenBase * object = 0) {
 
         if (!verifyTag || readTag() == Type::TAG_CUSTOM) {
 
-            const ClassRegistryEntry * classRegistryEntry = readMGenBaseHeader(
-                    constrained,
-                    constraint);
+            const ClassRegistryEntry * classRegistryEntry = readMGenBaseHeader();
 
             if (classRegistryEntry) {
 
-                if (classRegistryEntry == mgen::ClassRegistryEntry::NULL_ENTRY()) {
-
+                if (classRegistryEntry == mgen::ClassRegistryEntry::NULL_ENTRY())
                     return 0;
 
-                } else {
+                if (constraintTypeId != -1 && !classRegistryEntry->isInstanceOfTypeId(constraintTypeId))
+                    return 0;
 
-                    if (!object)
-                        object = classRegistryEntry->newInstance();
+                if (!object)
+                    object = classRegistryEntry->newInstance();
 
-                    int ctx;
-                    m_classRegistry.readObjectFields(*object, ctx, *this);
-                    return object;
-
-                }
+                int ctx;
+                m_classRegistry.readObjectFields(*object, ctx, *this);
+                return object;
 
             } else {
 
@@ -112,37 +108,19 @@ private:
         }
     }
 
-    const ClassRegistryEntry * readMGenBaseHeader(
-            const bool constrained = false,
-            const short constraint = 0) {
+    const ClassRegistryEntry * readMGenBaseHeader() {
 
         const int nTypeIds = readSize();
 
         if (nTypeIds > 0) {
 
-            bool constrainPassed = !constrained;
+            std::vector<short> typeIds16Bit(nTypeIds);
+            for (int i = 0; i < nTypeIds; i++)
+                read(typeIds16Bit[i], false);
 
-            std::vector<short> typeIds(nTypeIds);
-            for (int i = 0; i < nTypeIds; i++) {
-                read(typeIds[i], false);
-                if (typeIds[i] == constraint)
-                    constrainPassed = true;
-            }
-
-            if (constrainPassed) {
-                for (int i = (typeIds.size() - 1); i >= 0; i--) {
-                    const ClassRegistryEntry * entry = m_classRegistry.getByHash16bit(typeIds[i]);
-                    if (entry)
-                        return entry;
-                }
-
-                // TODO: Handle unknown type
-
-            } else {
-
-                // TODO: Handle unexpected type
-
-            }
+            const ClassRegistryEntry * entry = m_classRegistry.getByTypeIds16Bit(typeIds16Bit);
+            if (entry)
+                return entry;
 
         } else if (nTypeIds < 0) {
             throw StreamCorruptedException(
@@ -179,7 +157,7 @@ private:
 
     void skipCustom(const ClassRegistryEntry * classRegistryEntry) {
         if (classRegistryEntry != ClassRegistryEntry::NULL_ENTRY()) {
-            const int nFields = readNFields();
+            const int nFields = readNumFields();
             for (int i = 0; i < nFields; i++) {
                 readFieldId();
                 skip(readTag());
@@ -242,12 +220,12 @@ private:
     template<typename T>
     void read(Polymorphic<T>& v, const bool verifyTag) {
         verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        v.set((T*) readMgenObject(false, true, (short) T::_TYPE_HASH_16BIT));
+        v.set((T*) readMgenObject(false, true, (short) T::_type_id));
     }
 
     void read(MGenBase& v, const bool verifyTag) {
         verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        readMgenObject(false, true, v._typeHash16bit(), &v);
+        readMgenObject(false, true, v._typeId(), &v);
     }
 
     void read(bool& v, const bool verifyTag) {

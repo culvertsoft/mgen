@@ -112,7 +112,7 @@ public:
             const std::string& name = nameNode.GetString();
             const Field * field = object._fieldByName(name);
             if (field) {
-                object._readField(field->hash16bit(), it->value, *this);
+                object._readField(field->id(), it->value, *this);
             } else {
                 handleUnknownField(name, it->value);
             }
@@ -147,15 +147,21 @@ private:
 
     MGenBase * readMgenObject(
             const Node& node,
-            const std::string * constraint = 0,
+            const long long constraintTypeId = -1,
             MGenBase * object = 0) {
 
         if (node.IsNull())
             return 0;
 
-        const ClassRegistryEntry * classRegistryEntry = readMGenBaseHeader(node, constraint);
+        const ClassRegistryEntry * classRegistryEntry = readMGenBaseHeader(node);
 
-        if (classRegistryEntry && classRegistryEntry != mgen::ClassRegistryEntry::NULL_ENTRY()) {
+        if (classRegistryEntry) {
+
+            if (classRegistryEntry == mgen::ClassRegistryEntry::NULL_ENTRY())
+                return 0;
+
+            if (constraintTypeId != -1 && !classRegistryEntry->isInstanceOfTypeId(constraintTypeId))
+                return 0;
 
             if (!object)
                 object = classRegistryEntry->newInstance();
@@ -169,9 +175,7 @@ private:
 
     }
 
-    const ClassRegistryEntry * readMGenBaseHeader(
-            const Node& node,
-            const std::string * constraint) {
+    const ClassRegistryEntry * readMGenBaseHeader(const Node& node) {
 
         if (node.IsNull())
             return 0;
@@ -181,27 +185,13 @@ private:
 
             const int nTypeIds = v.Size();
 
-            bool constrainPassed = !constraint;
+            std::vector<std::string> typeIdsBase64(nTypeIds);
+            for (int i = 0; i < nTypeIds; i++)
+                read(typeIdsBase64[i], v[i]);
 
-            std::vector<std::string> typeIds(nTypeIds);
-            for (int i = 0; i < nTypeIds; i++) {
-                const Node& node = v[i];
-                read(typeIds[i], node);
-                if (!constrainPassed && typeIds[i] == *constraint)
-                    constrainPassed = true;
-            }
-
-            if (constrainPassed) {
-                for (int i = (typeIds.size() - 1); i >= 0; i--) {
-                    const ClassRegistryEntry * entry = m_classRegistry.getByBase64Hash16bit(
-                            typeIds[i]);
-                    if (entry)
-                        return entry;
-                }
-                // TODO: Handle unknown type
-            } else {
-                // TODO: Handle unexpected type
-            }
+            const ClassRegistryEntry * entry = m_classRegistry.getByTypeIds16BitBase64(typeIdsBase64);
+            if (entry)
+                return entry;
 
         } else {
             // TODO: write out object string/implement toString
@@ -243,7 +233,7 @@ private:
     template<typename T>
     void read(Polymorphic<T>& v, const Node& node) {
         if (node.IsObject()) {
-            v.set((T*) readMgenObject(node, &(T::_TYPE_HASH_16BIT_BASE64())));
+            v.set((T*) readMgenObject(node, T::_type_id));
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
             throw_unexpected_type(T::_TYPE_NAME(), "something_wrong");
@@ -252,7 +242,7 @@ private:
 
     void read(MGenBase& v, const Node& node) {
         if (node.IsObject()) {
-            readMgenObject(node, &v._typeHash16bitBase64(), &v);
+            readMgenObject(node, v._typeId(), &v);
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
             throw_unexpected_type(v._typeName(), "something_wrong");

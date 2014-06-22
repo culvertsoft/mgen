@@ -31,7 +31,7 @@ public:
     template<typename T>
     void visit(const T& v, const Field& field, const bool isSet) {
         if (isSet) {
-            writeFieldStart(field.hash16bit(), field.type().tag());
+            writeFieldStart(field.id(), field.type().tag());
             write(v, false);
         }
     }
@@ -49,7 +49,7 @@ public:
                             object._typeName()));
         }
 
-        const std::vector<short>& typeIds = object._typeHashes16bit();
+        const std::vector<short>& typeIds = object._typeId16Bit();
         writeSize(typeIds.size());
         for (std::size_t i = 0; i < typeIds.size(); i++)
             write(typeIds[i], false);
@@ -62,8 +62,8 @@ public:
 
 private:
 
-    void writeFieldStart(const short fieldHash16bit, const char tag) {
-        write(fieldHash16bit, false);
+    void writeFieldStart(const short fieldId, const char tag) {
+        write(fieldId, false);
         writeTypeTag(tag);
     }
 

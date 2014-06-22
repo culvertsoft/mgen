@@ -1,6 +1,7 @@
 package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.JavaConversions.seqAsJavaList
+
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile

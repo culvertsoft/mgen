@@ -47,7 +47,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     mkPublic()
     mkDefaultCtor(t)
     mkRequiredMembersCtor(t)
-    mkAllMembersAsArgsCtor(t)
+    mkAllMembersCtor(t)
     mkDestructor(t)
     mkGetters(t)
     mkSetters(t)
@@ -60,20 +60,19 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     mkPublic()
     mkReadField(t)
     mkAcceptVisitor(t)
-    mkFieldBy16BitHash(t)
-    mkFieldByName(t)
+    mkFieldById(t)
     mkMetadataGetters(t)
     mkSetFieldsSet(t)
+    mkNumFieldsSet(t)
+    mkIsFieldSet(t)
     mkValidate(t)
-    mkNewInstance(t)
     mkEquals(t)
     mkDeepCopy(t)
+    mkNewInstance(t)
 
     // Metadata data section
     mkMetadataComment(t)
     mkMetaDataFields(t)
-    mkNFieldsSet(t)
-    mkFieldStatusGetters(t)
     mkPrivate()
     mkMetaDataFieldMakers(t)
 
@@ -108,7 +107,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
   def mkIncludes(t: CustomType) {}
 
-  def mkNFieldsSet(t: CustomType) {}
+  def mkNumFieldsSet(t: CustomType) {}
 
   def mkClassStart(t: CustomType) {}
   def mkPrivate() {}
@@ -116,7 +115,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   def mkPublic() {}
   def mkDefaultCtor(t: CustomType) {}
   def mkRequiredMembersCtor(t: CustomType) {}
-  def mkAllMembersAsArgsCtor(t: CustomType) {}
+  def mkAllMembersCtor(t: CustomType) {}
   def mkDestructor(t: CustomType) {}
   def mkGetters(t: CustomType) {}
   def mkSetters(t: CustomType) {}
@@ -136,8 +135,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   def mkReadFields(t: CustomType) {}
   def mkReadField(t: CustomType) {}
   def mkGetFields(t: CustomType) {}
-  def mkFieldBy16BitHash(t: CustomType) {}
-  def mkFieldByName(t: CustomType) {}
+  def mkFieldById(t: CustomType) {}
   def mkTypeHierarchyMethods(t: CustomType) {}
   def mkNewInstance(t: CustomType) {}
   def mkMetadataComment(t: CustomType) {
@@ -156,7 +154,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   def mkValidate(t: CustomType) {
   }
 
-  def mkFieldStatusGetters(t: CustomType) {
+  def mkIsFieldSet(t: CustomType) {
   }
 
   def mkNamespaceEnd(namespaces: Array[String]) {
@@ -168,44 +166,5 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   }
 
   def mkIncludeGuardEnd() {}
-
-  def get(field: Field): String = {
-    s"get${upFirst(field.name())}()"
-  }
-
-  def getMutable(field: Field): String = {
-    s"get${upFirst(field.name())}Mutable()"
-  }
-
-  def set(field: Field, input: String): String = {
-    s"set${upFirst(field.name())}($input)"
-  }
-
-  def hash16(field: Field): String = {
-    s"_${field.name()}_HASH_16BIT"
-  }
-
-  def meta(field: Field, inclParan: Boolean = true): String = {
-    if (inclParan)
-      s"_${field.name()}_METADATA()"
-    else
-      s"_${field.name()}_METADATA"
-  }
-
-  def isSetName(f: Field): String = {
-    s"_m_${f.name()}_isSet"
-  }
-
-  def setFieldSetName(f: Field): String = {
-    s"_set${upFirst(f.name())}Set"
-  }
-
-  def isFieldSet(f: Field, input: String): String = {
-    s"_is${upFirst(f.name())}Set($input)"
-  }
-
-  def setFieldSet(f: Field, input: String): String = {
-    s"${setFieldSetName(f)}($input)"
-  }
 
 }

@@ -65,7 +65,7 @@ public:
                             object._typeName()));
         }
 
-        const std::vector<std::string>& types = object._typeHashes16bitBase64();
+        const std::vector<std::string>& types = object._typeIds16BitBase64();
 
         m_rapidJsonWriter.StartObject();
         m_rapidJsonWriter.String("__t");

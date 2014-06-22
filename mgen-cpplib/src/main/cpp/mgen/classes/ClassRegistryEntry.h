@@ -18,7 +18,10 @@ typedef MGenBasePtr (*MgenCtorFn)();
 class ClassRegistryEntry {
 public:
 
-    ClassRegistryEntry(const std::string& typeName = "", MgenCtorFn ctor = 0) :
+    ClassRegistryEntry(
+            const std::vector<long long>& typeIds = std::vector<long long>(),
+            const std::string& typeName = "",
+            MgenCtorFn ctor = 0) :
             m_typeName(typeName), m_ctor(ctor) {
     }
 
@@ -30,12 +33,25 @@ public:
         return m_typeName;
     }
 
+    bool isInstanceOfTypeId(const long long typeId) const  {
+        for (int i = (int)m_typeIds.size(); i >= 0; i--) {
+            if (m_typeIds[i] == typeId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * This is required for binary reading to work (skipping past nulls is different from skipping past unknowns)
+     */
     static const ClassRegistryEntry * NULL_ENTRY() {
         static ClassRegistryEntry entry;
         return &entry;
     }
 
 private:
+    std::vector<long long> m_typeIds;
     std::string m_typeName;
     MgenCtorFn m_ctor;
 

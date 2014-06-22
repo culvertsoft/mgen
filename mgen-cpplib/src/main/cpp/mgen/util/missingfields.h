@@ -18,7 +18,7 @@ inline std::string requiredAsString(const MGenBase& object, const FieldSetDepth 
 
 inline std::vector<Field> required(const MGenBase& object, const FieldSetDepth depth) {
 
-    const std::vector<Field>& allFields = object._fields();
+    const std::vector<Field>& allFields = object._fieldMetadatas();
     std::vector<Field> missingReqFields;
     for (std::size_t i = 0; i < allFields.size(); i++) {
         if (allFields[i].isRequired() && !object._isFieldSet(allFields[i], depth)) {

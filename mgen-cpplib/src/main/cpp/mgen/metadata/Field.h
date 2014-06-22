@@ -16,11 +16,11 @@ class Field {
 public:
 
     Field(
-            const short hash16bit,
+            const short id,
             const std::string& name,
             const Type type,
             const std::vector<std::string>& flags) :
-                    m_hash16bit(hash16bit),
+                    m_id(id),
                     m_name(name),
                     m_type(type),
                     m_flags(flags),
@@ -33,8 +33,8 @@ public:
         }
     }
 
-    short hash16bit() const {
-        return m_hash16bit;
+    short id() const {
+        return m_id;
     }
 
     const std::string& name() const {
@@ -54,7 +54,7 @@ public:
     }
 
 private:
-    short m_hash16bit;
+    short m_id;
     std::string m_name;
     Type m_type;
     std::vector<std::string> m_flags;
