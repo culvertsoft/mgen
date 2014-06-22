@@ -2,9 +2,11 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.JavaConverters.mapAsScalaMapConverter
-
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16Bit
+import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16BitBase64
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 
 object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(".cpp") {
 
@@ -22,23 +24,29 @@ object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(".cpp"
           CppGenUtils.include(t, ".cpp")
     }
 
-    txtBuffer.endl()
+    endl()
 
   }
 
   override def mkDefaultCtor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-    txtBuffer.tabs(0).textln(s"ClassRegistry::ClassRegistry() {")
+    ln(s"ClassRegistry::ClassRegistry() {")
     for (m <- referencedModules)
       for (t <- m.types().values())
-        txtBuffer.tabs(1).textln(s"add<${t.fullName().replaceAllLiterally(".", "::")}>();")
-    txtBuffer.tabs(0).textln(s"}")
-    txtBuffer.endl()
+        ln(1, s"add<${t.fullName().replaceAllLiterally(".", "::")}>();")
+    ln(s"}").endl()
   }
 
   override def mkDestructor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-    txtBuffer.tabs(0).textln(s"ClassRegistry::~ClassRegistry() {")
-    txtBuffer.tabs(0).textln(s"}")
-    txtBuffer.endl()
+    ln("ClassRegistry::~ClassRegistry() {")
+    ln("}").endl()
+  }
+
+  override def mkGetByTypeIds16Bit(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+    MkGetByTypeIds16Bit(0, referencedModules, namespacesstring, generatorSettings)
+  }
+
+  override def mkGetByTypeIds16BitBase64(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+    MkGetByTypeIds16BitBase64(0, referencedModules, namespacesstring, generatorSettings)
   }
 
 }

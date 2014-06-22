@@ -236,7 +236,7 @@ private:
             v.set((T*) readMgenObject(node, T::_type_id));
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type(T::_TYPE_NAME(), "something_wrong");
+            throw_unexpected_type(T::_type_name(), "something_wrong");
         }
     }
 

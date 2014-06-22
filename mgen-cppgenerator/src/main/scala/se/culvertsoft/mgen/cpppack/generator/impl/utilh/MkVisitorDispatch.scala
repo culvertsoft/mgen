@@ -5,42 +5,45 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import scala.collection.JavaConversions._
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator._
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import se.culvertsoft.mgen.api.model.CustomType
 
 object MkVisitorDispatch {
 
+  def fullName(t: CustomType): String = {
+    MkLongTypeName.cpp(t)
+  }
+  
   def apply(
     referencedModules: Seq[Module],
     namespaceString: String,
     generatorSettings: java.util.Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
+    val nTabs = 1
+    val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
+    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+
     for (constString <- List("", "const ")) {
 
-      txtBuffer.tabs(1).textln(s"template<typename VisitorType>")
-      txtBuffer.tabs(1).textln(s"void visitObject(${constString}mgen::MGenBase& o, VisitorType& visitor) const {")
+      ln(1, s"template<typename VisitorType>")
+      ln(1, s"void visitObject(${constString}mgen::MGenBase& o, VisitorType& visitor) const {")
 
-      // TODO: Make type switch here
-
-      /*
-     * txtBuffer.tabs(2).textln(s"switch (o._typeHash16bit()) {")
-      for (module <- referencedModules) {
-        for (t <- module.types().values()) {
-          val fullName = t.fullName().replaceAllLiterally(".", "::")
-          txtBuffer.tabs(2).textln(s"case ($fullName::_TYPE_HASH_16BIT):")
-          txtBuffer.tabs(3).textln(s"reinterpret_cast<${constString}${fullName}&>(o)._accept<VisitorType>(visitor);")
-          txtBuffer.tabs(3).textln(s"break;")
-        }
-      }
-      txtBuffer.tabs(2).textln("default: // should not happen...INCORRECT USAGE!")
-      txtBuffer.tabs(3).textln("throw mgen::Exception(")
-      txtBuffer.tabs(5).textln("std::string(")
-      txtBuffer.tabs(7).textln(s"${quote(s"${namespaceString}::ClassRegistry::visitObject: Incorrect usage. Class '")}).append(")
-      txtBuffer.tabs(7).textln("o._typeName()).append(\" not registered.\"));")
-      txtBuffer.tabs(2).textln(s"}")
-      
-      */
-
-      txtBuffer.tabs(1).textln(s"}")
       txtBuffer.endl()
+
+      ln(nTabs + 1, "const std::vector<short>& ids = o._typeIds16Bit();").endl()
+
+      ln(nTabs + 1, "int i = 0;")
+      MkTypeIdSwitch.apply(
+        s => s,
+        true,
+        nTabs + 1,
+        "return;",
+        topLevelTypes,
+        t => s"${MkLongTypeName.cpp(t)}::_type_id_16bit",
+        t => s"reinterpret_cast<${constString}${fullName(t)}&>(o)._accept<VisitorType>(visitor);")
+
+      ln(nTabs + 1, "return;")
+
+      ln(1, "}").endl()
 
     }
 

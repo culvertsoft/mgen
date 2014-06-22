@@ -23,4 +23,12 @@ object BuiltInGeneratorUtil {
     txtBuffer.tabs(nTabs).textln(txt)
   }
 
+  def ln(txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
+    ln(0, txt)
+  }
+  
+  def endl()(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
+    txtBuffer.endl()
+  }
+
 }

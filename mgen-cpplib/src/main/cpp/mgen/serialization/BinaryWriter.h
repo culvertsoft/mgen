@@ -49,7 +49,7 @@ public:
                             object._typeName()));
         }
 
-        const std::vector<short>& typeIds = object._typeId16Bit();
+        const std::vector<short>& typeIds = MGenType::_type_ids_16bit();
         writeSize(typeIds.size());
         for (std::size_t i = 0; i < typeIds.size(); i++)
             write(typeIds[i], false);

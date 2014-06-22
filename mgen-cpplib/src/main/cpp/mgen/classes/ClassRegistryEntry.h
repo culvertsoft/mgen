@@ -33,8 +33,8 @@ public:
         return m_typeName;
     }
 
-    bool isInstanceOfTypeId(const long long typeId) const  {
-        for (int i = (int)m_typeIds.size(); i >= 0; i--) {
+    bool isInstanceOfTypeId(const long long typeId) const {
+        for (int i = int(m_typeIds.size()) - 1; i >= 0; i--) {
             if (m_typeIds[i] == typeId) {
                 return true;
             }

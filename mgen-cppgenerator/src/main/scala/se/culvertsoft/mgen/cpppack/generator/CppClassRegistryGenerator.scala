@@ -37,9 +37,13 @@ abstract class CppClassRegistryGenerator(fileEnding: String) {
 
     mkDefaultCtor(referencedModules, generatorSettings)
     mkDestructor(referencedModules, generatorSettings)
+    
     mkReadObjectFields(referencedModules, generatorSettings)
     mkVisitObjectFields(referencedModules, generatorSettings)
-
+    
+    mkGetByTypeIds16Bit(referencedModules, generatorSettings)
+    mkGetByTypeIds16BitBase64(referencedModules, generatorSettings)
+    
     mkClassEnd(referencedModules, generatorSettings)
     CppGenUtils.mkNameSpacesEnd(namespaces)
 
@@ -63,6 +67,12 @@ abstract class CppClassRegistryGenerator(fileEnding: String) {
   }
 
   def mkVisitObjectFields(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
+
+  def mkGetByTypeIds16Bit(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  }
+
+  def mkGetByTypeIds16BitBase64(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
   }
 
   def mkClassEnd(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
