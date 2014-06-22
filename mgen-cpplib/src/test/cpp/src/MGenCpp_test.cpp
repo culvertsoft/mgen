@@ -105,7 +105,7 @@ void testJSON(
 
     std::cout << "back1 == entity: " << (*back1 == entity) << std::endl;
     std::cout << "back2 == entity: " << (*back2 == entity) << std::endl;
-
+        
     const double t0 = getCurTimeSeconds();
 
     long long sum = 0;

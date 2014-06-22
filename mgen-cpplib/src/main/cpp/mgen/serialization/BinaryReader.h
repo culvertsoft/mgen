@@ -66,7 +66,8 @@ private:
     int readNumFields() {
         const int out = readSize();
         if (out < 0)
-            throw StreamCorruptedException("BinaryReader::readNumFields: Unexpected field count(<0)");
+            throw StreamCorruptedException(
+                    "BinaryReader::readNumFields: Unexpected field count(<0)");
         return out;
     }
 
@@ -85,8 +86,10 @@ private:
                 if (classRegistryEntry == mgen::ClassRegistryEntry::NULL_ENTRY())
                     return 0;
 
-                if (constraintTypeId != -1 && !classRegistryEntry->isInstanceOfTypeId(constraintTypeId))
+                if (constraintTypeId != -1 && !classRegistryEntry->isInstanceOfTypeId(constraintTypeId)) {
+                    skipCustom(classRegistryEntry);
                     return 0;
+                }
 
                 if (!object)
                     object = classRegistryEntry->newInstance();
@@ -220,7 +223,7 @@ private:
     template<typename T>
     void read(Polymorphic<T>& v, const bool verifyTag) {
         verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        v.set((T*) readMgenObject(false, true, (short) T::_type_id));
+        v.set((T*) readMgenObject(false, true, T::_type_id));
     }
 
     void read(MGenBase& v, const bool verifyTag) {

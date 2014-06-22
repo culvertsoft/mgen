@@ -22,7 +22,7 @@ public:
             const std::vector<long long>& typeIds = std::vector<long long>(),
             const std::string& typeName = "",
             MgenCtorFn ctor = 0) :
-            m_typeName(typeName), m_ctor(ctor) {
+            m_typeIds(typeIds), m_typeName(typeName), m_ctor(ctor) {
     }
 
     MGenBase * newInstance() const {
