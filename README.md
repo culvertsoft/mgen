@@ -276,7 +276,7 @@ Now let us try to serialize these cars to JSON. This is how we do it:
       writer.writeMgenObject(car2);
       writer.writeMgenObject(car3);
       
-Now we can read these objects back from the stream in the following manner:
+Now we can read these objects back from the buffer in the following manner:
 
       // Create an InputStream object from the data source
       VectorInputStream in(buffer);
