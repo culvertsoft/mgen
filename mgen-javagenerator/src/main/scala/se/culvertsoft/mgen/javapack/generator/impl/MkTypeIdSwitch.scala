@@ -9,26 +9,24 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 object MkTypeIdSwitch {
 
   def apply(
+    transform: String => String,
+    outOfBoundsCase: String,
     addBreak: Boolean,
     nTabs: Int,
     defaultValue: String,
     possibleTypes: Seq[CustomType],
     caser: CustomType => String,
-    returner: CustomType => String)(implicit txtBuffer: SuperStringBuffer) {
+    returner: CustomType => String,
+    depth: Int = 0)(implicit txtBuffer: SuperStringBuffer) {
 
-    ln(nTabs, "switch(ids[i++]) {")
+    ln(nTabs, s"switch((i < ids.length ? ${transform("ids[i++]")} : $outOfBoundsCase)) {")
 
     for (t <- possibleTypes) {
 
       ln(nTabs + 1, s"case ${caser(t)}:")
 
       if (t.subTypes().nonEmpty) {
-        ln(nTabs + 2, s"if (i == ids.length) {")
-        ln(nTabs + 3, returner(t))
-        if (addBreak)
-          ln(nTabs + 3, "break;")
-        ln(nTabs + 2, s"}")
-        apply(addBreak, nTabs + 2, returner(t), t.subTypes(), caser, returner);
+        apply(transform, outOfBoundsCase, addBreak, nTabs + 2, returner(t), t.subTypes(), caser, returner, depth + 1);
       } else {
         ln(nTabs + 2, returner(t))
       }

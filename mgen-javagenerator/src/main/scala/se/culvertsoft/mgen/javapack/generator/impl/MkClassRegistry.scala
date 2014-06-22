@@ -34,6 +34,8 @@ object MkClassRegistry {
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     def mkFunc(
+      transform: String => String,
+      oobString: String,
       defaultVal: String,
       returnType: String,
       funcName: String,
@@ -44,24 +46,24 @@ object MkClassRegistry {
       txtBuffer.tabs(1).textln(s"public $returnType $funcName(final $inpTypeStr[] ids) {")
       txtBuffer.tabs(2).textln("int i = 0;")
 
-      MkTypeIdSwitch(false, 2, defaultVal, topLevelTypes, caser, returner)
+      MkTypeIdSwitch(transform, oobString, false, 2, defaultVal, topLevelTypes, caser, returner)
 
       txtBuffer.tabs(1).textln("}").endl()
     }
 
-    def mkLkupFunc(funcName: String, inpTypeStr: String, caser: CustomType => String) {
-      mkFunc("return -1;", "long", funcName, inpTypeStr, caser, s => s"return ${typeIdStr(s)};")
+    def mkLkupFunc(transform: String => String, oobString: String, funcName: String, inpTypeStr: String, caser: CustomType => String) {
+      mkFunc(transform, oobString, "return -1;", "long", funcName, inpTypeStr, caser, s => s"return ${typeIdStr(s)};")
     }
 
-    def mkInstantiateFunc(funcName: String, inpTypeStr: String, caser: CustomType => String) {
-      mkFunc("return null;", JavaConstants.mgenBaseClsString, funcName, inpTypeStr, caser, s => s"return ${instantiate(s)};")
+    def mkInstantiateFunc(transform: String => String, oobString: String, funcName: String, inpTypeStr: String, caser: CustomType => String) {
+      mkFunc(transform, oobString, "return null;", JavaConstants.mgenBaseClsString, funcName, inpTypeStr, caser, s => s"return ${instantiate(s)};")
     }
 
-    mkLkupFunc("typeIds16Bit2TypeId", "short", typeIdStr16bit)
-    mkLkupFunc("typeIds16Base64Bit2TypeId", "String", typeIdStr16BitBase64)
+    mkLkupFunc(s => s"(int)$s", "0xFFFFFFFF", "typeIds16Bit2TypeId", "short", typeIdStr16bit)
+    mkLkupFunc(s => s, "\"0xFFFFFFFF\"", "typeIds16Base64Bit2TypeId", "String", typeIdStr16BitBase64)
 
-    mkInstantiateFunc("instantiateByTypeIds16Bit", "short", typeIdStr16bit)
-    mkInstantiateFunc("instantiateByTypeIds16BitBase64", "String", typeIdStr16BitBase64)
+    mkInstantiateFunc(s => s"(int)$s", "0xFFFFFFFF", "instantiateByTypeIds16Bit", "short", typeIdStr16bit)
+    mkInstantiateFunc(s => s, "\"0xFFFFFFFF\"", "instantiateByTypeIds16BitBase64", "String", typeIdStr16BitBase64)
 
     MkClassEnd()
 

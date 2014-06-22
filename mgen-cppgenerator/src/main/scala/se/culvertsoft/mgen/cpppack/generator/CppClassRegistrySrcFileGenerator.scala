@@ -2,11 +2,13 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.JavaConverters.mapAsScalaMapConverter
+
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16Bit
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16BitBase64
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 
 object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(".cpp") {
 
@@ -19,9 +21,9 @@ object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(".cpp"
     val mkUnityBuild = generatorSettings.asScala.getOrElse("generate_unity_build", throw new GenerationException("Missing <generate_unity_build> setting for C++ generator")).toBoolean
 
     if (mkUnityBuild) {
-      for (referencedModule <- referencedModules)
-        for (t <- referencedModule.types().values())
-          CppGenUtils.include(t, ".cpp")
+      val ts = referencedModules.flatMap(_.types.values).distinct
+      for (t <- ts)
+        CppGenUtils.include(t, ".cpp")
     }
 
     endl()

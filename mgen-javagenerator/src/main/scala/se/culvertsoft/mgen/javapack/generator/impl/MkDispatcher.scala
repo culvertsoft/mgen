@@ -36,7 +36,7 @@ object MkDispatcher {
       ln(2, "final short[] ids = o._typeIds16Bit();")
       ln(2, "int i = 0;")
 
-      MkTypeIdSwitch.apply(true, 2, "handler.handleUnknown(o);", topLevelTypes, typeIdStr16bit, t => s"handler.handle((${t.fullName()})o);")
+      MkTypeIdSwitch.apply(s => s"(int)$s", "0xFFFFFFFF", true, 2, "handler.handleUnknown(o);", topLevelTypes, typeIdStr16bit, t => s"handler.handle((${t.fullName()})o);")
 
       ln(1, "}").endl()
 
