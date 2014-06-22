@@ -56,9 +56,6 @@ object MkSetters {
       }
     }
 
-    if (t.fields().nonEmpty)
-      txtBuffer.endl()
-
   }
 
 }

@@ -51,6 +51,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     mkDestructor(t)
     mkGetters(t)
     mkSetters(t)
+    mkHasers(t)
     mkEqOperator(t)
     mkToString(t)
     mkHashCode(t)
@@ -119,6 +120,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   def mkDestructor(t: CustomType) {}
   def mkGetters(t: CustomType) {}
   def mkSetters(t: CustomType) {}
+  def mkHasers(t: CustomType) {}
   def mkToString(t: CustomType) {}
   def mkHashCode(t: CustomType) {}
   def mkDeepCopy(t: CustomType) {}

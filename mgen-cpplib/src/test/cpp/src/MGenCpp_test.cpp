@@ -105,7 +105,14 @@ void testJSON(
 
     std::cout << "back1 == entity: " << (*back1 == entity) << std::endl;
     std::cout << "back2 == entity: " << (*back2 == entity) << std::endl;
+    
+    buffer.clear();
+    writer.writeMgenObject(*back2);
+    const std::string json2(buffer.data(), buffer.size());
         
+    std::cout << "JSON2: " << std::endl;
+    std::cout << json2 << std::endl;
+    
     const double t0 = getCurTimeSeconds();
 
     long long sum = 0;

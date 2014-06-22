@@ -20,6 +20,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkSetFieldsSet
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkSetters
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkValidate
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkEqOperator
+import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkHasers
 
 object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
@@ -67,6 +68,10 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
     MkSetters(t, currentModule)
   }
 
+  override def mkHasers(t: CustomType) {
+    MkHasers(t, currentModule)
+  }
+  
   override def mkNewInstance(t: CustomType) {
     MkNewInstance(t, currentModule)
   }
