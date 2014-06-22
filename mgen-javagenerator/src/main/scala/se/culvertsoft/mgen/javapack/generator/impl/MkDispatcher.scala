@@ -17,6 +17,8 @@ object MkDispatcher {
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     txtBuffer.clear()
+    
+    MkFancyHeader.apply(null)
 
     MkPackage(packagePath)
 

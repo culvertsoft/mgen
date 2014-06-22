@@ -17,6 +17,8 @@ object MkHandler {
 
     txtBuffer.clear()
 
+    MkFancyHeader.apply(null)
+    
     MkPackage(packagePath)
 
     ln(0, s"import ${JavaConstants.mgenBaseClsString};").endl()

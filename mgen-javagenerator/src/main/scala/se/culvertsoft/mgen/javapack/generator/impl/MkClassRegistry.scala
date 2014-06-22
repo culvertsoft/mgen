@@ -18,6 +18,8 @@ object MkClassRegistry {
 
     txtBuffer.clear()
 
+    MkFancyHeader.apply(null)
+    
     MkPackage(packagePath)
 
     MkClassStart("ClassRegistry", clsRegistryClsString)
