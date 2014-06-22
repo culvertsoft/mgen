@@ -298,7 +298,7 @@ Now we can read these objects back from the buffer in the following manner:
       
       // What we could do now is dynamic_cast to identify the types, or use one 
       // of the type ids supplied for generated classes:
-      // Here using Car::TYPE_ID, which is a generated globally unique 64bit hash code.
+      // Here using Car::_type_id, which is a generated globally unique 64bit hash code.
       for (MGenBase obj * : objects) {
         switch(obj->_typeId()) {
           case Car::_type_id:
