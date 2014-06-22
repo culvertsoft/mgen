@@ -300,8 +300,8 @@ Now we can read these objects back from the buffer in the following manner:
       // of the type ids supplied for generated classes:
       // Here using Car::TYPE_ID, which is a generated globally unique 64bit hash code.
       for (MGenBase obj * : objects) {
-        switch(obj->typeId()) {
-          case Car::TYPE_ID:
+        switch(obj->_typeId()) {
+          case Car::_type_id:
             Car * car = reinterpret_cast<Car*>(obj);
             std::cout << "Yay we got a car!" << std::endl;
             break;
