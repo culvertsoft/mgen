@@ -28,9 +28,6 @@
 		"mgen-javalib": {
 			"def_files": "java"
 		},
-		"mgen-javascriptgenerator": {
-			"def_files": "java"
-		},
 		"mgen-visualdesigner": {
 			"def_files": [ "java", "java-assembly" ]
 		}
