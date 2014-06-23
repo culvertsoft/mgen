@@ -9,7 +9,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 object CppDispatchHeaderGenerator extends CppDispatchGenerator(Header) {
 
   override def mkIncludes(param: UtilClassGenParam) {
-    CppGenUtils.include(CppHandlerGenerator.includeStringH(param.nameSpaceString))
+    CppGenUtils.include("Handler.h")
     endl()
   }
 
