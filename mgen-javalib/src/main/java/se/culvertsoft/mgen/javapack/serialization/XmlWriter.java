@@ -111,7 +111,7 @@ public class XmlWriter extends DynamicWriter {
 	}
 
 	@Override
-	public void beginWrite(final MGenBase o, final int nFieldsSet)
+	public void beginWrite(final MGenBase o, final int nFieldsSet, final int nFieldsTotal)
 			throws IOException {
 		for (final String typeId : typeIdsOf(o)) {
 			writeString("__t", typeId);

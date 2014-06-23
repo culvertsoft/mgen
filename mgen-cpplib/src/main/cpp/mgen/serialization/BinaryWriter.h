@@ -37,7 +37,7 @@ public:
     }
 
     template<typename MGenType>
-    void beginVisit(const MGenType& object, const int nFields) {
+    void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
 
         if (!object._validate(SHALLOW)) {
 
@@ -53,7 +53,7 @@ public:
         writeSize(typeIds.size());
         for (std::size_t i = 0; i < typeIds.size(); i++)
             write(typeIds[i], false);
-        writeSize(nFields);
+        writeSize(nFieldsSet);
 
     }
 

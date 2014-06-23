@@ -53,7 +53,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	@Override
-	public void beginWrite(final MGenBase parent, final int nFieldsSet)
+	public void beginWrite(final MGenBase parent, final int nFieldsSet, final int nFieldsTotal)
 			throws IOException {
 		if (parent != null) {
 			final short[] typeIds = parent._typeIds16Bit();

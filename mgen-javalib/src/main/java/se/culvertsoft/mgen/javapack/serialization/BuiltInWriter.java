@@ -25,8 +25,9 @@ public abstract class BuiltInWriter implements Writer {
 	}
 
 	public abstract void beginWrite(
-			final MGenBase currentObject,
-			final int nFieldsSet) throws IOException;
+			final MGenBase object,
+			final int nFieldsSet, 
+			final int nFieldsTotal) throws IOException;
 
 	public abstract void writeBooleanField(
 			final boolean b,
@@ -157,9 +158,9 @@ public abstract class BuiltInWriter implements Writer {
 	}
 
 	@Override
-	public void beginVisit(final MGenBase parent, final int nFieldsSet)
+	public void beginVisit(final MGenBase object, final int nFieldsSet, final int nFieldsTotal)
 			throws IOException {
-		beginWrite(parent, nFieldsSet);
+		beginWrite(object, nFieldsSet, nFieldsTotal);
 	}
 
 	@Override

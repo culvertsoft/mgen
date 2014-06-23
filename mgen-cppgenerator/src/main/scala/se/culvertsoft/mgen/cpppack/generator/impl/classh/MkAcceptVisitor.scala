@@ -19,7 +19,7 @@ object MkAcceptVisitor {
 
     txtBuffer.tabs(1).textln(s"template<typename VisitorType>")
     txtBuffer.tabs(1).textln(s"void _accept(VisitorType& visitor) const {")
-    txtBuffer.tabs(2).textln(s"visitor.beginVisit(*this, _numFieldsSet(mgen::SHALLOW));")
+    txtBuffer.tabs(2).textln(s"visitor.beginVisit(*this, _numFieldsSet(mgen::SHALLOW), ${t.getAllFieldsInclSuper().size()});")
     for (field <- allFields) {
       txtBuffer.tabs(2).textln(s"visitor.visit(${get(field)}, ${fieldMetaString(field)}, ${isFieldSet(field, "mgen::SHALLOW")});")
     }
@@ -29,7 +29,7 @@ object MkAcceptVisitor {
 
     txtBuffer.tabs(1).textln(s"template<typename VisitorType>")
     txtBuffer.tabs(1).textln(s"void _accept(VisitorType& visitor) {")
-    txtBuffer.tabs(2).textln(s"visitor.beginVisit(*this, _numFieldsSet(mgen::SHALLOW));")
+    txtBuffer.tabs(2).textln(s"visitor.beginVisit(*this, _numFieldsSet(mgen::SHALLOW), ${t.getAllFieldsInclSuper().size()});")
     for (field <- allFields) {
       txtBuffer.tabs(2).textln(s"visitor.visit(${getMutable(field)}, ${fieldMetaString(field)}, ${isFieldSet(field, "mgen::SHALLOW")});")
     }

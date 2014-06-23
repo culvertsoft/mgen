@@ -53,7 +53,7 @@ public:
     }
 
     template<typename MGenType>
-    void beginVisit(const MGenType& object, const int nFields) {
+    void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
 
         if (!object._validate(SHALLOW)) {
 

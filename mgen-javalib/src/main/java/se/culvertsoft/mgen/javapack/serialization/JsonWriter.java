@@ -186,7 +186,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
-	public void beginWrite(final MGenBase parent, final int nFieldsSet)
+	public void beginWrite(final MGenBase parent, final int nFieldsSet, final int nFieldsTotal)
 			throws IOException {
 		final List<String> names = typeIdsOf(parent);
 		write("{\"__t\":");
