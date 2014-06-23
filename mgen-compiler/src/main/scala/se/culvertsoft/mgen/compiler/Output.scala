@@ -51,11 +51,16 @@ object Output {
 
     for (output <- outputs) {
 
-      val dir = FileUtils.directoryOf(output.filePath)
+      val file = new File(output.filePath)
+      if (!file.exists || FileUtils.readToString(output.filePath) != output.sourceCode) {
+        println(s"  writing: ${output.filePath}")
+        val dir = FileUtils.directoryOf(output.filePath)
+        Path(dir).createDirectory(true, false)
+        Path(output.filePath()).toFile.writeAll(output.sourceCode())
+      } else {        
+        println(s"  skipping (no change): ${output.filePath}")
+      }
 
-      println(s"  ${output.filePath}")
-      Path(dir).createDirectory(true, false)
-      Path(output.filePath()).toFile.writeAll(output.sourceCode())
     }
 
     println("")
