@@ -8,7 +8,7 @@ import se.culvertsoft.mgen.api.plugins.Parser
 class DefaultParser(allowNoGenerators: Boolean) extends Parser {
   def this() = this(false) // This explicit aux constructor is required for java reflection to work
 
-  implicit private val cache = new ParseState
+  implicit private val state = new ParseState
 
   override def parse(settings: java.util.Map[String, String]): Project = {
 
@@ -20,6 +20,8 @@ class DefaultParser(allowNoGenerators: Boolean) extends Parser {
     val project = ParseProject(projectPath, settings.toMap, Nil, true)
 
     LinkTypes(project)
+
+    CheckConflicts(project)
 
     project
 
