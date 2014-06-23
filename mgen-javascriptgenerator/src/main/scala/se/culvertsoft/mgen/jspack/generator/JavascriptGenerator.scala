@@ -12,10 +12,10 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.compiler.internal.BuiltInGenerator
+import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
-class JavascriptGenerator extends BuiltInGenerator {
+class JavascriptGenerator extends Generator {
 
    var currentModule: Module = null
    val txtBuffer = new SuperStringBuffer
@@ -81,16 +81,10 @@ class JavascriptGenerator extends BuiltInGenerator {
    }
 
    def generateClassSourceCode(t: CustomType) {
-      mkHashTable(t)
       mkStart(t)
       mkmgType(t)
       mkMembers(t)
       mkEnd(t)
-   }
-
-   def mkHashTable(t: CustomType) {
-      txtBuffer.tabs(1).text("if(registry.hashRegistry[\"" + t.typeHash16bitBase64String + "\"]) throw \"name conflict in " + t.fullName + "\";").endl();
-      txtBuffer.tabs(1).text("registry.hashRegistry[\"" + t.typeHash16bitBase64String + "\"] = \"" + t.fullName + "\";").endl()
    }
 
    def mkStart(t: CustomType) {
@@ -98,7 +92,7 @@ class JavascriptGenerator extends BuiltInGenerator {
    }
 
    def mkmgType(t: CustomType) {
-      var hashes = t.superTypeHierarchy().map(x => "\"" + x.typeHash16bitBase64String().toString() + "\"").mkString(", ")
+      var hashes = t.superTypeHierarchy().map(x => "\"" + x.typeId16BitBase64().toString() + "\"").mkString(", ")
       txtBuffer.tabs(2).text("\"mGenTypeHash\": [" + hashes + "],").endl()
    }
 
@@ -107,7 +101,7 @@ class JavascriptGenerator extends BuiltInGenerator {
          "\t\t\"" + field.name + "\": {\n" +
             "\t\t\t\"flags\": [" + field.flags().map(x => "\"" + x + "\"").mkString(",") + "],\n" +
             "\t\t\t\"type\": \"" + getTypeName(field.typ()) + "\",\n" +
-            "\t\t\t\"hash\": \"" + field.fieldHash16bitBase64() + "\"\n" +
+            "\t\t\t\"hash\": \"" + field.idBase64() + "\"\n" +
             "\t\t}"
       }).mkString(",\n").+("\n"))
    }
@@ -115,5 +109,4 @@ class JavascriptGenerator extends BuiltInGenerator {
    def mkEnd(t: CustomType) {
       txtBuffer.tabs(1).braceEnd().text(";").endl2()
    }
-
 }
