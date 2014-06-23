@@ -23,10 +23,13 @@ create-target-directory:
 	mkdir -p target
 
 eclipse:
-	############################################
-	# CREATING ECLIPSE PROJECT FOR MGEN-CPPLIB #
-	############################################
-	echo - NOT YET IMPLEMENTED -
+	#################################################
+	# CREATING ECLIPSE PROJECT FOR MGEN-CPPLIB-TEST #
+	#################################################
+	cd target && \
+	mkdir -p eclipse-project &&  \
+	cd eclipse-project && \
+	cmake . ../../src/test/cpp/src/ -G"Eclipse CDT4 - Unix Makefiles"
 
 clean:
 	#########################################
