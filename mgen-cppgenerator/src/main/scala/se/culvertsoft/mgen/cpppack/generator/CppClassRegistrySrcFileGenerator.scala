@@ -1,54 +1,52 @@
 package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
-import scala.collection.JavaConverters.mapAsScalaMapConverter
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
-import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16Bit
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16BitBase64
 
-object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(".cpp") {
+object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFile) {
 
-  override def mkIncludes(
-    referencedModules: Seq[Module],
-    generatorSettings: java.util.Map[String, String]) {
+  override def mkIncludes(param: UtilClassGenParam) {
 
     CppGenUtils.include("ClassRegistry.h")
 
-    val mkUnityBuild = generatorSettings.asScala.getOrElse("generate_unity_build", throw new GenerationException("Missing <generate_unity_build> setting for C++ generator")).toBoolean
+    val mkUnityBuild = param.settings.getOrElse("generate_unity_build", throw new GenerationException("Missing <generate_unity_build> setting for C++ generator")).toBoolean
 
     if (mkUnityBuild) {
-      val ts = referencedModules.flatMap(_.types.values).distinct
+      val ts = param.modules.flatMap(_.types.values).distinct
       for (t <- ts)
         CppGenUtils.include(t, ".cpp")
+      CppGenUtils.include(CppDispatchGenerator.includeStringCpp(param.nameSpaceString))
+      CppGenUtils.include(CppHandlerGenerator.includeStringCpp(param.nameSpaceString))
     }
 
     endl()
 
   }
 
-  override def mkDefaultCtor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  override def mkDefaultCtor(param: UtilClassGenParam) {
     ln(s"ClassRegistry::ClassRegistry() {")
-    for (m <- referencedModules)
+    for (m <- param.modules)
       for (t <- m.types().values())
         ln(1, s"add<${t.fullName().replaceAllLiterally(".", "::")}>();")
     ln(s"}").endl()
   }
 
-  override def mkDestructor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
+  override def mkDestructor(param: UtilClassGenParam) {
     ln("ClassRegistry::~ClassRegistry() {")
     ln("}").endl()
   }
 
-  override def mkGetByTypeIds16Bit(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-    MkGetByTypeIds16Bit(0, referencedModules, namespacesstring, generatorSettings)
+  override def mkGetByTypeIds16Bit(param: UtilClassGenParam) {
+    MkGetByTypeIds16Bit(0, param.nameSpaceString, param.modules, param.settings)
   }
 
-  override def mkGetByTypeIds16BitBase64(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-    MkGetByTypeIds16BitBase64(0, referencedModules, namespacesstring, generatorSettings)
+  override def mkGetByTypeIds16BitBase64(param: UtilClassGenParam) {
+    MkGetByTypeIds16BitBase64(0, param.nameSpaceString, param.modules, param.settings)
   }
 
 }

@@ -10,9 +10,9 @@ object MkGetByTypeIds16Bit {
 
   def apply(
     nTabs: Int,
-    referencedModules: Seq[Module],
     namespaceString: String,
-    generatorSettings: java.util.Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
+    referencedModules: Seq[Module],
+    generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
     val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
 

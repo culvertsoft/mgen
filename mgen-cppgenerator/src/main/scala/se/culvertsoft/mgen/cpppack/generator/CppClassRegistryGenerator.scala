@@ -6,76 +6,32 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
-abstract class CppClassRegistryGenerator(fileEnding: String) {
+abstract class CppClassRegistryGenerator(artifactType: CppArtifactType)
+  extends UtilityClassGenerator("ClassRegistry", Some("mgen::ClassRegistryBase"), artifactType) {
 
-  implicit val txtBuffer = new SuperStringBuffer
-  var namespacesstring = ""
+  override def mkClassContents(param: UtilClassGenParam) {
 
-  def generate(folder: String,
-    packagePath: String,
-    referencedModules: Seq[Module],
-    generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {
-    val fileName = "ClassRegistry" + fileEnding
-    val sourceCode = generateSourceCode(packagePath, referencedModules, generatorSettings)
-    new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
-  }
+    mkDefaultCtor(param)
+    mkDestructor(param)
 
-  def generateSourceCode(
-    packagePath: String,
-    referencedModules: Seq[Module],
-    generatorSettings: java.util.Map[String, String]): String = {
+    mkReadObjectFields(param)
+    mkVisitObjectFields(param)
 
-    val namespaces = packagePath.split("\\.")
-    namespacesstring = namespaces.mkString("::")
-
-    txtBuffer.clear()
-
-    CppGenUtils.mkFancyHeader()
-    mkIncludes(referencedModules, generatorSettings)
-    CppGenUtils.mkNameSpaces(namespaces)
-    mkClassStart(referencedModules, generatorSettings)
-
-    mkDefaultCtor(referencedModules, generatorSettings)
-    mkDestructor(referencedModules, generatorSettings)
-    
-    mkReadObjectFields(referencedModules, generatorSettings)
-    mkVisitObjectFields(referencedModules, generatorSettings)
-    
-    mkGetByTypeIds16Bit(referencedModules, generatorSettings)
-    mkGetByTypeIds16BitBase64(referencedModules, generatorSettings)
-    
-    mkClassEnd(referencedModules, generatorSettings)
-    CppGenUtils.mkNameSpacesEnd(namespaces)
-
-    txtBuffer.toString
+    mkGetByTypeIds16Bit(param)
+    mkGetByTypeIds16BitBase64(param)
 
   }
 
-  def mkIncludes(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
+  def mkDefaultCtor(param: UtilClassGenParam) {}
 
-  def mkClassStart(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
+  def mkDestructor(param: UtilClassGenParam) {}
 
-  def mkDefaultCtor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
+  def mkReadObjectFields(param: UtilClassGenParam) {}
 
-  def mkDestructor(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
+  def mkVisitObjectFields(param: UtilClassGenParam) {}
 
-  def mkReadObjectFields(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
+  def mkGetByTypeIds16Bit(param: UtilClassGenParam) {}
 
-  def mkVisitObjectFields(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
-
-  def mkGetByTypeIds16Bit(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
-
-  def mkGetByTypeIds16BitBase64(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
-
-  def mkClassEnd(referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]) {
-  }
+  def mkGetByTypeIds16BitBase64(param: UtilClassGenParam) {}
 
 }

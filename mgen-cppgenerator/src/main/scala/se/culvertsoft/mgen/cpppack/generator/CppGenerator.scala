@@ -14,8 +14,27 @@ class CppGenerator extends BuiltInStaticLangGenerator {
     packagePath: String,
     referencedModules: Seq[Module],
     generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    List(CppClassRegistryHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings),
-      CppClassRegistrySrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings))
+
+    val classRegH = CppClassRegistryHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
+    val classRegCpp = CppClassRegistrySrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
+
+    val dispatcherH = CppDispatchHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
+    val dispatcherCpp = CppDispatchSrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
+
+    val handlerH = CppHandlerHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
+    val handlerCpp = CppHandlerSrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
+
+    val fwdDeclare = ForwardDeclareGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
+    
+    List(
+      classRegH,
+      classRegCpp,
+      dispatcherH,
+      dispatcherCpp,
+      handlerH,
+      handlerCpp,
+      fwdDeclare)
+
   }
 
   def generateModuleMetaSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {

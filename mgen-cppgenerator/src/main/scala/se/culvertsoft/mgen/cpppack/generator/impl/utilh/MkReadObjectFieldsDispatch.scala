@@ -15,8 +15,7 @@ object MkReadObjectFieldsDispatch {
 
   def apply(
     referencedModules: Seq[Module],
-    namespaceString: String,
-    generatorSettings: java.util.Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
+    generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
     val nTabs = 1
     val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
