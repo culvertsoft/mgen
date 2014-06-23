@@ -54,10 +54,12 @@ object Output {
       val file = new File(output.filePath)
       if (!file.exists || FileUtils.readToString(output.filePath) != output.sourceCode) {
         println(s"  writing: ${output.filePath}")
-        val dir = FileUtils.directoryOf(output.filePath)
-        Path(dir).createDirectory(true, false)
+        if (!file.exists) {
+          val dir = FileUtils.directoryOf(output.filePath)
+          Path(dir).createDirectory(true, false)
+        }
         Path(output.filePath()).toFile.writeAll(output.sourceCode())
-      } else {        
+      } else {
         println(s"  skipping (no change): ${output.filePath}")
       }
 
