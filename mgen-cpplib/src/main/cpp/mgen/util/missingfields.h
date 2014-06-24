@@ -13,39 +13,54 @@
 namespace mgen {
 namespace missingfields {
 
-inline std::vector<Field> required(const MGenBase& object, const FieldSetDepth depth = SHALLOW);
-inline std::string requiredAsString(const MGenBase& object, const FieldSetDepth depth = SHALLOW);
+inline std::vector<Field> required(const MGenBase& object,
+		const FieldSetDepth depth = SHALLOW);
+inline std::string requiredAsString(const MGenBase& object,
+		const FieldSetDepth depth = SHALLOW);
 
-inline std::vector<Field> required(const MGenBase& object, const FieldSetDepth depth) {
+inline std::vector<Field> required(const MGenBase& object,
+		const FieldSetDepth depth) {
 
-    const std::vector<Field>& allFields = object._fieldMetadatas();
-    std::vector<Field> missingReqFields;
-    for (std::size_t i = 0; i < allFields.size(); i++) {
-        if (allFields[i].isRequired() && !object._isFieldSet(allFields[i], depth)) {
-            missingReqFields.push_back(allFields[i]);
-        }
-    }
+	const std::vector<Field>& allFields = object._fieldMetadatas();
+	std::vector<Field> missingReqFields;
+	for (std::size_t i = 0; i < allFields.size(); i++) {
+		if (allFields[i].isRequired()
+				&& !object._isFieldSet(allFields[i], depth)) {
+			missingReqFields.push_back(allFields[i]);
+		}
+	}
 
-    return missingReqFields;
+	return missingReqFields;
 
 }
 
-inline std::string requiredAsString(const MGenBase& object, const FieldSetDepth depth) {
+inline std::string requiredAsString(const MGenBase& object,
+		const FieldSetDepth depth) {
 
-    std::vector<Field> missingReqFields = required(object, depth);
+	std::vector<Field> missingReqFields = required(object, depth);
 
-    std::string missingFieldsString = "[";
+	std::string missingFieldsString = "[";
 
-    for (std::size_t i = 0; i < missingReqFields.size(); i++) {
-        missingFieldsString += missingReqFields[i].name();
-        if (i + 1 < missingReqFields.size())
-            missingFieldsString += ", ";
-    }
+	for (std::size_t i = 0; i < missingReqFields.size(); i++) {
+		missingFieldsString += missingReqFields[i].name();
+		if (i + 1 < missingReqFields.size())
+			missingFieldsString += ", ";
+	}
 
-    missingFieldsString += "]";
+	missingFieldsString += "]";
 
-    return missingFieldsString;
+	return missingFieldsString;
 
+}
+
+inline void ensureNoMissingFields(const MGenBase& object) {
+	if (!object._validate(SHALLOW)) {
+		const std::string missingFieldsString = requiredAsString(object);
+		throw SerializationException(
+				std::string("Missing required fields ").append(
+						missingFieldsString).append(" for object of type: ").append(
+						object._typeName()));
+	}
 }
 
 } /* namespace missingfields */
