@@ -24,7 +24,7 @@ class ObjectSerialization {
     val stream = new ByteArrayOutputStream
     val jsonWriter = new JsonWriter(stream, classRegistry)
     val binaryWriter = new BinaryWriter(stream, classRegistry)
-    val writers = Seq( /*jsonWriter, */ binaryWriter)
+    val writers = Seq(jsonWriter, binaryWriter)
   }
 
   def mkTestObjects()(implicit state: TestState) = {
@@ -87,7 +87,7 @@ class ObjectSerialization {
       val reader = getReader(writer)
 
       for (o <- all) {
-        val oBack = reader.readMGenObject()
+        reader.readMGenObject()
       }
 
       state.stream.reset()
