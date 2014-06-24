@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.api.exceptions;
+package se.culvertsoft.mgen.javapack.exceptions;
 
 public class MissingRequiredFieldsException extends SerializationException {
 
@@ -12,8 +12,7 @@ public class MissingRequiredFieldsException extends SerializationException {
 		super(cause);
 	}
 
-	public MissingRequiredFieldsException(
-			final String reason,
+	public MissingRequiredFieldsException(final String reason,
 			final Throwable cause) {
 		super(reason, cause);
 	}

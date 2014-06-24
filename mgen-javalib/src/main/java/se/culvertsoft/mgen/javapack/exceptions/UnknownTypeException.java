@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.api.exceptions;
+package se.culvertsoft.mgen.javapack.exceptions;
 
 public class UnknownTypeException extends SerializationException {
 

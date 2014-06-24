@@ -7,8 +7,8 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
 
 public interface FieldVisitor {
 
-	public void beginVisit(final MGenBase object, final int nFieldsSet, final int nFieldsTotal)
-			throws IOException;
+	public void beginVisit(final MGenBase object, final int nFieldsSet,
+			final int nFieldsTotal) throws IOException;
 
 	public void visit(final byte b, final Field field, final boolean isSet)
 			throws IOException;

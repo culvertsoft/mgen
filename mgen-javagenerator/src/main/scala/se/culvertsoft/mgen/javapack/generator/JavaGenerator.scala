@@ -96,15 +96,18 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
   }
 
   def generateClassSourceCode(t: CustomType): String = {
-
     txtBuffer.clear()
+    mkPublicSection(t)
+    mkMetadataMethodsSection(t)
+    mkMetadataFieldsSection(t)
+    txtBuffer.toString()
+  }
 
+  def mkPublicSection(t: CustomType) {
     MkFancyHeader(t)
-
     MkPackage(currentModule)
     MkImports(t, currentModule)
     MkClassStart(t, currentModule)
-
     MkMembers(t, currentModule)
     MkDefaultCtor(t, currentModule)
     MkRequiredMembersCtor(t, currentModule)
@@ -115,9 +118,10 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkHashCode(t, currentModule)
     MkEquals(t, currentModule)
     MkDeepCopy(t, currentModule)
+  }
 
+  def mkMetadataMethodsSection(t: CustomType) {
     MkMetadataMethodsComment(t)
-
     MkTypeIdMethods(t, currentModule)
     MkAcceptVisitor(t, currentModule)
     MkReadField(t, currentModule)
@@ -127,14 +131,13 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkValidate(t, currentModule)
     MkNFieldsSet(t, currentModule)
     MkFieldById(t, currentModule)
+  }
 
+  def mkMetadataFieldsSection(t: CustomType) {
     MkMetadataComment(t)
-
     MkTypeIdFields(t, currentModule)
     MkFieldMetaData(t, currentModule)
     MkClassEnd()
-
-    txtBuffer.toString()
   }
 
 }

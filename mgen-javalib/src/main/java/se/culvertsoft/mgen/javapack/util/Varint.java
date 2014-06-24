@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.api.util;
+package se.culvertsoft.mgen.javapack.util;
 
 /**
  * 
@@ -24,7 +24,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import se.culvertsoft.mgen.api.exceptions.SerializationException;
+import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
 
 /**
  * <p>
@@ -153,8 +153,7 @@ public final class Varint {
 			value |= (b & 0x7F) << i;
 			i += 7;
 			if (i >= 64)
-				throw new SerializationException(
-						"Stream corrupted! Varint overflow.");
+				throw new StreamCorruptedException("Varlong overflow");
 		}
 		return value | (b << i);
 	}
@@ -194,10 +193,8 @@ public final class Varint {
 			value |= (b & 0x7F) << i;
 			i += 7;
 			if (i >= 36)
-				throw new SerializationException(
-						"Stream corrupted! Varint overflow.");
+				throw new StreamCorruptedException("Varint overflow");
 		}
 		return value | (b << i);
 	}
-
 }
