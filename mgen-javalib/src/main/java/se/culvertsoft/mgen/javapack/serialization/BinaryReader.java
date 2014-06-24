@@ -12,18 +12,17 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_INT8;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_LIST;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_MAP;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
+import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureExpectedType;
+import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
+import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.throwUnexpectTag;
 
-import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import se.culvertsoft.mgen.api.exceptions.MissingRequiredFieldsException;
-import se.culvertsoft.mgen.api.exceptions.SerializationException;
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListOrArrayType;
@@ -31,141 +30,22 @@ import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.UnknownCustomType;
-import se.culvertsoft.mgen.api.util.Varint;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
-import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
+import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
+import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
 
-	private static final Charset charset = Charset.forName("UTF8");
-	private static final short[] NO_IDS = new short[0];
-	private final DataInput stream;
-	@SuppressWarnings("unused")
-	private final ReaderSettings readerSettings;
-	private final ReadErrorListener errorHandler;
-
-	public BinaryReader(final InputStream stream,
-			final ClassRegistry classRegistry,
-			final ReaderSettings readerSettings,
-			final ReadErrorListener errorHandler) {
-		super(classRegistry);
-		this.stream = stream instanceof DataInput ? (DataInput) stream
-				: new DataInputStream(stream);
-		this.readerSettings = readerSettings;
-		this.errorHandler = errorHandler;
-	}
-
 	public BinaryReader(final InputStream stream,
 			final ClassRegistry classRegistry) {
-		this(stream, classRegistry, ReaderSettings.DEFAULT,
-				new ReadErrorAdapter());
+		super(stream instanceof DataInputStream ? (DataInputStream) stream
+				: new DataInputStream(stream), classRegistry);
 	}
 
 	@Override
 	public final MGenBase readMGenObject() throws IOException {
 		return readMGenObject(true);
-	}
-
-	protected MGenBase readMGenObject(final boolean readTypeTag)
-			throws IOException {
-
-		if (readTypeTag)
-			ensureTypeTag(null, TAG_CUSTOM, readTypeTag());
-
-		final short[] typeIds16Bit = readTypeIdsBit();
-		final MGenBase out = m_classRegistry.instantiateByTypeIds16Bit(typeIds16Bit);
-
-		readFields(out);
-
-		return out;
-	}
-
-	private Field nextField(final MGenBase object) throws IOException {
-		if (object != null) {
-			// TODO: Handle fieldIdType settings
-			final short fieldId = readFieldId();
-			return object._fieldById(fieldId);
-		} else {
-			return null;
-		}
-	}
-
-	private void readFields(final MGenBase object) throws IOException {
-
-		final int nFields = readSize();
-
-		System.out.println("Reading " + object);
-
-		if (nFields < 0)
-			throw new SerializationException(
-					"MGenReader.read(..): stream corrupted, nFields < 0");
-
-		for (int i = 0; i < nFields; i++) {
-			final Field field = nextField(object);
-			System.out.println("Reading field " + field);
-			if (field != null) {
-				object._readField(field, null, this);
-			} else {
-				handleUnknownField(null, null);
-			}
-		}
-
-		System.out.println("read: " + object);
-		System.out.println(object._validate(FieldSetDepth.SHALLOW));
-		if (object != null && !object._validate(FieldSetDepth.SHALLOW)) {
-			final ArrayList<Field> missingReqFields = new ArrayList<Field>();
-			for (final Field f : object._fields()) {
-				if (f.isRequired()
-						&& !object._isFieldSet(f, FieldSetDepth.SHALLOW)) {
-					missingReqFields.add(f);
-				}
-			}
-
-			throw new MissingRequiredFieldsException(
-					"MGenReader.read(..): Missing required fields ["
-							+ missingReqFields + "] while reading object '"
-							+ object + "'");
-		}
-
-	}
-
-	private MGenBase readMGenObject(final boolean readTypeTag,
-			final UnknownCustomType constraint) throws IOException {
-
-		final MGenBase out = readMGenObject(readTypeTag);
-
-		if (out != null && constraint != null) {
-			if (!out.isInstanceOfTypeWithId(constraint.typeId())) {
-				// TODO: Handle constraints failure
-				return null;
-			}
-		}
-
-		return out;
-
-	}
-
-	private short[] readTypeIdsBit() throws IOException {
-
-		final int nTypeIds = readSize();
-
-		if (nTypeIds > 0) {
-
-			final short[] typeIds = new short[nTypeIds];
-
-			for (int i = 0; i < typeIds.length; i++)
-				typeIds[i] = readMgenTypeId();
-
-			return typeIds;
-
-		} else if (nTypeIds < 0) {
-			throw new SerializationException(
-					"MGenReader.readObject(..): Stream currupted. nTypeIds < 0");
-		}
-
-		return NO_IDS;
-
 	}
 
 	@Override
@@ -258,6 +138,13 @@ public class BinaryReader extends BuiltInReader {
 		skip(readTypeTag());
 	}
 
+	/*******************************************************************
+	 * 
+	 * 
+	 * - - - - - - - - - - INTERNAL METHODS
+	 * 
+	 ******************************************************************/
+
 	private Object skip(final byte typeTag) throws IOException {
 		switch (typeTag) {
 		case TAG_BOOL:
@@ -285,7 +172,7 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_CUSTOM:
 			return readMGenObject(false, null);
 		default:
-			throw new SerializationException("Stream corrupted!");
+			throw new StreamCorruptedException("Unknown typeTag: " + typeTag);
 		}
 	}
 
@@ -294,11 +181,11 @@ public class BinaryReader extends BuiltInReader {
 		final int nBytes = readSize();
 
 		if (nBytes < 0)
-			throw new SerializationException("Stream corrupted!");
+			throw new StreamCorruptedException("nBytes < 0");
 
 		if (nBytes > 0) {
 			final byte[] bytes = new byte[nBytes];
-			stream.readFully(bytes);
+			m_stream.readFully(bytes);
 			return new String(bytes, charset);
 		} else {
 			return "";
@@ -306,61 +193,111 @@ public class BinaryReader extends BuiltInReader {
 
 	}
 
-	/*******************************************************************
-	 * 
-	 * 
-	 * - - - - - - - - - - INTERNAL METHODS
-	 * 
-	 ******************************************************************/
+	private MGenBase readMGenObject(final boolean readTypeTag)
+			throws IOException {
+
+		if (readTypeTag)
+			ensureTypeTag(null, TAG_CUSTOM, readTypeTag());
+
+		final short[] typeIds16Bit = readTypeIdsBit();
+		final MGenBase out = m_classRegistry
+				.instantiateByTypeIds16Bit(typeIds16Bit);
+
+		readFields(out);
+
+		return out;
+	}
+
+	private void readFields(final MGenBase object) throws IOException {
+
+		final int nFields = readSize();
+
+		if (nFields < 0)
+			throw new StreamCorruptedException("nFields < 0");
+
+		for (int i = 0; i < nFields; i++)
+			object._readField(readFieldId(), null, this);
+
+		ensureNoMissingReqFields(object);
+
+	}
+
+	private MGenBase readMGenObject(final boolean readTypeTag,
+			final UnknownCustomType constraint) throws IOException {
+		final MGenBase out = readMGenObject(readTypeTag);
+		ensureExpectedType(out, constraint);
+		return out;
+	}
+
+	private short[] readTypeIdsBit() throws IOException {
+
+		final int nTypeIds = readSize();
+
+		if (nTypeIds > 0) {
+
+			final short[] typeIds = new short[nTypeIds];
+
+			for (int i = 0; i < typeIds.length; i++)
+				typeIds[i] = readMgenTypeId();
+
+			return typeIds;
+
+		} else if (nTypeIds < 0) {
+			throw new StreamCorruptedException("nTypeIds < 0");
+		}
+
+		return NO_IDS;
+
+	}
 
 	private byte readTypeTag() throws IOException {
-		return stream.readByte();
+		return m_stream.readByte();
 	}
 
 	private boolean readBoolean(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_BOOL, readTypeTag());
-		return stream.readByte() != 0;
+		return m_stream.readByte() != 0;
 	}
 
 	private byte readInt8(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_INT8, readTypeTag());
-		return stream.readByte();
+		return m_stream.readByte();
 	}
 
 	private short readInt16(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_INT16, readTypeTag());
-		return stream.readShort();
+		return m_stream.readShort();
 	}
 
 	private int readInt32(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_INT32, readTypeTag());
-		return Varint.readSignedVarInt(stream);
+		return Varint.readSignedVarInt(m_stream);
 	}
 
 	private long readInt64(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_INT64, readTypeTag());
-		return Varint.readSignedVarLong(stream);
+		return Varint.readSignedVarLong(m_stream);
 	}
 
 	private float readFloat32(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_FLOAT32, readTypeTag());
-		return stream.readFloat();
+		return m_stream.readFloat();
 	}
 
 	private double readFloat64(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_FLOAT64, readTypeTag());
-		return stream.readDouble();
+		return m_stream.readDouble();
 	}
 
 	private int readSize() throws IOException {
-		return Varint.readUnsignedVarInt(stream);
+		return Varint.readUnsignedVarInt(m_stream);
 	}
 
 	private short readMgenTypeId() throws IOException {
@@ -374,7 +311,7 @@ public class BinaryReader extends BuiltInReader {
 	private void ensureTypeTag(final Field field, final byte expTag,
 			final byte readTag) throws IOException {
 		if (expTag != readTag) {
-			handleUnexpectedType(field, expTag, readTag);
+			throwUnexpectTag("(for field " + field + ")", expTag, readTag);
 		}
 	}
 
@@ -402,7 +339,8 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_CUSTOM:
 			return readObjectArray(n, elemTypeTag, arrayType);
 		default:
-			throw new SerializationException("Stream corrupted!");
+			throw new StreamCorruptedException("Unknown elemTypeTag: "
+					+ elemTypeTag);
 		}
 	}
 
@@ -417,7 +355,7 @@ public class BinaryReader extends BuiltInReader {
 	private Object readInt8Array(final int n, final boolean b)
 			throws IOException {
 		final byte[] array = new byte[n];
-		stream.readFully(array);
+		m_stream.readFully(array);
 		return array;
 	}
 
@@ -496,7 +434,7 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_CUSTOM:
 			return readMGenObject(false, (UnknownCustomType) expectType);
 		default:
-			throw new SerializationException("Stream corrupted!");
+			throw new StreamCorruptedException("Unknown type tag: " + typeTag);
 		}
 	}
 
@@ -520,18 +458,14 @@ public class BinaryReader extends BuiltInReader {
 			if (expectElemTypeTag == readElemTypeTag) {
 				return array;
 			} else {
-				errorHandler.handleUnexpectedElementType(null,
-						expectElemTypeTag, readElemTypeTag, NO_IDS, array);
 				return null;
 			}
 
 		} else if (nElements == 0) {
-
 			return expectType != null ? expectType.newInstance(0) : null;
-
-		} else {
-			throw new SerializationException("Stream corrupt!");
 		}
+
+		throw new StreamCorruptedException("nElements < 0");
 
 	}
 
@@ -564,13 +498,13 @@ public class BinaryReader extends BuiltInReader {
 					.valueType() : null);
 
 			if (keys.size() != values.size() || keys.size() != nElements)
-				throw new SerializationException("Stream corrupted!");
+				throw new StreamCorruptedException("nKeys != nValues in map");
 
 			for (int i = 0; i < keys.size(); i++)
 				out.put(keys.get(i), values.get(i));
 
 		} else if (nElements < 0) {
-			throw new SerializationException("Stream corrupt!");
+			throw new StreamCorruptedException("nElements < 0");
 		}
 
 		return out;
@@ -581,35 +515,20 @@ public class BinaryReader extends BuiltInReader {
 
 		final int nElements = readSize();
 
-		if (nElements < 0) {
-			throw new SerializationException("Stream corrupt!");
-		}
+		if (nElements < 0)
+			throw new StreamCorruptedException("nElements < 0");
+
+		final byte readElemTag = readTypeTag();
+
+		if (constraint != null && constraint.binaryTypeTag() != readElemTag)
+			throwUnexpectTag("", constraint.binaryTypeTag(), readElemTag);
 
 		final ArrayList<Object> out = new ArrayList<Object>(nElements);
 
-		final byte readElemTag = readTypeTag();
-		final boolean typeTagOk = constraint == null
-				|| constraint.binaryTypeTag() == readElemTag;
-
-		if (typeTagOk) {
-			for (int i = 0; i < nElements; i++)
-				out.add(readObject(readTypeTag(), constraint));
-		} else {
-
-			// TODO: notify somehow that the wrong type is arriving...
-
-			for (int i = 0; i < nElements; i++)
-				readObject(readTypeTag(), constraint);
-		}
+		for (int i = 0; i < nElements; i++)
+			out.add(readObject(readTypeTag(), constraint));
 
 		return out;
-	}
-
-	private void handleUnexpectedType(final Field field, final byte expTag,
-			final byte readTag) throws IOException {
-		skip(readTag);
-		System.err.println("Unexpected type (field=" + field
-				+ ") expect/read: " + expTag + "/" + readTag);
 	}
 
 }

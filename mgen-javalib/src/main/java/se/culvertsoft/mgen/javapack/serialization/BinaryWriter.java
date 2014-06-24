@@ -13,190 +13,124 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_LIST;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_MAP;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import se.culvertsoft.mgen.api.exceptions.SerializationException;
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.api.util.Varint;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
+import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
+import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryWriter extends BuiltInWriter {
 
-	private static final Charset charset = Charset.forName("UTF8");
-
-	public BinaryWriter(
-			final OutputStream outputStream,
+	public BinaryWriter(final OutputStream stream,
 			final ClassRegistry classRegistry) {
-		super(
-				outputStream instanceof DataOutputStream ? (DataOutputStream) outputStream
-						: new DataOutputStream(outputStream),
-				classRegistry);
-	}
-
-	public BinaryWriter(
-			final DataOutput stream,
-			final ClassRegistry classRegistry) {
-		super(stream, classRegistry);
+		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
+				: new DataOutputStream(stream), classRegistry);
 	}
 
 	@Override
-	public void beginWrite(final MGenBase parent, final int nFieldsSet, final int nFieldsTotal)
+	public void beginWrite(final MGenBase object, final int nFieldsSet,
+			final int nFieldsTotal) throws IOException {
+		final short[] typeIds = object._typeIds16Bit();
+		writeSize(typeIds.length);
+		for (final short typeId : typeIds)
+			writeInt16(typeId, false);
+		writeSize(nFieldsSet);
+	}
+
+	@Override
+	public void writeBooleanField(final boolean b, final Field field)
 			throws IOException {
-		if (parent != null) {
-			final short[] typeIds = parent._typeIds16Bit();
-			writeSize(typeIds.length);
-			for (final short typeId : typeIds)
-				writeInt16(typeId, false);
-			writeSize(nFieldsSet);
-		} else {
-			throw new SerializationException(
-					"beginWrite called with null argument....should not happen!");
-		}
+		writeFieldStart(field.id(), TAG_BOOL);
+		writeBoolean(b, false);
 	}
 
 	@Override
-	public void writeBooleanField(
-			final boolean b,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_BOOL);
-			writeBoolean(b, false);
-		}
+	public void writeInt8Field(final byte b, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_INT8);
+		writeInt8(b, false);
 	}
 
 	@Override
-	public void writeInt8Field(
-			final byte b,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_INT8);
-			writeInt8(b, false);
-		}
+	public void writeInt16Field(final short s, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_INT16);
+		writeInt16(s, false);
 	}
 
 	@Override
-	public void writeInt16Field(
-			final short s,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_INT16);
-			writeInt16(s, false);
-		}
+	public void writeInt32Field(final int i, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_INT32);
+		writeInt32(i, false);
 	}
 
 	@Override
-	public void writeInt32Field(
-			final int i,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_INT32);
-			writeInt32(i, false);
-		}
+	public void writeInt64Field(final long l, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_INT64);
+		writeInt64(l, false);
 	}
 
 	@Override
-	public void writeInt64Field(
-			final long l,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_INT64);
-			writeInt64(l, false);
-		}
+	public void writeFloat32Field(final float f, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_FLOAT32);
+		writeFloat32(f, false);
 	}
 
 	@Override
-	public void writeFloat32Field(
-			final float f,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_FLOAT32);
-			writeFloat32(f, false);
-		}
+	public void writeFloat64Field(final double d, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_FLOAT64);
+		writeFloat64(d, false);
 	}
 
 	@Override
-	public void writeFloat64Field(
-			final double d,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_FLOAT64);
-			writeFloat64(d, false);
-		}
+	public void writeStringField(final String s, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_STRING);
+		writeString(s, false);
 	}
 
 	@Override
-	public void writeStringField(
-			final String s,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_STRING);
-			writeString(s, false);
-		}
+	public void writeListField(final ArrayList<Object> list, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_LIST);
+		writeList(list, (ListType) field.typ(), false);
 	}
 
 	@Override
-	public void writeListField(
-			final ArrayList<Object> list,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_LIST);
-			writeList(list, (ListType) field.typ(), false);
-		}
+	public void writeMapField(final HashMap<Object, Object> map,
+			final Field field) throws IOException {
+		writeFieldStart(field.id(), TAG_MAP);
+		writeMap(map, (MapType) field.typ(), false);
 	}
 
 	@Override
-	public void writeMapField(
-			final HashMap<Object, Object> map,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_MAP);
-			writeMap(map, (MapType) field.typ(), false);
-		}
+	public void writeArrayField(final Object arrayObj, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_ARRAY);
+		writeArray(arrayObj, (ArrayType) field.typ(), false);
 	}
 
 	@Override
-	public void writeArrayField(
-			final Object arrayObj,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_ARRAY);
-			writeArray(arrayObj, (ArrayType) field.typ(), false);
-		}
-	}
-
-	@Override
-	public void writeMGenObjectField(
-			final MGenBase o,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			writeFieldStart(field.id(), TAG_CUSTOM);
-			writeMGenObject(o, false);
-		}
+	public void writeMGenObjectField(final MGenBase o, final Field field)
+			throws IOException {
+		writeFieldStart(field.id(), TAG_CUSTOM);
+		writeMGenObject(o, false);
 	}
 
 	@Override
@@ -220,20 +154,20 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 		if (tag)
 			writeTypeTag(TAG_BOOL);
-		stream.writeByte(b ? 1 : 0);
+		m_stream.writeByte(b ? 1 : 0);
 	}
 
 	private void writeInt8(final int b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT8);
-		stream.writeByte(b);
+		m_stream.writeByte(b);
 	}
 
 	private void writeInt16(final short s, final boolean tag)
 			throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT16);
-		stream.writeShort(s);
+		m_stream.writeShort(s);
 	}
 
 	private void writeInt32(final int i, final boolean tag) throws IOException {
@@ -253,14 +187,14 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT32);
-		stream.writeFloat(f);
+		m_stream.writeFloat(f);
 	}
 
 	private void writeFloat64(final double d, final boolean tag)
 			throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT64);
-		stream.writeDouble(d);
+		m_stream.writeDouble(d);
 	}
 
 	private void writeString(final String s, final boolean tag)
@@ -269,15 +203,13 @@ public class BinaryWriter extends BuiltInWriter {
 			writeTypeTag(TAG_STRING);
 		if (s != null && !s.isEmpty()) {
 			writeSize(s.length());
-			stream.write(s.getBytes(charset));
+			m_stream.write(s.getBytes(charset));
 		} else {
 			writeSize(0);
 		}
 	}
 
-	private void writeList(
-			final List<Object> list,
-			final ListType typ,
+	private void writeList(final List<Object> list, final ListType typ,
 			final boolean tag) throws IOException {
 
 		if (tag)
@@ -287,8 +219,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
-	private void writeElements(
-			final Collection<Object> list,
+	private void writeElements(final Collection<Object> list,
 			final Type elementType) throws IOException {
 
 		if (list != null && !list.isEmpty()) {
@@ -305,9 +236,7 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
-	private void writeMap(
-			final HashMap<Object, Object> map,
-			final MapType typ,
+	private void writeMap(final HashMap<Object, Object> map, final MapType typ,
 			final boolean tag) throws IOException {
 
 		if (tag)
@@ -326,9 +255,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
-	private void writeArray(
-			final Object arrayObj,
-			final ArrayType typ,
+	private void writeArray(final Object arrayObj, final ArrayType typ,
 			final boolean tag) throws IOException {
 
 		if (tag)
@@ -403,7 +330,7 @@ public class BinaryWriter extends BuiltInWriter {
 			writeSize(array.length);
 
 			writeTypeTag(TAG_INT8);
-			stream.write(array);
+			m_stream.write(array);
 
 		} else {
 			writeSize(0);
@@ -516,9 +443,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
-	private void writeObjectArray(
-			final Object[] array,
-			final Type elementType,
+	private void writeObjectArray(final Object[] array, final Type elementType,
 			final boolean tag) throws IOException {
 
 		if (tag)
@@ -539,15 +464,15 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	private void writeSignedVarint32(final int i) throws IOException {
-		Varint.writeSignedVarInt(i, stream);
+		Varint.writeSignedVarInt(i, m_stream);
 	}
 
 	private void writeSignedVarint64(final long l) throws IOException {
-		Varint.writeSignedVarLong(l, stream);
+		Varint.writeSignedVarLong(l, m_stream);
 	}
 
 	private void writeUnsignedVarint32(final int i) throws IOException {
-		Varint.writeUnsignedVarInt(i, stream);
+		Varint.writeUnsignedVarInt(i, m_stream);
 	}
 
 	private void writeSize(final int i) throws IOException {
@@ -597,7 +522,7 @@ public class BinaryWriter extends BuiltInWriter {
 			writeMGenObject((MGenBase) o, tag);
 			break;
 		default:
-			throw new SerializationException("Stream corrupted!");
+			throw new SerializationException("Unknown type tag for writeObject");
 		}
 
 	}
@@ -609,10 +534,9 @@ public class BinaryWriter extends BuiltInWriter {
 			writeTypeTag(TAG_CUSTOM);
 
 		if (o != null) {
-			validateThrow(o);
 			o._accept(this);
 		} else {
-			stream.writeByte(0);
+			m_stream.writeByte(0);
 		}
 
 	}
@@ -623,7 +547,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	private void writeTypeTag(byte tag) throws IOException {
-		stream.writeByte(tag);
+		m_stream.writeByte(tag);
 	}
 
 }

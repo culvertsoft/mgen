@@ -16,20 +16,13 @@ import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
+import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
 
 public class JsonWriter extends DynamicWriter {
 
-	public JsonWriter(
-			final OutputStream outputStream,
-			final ClassRegistry classRegistry,
-			final boolean useTypeHashes) {
-		super(outputStream, classRegistry, useTypeHashes);
-	}
-
-	public JsonWriter(
-			final OutputStream outputStream,
+	public JsonWriter(final OutputStream outputStream,
 			final ClassRegistry classRegistry) {
-		this(outputStream, classRegistry, true);
+		super(outputStream, classRegistry);
 	}
 
 	@Override
@@ -37,7 +30,6 @@ public class JsonWriter extends DynamicWriter {
 		if (o == null) {
 			write("null");
 		} else {
-			validateThrow(o);
 			o._accept(this);
 		}
 	}
@@ -52,145 +44,101 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
-	public void writeBooleanField(
-			final boolean b,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writePair(field.name(), String.valueOf(b));
-		}
-	}
-
-	@Override
-	public void writeInt8Field(
-			final byte b,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writePair(field.name(), String.valueOf(b));
-		}
-	}
-
-	@Override
-	public void writeInt16Field(
-			final short s,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writePair(field.name(), String.valueOf(s));
-		}
-	}
-
-	@Override
-	public void writeInt32Field(
-			final int i,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writePair(field.name(), String.valueOf(i));
-		}
-	}
-
-	@Override
-	public void writeInt64Field(
-			final long l,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writePair(field.name(), String.valueOf(l));
-		}
-	}
-
-	@Override
-	public void writeFloat32Field(
-			final float f,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writePair(field.name(), String.valueOf(f));
-		}
-	}
-
-	@Override
-	public void writeFloat64Field(
-			final double d,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writePair(field.name(), String.valueOf(d));
-		}
-	}
-
-	@Override
-	public void writeStringField(
-			final String s,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writePair(field.name(), quoteEscape(s));
-		}
-	}
-
-	@Override
-	public void writeListField(
-			final ArrayList<Object> list,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writeName(field.name());
-			writeList(list, (ListType) field.typ());
-		}
-	}
-
-	@Override
-	public void writeMapField(
-			final HashMap<Object, Object> m,
-			final Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writeName(field.name());
-			writeMap(m, (MapType) field.typ());
-		}
-	}
-
-	@Override
-	public void writeArrayField(Object array, Field field, final boolean isSet)
+	public void writeBooleanField(final boolean b, final Field field)
 			throws IOException {
-		if (isSet) {
-			write(",");
-			writeName(field.name());
-			writeArray(array, (ArrayType) field.typ());
-		}
+		write(",");
+		writePair(field.name(), String.valueOf(b));
 	}
 
 	@Override
-	public void writeMGenObjectField(
-			MGenBase o,
-			Field field,
-			final boolean isSet) throws IOException {
-		if (isSet) {
-			write(",");
-			writeName(field.name());
-			writeMGenObject(o);
-		}
-	}
-
-	@Override
-	public void beginWrite(final MGenBase parent, final int nFieldsSet, final int nFieldsTotal)
+	public void writeInt8Field(final byte b, final Field field)
 			throws IOException {
-		final List<String> names = typeIdsOf(parent);
+		write(",");
+		writePair(field.name(), String.valueOf(b));
+	}
+
+	@Override
+	public void writeInt16Field(final short s, final Field field)
+			throws IOException {
+		write(",");
+		writePair(field.name(), String.valueOf(s));
+	}
+
+	@Override
+	public void writeInt32Field(final int i, final Field field)
+			throws IOException {
+
+		write(",");
+		writePair(field.name(), String.valueOf(i));
+
+	}
+
+	@Override
+	public void writeInt64Field(final long l, final Field field)
+			throws IOException {
+
+		write(",");
+		writePair(field.name(), String.valueOf(l));
+
+	}
+
+	@Override
+	public void writeFloat32Field(final float f, final Field field)
+			throws IOException {
+		write(",");
+		writePair(field.name(), String.valueOf(f));
+	}
+
+	@Override
+	public void writeFloat64Field(final double d, final Field field)
+			throws IOException {
+		write(",");
+		writePair(field.name(), String.valueOf(d));
+	}
+
+	@Override
+	public void writeStringField(final String s, final Field field)
+			throws IOException {
+		write(",");
+		writePair(field.name(), quoteEscape(s));
+	}
+
+	@Override
+	public void writeListField(final ArrayList<Object> list, final Field field)
+			throws IOException {
+		write(",");
+		writeName(field.name());
+		writeList(list, (ListType) field.typ());
+	}
+
+	@Override
+	public void writeMapField(final HashMap<Object, Object> m, final Field field)
+			throws IOException {
+		write(",");
+		writeName(field.name());
+		writeMap(m, (MapType) field.typ());
+	}
+
+	@Override
+	public void writeArrayField(Object array, Field field) throws IOException {
+		write(",");
+		writeName(field.name());
+		writeArray(array, (ArrayType) field.typ());
+	}
+
+	@Override
+	public void writeMGenObjectField(MGenBase o, Field field)
+			throws IOException {
+		write(",");
+		writeName(field.name());
+		writeMGenObject(o);
+	}
+
+	@Override
+	public void beginWrite(final MGenBase parent, final int nFieldsSet,
+			final int nFieldsTotal) throws IOException {
 		write("{\"__t\":");
-		writeArray(names.toArray(new String[names.size()]));
+		writeArray(parent._typeIds16BitBase64());
 	}
 
 	@Override
@@ -243,7 +191,7 @@ public class JsonWriter extends DynamicWriter {
 			writeMGenObject((MGenBase) o);
 			break;
 		default:
-			break;
+			throw new SerializationException("Unknown type for writeObject");
 		}
 
 	}

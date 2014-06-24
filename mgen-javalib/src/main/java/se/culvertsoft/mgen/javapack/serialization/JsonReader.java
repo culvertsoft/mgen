@@ -1,5 +1,8 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
+import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureExpectedType;
+import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
+
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,8 +14,8 @@ import java.util.HashMap;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
-import se.culvertsoft.mgen.api.exceptions.SerializationException;
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
@@ -21,41 +24,26 @@ import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.UnknownCustomType;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
-import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
-import se.culvertsoft.mgen.javapack.serialization.SerializationSettings.TypeIdType;
+import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
+import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
+import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 
 public class JsonReader extends BuiltInReader {
 
-	private final DataInputStream stream;
-	private final ReaderSettings readerSettings;
-	@SuppressWarnings("unused")
-	private final ReadErrorListener errorHandler;
-
-	public JsonReader(final InputStream stream,
-			final ClassRegistry classRegistry,
-			final ReaderSettings readerSettings,
-			final ReadErrorListener errorHandler) {
-		super(classRegistry);
-		this.stream = stream instanceof DataInputStream ? (DataInputStream) stream
-				: new DataInputStream(stream);
-		this.readerSettings = readerSettings;
-		this.errorHandler = errorHandler;
-	}
-
 	public JsonReader(final InputStream stream,
 			final ClassRegistry classRegistry) {
-		this(stream, classRegistry, ReaderSettings.DEFAULT,
-				new ReadErrorAdapter());
+		super(stream instanceof DataInputStream ? (DataInputStream) stream
+				: new DataInputStream(stream), classRegistry);
 	}
 
 	@Override
 	public MGenBase readMGenObject() throws IOException {
 		try {
 			final JSONParser parser = new JSONParser();
-			final Object parsed = parser.parse(new InputStreamReader(stream));
+			final Object parsed = parser.parse(new InputStreamReader(m_stream));
 			return readMGenObject((JSONObject) parsed);
-		} catch (final Throwable e) {
-			throw new SerializationException(e);
+		} catch (final ParseException e) {
+			throw new StreamCorruptedException(e);
 		}
 	}
 
@@ -71,7 +59,7 @@ public class JsonReader extends BuiltInReader {
 
 		if (out != null) {
 			readObjectFields(out, node);
-			validateThrow(out);
+			ensureNoMissingReqFields(out);
 		}
 
 		return out;
@@ -163,19 +151,15 @@ public class JsonReader extends BuiltInReader {
 	@Override
 	public void handleUnknownField(final Field field, final Object context)
 			throws IOException {
-		// Just skip it
 	}
 
 	private void readObjectFields(final MGenBase object, final JSONObject node)
 			throws IOException {
-
-		final Object context = node;
-
 		for (final Object keyO : node.keySet()) {
-			final String key = (String) keyO;
-			final Field field = object._fieldByName(key);
+			final String name = (String) keyO;
+			final Field field = object._fieldByName(name);
 			if (field != null) {
-				object._readField(field, context, this);
+				object._readField(field.id(), node, this);
 			}
 		}
 
@@ -183,28 +167,17 @@ public class JsonReader extends BuiltInReader {
 
 	private MGenBase readMGenObject(final JSONObject node,
 			final UnknownCustomType constraint) throws IOException {
-
 		final MGenBase out = readMGenObject(node);
-
-		if (out != null && constraint != null) {
-			if (!out.isInstanceOfTypeWithId(constraint.typeId())) {
-				// TODO: Handle constraints failure
-				return null;
-			}
-		}
-
+		ensureExpectedType(out, constraint);
 		return out;
 	}
 
 	protected MGenBase instantiateFromStreamIds(final JSONArray array)
 			throws IOException {
 		@SuppressWarnings("unchecked")
-		final String[] ids = ((ArrayList<String>) array).toArray(new String[array.size()]);
-		if (readerSettings.typeIdType() == TypeIdType.HASH_16_BIT) {
-			return m_classRegistry.instantiateByTypeIds16BitBase64(ids);
-		} else {
-			return m_classRegistry.instantiateByNames(ids);
-		}
+		final String[] ids = ((ArrayList<String>) array)
+				.toArray(new String[array.size()]);
+		return m_classRegistry.instantiateByTypeIds16BitBase64(ids);
 	}
 
 	private HashMap<?, ?> readMap(MapType typ, JSONObject node)
@@ -256,9 +229,8 @@ public class JsonReader extends BuiltInReader {
 		case UNKNOWN:
 			return readObjectArray(node, typ);
 		default:
-			throw new SerializationException(
-					"MgenJsonReader.readArray: Unknown type: "
-							+ typ.elementType());
+			throw new UnknownTypeException("Unknown array elementType: "
+					+ typ.elementType());
 		}
 	}
 
@@ -293,9 +265,8 @@ public class JsonReader extends BuiltInReader {
 		case UNKNOWN:
 			return readObjectList(node, typ);
 		default:
-			throw new SerializationException(
-					"MgenJsonReader.readList: Unknown type: "
-							+ typ.elementType());
+			throw new UnknownTypeException("Unknown array element type: "
+					+ typ.elementType());
 		}
 	}
 
@@ -477,30 +448,16 @@ public class JsonReader extends BuiltInReader {
 		case UNKNOWN:
 			return readMGenObject((JSONObject) node, (UnknownCustomType) typ);
 		default:
-			throw new SerializationException(
-					"MgenJsonReader.readObject: Unknown type: " + typ);
+			throw new UnknownTypeException("Unknown type: " + typ);
 		}
-	}
-
-	protected void throwMissingField(final String fieldName) {
-		throw new SerializationException(
-				"MGenJSonReader.readMGenObject: Missing field '" + fieldName
-						+ "'");
 	}
 
 	protected void throwMissingFieldIfNull(final Object o,
 			final String fieldName) {
 		if (o == null) {
-			throwMissingField(fieldName);
-		}
-	}
-
-	protected void validateThrow(final MGenBase o) {
-		if (o != null && !o._validate(FieldSetDepth.SHALLOW)) {
-			throw new SerializationException("MGenReader.validate failed: A "
-					+ o.getClass()
-					+ " does not have all required fields set, missing: "
-					+ o._missingRequiredFields());
+			throw new MissingRequiredFieldsException(
+					"MGenJSonReader.readMGenObject: Missing field '"
+							+ fieldName + "'");
 		}
 	}
 

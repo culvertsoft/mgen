@@ -35,9 +35,10 @@ void testBinary(
     mgen::BinaryReader<mgen::VectorInputStream, mgen::EmptyClassRegistry> readerNoClasses(inNoClasses, emptyRegistry);
 
     const double t0 = getCurTimeSeconds();
+    const int n = 100000;
 
     long long sum = 0;
-    for (int i = 0; i < 100000; i++) {
+    for (int i = 0; i < n; i++) {
         // write it
         buffer.clear();
         inNoClasses.reset();
@@ -50,8 +51,10 @@ void testBinary(
     const double dt = t1 - t0;
     const double MB = double(sum) / 1024.0 / 1024.0;
     const double MB_per_sec = MB / dt;
-    std::cout << "Serialized+Deserialized " << (sum / 1024) << " kB" << std::endl;
-    std::cout << "Which is MB/s: " << MB_per_sec << std::endl;
+    const int msgs_per_sec = int(double(n) / dt);
+    std::cout << "BINARY performance " << (sum / 1024) << " kB" << std::endl;
+    std::cout << "  MB/s: " << MB_per_sec << std::endl;
+    std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
 
     // Read it
     TestType * entityBack = static_cast<TestType*>(reader.readMgenObject());
@@ -114,9 +117,10 @@ void testJSON(
     std::cout << json2 << std::endl;
     
     const double t0 = getCurTimeSeconds();
+    const int n = 10000;
 
     long long sum = 0;
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < n; i++) {
         // write it
         buffer.clear();
         inNoClasses.reset();
@@ -129,8 +133,10 @@ void testJSON(
     const double dt = t1 - t0;
     const double MB = double(sum) / 1024.0 / 1024.0;
     const double MB_per_sec = MB / dt;
-    std::cout << "Serialized+Deserialized " << (sum / 1024) << " kB" << std::endl;
-    std::cout << "Which is MB/s: " << MB_per_sec << std::endl;
+    const int msgs_per_sec = int(double(n) / dt);
+    std::cout << "JSON performance " << (sum / 1024) << " kB" << std::endl;
+    std::cout << "  MB/s: " << MB_per_sec << std::endl;
+    std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
 
 }
 

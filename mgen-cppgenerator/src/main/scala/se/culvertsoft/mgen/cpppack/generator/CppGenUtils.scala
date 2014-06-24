@@ -7,7 +7,7 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 object CppGenUtils {
 
-  def mkNameSpaces(namespaces: Array[String])(implicit txtBuffer: SuperStringBuffer) {
+  def mkNameSpaces(namespaces: Seq[String])(implicit txtBuffer: SuperStringBuffer) {
     for (namespace <- namespaces)
       txtBuffer.textln(s"namespace $namespace {")
     txtBuffer.endl()
@@ -33,7 +33,7 @@ object CppGenUtils {
     include(t.fullName().replaceAllLiterally(".", "/") + fileEnding)
   }
 
-  def mkNameSpacesEnd(namespaces: Array[String])(implicit txtBuffer: SuperStringBuffer) {
+  def mkNameSpacesEnd(namespaces: Seq[String])(implicit txtBuffer: SuperStringBuffer) {
     for (namespace <- namespaces.reverse)
       txtBuffer.textln(s"} // End namespace $namespace")
     txtBuffer.endl()
@@ -44,7 +44,7 @@ object CppGenUtils {
   }
 
   def getIncludeGuardTypeString(typeName: String): String = {
-    typeName.replaceAllLiterally(".", "_").toUpperCase()
+    typeName.replaceAllLiterally(".", "_").replaceAllLiterally("::", "_").toUpperCase()
   }
 
   def mkIncludeGuardStart(fullTypeName: String)(implicit txtBuffer: SuperStringBuffer) {
@@ -59,7 +59,7 @@ object CppGenUtils {
   }
 
   def mkClassStart(thisClsName: String, superClsName: String = "")(implicit txtBuffer: SuperStringBuffer) {
-    if (superClsName.nonEmpty)
+    if (superClsName != null && superClsName.nonEmpty)
       txtBuffer.textln(s"class $thisClsName : public $superClsName {")
     else
       txtBuffer.textln(s"class $thisClsName {")

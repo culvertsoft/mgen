@@ -10,6 +10,7 @@
 
 #include <string>
 #include <sstream>
+#include <vector>
 
 namespace mgen {
 
@@ -18,15 +19,25 @@ namespace mgen {
 #define STRINGIFY(expr) STRINGIFY2(expr)
 #endif //STRINGIFY
 
-//Converts std::ostream to std::string
-inline std::string streamToString(const std::ostream& src) {
-    std::stringstream trg;
-    trg << src.rdbuf();
-    return trg.str();
+template<typename T>
+std::string toString(const T& t) {
+	std::stringstream trg;
+	trg << t;
+	return trg.str();
 }
 
-//Helper macro for creating a string from an expression, C++ stream style.
-#define TO_STRING(expression) streamToString((std::ostringstream() << "") << expression)
+template<typename T>
+std::string toString(const std::vector<T>& v) {
+	std::stringstream trg;
+	trg << "[";
+	for (int i = 0; i < int(v.size()); i++) {
+		if (i >= 1)
+			trg << ", ";
+		trg << toString(v[i]);
+	}
+	trg << "]";
+	return trg.str();
+}
 
 } /* namespace mgen */
 
