@@ -22,7 +22,6 @@ import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.UnknownCustomType;
-import se.culvertsoft.mgen.api.util.Hasher;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
@@ -161,9 +160,11 @@ public class JsonReader extends BuiltInReader {
 		final Object context = node;
 
 		for (final Object keyO : node.keySet()) {
-			final String key = (String) keyO;
-			final short fieldId = Hasher.static_16bit(key);
-			object._readField(fieldId, context, this);
+			final String name = (String) keyO;
+			final Field field = object._fieldByName(name);
+			if (field != null) {
+				object._readField(field.id(), context, this);
+			}
 		}
 
 	}

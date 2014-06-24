@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.culvertsoft.mgen.api.model.Field;
+import se.culvertsoft.mgen.api.util.Hasher;
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
 import se.culvertsoft.mgen.javapack.serialization.FieldVisitor;
 import se.culvertsoft.mgen.javapack.serialization.Reader;
@@ -59,6 +60,10 @@ public abstract class MGenBase {
 	public abstract Field[] _fields();
 
 	public abstract Field _fieldById(final short id);
+
+	public Field _fieldByName(final String name) {
+		return _fieldById(Hasher.static_16bit(name));
+	}
 
 	public abstract int _nFieldsSet(final FieldSetDepth fieldSetDepth);
 
