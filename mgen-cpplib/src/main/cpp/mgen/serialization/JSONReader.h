@@ -163,10 +163,18 @@ private:
             if (constraintTypeId != -1 && !classRegistryEntry->isInstanceOfTypeId(constraintTypeId))
                 return 0;
 
-            if (!object)
-                object = classRegistryEntry->newInstance();
+            if (!object) {
+            	try {
+            		object = classRegistryEntry->newInstance();
+                	m_classRegistry.readObjectFields(*object, node, *this);
+            	} catch (...) {
+            		delete object;
+            		throw;
+            	}
+            } else {
+            	m_classRegistry.readObjectFields(*object, node, *this);
+            }
 
-            m_classRegistry.readObjectFields(*object, node, *this);
             return object;
 
         } else {

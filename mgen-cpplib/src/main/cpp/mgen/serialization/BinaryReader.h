@@ -91,11 +91,19 @@ private:
                     return 0;
                 }
 
-                if (!object)
-                    object = classRegistryEntry->newInstance();
-
                 int ctx;
-                m_classRegistry.readObjectFields(*object, ctx, *this);
+                if (!object) {
+                	try {
+                		object = classRegistryEntry->newInstance();
+                    	m_classRegistry.readObjectFields(*object, ctx, *this);
+                	} catch (...) {
+                		delete object;
+                		throw;
+                	}
+                } else {
+                	m_classRegistry.readObjectFields(*object, ctx, *this);
+                }
+
                 return object;
 
             } else {
