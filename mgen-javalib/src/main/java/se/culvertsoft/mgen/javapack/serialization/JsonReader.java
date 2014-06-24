@@ -151,19 +151,15 @@ public class JsonReader extends BuiltInReader {
 	@Override
 	public void handleUnknownField(final Field field, final Object context)
 			throws IOException {
-		// Just skip it
 	}
 
 	private void readObjectFields(final MGenBase object, final JSONObject node)
 			throws IOException {
-
-		final Object context = node;
-
 		for (final Object keyO : node.keySet()) {
 			final String name = (String) keyO;
 			final Field field = object._fieldByName(name);
 			if (field != null) {
-				object._readField(field.id(), context, this);
+				object._readField(field.id(), node, this);
 			}
 		}
 
