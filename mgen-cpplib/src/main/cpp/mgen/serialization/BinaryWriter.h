@@ -39,15 +39,7 @@ public:
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
 
-        if (!object._validate(SHALLOW)) {
-
-            const std::string missingFieldsString = missingfields::requiredAsString(object);
-
-            throw SerializationException(
-                    std::string("mgen::BinaryWriter::write(..) failed: Missing required fields ").append(
-                            missingFieldsString).append(" for object of type: ").append(
-                            object._typeName()));
-        }
+    	missingfields::ensureNoMissingFields(object);
 
         const std::vector<short>& typeIds = MGenType::_type_ids_16bit();
         writeSize(typeIds.size());
