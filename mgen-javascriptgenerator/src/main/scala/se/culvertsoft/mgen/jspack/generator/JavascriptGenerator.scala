@@ -23,7 +23,7 @@ class JavascriptGenerator extends Generator {
    override def generate(modules: java.util.List[Module], settings: java.util.Map[String, String]): java.util.List[GeneratedSourceFile] = {
       val out = new java.util.ArrayList[GeneratedSourceFile]
 
-      val folder = settings.getOrElse("output_folder", "")
+      val folder = settings.getOrElse("output_path", "")
       val fileName = settings.getOrElse("output_filename", "mGen.js")
       val classregistryName = settings.getOrElse("classregistry_name", "mgen_registry")
       val sourceCode = "";
