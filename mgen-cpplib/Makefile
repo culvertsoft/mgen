@@ -29,7 +29,7 @@ eclipse:
 	cd target && \
 	mkdir -p eclipse-project &&  \
 	cd eclipse-project && \
-	cmake . ../../src/test/cpp/src/ -G"Eclipse CDT4 - Unix Makefiles"
+	cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../../src/test/cpp/src/
 
 clean:
 	#########################################
