@@ -203,7 +203,8 @@ public class BinaryReader extends BuiltInReader {
 		final MGenBase out = m_classRegistry
 				.instantiateByTypeIds16Bit(typeIds16Bit);
 
-		readFields(out);
+		if (out != null)
+			readFields(out);
 
 		return out;
 	}
