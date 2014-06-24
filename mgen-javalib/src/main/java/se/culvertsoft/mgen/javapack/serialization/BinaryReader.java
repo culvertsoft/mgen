@@ -208,16 +208,6 @@ public class BinaryReader extends BuiltInReader {
 		return out;
 	}
 
-	private Field nextField(final MGenBase object) throws IOException {
-		if (object != null) {
-			// TODO: Handle fieldIdType settings
-			final short fieldId = readFieldId();
-			return object._fieldById(fieldId);
-		} else {
-			return null;
-		}
-	}
-
 	private void readFields(final MGenBase object) throws IOException {
 
 		final int nFields = readSize();
@@ -225,14 +215,8 @@ public class BinaryReader extends BuiltInReader {
 		if (nFields < 0)
 			throw new StreamCorruptedException("nFields < 0");
 
-		for (int i = 0; i < nFields; i++) {
-			final Field field = nextField(object);
-			if (field != null) {
-				object._readField(field, null, this);
-			} else {
-				handleUnknownField(null, null);
-			}
-		}
+		for (int i = 0; i < nFields; i++)
+			object._readField(readFieldId(), null, this);
 
 		ensureNoMissingReqFields(object);
 

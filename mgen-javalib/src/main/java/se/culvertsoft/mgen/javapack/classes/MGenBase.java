@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.culvertsoft.mgen.api.model.Field;
-import se.culvertsoft.mgen.api.util.Hasher;
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
 import se.culvertsoft.mgen.javapack.serialization.FieldVisitor;
 import se.culvertsoft.mgen.javapack.serialization.Reader;
@@ -59,12 +58,7 @@ public abstract class MGenBase {
 
 	public abstract Field[] _fields();
 
-	public abstract Field _fieldById(final short hash);
-
-	public Field _fieldByName(final String memberName) {
-		return memberName != null ? _fieldById(Hasher.static_16bit(memberName))
-				: null;
-	}
+	public abstract Field _fieldById(final short id);
 
 	public abstract int _nFieldsSet(final FieldSetDepth fieldSetDepth);
 
@@ -78,8 +72,8 @@ public abstract class MGenBase {
 
 	public abstract void _accept(final FieldVisitor visitor) throws IOException;
 
-	public abstract boolean _readField(final Field field, final Object context,
-			final Reader reader) throws IOException;
+	public abstract boolean _readField(final short fieldId,
+			final Object context, final Reader reader) throws IOException;
 
 	public List<Field> _missingRequiredFields() {
 		final ArrayList<Field> missingFields = new ArrayList<Field>();
