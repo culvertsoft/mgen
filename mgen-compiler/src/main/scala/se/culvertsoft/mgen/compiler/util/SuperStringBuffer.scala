@@ -1,5 +1,9 @@
 package se.culvertsoft.mgen.compiler.util
 
+object SuperStringBuffer {
+  implicit def SuperStringBuffer2String(s : SuperStringBuffer) = s.toString
+}
+
 class SuperStringBuffer {
 
    private var TAB_STRING = "    "
@@ -21,6 +25,7 @@ class SuperStringBuffer {
 
    def endl2() = { buffer.append('\n').append('\n'); this }
    def text(s: String) = { buffer.append(s); this }
+   def +=(s: String) : SuperStringBuffer = { this.text(s) }
    def textln(s: String = "") = { buffer.append(s).append('\n'); this }
    def function(name: String)(params: String = "") = { buffer.append(name).append('(').append(params).append(')'); this }
    def paranthBegin() = { buffer.append('('); this }
@@ -37,9 +42,10 @@ class SuperStringBuffer {
    def length() = size()
    def removeLast(size: Int) = { buffer.setLength(buffer.length() - size); this }
 
-   override def toString() = buffer.toString()
+   override def toString = buffer.toString
 
-   private var m_tabs = 0
+
+   //private var m_tabs = 0
    private var m_firstOnLine = false
    /*
    def write(t: String): SuperStringBuffer = {
