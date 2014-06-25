@@ -66,35 +66,37 @@ private:
 
         verifyReadTagIf(Type::TAG_CUSTOM, verifyTag);
 
-        const ClassRegistryEntry * entry = readMGenBaseHeader();
+        const int nIds = readSize();
 
-        return serialutil::readObjFromEntry(
-                *this,
-                m_classRegistry,
-                context_ignore,
-                object,
-                entry,
-                expectTypeId,
-                constrained);
+        if (nIds > 0) {
+
+            const ClassRegistryEntry * entry = getCompatibleEntry(nIds, constrained, expectTypeId);
+
+            if (entry) {
+                object = serialutil::readObjInternal(
+                        *this,
+                        m_classRegistry,
+                        context_ignore,
+                        object,
+                        *entry);
+            } else {
+                skipFields();
+            }
+
+        }
+
+        return object;
 
     }
 
-    const ClassRegistryEntry * readMGenBaseHeader() {
-
-        const int nTypeIds = readSize();
-
-        if (nTypeIds > 0) {
-
-            std::vector<short> typeIds16Bit(nTypeIds);
-            for (int i = 0; i < nTypeIds; i++)
-                read(typeIds16Bit[i], false);
-
-            return m_classRegistry.getByTypeIds16Bit(typeIds16Bit);
-
-        } else {
-            return mgen::ClassRegistryEntry::NULL_ENTRY();
-        }
-
+    const ClassRegistryEntry * getCompatibleEntry(
+            const int nIds,
+            const bool constrained,
+            const long long expectTypeId) {
+        std::vector<short> ids(nIds);
+        for (int i = 0; i < nIds; i++)
+            read(ids[i], false);
+        return serialutil::getCompatibleEntry(m_classRegistry, ids, constrained, expectTypeId);
     }
 
     void skipList() {
@@ -114,13 +116,21 @@ private:
         }
     }
 
-    void skipCustom(const ClassRegistryEntry * classRegistryEntry) {
-        if (classRegistryEntry != ClassRegistryEntry::NULL_ENTRY()) {
-            const int nFields = readSize();
-            for (int i = 0; i < nFields; i++) {
-                readFieldId();
-                skip(readTag());
-            }
+    void skipFields() {
+        const int nFields = readSize();
+        for (int i = 0; i < nFields; i++) {
+            readFieldId();
+            skip(readTag());
+        }
+    }
+
+    void skipCustom() {
+        const int nIds = readSize();
+        if (nIds > 0) {
+            short t;
+            for (int i = 0; i < nIds; i++)
+                read(t, false);
+            skipFields();
         }
     }
 
@@ -137,7 +147,7 @@ private:
         SKIP_CASE_READ(Type::TAG_STRING, read<std::string>(false))
         SKIP_CASE_READ(Type::TAG_LIST, skipList())
         SKIP_CASE_READ(Type::TAG_MAP, skipMap())
-        SKIP_CASE_READ(Type::TAG_CUSTOM, skipCustom(readMGenBaseHeader()))
+        SKIP_CASE_READ(Type::TAG_CUSTOM, skipCustom())
         default:
             throw UnexpectedTypeException("BinaryReader::skipField(..): Unexpected tag");
         }

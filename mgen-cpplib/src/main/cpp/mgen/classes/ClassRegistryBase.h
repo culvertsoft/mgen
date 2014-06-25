@@ -43,12 +43,12 @@ public:
     }
 
     // Generated subclass code
-    const ClassRegistryEntry * getByTypeIds16Bit(const std::vector<short>& typeIds16bit) const {
+    const ClassRegistryEntry * getByIds(const std::vector<short>& typeIds16bit) const {
         return 0;
     }
 
     // Generated subclass code
-    const ClassRegistryEntry * getByTypeIds16BitBase64(const std::vector<std::string>& typeIds16bitBase64) const {
+    const ClassRegistryEntry * getByIds(const std::vector<std::string>& typeIds16bitBase64) const {
         return 0;
     }
 

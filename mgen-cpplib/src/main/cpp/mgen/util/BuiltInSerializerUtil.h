@@ -15,65 +15,53 @@
 namespace mgen {
 namespace serialutil {
 
-template <typename ClassRegType>
-void ensureExpectedType(
-		const ClassRegType& classRegistry,
-		const ClassRegistryEntry& entry,
-		const long long expId,
-		const bool constrained) {
-
-	if (constrained && !entry.isInstanceOfTypeId(expId)) {
-
-		const ClassRegistryEntry * expEntry = classRegistry.getByTypeId(expId);
-
-		throw UnexpectedTypeException(
-				toString("readMgenObject::Unexpected type. Expecting ").append(
-						expEntry ? expEntry->typeName() : "any").append(
-						" but got ").append(entry.typeName()));
-
-	}
-}
-
-template <typename ReaderType, typename ClassRegType, typename ContextType>
+template<typename ReaderType, typename ClassRegType, typename ContextType>
 MGenBase * readObjInternal(
-		ReaderType& reader,
-		const ClassRegType& classRegistry,
-		ContextType& context,
-		MGenBase * object,
-		const ClassRegistryEntry& entry) {
+        ReaderType& reader,
+        const ClassRegType& classRegistry,
+        ContextType& context,
+        MGenBase * object,
+        const ClassRegistryEntry& entry) {
 
-	if (!object) {
-		try {
-			object = entry.newInstance();
-			classRegistry.readObjectFields(*object, context, reader);
-		} catch (...) {
-			delete object;
-			throw;
-		}
-	} else {
-		classRegistry.readObjectFields(*object, context, reader);
-	}
+    if (!object) {
+        try {
+            object = entry.newInstance();
+            classRegistry.readObjectFields(*object, context, reader);
+        } catch (...) {
+            delete object;
+            throw;
+        }
+    } else {
+        classRegistry.readObjectFields(*object, context, reader);
+    }
 
-	return object;
+    return object;
 
 }
 
-template <typename ReaderType, typename ClassRegType, typename ContextType>
-MGenBase * readObjFromEntry(
-		ReaderType& reader,
-		const ClassRegType& classRegistry,
-		ContextType& context,
-		MGenBase * object,
-		const ClassRegistryEntry * entry,
-		const long long expTypeId,
-		const bool constrained) {
+template<typename ClassRegType, typename IdType>
+const ClassRegistryEntry * getCompatibleEntry(
+        const ClassRegType& classReg,
+        const std::vector<IdType>& ids,
+        const bool constrained,
+        const long constraint) {
 
-	if (entry && entry != mgen::ClassRegistryEntry::NULL_ENTRY()) {
-		ensureExpectedType(classRegistry, *entry, expTypeId, constrained);
-		return readObjInternal(reader, classRegistry, context, object, *entry);
-	} else {
-		return object;
-	}
+    const ClassRegistryEntry * entry = classReg.getByIds(ids);
+
+    if (constrained) {
+        if (!entry) {
+            new UnexpectedTypeException("Unknown type: " + toString(ids));
+        } else if (!entry->isInstanceOfTypeId(constraint)) {
+            const ClassRegistryEntry * expEntry = classReg.getByTypeId(constraint);
+            new UnexpectedTypeException(
+                    std::string("Unexpected type. Expected ")
+                    .append(expEntry ? expEntry->typeName() : " <unknown> ")
+                    .append(" but got ")
+                    .append(entry->typeName()));
+        }
+    }
+
+    return entry;
 
 }
 
