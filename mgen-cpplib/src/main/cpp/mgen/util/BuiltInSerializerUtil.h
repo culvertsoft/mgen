@@ -1,12 +1,12 @@
 /*
- * Marker.h
+ * BuiltInSerializerUtil.h
  *
- *  Created on: 21 mar 2014
+ *  Created on: 24 jun 2014
  *      Author: GiGurra
  */
 
-#ifndef MARKER_H_
-#define MARKER_H_
+#ifndef BUILTINSERIALIZERUTIL_H_
+#define BUILTINSERIALIZERUTIL_H_
 
 #include "mgen/classes/MGenBase.h"
 #include "mgen/util/stringutil.h"
@@ -81,4 +81,4 @@ MGenBase * readObjFromEntry(
 /* namespace serialutil */
 } /* namespace mgen */
 
-#endif /* MARKER_H_ */
+#endif /* BUILTINSERIALIZERUTIL_H_ */

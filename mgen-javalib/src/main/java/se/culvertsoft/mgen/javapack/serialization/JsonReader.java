@@ -13,7 +13,6 @@ import java.util.HashMap;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
@@ -27,20 +26,23 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
 import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
+import se.culvertsoft.mgen.javapack.serialization.mgen2jsonsimple.MGenJSONParser;
 
 public class JsonReader extends BuiltInReader {
+
+	private final MGenJSONParser m_parser;
 
 	public JsonReader(final InputStream stream,
 			final ClassRegistry classRegistry) {
 		super(stream instanceof DataInputStream ? (DataInputStream) stream
 				: new DataInputStream(stream), classRegistry);
+		m_parser = new MGenJSONParser(new InputStreamReader(stream));
 	}
 
 	@Override
 	public MGenBase readMGenObject() throws IOException {
 		try {
-			final JSONParser parser = new JSONParser();
-			final Object parsed = parser.parse(new InputStreamReader(m_stream));
+			final Object parsed = m_parser.parseNext();
 			return readMGenObject((JSONObject) parsed);
 		} catch (final ParseException e) {
 			throw new StreamCorruptedException(e);

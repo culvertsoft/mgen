@@ -38,10 +38,10 @@ public:
 
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
+        static const std::vector<short>& typeIds = MGenType::_type_ids_16bit();
 
     	missingfields::ensureNoMissingFields(object);
 
-        const std::vector<short>& typeIds = MGenType::_type_ids_16bit();
         writeSize(typeIds.size());
         for (std::size_t i = 0; i < typeIds.size(); i++)
             write(typeIds[i], false);
@@ -72,11 +72,11 @@ private:
 
     template<typename T>
     void write(const std::vector<T>& v, const bool verifyTag) {
-        static const Type::TAG tag = Type::TAG_OF(T());
+        static const Type::TAG elemTag = Type::TAG_OF(T());
         writeTagIf(Type::TAG_LIST, verifyTag);
         writeSize(v.size());
         if (!v.empty()) {
-            writeTagIf(tag, true);
+            writeTagIf(elemTag, true);
             for (std::size_t i = 0; i < v.size(); i++)
                 write(v[i], false);
         }

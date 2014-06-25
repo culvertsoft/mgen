@@ -364,7 +364,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private String quoteEscape(final String text) {
-		return '"' + JSONValue.escape(text) + '"';
+		return text != null ? '"' + JSONValue.escape(text) + '"' : "null";
 	}
 
 }
