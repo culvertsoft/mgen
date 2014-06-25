@@ -16,7 +16,7 @@ object MkGetByTypeIds16BitBase64 {
 
     val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
 
-    ln(nTabs, s"const mgen::ClassRegistryEntry * $namespaceString::ClassRegistry::getByTypeIds16BitBase64(const std::vector<std::string>& ids) const {")
+    ln(nTabs, s"const mgen::ClassRegistryEntry * $namespaceString::ClassRegistry::getByIds(const std::vector<std::string>& ids) const {")
 
     for (t <- allTypes)
       ln(nTabs + 1, MkLongTypeName.staticClassRegEntry(t))

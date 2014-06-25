@@ -26,6 +26,8 @@ object JavaConstants {
 
   val mgenBaseClsString = s"${javapackPkg}.classes.MGenBase"
   val clsRegistryClsString = s"${javapackPkg}.classes.ClassRegistry"
+  val clsRegistryEntryClsString = s"ClassRegistryEntry"
+  val clsRegistryEntryClsStringQ = s"$javapackPkg.classes.$clsRegistryEntryClsString"
   val eqTesterClsString = s"EqualityTester"
   val eqTesterClsStringQ = s"${javapackPkg}.util.${eqTesterClsString}"
 

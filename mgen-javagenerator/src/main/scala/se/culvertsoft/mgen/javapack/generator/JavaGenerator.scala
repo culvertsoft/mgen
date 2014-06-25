@@ -32,7 +32,6 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkImports
 import se.culvertsoft.mgen.javapack.generator.impl.MkIsFieldSet
 import se.culvertsoft.mgen.javapack.generator.impl.MkMarkFieldsSet
 import se.culvertsoft.mgen.javapack.generator.impl.MkMembers
-import se.culvertsoft.mgen.javapack.generator.impl.MkModuleClassRegistry
 import se.culvertsoft.mgen.javapack.generator.impl.MkNFieldsSet
 import se.culvertsoft.mgen.javapack.generator.impl.MkPackage
 import se.culvertsoft.mgen.javapack.generator.impl.MkReadField
@@ -82,10 +81,7 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
   override def generateModuleMetaSources(
     module: Module,
     generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    val folder = getModuleFolderPath(module, generatorSettings)
-    val fileName = "MGenModuleClassRegistry" + ".java"
-    val sourceCode = MkModuleClassRegistry(module)
-    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
+    Nil
   }
 
   override def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {

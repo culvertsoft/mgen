@@ -1,6 +1,5 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
-import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureExpectedType;
 import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
 
 import java.io.DataInputStream;
@@ -32,7 +31,8 @@ public class JsonReader extends BuiltInReader {
 
 	private final MGenJSONParser m_parser;
 
-	public JsonReader(final InputStream stream,
+	public JsonReader(
+			final InputStream stream,
 			final ClassRegistry classRegistry) {
 		super(stream instanceof DataInputStream ? (DataInputStream) stream
 				: new DataInputStream(stream), classRegistry);
@@ -43,36 +43,10 @@ public class JsonReader extends BuiltInReader {
 	public MGenBase readMGenObject() throws IOException {
 		try {
 			final Object parsed = m_parser.parseNext();
-			return readMGenObject((JSONObject) parsed);
+			return readMGenObject((JSONObject) parsed, null);
 		} catch (final ParseException e) {
 			throw new StreamCorruptedException(e);
 		}
-	}
-
-	protected MGenBase readMGenObject(final JSONObject node) throws IOException {
-
-		if (node == null)
-			return null;
-
-		final JSONArray typeNames = (JSONArray) node.get("__t");
-		throwMissingFieldIfNull(typeNames, "__t");
-
-		final MGenBase out = instantiateFromStreamIds(typeNames);
-
-		if (out != null) {
-			readObjectFields(out, node);
-			ensureNoMissingReqFields(out);
-		}
-
-		return out;
-	}
-
-	private JSONObject getJsonObj(final Field field, final Object context) {
-		return (JSONObject) ((JSONObject) context).get(field.name());
-	}
-
-	private JSONArray getJsonArr(final Field field, final Object context) {
-		return (JSONArray) ((JSONObject) context).get(field.name());
 	}
 
 	@Override
@@ -144,15 +118,60 @@ public class JsonReader extends BuiltInReader {
 	}
 
 	@Override
-	public final MGenBase readMgenObjectField(final Field field,
+	public final MGenBase readMgenObjectField(
+			final Field field,
 			final Object context) throws IOException {
-		return readMGenObject(getJsonObj(field, context),
+		return readMGenObject(
+				getJsonObj(field, context),
 				(UnknownCustomType) field.typ());
 	}
 
 	@Override
 	public void handleUnknownField(final Field field, final Object context)
 			throws IOException {
+	}
+
+	private MGenBase readMGenObject(
+			final JSONObject node,
+			final UnknownCustomType constraint) throws IOException {
+
+		// Wrote null
+		if (node == null || node.isEmpty())
+			return null;
+
+		final JSONArray typeNames = (JSONArray) node.get("__t");
+		throwMissingFieldIfNull(typeNames, "__t");
+
+		@SuppressWarnings("unchecked")
+		final String[] ids = ((ArrayList<String>) typeNames)
+				.toArray(new String[typeNames.size()]);
+
+		if (ids.length == 0)
+			return null;
+
+		final MGenBase object = instantiate(ids, constraint);
+
+		if (object != null) {
+			readObjectFields(object, node);
+			ensureNoMissingReqFields(object);
+			return object;
+		} else {
+			skipFields();
+			return null;
+		}
+
+	}
+
+	private void skipFields() {
+
+	}
+
+	private JSONObject getJsonObj(final Field field, final Object context) {
+		return (JSONObject) ((JSONObject) context).get(field.name());
+	}
+
+	private JSONArray getJsonArr(final Field field, final Object context) {
+		return (JSONArray) ((JSONObject) context).get(field.name());
 	}
 
 	private void readObjectFields(final MGenBase object, final JSONObject node)
@@ -165,21 +184,6 @@ public class JsonReader extends BuiltInReader {
 			}
 		}
 
-	}
-
-	private MGenBase readMGenObject(final JSONObject node,
-			final UnknownCustomType constraint) throws IOException {
-		final MGenBase out = readMGenObject(node);
-		ensureExpectedType(out, constraint);
-		return out;
-	}
-
-	protected MGenBase instantiateFromStreamIds(final JSONArray array)
-			throws IOException {
-		@SuppressWarnings("unchecked")
-		final String[] ids = ((ArrayList<String>) array)
-				.toArray(new String[array.size()]);
-		return m_classRegistry.instantiateByTypeIds16BitBase64(ids);
 	}
 
 	private HashMap<?, ?> readMap(MapType typ, JSONObject node)
@@ -454,7 +458,8 @@ public class JsonReader extends BuiltInReader {
 		}
 	}
 
-	protected void throwMissingFieldIfNull(final Object o,
+	protected void throwMissingFieldIfNull(
+			final Object o,
 			final String fieldName) {
 		if (o == null) {
 			throw new MissingRequiredFieldsException(

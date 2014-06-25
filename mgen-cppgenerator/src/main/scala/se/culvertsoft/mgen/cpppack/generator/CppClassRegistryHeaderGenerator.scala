@@ -44,11 +44,11 @@ object CppClassRegistryHeaderGenerator extends CppClassRegistryGenerator(Header)
   }
 
   override def mkGetByTypeIds16Bit(param: UtilClassGenParam) {
-    ln(1, s"const mgen::ClassRegistryEntry * getByTypeIds16Bit(const std::vector<short>& ids) const;").endl()
+    ln(1, s"const mgen::ClassRegistryEntry * getByIds(const std::vector<short>& ids) const;").endl()
   }
 
   override def mkGetByTypeIds16BitBase64(param: UtilClassGenParam) {
-    ln(1, s"const mgen::ClassRegistryEntry * getByTypeIds16BitBase64(const std::vector<std::string>& ids) const;").endl()
+    ln(1, s"const mgen::ClassRegistryEntry * getByIds(const std::vector<std::string>& ids) const;").endl()
   }
 
 }
