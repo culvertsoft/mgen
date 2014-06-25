@@ -3,15 +3,17 @@ package se.culvertsoft.mgen.javapack.classes;
 public class ClassRegistryEntry {
 
 	public ClassRegistryEntry(
-			final long typeId, 
-			final String className,
+			final long typeId,
+			final long[] typeIds, 
+			final String className, 
 			final Ctor ctor) {
 		m_cls = lkupClass(className);
 		m_typeId = typeId;
+		m_typeIds = typeIds;
 		m_clsName = className;
 		m_ctor = ctor;
 	}
-	
+
 	private static Class<?> lkupClass(final String className) {
 		try {
 			return Class.forName(className);
@@ -24,12 +26,16 @@ public class ClassRegistryEntry {
 		return m_ctor.create();
 	}
 
-	public String clsName() {
-		return m_clsName;
-	}
-
 	public long typeId() {
 		return m_typeId;
+	}
+	
+	public long[] typeIds() {
+		return m_typeIds;
+	}
+
+	public String clsName() {
+		return m_clsName;
 	}
 
 	public Ctor ctor() {
@@ -40,8 +46,18 @@ public class ClassRegistryEntry {
 		return m_cls;
 	}
 
+	public boolean isInstanceOfTypeId(final long typeId) {
+		for (int i = m_typeIds.length - 1; i >= 0; i--) {
+			if (m_typeIds[i] == typeId) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	private final Class<?> m_cls;
 	private final long m_typeId;
+	private final long[] m_typeIds;
 	private final String m_clsName;
 	private final Ctor m_ctor;
 

@@ -6,7 +6,7 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 object MkPackage {
 
   def apply(packagePath: String)(implicit txtBuffer: SuperStringBuffer) {
-    txtBuffer.text(s"package ${packagePath};").endl2()
+    txtBuffer.textln(s"package $packagePath;").endl()
   }
 
   def apply(module: Module)(implicit txtBuffer: SuperStringBuffer) {
