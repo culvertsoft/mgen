@@ -155,10 +155,11 @@ private:
 
 	template<typename T>
 	void read(std::vector<T>& v, const bool verifyTag) {
+        static const Type::TAG elemTag = Type::TAG_OF(T());
 		verifyReadTagIf(Type::TAG_OF(v), verifyTag);
 		const int sz = readSize();
 		if (sz > 0) {
-			verifyReadTagIf(Type::TAG_OF(T()), true);
+			verifyReadTagIf(elemTag, true);
 			v.resize(sz);
 			for (int i = 0; i < sz; i++)
 				read(v[i], false);
