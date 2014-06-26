@@ -1,42 +1,28 @@
 package se.culvertsoft.mgen.jspack.generator
 
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import scala.collection.JavaConversions._
 
 object MkModuleHashRegistry {
 
-  def apply(m: Module)(implicit txtBuffer: SuperStringBuffer) : String = {
-    txtBuffer textln("Hash") textln(m.toString)
+  def apply(modules: Seq[Module])(implicit txtBuffer: SuperStringBuffer) {
+
+    val allTypes = modules.flatMap(_.types.values).distinct
+    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+
+    //topLevelTypes.get
+
+    txtBuffer {
+
+      scope("registry.lookup = function( typeId ) ") {
+        ln("t = a.match(/(.{1,3})/g); // Split typeId into array for easier reading of inheritance (every 3 char is a type).")
+        MkHashSwitch(topLevelTypes)
+
+      }
+    }
+
   }
 
 }
-
-
-//
-//transform: String => String,
-//nTabs: Int = 0,
-//defaultValue: String,
-//caseType: Seq[CustomType],
-//returner: CustomType => String,
-//depth: Int = 0)(implicit txtBuffer: SuperStringBuffer) {
-//
-//ln(nTabs, s"switch() {")
-//
-//for (t <- possibleTypes) {
-//
-//ln(nTabs + 1, s"case $t}:")
-//
-//if (t.subTypes().nonEmpty) {
-//apply(transform,  nTabs + 2, returner(t), t.subTypes(), returner, depth + 1);
-//} else {
-//ln(nTabs + 2, returner(t))
-//}
-//if (addBreak)
-//ln(nTabs + 2, "break;")
-//}
-//
-//ln(nTabs + 1, "default:")
-//ln(nTabs + 2, defaultValue)
-//if (addBreak)
-//ln(nTabs + 2, "break;")
-//ln(nTabs, "}")
