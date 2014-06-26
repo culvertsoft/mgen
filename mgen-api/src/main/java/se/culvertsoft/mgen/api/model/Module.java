@@ -1,10 +1,6 @@
 package se.culvertsoft.mgen.api.model;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-
-import se.culvertsoft.mgen.api.model.impl.ModuleImpl;
 
 /**
  * A module represents a set of types, similar to a java package or c++
@@ -55,25 +51,5 @@ public interface Module {
 	 * @return The types defined within this module.
 	 */
 	public Map<String, CustomType> types();
-
-	/**
-	 * Utility method for getting all known types (known from this module) with
-	 * the provided unqualified (type name without module path). This includes
-	 * both types that may be defined within this module but also in its
-	 * dependencies.
-	 * 
-	 * @param typeName
-	 *            The unqualified (excl. module path) type name of the type to
-	 *            look for
-	 * @return All known types with unqualified type name=typeName
-	 */
-	public List<Type> getAllKnownTypesWithName(final String typeName);
-
-	/**
-	 * Helper singleton for some analysis steps and generators. Usually not
-	 * needed for generation. You'll know if you need it :).
-	 */
-	public static Module INSTANCE = new ModuleImpl("", "", "",
-			new HashMap<String, String>());
 
 }
