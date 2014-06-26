@@ -1,6 +1,5 @@
 package se.culvertsoft.mgen.api.model.impl;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -8,7 +7,6 @@ import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Module;
-import se.culvertsoft.mgen.api.model.Type;
 
 public class ModuleImpl implements Module {
 
@@ -18,11 +16,8 @@ public class ModuleImpl implements Module {
 	private final Map<String, String> m_settings;
 	private LinkedHashMap<String, CustomTypeImpl> m_types;
 
-	public ModuleImpl(
-			final String path, 
-			final String filePath,
-			final String absoluteFilePath, 
-			final Map<String, String> settings) {
+	public ModuleImpl(final String path, final String filePath,
+			final String absoluteFilePath, final Map<String, String> settings) {
 		m_path = path;
 		m_filePath = filePath;
 		m_absoluteFilePath = absoluteFilePath;
@@ -64,15 +59,6 @@ public class ModuleImpl implements Module {
 
 	public void addType(final CustomTypeImpl type) {
 		m_types.put(type.name(), type);
-	}
-
-	@Override
-	public List<Type> getAllKnownTypesWithName(String typeName) {
-		final ArrayList<Type> out = new ArrayList<Type>();
-		final Type thisModuleType = m_types.get(typeName);
-		if (thisModuleType != null)
-			out.add(thisModuleType);
-		return out;
 	}
 
 }

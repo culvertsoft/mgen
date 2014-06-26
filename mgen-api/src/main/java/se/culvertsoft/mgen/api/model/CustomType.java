@@ -1,10 +1,7 @@
 package se.culvertsoft.mgen.api.model;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
-import se.culvertsoft.mgen.api.model.impl.CustomTypeImpl;
 
 public interface CustomType extends Type {
 
@@ -33,8 +30,5 @@ public interface CustomType extends Type {
 	public Set<CustomType> getAllReferencedExtTypesInclSuper();
 
 	public Set<CustomType> getDirectDependencies();
-
-	public static CustomType INSTANCE = new CustomTypeImpl("<dummy>", Module.INSTANCE,
-			null, new ArrayList<Field>());
 
 }

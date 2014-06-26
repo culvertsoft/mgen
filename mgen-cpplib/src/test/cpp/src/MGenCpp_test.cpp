@@ -52,7 +52,7 @@ void testBinary(
     const double MB = double(sum) / 1024.0 / 1024.0;
     const double MB_per_sec = MB / dt;
     const int msgs_per_sec = int(double(n) / dt);
-    std::cout << "BINARY performance " << (sum / 1024) << " kB" << std::endl;
+    std::cout << "BINARY performance:" << std::endl;
     std::cout << "  MB/s: " << MB_per_sec << std::endl;
     std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
 
@@ -134,7 +134,7 @@ void testJSON(
     const double MB = double(sum) / 1024.0 / 1024.0;
     const double MB_per_sec = MB / dt;
     const int msgs_per_sec = int(double(n) / dt);
-    std::cout << "JSON performance " << (sum / 1024) << " kB" << std::endl;
+    std::cout << "JSON performance:" << std::endl;
     std::cout << "  MB/s: " << MB_per_sec << std::endl;
     std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
 

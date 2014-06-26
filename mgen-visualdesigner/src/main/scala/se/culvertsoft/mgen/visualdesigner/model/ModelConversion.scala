@@ -69,8 +69,7 @@ object ModelConversion {
   val ApiFloat32TypeInstance = se.culvertsoft.mgen.api.model.Float32Type.INSTANCE
   val ApiFloat64TypeInstance = se.culvertsoft.mgen.api.model.Float64Type.INSTANCE
   val ApiStringTypeInstance = se.culvertsoft.mgen.api.model.StringType.INSTANCE
-  val ApiCustomTypeInstance = se.culvertsoft.mgen.api.model.CustomType.INSTANCE
-
+  
   def vd2Api(model: VdModel): ApiProjectImpl = {
     Vd2Api(model)
   }

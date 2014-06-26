@@ -3,24 +3,19 @@ package se.culvertsoft.mgen.api.model;
 import java.util.List;
 import java.util.Map;
 
-import se.culvertsoft.mgen.api.model.impl.ProjectImpl;
 import se.culvertsoft.mgen.api.plugins.GeneratorDescriptor;
 
 /**
- * A project represents an MGen Project. That is: a set of modules (see Module),
- * each containing a set of custom defined types (see CustomType).
- * 
- * A project is defined in a single project file, either xml or json, but may
- * reference any number of other project files.
+ * A project represents a set of modules (see Module) parsed by the MGen
+ * Compiler through a Parser.
  * 
  * @author GiGurra
  */
 public interface Project {
 
 	/**
-	 * The given name of this project. The name must be unique as such that it
-	 * does not also exist among its dependencies. The name is used by the
-	 * default generators as the java class path for generated code.
+	 * The given name of this project. This name is the same as the project.xml
+	 * file excluding ".xml".
 	 * 
 	 * @return The name of this project.
 	 */
@@ -35,8 +30,8 @@ public interface Project {
 	public Map<String, String> settings();
 
 	/**
-	 * The file search path of this project's definition file, as written as 
-	 * command line argument for the compiler, or in a depender's project 
+	 * The file search path of this project's definition file, as written as
+	 * command line argument for the compiler, or in a depender's project
 	 * definition file.
 	 */
 	public String filePath();
@@ -61,25 +56,15 @@ public interface Project {
 	public List<Project> dependencies();
 
 	/**
-	 * Returns the generators that were specified for this project. If this is a
-	 * dependency, then the depending projects may add additional generators
-	 * than those originally specified for this dependency/leaf.
+	 * Returns the generators that were specified for this project.
 	 * 
 	 * @return The generators for this project.
 	 */
 	public List<GeneratorDescriptor> generators();
 
 	/**
-	 * Returns if this project is the root project.
-	 * 
-	 * @return If this project is the root project.
+	 * @return If this project is the root project (= not a dependency).
 	 */
 	public boolean isRoot();
-
-	/**
-	 * Helper singleton for some analysis steps and generators. Usually not
-	 * needed for generation. You'll know if you need it :).
-	 */
-	public static Project INSTANCE = new ProjectImpl("", "", "", true);
 
 }

@@ -45,6 +45,7 @@ public:
     virtual const std::vector<long long>& _typeIds() const = 0;
     virtual const std::vector<short>& _typeIds16Bit() const = 0;
     virtual const std::vector<std::string>& _typeIds16BitBase64() const = 0;
+    virtual const std::string& _typeIds16BitBase64String() const = 0;
     virtual const std::vector<std::string>& _typeNames() const = 0;
 
     /************************************************************************

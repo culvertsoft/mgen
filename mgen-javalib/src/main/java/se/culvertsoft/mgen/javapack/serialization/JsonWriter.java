@@ -135,10 +135,9 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
-	public void beginWrite(final MGenBase parent, final int nFieldsSet,
+	public void beginWrite(final MGenBase o, final int nFieldsSet,
 			final int nFieldsTotal) throws IOException {
-		write("{\"__t\":");
-		writeArray(parent._typeIds16BitBase64());
+		write("{\"__t\":" + quote(o._typeIds16BitBase64String()));
 	}
 
 	@Override
@@ -364,7 +363,11 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private String quoteEscape(final String text) {
-		return text != null ? '"' + JSONValue.escape(text) + '"' : "null";
+		return text != null ? quote(JSONValue.escape(text)) : "null";
+	}
+	
+	private String quote(final String in) {
+		return '"' + in + '"';
 	}
 
 }
