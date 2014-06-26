@@ -54,16 +54,13 @@ public:
 
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
-        static const std::vector<std::string>& types = MGenType::_type_ids_16bit_base64();
+        static const std::string& idsString = MGenType::_type_ids_16bit_base64_string();
 
     	missingfields::ensureNoMissingFields(object);
 
         m_rapidJsonWriter.StartObject();
         m_rapidJsonWriter.String("__t");
-        m_rapidJsonWriter.StartArray();
-        for (std::size_t i = 0; i < types.size(); i++)
-            m_rapidJsonWriter.String(types[i].c_str());
-        m_rapidJsonWriter.EndArray();
+        m_rapidJsonWriter.String(idsString.c_str());
 
     }
 

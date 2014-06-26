@@ -46,6 +46,11 @@ object MkTypeIdMethods {
     txtBuffer.tabs(1).textln("}").endl()
 
     txtBuffer.tabs(1).textln("@Override")
+    txtBuffer.tabs(1).textln("public String _typeIds16BitBase64String() {")
+    txtBuffer.tabs(2).textln(s"return _TYPE_IDS_16BIT_BASE64_STRING;")
+    txtBuffer.tabs(1).textln("}").endl()
+
+    txtBuffer.tabs(1).textln("@Override")
     txtBuffer.tabs(1).textln("public String[] _typeNames() {")
     txtBuffer.tabs(2).textln(s"return _TYPE_NAMES;")
     txtBuffer.tabs(1).textln("}").endl()

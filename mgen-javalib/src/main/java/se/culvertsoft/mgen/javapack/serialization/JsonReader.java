@@ -31,8 +31,7 @@ public class JsonReader extends BuiltInReader {
 
 	private final MGenJSONParser m_parser;
 
-	public JsonReader(
-			final InputStream stream,
+	public JsonReader(final InputStream stream,
 			final ClassRegistry classRegistry) {
 		super(stream instanceof DataInputStream ? (DataInputStream) stream
 				: new DataInputStream(stream), classRegistry);
@@ -118,11 +117,9 @@ public class JsonReader extends BuiltInReader {
 	}
 
 	@Override
-	public final MGenBase readMgenObjectField(
-			final Field field,
+	public final MGenBase readMgenObjectField(final Field field,
 			final Object context) throws IOException {
-		return readMGenObject(
-				getJsonObj(field, context),
+		return readMGenObject(getJsonObj(field, context),
 				(UnknownCustomType) field.typ());
 	}
 
@@ -131,39 +128,34 @@ public class JsonReader extends BuiltInReader {
 			throws IOException {
 	}
 
-	private MGenBase readMGenObject(
-			final JSONObject node,
+	private MGenBase readMGenObject(final JSONObject node,
 			final UnknownCustomType constraint) throws IOException {
 
-		// Wrote null
 		if (node == null || node.isEmpty())
 			return null;
 
-		final JSONArray typeNames = (JSONArray) node.get("__t");
-		throwMissingFieldIfNull(typeNames, "__t");
-
-		@SuppressWarnings("unchecked")
-		final String[] ids = ((ArrayList<String>) typeNames)
-				.toArray(new String[typeNames.size()]);
-
-		if (ids.length == 0)
-			return null;
-
-		final MGenBase object = instantiate(ids, constraint);
+		final MGenBase object = instantiate(readIds(node), constraint);
 
 		if (object != null) {
 			readObjectFields(object, node);
 			ensureNoMissingReqFields(object);
 			return object;
 		} else {
-			skipFields();
 			return null;
 		}
 
 	}
 
-	private void skipFields() {
+	private String[] readIds(final JSONObject node) {
 
+		final String typeIdsString = node.get("__t").toString();
+		throwMissingFieldIfNull(typeIdsString, "__t");
+
+		final String[] ids = new String[typeIdsString.length() / 3];
+		for (int i = 0; i < ids.length; i++)
+			ids[i] = typeIdsString.substring(i * 3, i * 3 + 3);
+
+		return ids;
 	}
 
 	private JSONObject getJsonObj(final Field field, final Object context) {
@@ -458,8 +450,7 @@ public class JsonReader extends BuiltInReader {
 		}
 	}
 
-	protected void throwMissingFieldIfNull(
-			final Object o,
+	protected void throwMissingFieldIfNull(final Object o,
 			final String fieldName) {
 		if (o == null) {
 			throw new MissingRequiredFieldsException(

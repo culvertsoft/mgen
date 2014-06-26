@@ -46,6 +46,8 @@ public abstract class MGenBase {
 
 	public abstract String[] _typeIds16BitBase64();
 
+	public abstract String _typeIds16BitBase64String();
+	
 	public abstract String _typeName();
 
 	public abstract String[] _typeNames();

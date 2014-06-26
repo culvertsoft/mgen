@@ -34,6 +34,8 @@ object MkTypeIdFields {
     ln(1, s"public static final String _TYPE_ID_16BIT_BASE64 = ${quote(t.typeId16BitBase64)};").endl()
     ln(1, s"public static final String[] _TYPE_IDS_16BIT_BASE64 = { ${allTypeIds16BitBase64.mkString(", ")} };").endl()
 
+    ln(1, s"public static final String _TYPE_IDS_16BIT_BASE64_STRING = ${allTypeIds16BitBase64.mkString(" + ")};").endl()
+
     ln(1, s"public static final String _TYPE_NAME = ${quote(t.fullName())};").endl()
     ln(1, s"public static final String[] _TYPE_NAMES = { ${allNames.mkString(", ")} };").endl()
 
