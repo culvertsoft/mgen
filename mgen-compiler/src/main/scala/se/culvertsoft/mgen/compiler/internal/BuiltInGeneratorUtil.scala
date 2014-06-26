@@ -19,6 +19,14 @@ object BuiltInGeneratorUtil {
     '"' + txt + '"'
   }
   
+  def txt(txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
+    txtBuffer.text(txt)
+  }
+  
+  def txt(nTabs: Int, txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
+    txtBuffer.tabs(nTabs).text(txt)
+  }
+  
   def ln(nTabs: Int, txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
     txtBuffer.tabs(nTabs).textln(txt)
   }

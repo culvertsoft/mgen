@@ -195,7 +195,7 @@ class CopyPasteController(controller: Controller) extends SubController(controll
                   controller.model.superTypeOf(e) match {
                     case Some(superType) =>
                       if (!superType.getSubTypes().contains(e))
-                        superType.getSubTypesMutable().add(e.getId())
+                        superType.getSubTypes().add(e.getId())
                     case _ =>
                   }
                 }

@@ -10,6 +10,7 @@ import se.culvertsoft.mgen.cpppack.generator.CppConstruction
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 
 object MkSetFieldsSet {
 
@@ -23,25 +24,31 @@ object MkSetFieldsSet {
     val allFields = t.getAllFieldsInclSuper()
 
     for (field <- fields) {
-      txtBuffer.tabs(0).textln(s"${t.shortName()}& ${t.shortName()}::${setFieldSet(field, "const bool state, const mgen::FieldSetDepth depth")} {")
+      ln(s"${t.shortName()}& ${t.shortName()}::${setFieldSet(field, "const bool state, const mgen::FieldSetDepth depth")} {")
+
       if (!field.typ().containsMgenCreatedType()) {
-        txtBuffer.tabs(1).textln(s"${isSetName(field)} = state;")
+        if (CppGenerator.canBeNull(field)) {
+          ln(1, s"m_${field.name()}.ensureIsSet(state);")
+        } else {
+          ln(1, "if (!state)")
+          ln(2, s"m_${field.name} = ${CppConstruction.defaultConstructNull(field)};")
+          ln(1, s"${isSetName(field)} = state;")
+        }
       } else {
-        txtBuffer.tabs(1).textln(s"${isSetName(field)} = state;")
-        txtBuffer.tabs(1).textln(s"if (depth == mgen::DEEP)")
-        txtBuffer.tabs(2).textln(s"mgen::validation::setFieldSetDeep(m_${field.name()});")
+        ln(1, s"if (depth == mgen::DEEP)")
+        ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
       }
-      txtBuffer.tabs(1).textln(s"return *this;")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
+      ln(1, s"return *this;")
+      ln(s"}")
+      endl()
     }
 
-    txtBuffer.tabs(0).textln(s"${t.shortName()}& ${t.shortName()}::_setAllFieldsSet(const bool state, const mgen::FieldSetDepth depth) { ")
+    ln(s"${t.shortName()}& ${t.shortName()}::_setAllFieldsSet(const bool state, const mgen::FieldSetDepth depth) { ")
     for (field <- allFields)
-      txtBuffer.tabs(2).textln(s"${setFieldSet(field, "state, depth")};")
-    txtBuffer.tabs(1).textln(s"return *this;")
-    txtBuffer.tabs(0).textln(s"}")
-    txtBuffer.endl()
+      ln(2, s"${setFieldSet(field, "state, depth")};")
+    ln(1, s"return *this;")
+    ln(s"}")
+    endl()
 
   }
 

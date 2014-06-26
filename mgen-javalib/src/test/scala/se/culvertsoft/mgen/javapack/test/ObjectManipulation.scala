@@ -100,14 +100,14 @@ class ObjectManipulation {
 
     assert(garage1 != garage2)
 
-    garage1.getVehiclesMutable()(0) = car1
+    garage1.getVehicles()(0) = car1
 
     garage2.setVehicles(new Array[Vehicle](1))
-    garage2.getVehiclesMutable()(0) = car1
+    garage2.getVehicles()(0) = car1
 
     assert(garage1 == garage2)
 
-    garage2.getVehiclesMutable()(0) = car2
+    garage2.getVehicles()(0) = car2
 
     assert(garage1 != garage2)
 

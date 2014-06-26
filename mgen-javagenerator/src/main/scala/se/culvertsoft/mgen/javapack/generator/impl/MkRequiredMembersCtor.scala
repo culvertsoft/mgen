@@ -2,12 +2,12 @@ package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
-
 import Alias.isSetName
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.fieldTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 
 object MkRequiredMembersCtor {
 
@@ -47,10 +47,14 @@ object MkRequiredMembersCtor {
       val ownFields = reqFields -- fieldsToSuper
       for (field <- ownFields)
         txtBuffer.tabs(2).textln(s"m_${field.name()} = ${field.name()};")
-      for (field <- ownFields)
-        txtBuffer.tabs(2).textln(s"${isSetName(field)} = true;")
-      for (field <- (t.fields() -- ownFields))
-        txtBuffer.tabs(2).textln(s"${isSetName(field)} = false;")
+      for (field <- ownFields) {
+        if (!JavaGenerator.canBeNull(field))
+          txtBuffer.tabs(2).textln(s"${isSetName(field)} = true;")
+      }
+      for (field <- (t.fields() -- ownFields)) {
+        if (!JavaGenerator.canBeNull(field))
+          txtBuffer.tabs(2).textln(s"${isSetName(field)} = false;")
+      }
       txtBuffer.tabs(1).textln("}").endl()
     }
   }

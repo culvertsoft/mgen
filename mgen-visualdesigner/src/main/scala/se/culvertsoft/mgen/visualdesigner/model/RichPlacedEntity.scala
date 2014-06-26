@@ -13,8 +13,8 @@ object RichPlacedEntity {
       def bottom(): Int = y + height
       def left(): Int = x
       def right(): Int = x + width
-      def setPos(x: Int, y: Int) { base.getPlacementMutable().setX(x).setY(y) }
-      def setSize(w: Int, h: Int) { base.getPlacementMutable().setWidth(w).setHeight(h) }
+      def setPos(x: Int, y: Int) { base.getPlacement().setX(x).setY(y) }
+      def setSize(w: Int, h: Int) { base.getPlacement().setWidth(w).setHeight(h) }
       def setPos(x: Double, y: Double) { setPos(x.toInt, y.toInt) }
       def setSize(w: Double, h: Double) { setSize(w.toInt, h.toInt) }
       def midX() = (left + right) / 2

@@ -111,11 +111,11 @@ class RichProject(base: Project) extends RichEntity(base) {
     }
   }
 
-  override def add(e: Project) { base.getDependenciesMutable().add(e) }
-  override def add(e: Module) { base.getModulesMutable().add(e) }
+  override def add(e: Project) { base.getDependencies().add(e) }
+  override def add(e: Module) { base.getModules().add(e) }
     
-  override def remove(e: Project) { base.getDependenciesMutable().remove(e) }
-  override def remove(e: Module) { base.getModulesMutable().remove(e) }
+  override def remove(e: Project) { base.getDependencies().remove(e) }
+  override def remove(e: Module) { base.getModules().remove(e) }
 
   override def moveChildUp(child: Entity) {
     child match {
@@ -167,10 +167,10 @@ class RichModule(base: Module) extends RichEntity(base) {
     }
   }
 
-  override def add(e: Module) { base.getSubmodulesMutable().add(e) }
-  override def add(e: CustomType) { base.getTypesMutable().add(e) }
-  override def remove(e: Module) { base.getSubmodulesMutable().remove(e) }
-  override def remove(e: CustomType) { base.getTypesMutable().remove(e) }
+  override def add(e: Module) { base.getSubmodules().add(e) }
+  override def add(e: CustomType) { base.getTypes().add(e) }
+  override def remove(e: Module) { base.getSubmodules().remove(e) }
+  override def remove(e: CustomType) { base.getTypes().remove(e) }
 
   override def moveChildUp(child: Entity) {
     child match {
@@ -224,11 +224,11 @@ class RichCustomType(base: CustomType) extends RichEntity(base) {
   }
 
   override def add(e: CustomTypeField) {
-    base.getFieldsMutable().add(e)
+    base.getFields().add(e)
   }
 
   override def remove(e: CustomTypeField) {
-    base.getFieldsMutable().remove(e)
+    base.getFields().remove(e)
   }
 
   override def canBeParentOf(e: Entity): Boolean = {
@@ -241,10 +241,10 @@ class RichCustomType(base: CustomType) extends RichEntity(base) {
   override def moveChildUp(child: Entity) {
     child match {
       case field: CustomTypeField =>
-        val iprev = base.getFieldsMutable().indexWhere(_ eq field)
+        val iprev = base.getFields().indexWhere(_ eq field)
         if (iprev >= 1) {
-          base.getFieldsMutable().remove(iprev)
-          base.getFieldsMutable().insert(iprev - 1, field)
+          base.getFields().remove(iprev)
+          base.getFields().insert(iprev - 1, field)
         }
     }
   }
@@ -252,10 +252,10 @@ class RichCustomType(base: CustomType) extends RichEntity(base) {
   override def moveChildDown(child: Entity) {
     child match {
       case field: CustomTypeField =>
-        val iprev = base.getFieldsMutable().indexWhere(_ eq field)
-        if (iprev < (base.getFieldsMutable().size() - 1)) {
-          base.getFieldsMutable().remove(iprev)
-          base.getFieldsMutable().insert(iprev + 1, field)
+        val iprev = base.getFields().indexWhere(_ eq field)
+        if (iprev < (base.getFields().size() - 1)) {
+          base.getFields().remove(iprev)
+          base.getFields().insert(iprev + 1, field)
         }
     }
   }

@@ -10,6 +10,7 @@ import se.culvertsoft.mgen.cpppack.generator.CppConstruction
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 
 object MkIsFieldSet {
 
@@ -34,10 +35,13 @@ object MkIsFieldSet {
     for (field <- t.fields()) {
       txtBuffer.tabs(0).textln(s"bool ${t.shortName()}::${isFieldSet(field, "const mgen::FieldSetDepth depth")} const {")
       if (field.typ().containsMgenCreatedType()) {
+        
+        val shallowCall = if (CppGenerator.canBeNull(field)) s"m_${field.name()}.get()" else isSetName(field)
+        
         txtBuffer.tabs(1).textln(s"if (depth == mgen::SHALLOW) {")
-        txtBuffer.tabs(2).textln(s"return ${isSetName(field)};")
+        txtBuffer.tabs(2).textln(s"return $shallowCall;")
         txtBuffer.tabs(1).textln(s"} else {")
-        txtBuffer.tabs(2).textln(s"return ${isSetName(field)} && mgen::validation::validateFieldDeep(${get(field)});")
+        txtBuffer.tabs(2).textln(s"return $shallowCall && mgen::validation::validateFieldDeep(${get(field)});")
         txtBuffer.tabs(1).textln(s"}")
       } else {
         txtBuffer.tabs(1).textln(s"return ${isSetName(field)};")

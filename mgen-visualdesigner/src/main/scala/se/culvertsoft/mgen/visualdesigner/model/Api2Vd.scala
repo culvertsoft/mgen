@@ -67,7 +67,7 @@ object Api2Vd {
 
         parent.foreach { parent =>
           vdProject.setParent(parent.getId())
-          parent.getDependenciesMutable().add(vdProject)
+          parent.getDependencies().add(vdProject)
         }
 
         // Set FilePath
@@ -129,7 +129,7 @@ object Api2Vd {
 
           val parent = lkUp.getOrElseUpdate(part0, EntityFactory.mkModule(part0, m.getSaveDir))
           m.setName(m.getName.substring(parent.getName.length + 1))
-          parent.getSubmodulesMutable().add(m)
+          parent.getSubmodules().add(m)
           m.setParent(parent.getId())
         }
       }
@@ -164,8 +164,8 @@ object Api2Vd {
 
         vdModule.setParent(parent.getId)
         parent match {
-          case p: VdProject => p.getModulesMutable().add(vdModule)
-          case m: VdModule => m.getSubmodulesMutable().add(vdModule)
+          case p: VdProject => p.getModules().add(vdModule)
+          case m: VdModule => m.getSubmodules().add(vdModule)
         }
         vdModule.setSaveDir(getSaveDir(apiModule))
         vdModule.setSettings(toJava(apiModule.settings()))
@@ -183,7 +183,7 @@ object Api2Vd {
       state.addUnlinked(cls)
     }
 
-    parent.getTypesMutable().add(cls)
+    parent.getTypes().add(cls)
     cls.setParent(parent.getId)
 
     cls.setFields(toJava(apiClass.fields().map(cvtField(_, cls, state))))
@@ -195,7 +195,7 @@ object Api2Vd {
     val fld = EntityFactory.mkField(apiField.name)
     fld.setFlags(toJava(apiField.flags()))
     fld.setParent(parent.getId)
-    parent.getFieldsMutable().add(fld)
+    parent.getFields().add(fld)
     fld.setType(cvtFieldType(apiField, state))
     fld
   }
@@ -244,7 +244,7 @@ object Api2Vd {
     for (c <- state.unlinkedClasses) {
       val id = c.getSuperType().asInstanceOf[UnlinkedId]
       val superType = state.getLinked(id.apiType)
-      superType.getSubTypesMutable().add(c.getId())
+      superType.getSubTypes().add(c.getId())
       c.setSuperType(superType.getId)
     }
 

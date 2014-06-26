@@ -14,6 +14,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkLongTypeName
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.ListOrArrayType
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 
 object MkHasers {
 
@@ -32,24 +33,9 @@ object MkHasers {
     val allFields = t.getAllFieldsInclSuper()
 
     for (field <- allFields) {
-
       val fcnCall = s"unset${upFirst(field.name)}"
-
-      val isSuperField = !t.fields.contains(field)
-
-      ln(s"${t.shortName}& ${t.shortName()}::$fcnCall() {")
-      if (isSuperField) {
-        ln(1, s"${MkLongTypeName.cpp(t.superType.asInstanceOf[CustomType])}::$fcnCall();")
-      } else {
-        field.typ() match {
-          case t: CustomType if (field.isPolymorphic()) => ln(1, s"m_${field.name}.set(0);")
-          case t: MapType => ln(1, s"m_${field.name}.clear();")
-          case t: ListOrArrayType => ln(1, s"m_${field.name}.clear();")
-          case _ =>
-        }
-        ln(1, s"${Alias.isSetName(field)} = false;")
-      }
-
+      ln(s"${t.shortName}& ${t.shortName}::$fcnCall() {")
+      ln(1, s"_set${upFirst(field.name)}Set(false, mgen::SHALLOW);")
       ln(1, s"return *this;")
       ln("}").endl()
     }

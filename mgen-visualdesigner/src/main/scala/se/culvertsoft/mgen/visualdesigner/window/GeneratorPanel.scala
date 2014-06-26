@@ -20,7 +20,7 @@ abstract class GeneratorPanel(generator: Generator) extends JPanel() {
   val classRegistryPath = createTextFieldWithLabel("Class Registry Path", generator.getClassRegistryPath, generator.setClassRegistryPath)
   val generatorPath = createTextFieldWithLabel("Generator Path", generator.getGeneratorJarFileFolder, generator.setGeneratorJarFileFolder, true)
   val outputFolder = createTextFieldWithLabel("Output Folder", generator.getOutputFolder, generator.setOutputFolder, true)
-  val settings = new SettingsPanel(generator.getSettingsMutable())
+  val settings = new SettingsPanel(generator.getSettings())
 
   val delButton = new JButton("Remove Generator")
   delButton.addActionListener(MkActionListener {

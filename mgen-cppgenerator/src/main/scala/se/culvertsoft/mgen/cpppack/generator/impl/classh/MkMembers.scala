@@ -1,12 +1,12 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classh
 
 import scala.collection.JavaConversions.asScalaBuffer
-
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 
 object MkMembers {
 
@@ -22,7 +22,8 @@ object MkMembers {
         .textln(s"${getTypeName(field)} m_${field.name()};")
 
     for (field <- t.fields())
-      txtBuffer.tabs(1).textln(s"bool ${isSetName(field)};")
+      if (!CppGenerator.canBeNull(field))
+        txtBuffer.tabs(1).textln(s"bool ${isSetName(field)};")
 
     if (t.fields().nonEmpty)
       txtBuffer.endl()

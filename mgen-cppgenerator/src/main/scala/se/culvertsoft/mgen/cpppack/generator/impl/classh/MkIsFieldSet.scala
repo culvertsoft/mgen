@@ -15,8 +15,9 @@ object MkIsFieldSet {
 
     implicit val currentModule = module
 
-    for (field <- t.fields())
+    for (field <- t.fields()) {
       txtBuffer.tabs(1).textln(s"bool ${isFieldSet(field, "const mgen::FieldSetDepth depth")} const;")
+    }
 
     if (t.fields().nonEmpty)
       txtBuffer.endl()

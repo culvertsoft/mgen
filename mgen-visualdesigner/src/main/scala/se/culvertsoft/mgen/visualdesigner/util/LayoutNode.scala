@@ -89,7 +89,7 @@ class ClassLayoutNode(
 
   def placeAt(xCtr: Double, yCtr: Double) {
 
-    clas.getPlacementMutable()
+    clas.getPlacement()
       .setX((xCtr - clas.getPlacement().getWidth() / 2).toInt)
       .setY(yCtr.toInt)
 

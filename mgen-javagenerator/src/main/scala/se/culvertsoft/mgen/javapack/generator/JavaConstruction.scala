@@ -1,13 +1,13 @@
 package se.culvertsoft.mgen.javapack.generator
 
 import scala.collection.mutable.HashMap
-
 import JavaTypeNames.getTypeName
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
+import se.culvertsoft.mgen.api.model.Field
 
 object JavaConstruction {
 
@@ -40,6 +40,11 @@ object JavaConstruction {
 
   }
 
+  def defaultConstruct(
+    field: Field)(implicit currentModule: Module): String = {
+    defaultConstruct(field.typ())
+  }
+
   def defaultConstructNull(
     typ: Type,
     isGenericArg: Boolean = false)(implicit currentModule: Module): String = {
@@ -64,4 +69,10 @@ object JavaConstruction {
 
   }
 
+  def defaultConstructNull(
+    field: Field)(implicit currentModule: Module): String = {
+    defaultConstructNull(field.typ())
+  }
+
+  
 }

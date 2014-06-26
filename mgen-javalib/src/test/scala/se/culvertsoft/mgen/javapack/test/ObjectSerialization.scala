@@ -88,8 +88,7 @@ class ObjectSerialization {
 
       for (o <- all) {
         val back = reader.readMGenObject()
-        if (writer == state.jsonWriter)
-          assert(o == back)
+        assert(o == back)
       }
 
       state.stream.reset()
