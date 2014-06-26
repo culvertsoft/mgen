@@ -26,18 +26,19 @@ object MkSetFieldsSet {
     for (field <- fields) {
       ln(s"${t.shortName()}& ${t.shortName()}::${setFieldSet(field, "const bool state, const mgen::FieldSetDepth depth")} {")
 
-      if (!field.typ().containsMgenCreatedType()) {
-        if (CppGenerator.canBeNull(field)) {
-          ln(1, s"m_${field.name()}.ensureIsSet(state);")
-        } else {
-          ln(1, "if (!state)")
-          ln(2, s"m_${field.name} = ${CppConstruction.defaultConstructNull(field)};")
-          ln(1, s"${isSetName(field)} = state;")
-        }
+      if (CppGenerator.canBeNull(field)) {
+        ln(1, s"m_${field.name()}.ensureIsSet(state);")
       } else {
+        ln(1, "if (!state)")
+        ln(2, s"m_${field.name} = ${CppConstruction.defaultConstructNull(field)};")
+        ln(1, s"${isSetName(field)} = state;")
+      }
+
+      if (field.typ().containsMgenCreatedType()) {
         ln(1, s"if (depth == mgen::DEEP)")
         ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
       }
+
       ln(1, s"return *this;")
       ln(s"}")
       endl()
