@@ -18,15 +18,26 @@ object BuiltInGeneratorUtil {
   def quote(txt: String): String = {
     '"' + txt + '"'
   }
-  
+
+  def ln()(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
+    txtBuffer.textln()
+  }
+
   def ln(nTabs: Int, txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
-    txtBuffer.tabs(nTabs).textln(txt)
+    txtBuffer.tabs(nTabs + txtBuffer.getTabLevel()).textln(txt)
   }
 
   def ln(txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
     ln(0, txt)
   }
-  
+
+  def scope(head: String)(body: => Any)(implicit txtBuffer: SuperStringBuffer) {
+    txtBuffer.tabs(txtBuffer.getTabLevel()).text(head).braceBegin().endl(){
+      body
+    }
+    txtBuffer.tabs(txtBuffer.getTabLevel()).braceEnd().endl()
+  }
+
   def endl()(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
     txtBuffer.endl()
   }
