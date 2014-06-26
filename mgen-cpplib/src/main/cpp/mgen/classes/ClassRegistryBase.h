@@ -42,16 +42,6 @@ public:
         return it != m_typeId16BitBase642TypeId16Bit.end() ? it->second : INVALID_16BIT_ID;
     }
 
-    // Generated subclass code
-    const ClassRegistryEntry * getByIds(const std::vector<short>& typeIds16bit) const {
-        return 0;
-    }
-
-    // Generated subclass code
-    const ClassRegistryEntry * getByIds(const std::vector<std::string>& typeIds16bitBase64) const {
-        return 0;
-    }
-
 private:
     std::map<long long, ClassRegistryEntry> m_typeId2Entry;
     std::map<std::string, ClassRegistryEntry> m_typeName2Entry;

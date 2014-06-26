@@ -42,14 +42,6 @@ public:
         return false;
     }
 
-    /**
-     * This is required for binary reading to work (skipping past nulls is different from skipping past unknowns)
-     */
-    static const ClassRegistryEntry * NULL_ENTRY() {
-        static ClassRegistryEntry entry;
-        return &entry;
-    }
-
 private:
     std::vector<long long> m_typeIds;
     std::string m_typeName;

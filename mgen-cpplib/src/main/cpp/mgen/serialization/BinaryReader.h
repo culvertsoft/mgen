@@ -127,9 +127,8 @@ private:
     void skipCustom() {
         const int nIds = readSize();
         if (nIds > 0) {
-            short t;
             for (int i = 0; i < nIds; i++)
-                read(t, false);
+                readRaw<short>();
             skipFields();
         }
     }
