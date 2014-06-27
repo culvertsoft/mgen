@@ -25,6 +25,7 @@ class ObjectSerialization {
     val jsonWriter = new JsonWriter(stream, classRegistry)
     val binaryWriter = new BinaryWriter(stream, classRegistry)
     val writers = Seq(jsonWriter, binaryWriter)
+    def reset() { stream.reset() }
   }
 
   def mkTestObjects()(implicit state: TestState) = {
@@ -54,8 +55,6 @@ class ObjectSerialization {
   def testCanWrite() {
     implicit val state = new TestState()
 
-    state.stream.reset()
-
     val (all, valid, invalid) = mkTestObjects()
 
     assert(valid.nonEmpty)
@@ -71,8 +70,6 @@ class ObjectSerialization {
   @Test
   def testCanRead() {
     implicit val state = new TestState()
-
-    state.stream.reset()
 
     val (all, valid, invalid) = mkTestObjects()
 
@@ -91,7 +88,7 @@ class ObjectSerialization {
         assert(o == back)
       }
 
-      state.stream.reset()
+      state.reset()
     }
 
   }
