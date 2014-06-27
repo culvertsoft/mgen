@@ -447,9 +447,10 @@ MGen currently provides code generators for the following languages:
  * C++
  * JavaScript
 
-These produce two things:
+These produce:
  * Classes (or class-like structures in JavaScript)
  * ClassRegistries (registry for all generated classes)
+ * Utility classes (such as dispatchers and handlers)
 
 By default generated classes are java-beans and C++ data containers with getters and setters or class-like structures in the case of JavaScript. Some of the functionality generated for classes is:
 * Flag members indicating whether a member has been set or not
@@ -465,16 +466,7 @@ By default generated classes are java-beans and C++ data containers with getters
 * Methods for testing equality (c++: == operator, java: equals(..))
 * Stringification and object Hash Code methods (Java Only)
 
-ClassRegistries are used to dynamically instantiate and identify data types over data streams during deserialization.
-In some cases they may also be used during serialization. Some language implementations rely on ClassRegistries more than others. One could argue that Java for example does not really need one (because of reflection), however for performance reasons and API uniformity, they are created for Java as well.
-
-You can of course modify, extend and/or replace these yourself.
-
-One feature that ClassRegistries provide in C++ is the ability to call template methods with dynamic dispatch. This means you for example can use the ClassRegistry to access a derived visitor method through a call on the base type with a templated argument, such as a custom serializer, and the method will be called with full type preservation on the most derived class. What this type preservation also means is that during (de)serialization, once the serializer has been dispatched to the visitor method of the object it should serialize (which isn't much more than a switch-table) there's not much need for virtual calls - which can substantially improve performance.
-
-MGen does not rely on Java reflection or C++ RTTI.
-
-We plan to add support for LUA and Python.
+ClassRegistries are primarily used to identify and instantiate data types over data streams during deserialization.
 
 
 #### The MGen Runtime libraries
@@ -497,12 +489,10 @@ The runtime libraries provide two default serializers:
  * The MGen Binary format Serializer
  * The MGen JSON format Serializer
 
-You can of course modify, extend and/or replace these yourself.
-
 
 #### The MGen Visual Designer
 
-If you prefer graphical tools instead of command line, we are also working on a visual data model editor.
+We are also working on a visual data model editor.
 
 
 ### Performance
