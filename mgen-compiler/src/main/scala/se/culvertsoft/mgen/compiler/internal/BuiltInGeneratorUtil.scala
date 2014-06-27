@@ -1,12 +1,9 @@
 package se.culvertsoft.mgen.compiler.internal
 
-import se.culvertsoft.mgen.api.plugins.Generator
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 object BuiltInGeneratorUtil {
-    
+
   def upFirst(txt: String): String = {
     if (txt.size == 1) {
       txt.toUpperCase()
@@ -18,36 +15,36 @@ object BuiltInGeneratorUtil {
   def quote(txt: String): String = {
     '"' + txt + '"'
   }
-  
-  def txt(txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
-    txtBuffer.text(txt)
-  }
-  
-  def txt(nTabs: Int, txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
-    txtBuffer.tabs(nTabs).text(txt)
-  }
-  
-  def ln()(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
-    txtBuffer.textln()
+
+  def txt(txt: String)(implicit b: SuperStringBuffer): SuperStringBuffer = {
+    b.text(txt)
   }
 
-  def ln(nTabs: Int, txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
-    txtBuffer.tabs(nTabs + txtBuffer.getTabLevel()).textln(txt)
+  def txt(nTabs: Int, txt: String)(implicit b: SuperStringBuffer): SuperStringBuffer = {
+    b.tabs(nTabs).text(txt)
   }
 
-  def ln(txt: String)(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
+  def ln()(implicit b: SuperStringBuffer): SuperStringBuffer = {
+    b.textln()
+  }
+
+  def ln(nTabs: Int, txt: String)(implicit b: SuperStringBuffer): SuperStringBuffer = {
+    b.tabs(nTabs + b.tabLevel).textln(txt)
+  }
+
+  def ln(txt: String)(implicit b: SuperStringBuffer): SuperStringBuffer = {
     ln(0, txt)
   }
 
-  def scope(head: String)(body: => Any)(implicit txtBuffer: SuperStringBuffer) {
-    txtBuffer.tabs(txtBuffer.getTabLevel()).text(head).braceBegin().endl(){
+  def scope(head: String)(body: => Any)(implicit b: SuperStringBuffer) {
+    b.tabs(b.tabLevel).text(head).text(b.scopeBegin).endl() {
       body
     }
-    txtBuffer.tabs(txtBuffer.getTabLevel()).braceEnd().endl()
+    b.tabs(b.tabLevel).text(b.scopeEnd).endl()
   }
 
-  def endl()(implicit txtBuffer: SuperStringBuffer): SuperStringBuffer = {
-    txtBuffer.endl()
+  def endl()(implicit b: SuperStringBuffer): SuperStringBuffer = {
+    b.endl()
   }
 
 }
