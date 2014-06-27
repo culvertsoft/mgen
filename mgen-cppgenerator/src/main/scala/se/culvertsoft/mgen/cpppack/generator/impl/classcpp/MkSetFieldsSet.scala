@@ -11,6 +11,9 @@ import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator
+import se.culvertsoft.mgen.api.model.MapType
+import se.culvertsoft.mgen.api.model.ListType
+import se.culvertsoft.mgen.api.model.ListOrArrayType
 
 object MkSetFieldsSet {
 
@@ -28,15 +31,37 @@ object MkSetFieldsSet {
 
       if (CppGenerator.canBeNull(field)) {
         ln(1, s"m_${field.name()}.ensureIsSet(state);")
-      } else {
-        ln(1, "if (!state)")
-        ln(2, s"m_${field.name} = ${CppConstruction.defaultConstructNull(field)};")
-        ln(1, s"${isSetName(field)} = state;")
-      }
-
-      if (field.typ().containsMgenCreatedType()) {
-        ln(1, s"if (depth == mgen::DEEP)")
+        ln(1, s"if (state && depth == mgen::DEEP)")
         ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
+      } else {
+
+        def setGeneric() {
+          ln(1, "if (!state)")
+          ln(2, s"m_${field.name}.clear();")
+          if (t.containsMgenCreatedType()) {
+            ln(1, s"else if (depth == mgen::DEEP)")
+            ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
+          }
+        }
+
+        def setCustom() {
+          ln(1, "if (depth == mgen::DEEP)")
+          ln(2, s"m_${field.name}._setAllFieldsSet(state, mgen::DEEP);")
+        }
+
+        def setByDefCtor() {
+          ln(1, "if (!state)")
+          ln(2, s"m_${field.name} = ${CppConstruction.defaultConstructNull(field)};")
+        }
+
+        field.typ() match {
+          case t: MapType => setGeneric()
+          case t: ListOrArrayType => setGeneric()
+          case t: CustomType => setCustom()
+          case _ => setByDefCtor()
+        }
+
+        ln(1, s"${isSetName(field)} = state;")
       }
 
       ln(1, s"return *this;")
