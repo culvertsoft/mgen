@@ -71,7 +71,7 @@ object MkSetFieldsSet {
 
     ln(s"${t.shortName()}& ${t.shortName()}::_setAllFieldsSet(const bool state, const mgen::FieldSetDepth depth) { ")
     for (field <- allFields)
-      ln(2, s"${setFieldSet(field, "state, depth")};")
+      ln(1, s"${setFieldSet(field, "state, depth")};")
     ln(1, s"return *this;")
     ln(s"}")
     endl()
