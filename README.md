@@ -381,20 +381,18 @@ See [Generating source code](#generating-source-code) for how to use it.
 
 ### Installing the Java runtime libraries
 
-The [java runtime libraries](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/) are compiled to a java jar file. This file depends on [the mgen API](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/) (also a jar file). Both can be downloaded from the [downloads section](#download-links).
+The [java runtime libraries](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/) are compiled to a java jar file. This file depends on [the mgen API](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/) (also a jar file). Both can be downloaded from the [downloads section](#download-links). You will also need [json-simple](https://code.google.com/p/json-simple/).
 
-Add both to your java projects class path and you should be good to go.
+Add the jar files to your build and you should be good to go.
 
-There are also source attachments available. 
-
-If you want to include the runtime libries by source instead or build them yourself, [just clone this repository and build it](#building-mgen).
+If you want to include the runtime libries by source instead or build them yourself, see [Building MGen](#building-mgen).
 
 
 ### Installing the C++ runtime libraries
 
-The C++ runtime libraries are 100% header only, so there is no installation required. Right now we're not packaging them, so the easiest way to try them out at this point is to clone this git repository and browse to the cpplib/src/main/ folder where you will find it. Just add this folder to your build's include paths.
+The C++ runtime libraries and dependencies are header-only libraries, so there is no installation required. All external dependencies are included (currently just [rapipdjson](https://code.google.com/p/rapidjson/)). Right now we're not packaging them, so the easiest way to try them out at this point is to clone this git repository and browse to the cpplib/src/main/ folder where you will find it. Just add this folder to your build's include paths.
 
-Another way of getting them is clicking the Download Zip button on the right side of this page, which will [download a copy of this repository](https://github.com/culvertsoft/mgen/archive/master.zip) - then look in the folder _mgen-cpplib/src/main/cpp/_.
+Another way is clicking the Download Zip button on the right side of this page, which will [download a copy of this repository](https://github.com/culvertsoft/mgen/archive/master.zip) - then look in the folder _mgen-cpplib/src/main/cpp/_.
 
 
 ### Installing the JavaScript runtime libraries
@@ -404,10 +402,10 @@ Another way of getting them is clicking the Download Zip button on the right sid
 
 ### Installing the Visual Designer
 
-The Visual Designer is just an executable java JAR file. Check the [downloads section](#download-links) to try out the latest version.
+The Visual Designer is an executable java JAR file. Check the [downloads section](#download-links) to try out the latest version.
 [Here](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-visualdesigner/mgen-visualdesigner-assembly-SNAPSHOT.jar) a direct link for convenience.
 
-Just place and rename the jar file where you like. It should be possible to launch by double clicking if you have a Java JRE correctly installed.
+Place and rename the jar file where you like. It should be possible to launch by double clicking if you have a Java JRE correctly installed.
 
 
 ## Under the Hood
