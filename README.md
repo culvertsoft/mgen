@@ -145,7 +145,7 @@ Here we run the compiler with two arguments, project and plugin_paths.
  - project: which project file to load (see the previous section to learn more about project files).
  - plugin_paths: where the compiler should search for java JAR files containing IDL parsers and code generators.
 
-Example: Here is how we generate [the data model for testing the MGen Compiler](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources):
+Example: Here is how we generate [one of the data models for testing MGen](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources):
 
     java -jar ../mgen-compiler/target/mgen-compiler-assembly-SNAPSHOT.jar -project="../mgen-compiler/src/test/resources/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
                                            
