@@ -2,7 +2,7 @@
 
 -- HEADS UP: This README is Work-In-Progress. It's about 35% finished! -- 
 
-MGen is a toolkit for designing multi langauge data models with built-in functionality such as serialization and type introspection. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code in multiple programming languages may be generated using the MGen Compiler. Using the generated code with the MGen Runtime Libraries also provide functionality such as deep copying, equality testing and type identification. 
+MGen is a toolkit for designing multi langauge data models with built-in functionality such as serialization and type introspection. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code in multiple programming languages may be generated using the MGen Compiler.
 
 The goal of MGen is to to simplify type-safe cross-language collaboration among software components and software teams, allowing changes to the data model without requiring all participants to adapt or rebuild their software.
 
