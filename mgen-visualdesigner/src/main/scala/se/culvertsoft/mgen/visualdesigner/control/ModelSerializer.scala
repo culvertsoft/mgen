@@ -26,7 +26,7 @@ class ModelSerializer {
    }
 
    def serializeAny(o: MGenBase): Array[Byte] = {
-      writer.writeMGenObject(o)
+      writer.writeObject(o)
       val bytes = bos.toByteArray()
       bos.reset()
       bytes

@@ -38,12 +38,9 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
-	public void writeMGenObject(final MGenBase o) throws IOException {
-		if (o == null) {
-			write("null");
-		} else {
-			o._accept(this);
-		}
+	public void writeObject(final MGenBase o) throws IOException {
+		writeMGenObject(o);
+		flush();
 	}
 
 	@Override
@@ -149,6 +146,14 @@ public class JsonWriter extends DynamicWriter {
 	 * @throws IOException
 	 * 
 	 ******************************************************************/
+
+	private void writeMGenObject(MGenBase o) throws IOException {
+		if (o == null) {
+			write("null");
+		} else {
+			o._accept(this);
+		}
+	}
 
 	@SuppressWarnings("unchecked")
 	private void writeObject(final Object o, final Type typ) throws IOException {

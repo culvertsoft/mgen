@@ -42,7 +42,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	@Override
-	public void writeMGenObject(final MGenBase o) throws IOException {
+	public void writeObject(final MGenBase o) throws IOException {
 		writeMGenObject(o, true, null);
 	}
 

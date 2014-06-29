@@ -37,7 +37,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 	}
 
-	public abstract void writeMGenObject(final MGenBase object)
+	public abstract void writeObject(final MGenBase object)
 			throws IOException;
 
 	public abstract void beginWrite(
@@ -174,11 +174,12 @@ public abstract class BuiltInWriter implements FieldVisitor {
 		finishWrite();
 	}
 
-	protected ByteBuffer encodeString(final String s) {
+	protected ByteBuffer encodeString(final CharSequence s) {
 		try {
 			return stringEncoder.encode(CharBuffer.wrap(s));
 		} catch (CharacterCodingException x) {
 			throw new Error(x); // Can't happen
 		}
 	}
+		
 }

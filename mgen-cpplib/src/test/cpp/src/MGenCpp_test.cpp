@@ -42,7 +42,7 @@ void testBinary(
         // write it
         buffer.clear();
         inNoClasses.reset();
-        writer.writeMgenObject(entity);
+        writer.writeObject(entity);
         readerNoClasses.readMgenObject();
         sum += (long long) buffer.size();
     }
@@ -92,8 +92,8 @@ void testJSON(
     mgen::JSONReader<mgen::VectorInputStream, gameworld::types::ClassRegistry> reader(in, registry);
     mgen::JSONReader<mgen::VectorInputStream, mgen::EmptyClassRegistry> readerNoClasses(inNoClasses, emptyRegistry);
 
-    writer.writeMgenObject(entity);
-    writer.writeMgenObject(entity);
+    writer.writeObject(entity);
+    writer.writeObject(entity);
 
     const std::string json(buffer.data(), buffer.size());
 
@@ -110,7 +110,7 @@ void testJSON(
     std::cout << "back2 == entity: " << (*back2 == entity) << std::endl;
     
     buffer.clear();
-    writer.writeMgenObject(*back2);
+    writer.writeObject(*back2);
     const std::string json2(buffer.data(), buffer.size());
         
     std::cout << "JSON2: " << std::endl;
@@ -124,7 +124,7 @@ void testJSON(
         // write it
         buffer.clear();
         inNoClasses.reset();
-        writer.writeMgenObject(entity);
+        writer.writeObject(entity);
         readerNoClasses.readMgenObject();
         sum += (long long) buffer.size();
     }

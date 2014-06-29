@@ -61,8 +61,8 @@ class ObjectSerialization {
     assert(invalid.nonEmpty)
 
     for (writer <- state.writers) {
-      valid.foreach(o => AssertNoThrow(writer.writeMGenObject(o)))
-      invalid.foreach(o => AssertThrows(writer.writeMGenObject(o)))
+      valid.foreach(o => AssertNoThrow(writer.writeObject(o)))
+      invalid.foreach(o => AssertThrows(writer.writeObject(o)))
     }
 
   }
@@ -78,7 +78,7 @@ class ObjectSerialization {
     for (writer <- state.writers) {
 
       for (o <- all) {
-        writer.writeMGenObject(o)
+        writer.writeObject(o)
       }
 
       val reader = getReader(writer)

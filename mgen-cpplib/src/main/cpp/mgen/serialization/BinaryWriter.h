@@ -24,7 +24,7 @@ public:
             m_outputStream(outputStream), m_classRegistry(classRegistry) {
     }
 
-    void writeMgenObject(const MGenBase& object) {
+    void writeObject(const MGenBase& object) {
         writePoly(object, true);
     }
 

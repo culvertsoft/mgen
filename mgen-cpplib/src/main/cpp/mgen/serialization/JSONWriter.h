@@ -40,7 +40,7 @@ public:
                     m_classRegistry(classRegistry) {
     }
 
-    void writeMgenObject(const MGenBase& object) {
+    void writeObject(const MGenBase& object) {
         writePoly(object);
     }
 
