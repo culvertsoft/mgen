@@ -330,9 +330,9 @@ Now we can read these objects back from the buffer in the following manner:
 
 ## Download links
 
-The following are links where you can download MGen pre-built. You will notice that the compiler and visual designer also have variants named _assembly_. These are the ones you want to download if you want to use them as standalone executable JAR files.
+The following are links where you can download MGen pre-built. You will notice that the compiler and visual designer also have variants named _assembly_.
 
- * JAR files intended to be used as standalone executables are marked _assembly_. They are packaged with all library dependencies included. 
+ * JAR files marked _assembly_ are standalone executables. They are packaged with all library dependencies included. 
  * JAR files intended as programming libraries are NOT marked _assembly_.
 
 ### Stable
