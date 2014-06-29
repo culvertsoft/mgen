@@ -228,7 +228,7 @@ public class BinaryWriter extends BuiltInWriter {
 		if (tag)
 			writeTypeTag(TAG_STRING);
 		if (s != null && !s.isEmpty()) {
-			final ByteBuffer bb = charset.encode(s);
+			final ByteBuffer bb = encodeString(s);
 			writeSize(bb.remaining());
 			m_stream.write(bb.array(), 0, bb.remaining());
 		} else {

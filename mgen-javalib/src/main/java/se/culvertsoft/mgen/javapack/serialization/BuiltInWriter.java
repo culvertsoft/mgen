@@ -4,7 +4,12 @@ import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.
 
 import java.io.DataOutput;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetEncoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -16,18 +21,26 @@ import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 public abstract class BuiltInWriter implements FieldVisitor {
 
 	static protected final Charset charset = Charset.forName("UTF8");
+	protected final CharsetEncoder stringEncoder;
 
 	protected final ClassRegistry m_classRegistry;
 	protected final DataOutput m_stream;
 
-	public BuiltInWriter(final DataOutput stream,
+	public BuiltInWriter(
+			final DataOutput stream,
 			final ClassRegistry classRegistry) {
 		m_classRegistry = classRegistry;
 		m_stream = stream;
+		stringEncoder = charset
+				.newEncoder()
+				.onMalformedInput(CodingErrorAction.REPLACE)
+				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 	}
 
-	public abstract void beginWrite(final MGenBase object,
-			final int nFieldsSet, final int nFieldsTotal) throws IOException;
+	public abstract void beginWrite(
+			final MGenBase object,
+			final int nFieldsSet,
+			final int nFieldsTotal) throws IOException;
 
 	public abstract void writeBooleanField(final boolean b, final Field field)
 			throws IOException;
@@ -53,16 +66,19 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	public abstract void writeStringField(final String s, final Field field)
 			throws IOException;
 
-	public abstract void writeListField(final ArrayList<Object> list,
+	public abstract void writeListField(
+			final ArrayList<Object> list,
 			final Field field) throws IOException;
 
-	public abstract void writeMapField(final HashMap<Object, Object> map,
+	public abstract void writeMapField(
+			final HashMap<Object, Object> map,
 			final Field field) throws IOException;
 
 	public abstract void writeArrayField(final Object array, final Field field)
 			throws IOException;
 
-	public abstract void writeMGenObjectField(final MGenBase o,
+	public abstract void writeMGenObjectField(
+			final MGenBase o,
 			final Field field) throws IOException;
 
 	public abstract void finishWrite() throws IOException;
@@ -142,7 +158,9 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	}
 
 	@Override
-	public void beginVisit(final MGenBase object, final int nFieldsSet,
+	public void beginVisit(
+			final MGenBase object,
+			final int nFieldsSet,
 			final int nFieldsTotal) throws IOException {
 		ensureNoMissingReqFields(object);
 		beginWrite(object, nFieldsSet, nFieldsTotal);
@@ -160,4 +178,11 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	public abstract void writeMGenObject(final MGenBase object)
 			throws IOException;
 
+	protected ByteBuffer encodeString(final String s) {
+		try {
+			return stringEncoder.encode(CharBuffer.wrap(s));
+		} catch (CharacterCodingException x) {
+			throw new Error(x); // Can't happen
+		}
+	}
 }

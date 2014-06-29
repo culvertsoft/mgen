@@ -44,7 +44,7 @@ public abstract class DynamicWriter extends BuiltInWriter {
 	}
 
 	protected void write(final String s) throws IOException {
-		final ByteBuffer bb = charset.encode(s);
+		final ByteBuffer bb = encodeString(s);
 		m_stream.write(bb.array(), 0, bb.remaining());
 	}
 
