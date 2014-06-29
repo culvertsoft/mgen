@@ -261,7 +261,6 @@ Let us then create some objects from the generated classes and set some properti
       Car car1, car2, car3;
       car1.setBrand("Ford");
       car2.setTopSpeed(123);
-      car3.getPositioningMutable().setPosition(VectorR3(3,2,1));
       
 Now let us try to serialize these cars to JSON. This is how we do it:
 
