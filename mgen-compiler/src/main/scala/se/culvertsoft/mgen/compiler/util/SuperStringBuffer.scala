@@ -9,7 +9,7 @@ class SuperStringBuffer(
   val scopeEnd: String = "}") {
 
   private var TAB_STRING = "    "
-  private val buffer = new StringBuffer
+  private val buffer = new StringBuilder
   private var _tabLevel = 0
 
   def tabLevel() = { _tabLevel }

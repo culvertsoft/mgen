@@ -21,7 +21,7 @@ object MkToString {
     txtBuffer.tabs(1).textln("public String toString() {")
 
     if (fields.nonEmpty) {
-      txtBuffer.tabs(2).textln("final java.lang.StringBuffer sb = new java.lang.StringBuffer();")
+      txtBuffer.tabs(2).textln("final java.lang.StringBuilder sb = new java.lang.StringBuilder();")
 
       txtBuffer.tabs(2).text("sb.append(\"").text(t.fullName()).textln(":\\n\");")
 

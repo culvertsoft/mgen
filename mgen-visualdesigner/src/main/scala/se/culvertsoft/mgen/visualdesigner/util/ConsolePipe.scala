@@ -20,7 +20,7 @@ class ConsolePipe(val target: ConsoleTarget) {
     val color: Color,
     val printStream: PrintStream) extends ByteArrayOutputStream {
     val EOL = System.getProperty("line.separator");
-    val buffer = new StringBuffer(80);
+    val buffer = new StringBuilder(80);
 
     override def flush() {
       val message = toString();

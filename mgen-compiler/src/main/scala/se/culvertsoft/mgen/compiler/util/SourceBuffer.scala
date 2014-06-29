@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.compiler.util
 
 private class InternBuffer {
-  private val buffer = new StringBuffer
+  private val buffer = new StringBuilder
   protected[util] def append(s: String): this.type = {
     buffer.append(s)
     this
