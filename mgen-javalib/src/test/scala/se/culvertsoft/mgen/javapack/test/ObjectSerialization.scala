@@ -84,7 +84,7 @@ class ObjectSerialization {
       val reader = getReader(writer)
 
       for (written <- all) {
-        val readBack = reader.readMGenObject()
+        val readBack = reader.readObject()
         assert(written == readBack)
       }
 

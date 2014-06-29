@@ -43,7 +43,7 @@ void testBinary(
         buffer.clear();
         inNoClasses.reset();
         writer.writeObject(entity);
-        readerNoClasses.readMgenObject();
+        readerNoClasses.readObject();
         sum += (long long) buffer.size();
     }
 
@@ -57,7 +57,7 @@ void testBinary(
     std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
 
     // Read it
-    TestType * entityBack = static_cast<TestType*>(reader.readMgenObject());
+    TestType * entityBack = static_cast<TestType*>(reader.readObject());
 
     std::cout << "object: " << entityBack << ", typeName: " << entityBack->_typeName() << std::endl;
 
@@ -100,8 +100,8 @@ void testJSON(
     std::cout << "JSON: " << std::endl;
     std::cout << json << std::endl;
 
-    const TestType * back1 = static_cast<TestType*>(reader.readMgenObject());
-    const TestType * back2 = static_cast<TestType*>(reader.readMgenObject());
+    const TestType * back1 = static_cast<TestType*>(reader.readObject());
+    const TestType * back2 = static_cast<TestType*>(reader.readObject());
 
     std::cout << "Read back ptr: " << back1 << std::endl;
     std::cout << "Read back ptr: " << back2 << std::endl;
@@ -125,7 +125,7 @@ void testJSON(
         buffer.clear();
         inNoClasses.reset();
         writer.writeObject(entity);
-        readerNoClasses.readMgenObject();
+        readerNoClasses.readObject();
         sum += (long long) buffer.size();
     }
 

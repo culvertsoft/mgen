@@ -28,7 +28,7 @@ public:
 
     }
 
-    MGenBase * readMgenObject() {
+    MGenBase * readObject() {
         return readMgenObject(true, false, -1);
     }
 

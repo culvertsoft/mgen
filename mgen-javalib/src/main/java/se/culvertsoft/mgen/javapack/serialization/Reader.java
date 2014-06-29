@@ -48,6 +48,6 @@ public interface Reader {
 	public void handleUnknownField(final Field field, final Object context)
 			throws IOException;
 
-	public MGenBase readMGenObject() throws IOException;
+	public MGenBase readObject() throws IOException;
 
 }

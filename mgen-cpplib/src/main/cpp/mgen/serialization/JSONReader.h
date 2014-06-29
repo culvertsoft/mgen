@@ -97,6 +97,20 @@ public:
 					classRegistry) {
 	}
 
+	MGenBase * readObject() {
+		const rapidjson::Document& doc = m_rapidJsonDocument.ParseStream<
+				rapidjson::kParseDefaultFlags>(m_jsonStream);
+		if (!doc.HasParseError()) {
+			const Node& node = doc;
+			return readMgenObject(node, false, -1);
+		} else {
+			throw StreamCorruptedException(
+					std::string(
+							"JSONReader::readMgenObject(): Could not parse json, reason: ").append(
+							doc.GetParseError()));
+		}
+	}
+
 	template<typename FieldType>
 	void readField(const Field& /*field*/, const Node& node, FieldType& v) {
 		read(v, node);
@@ -124,19 +138,6 @@ public:
 		missingfields::ensureNoMissingFields(object);
 	}
 
-	MGenBase * readMgenObject() {
-		const rapidjson::Document& doc = m_rapidJsonDocument.ParseStream<
-				rapidjson::kParseDefaultFlags>(m_jsonStream);
-		if (!doc.HasParseError()) {
-			const Node& node = doc;
-			return readMgenObject(node, false, -1);
-		} else {
-			throw StreamCorruptedException(
-					std::string(
-							"JSONReader::readMgenObject(): Could not parse json, reason: ").append(
-							doc.GetParseError()));
-		}
-	}
 
 private:
 

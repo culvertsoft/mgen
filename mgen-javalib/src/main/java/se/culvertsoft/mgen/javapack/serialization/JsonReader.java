@@ -39,7 +39,7 @@ public class JsonReader extends BuiltInReader {
 	}
 
 	@Override
-	public MGenBase readMGenObject() throws IOException {
+	public MGenBase readObject() throws IOException {
 		try {
 			final Object parsed = m_parser.parseNext();
 			return readMGenObject((JSONObject) parsed, null);

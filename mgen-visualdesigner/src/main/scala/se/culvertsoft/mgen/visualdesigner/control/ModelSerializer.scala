@@ -35,7 +35,7 @@ class ModelSerializer {
    def deSerializeAny(bytes: Array[Byte]): MGenBase = {
       val bis = new ByteArrayInputStream(bytes)
       val reader = new JsonReader(bis, classRegistry)
-      reader.readMGenObject()
+      reader.readObject()
    }
 
 }
