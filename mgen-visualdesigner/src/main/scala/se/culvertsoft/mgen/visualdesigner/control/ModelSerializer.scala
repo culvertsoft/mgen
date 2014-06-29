@@ -14,7 +14,7 @@ class ModelSerializer {
 
    private val bos = new ByteArrayOutputStream
    private val classRegistry = new ClassRegistry
-   private val writer = new JsonWriter(bos, classRegistry)
+   private val writer = new JsonWriter(bos, classRegistry, true)
 
    def serialize(model: Model): Array[Byte] = {
       serializeAny(model.project)
