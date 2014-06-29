@@ -37,10 +37,15 @@ public abstract class BuiltInWriter implements FieldVisitor {
 				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 	}
 
+	public abstract void writeMGenObject(final MGenBase object)
+			throws IOException;
+
 	public abstract void beginWrite(
 			final MGenBase object,
 			final int nFieldsSet,
 			final int nFieldsTotal) throws IOException;
+
+	public abstract void finishWrite() throws IOException;
 
 	public abstract void writeBooleanField(final boolean b, final Field field)
 			throws IOException;
@@ -80,8 +85,6 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	public abstract void writeMGenObjectField(
 			final MGenBase o,
 			final Field field) throws IOException;
-
-	public abstract void finishWrite() throws IOException;
 
 	@Override
 	public void visit(final byte o, final Field field, final boolean isSet)
@@ -170,13 +173,6 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	public void endVisit() throws IOException {
 		finishWrite();
 	}
-
-	protected ClassRegistry registry() {
-		return m_classRegistry;
-	}
-
-	public abstract void writeMGenObject(final MGenBase object)
-			throws IOException;
 
 	protected ByteBuffer encodeString(final String s) {
 		try {
