@@ -278,9 +278,9 @@ Now let us try to serialize these cars to JSON. This is how we do it:
       JSONWriter<VectorOutputStream, ClassRegistry> writer(out, classRegistry);
       
       // Write the objects
-      writer.writeMgenObject(car1);
-      writer.writeMgenObject(car2);
-      writer.writeMgenObject(car3);
+      writer.writeObject(car1);
+      writer.writeObject(car2);
+      writer.writeObject(car3);
       
 Now we can read these objects back from the buffer in the following manner:
 
