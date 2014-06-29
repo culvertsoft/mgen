@@ -486,6 +486,8 @@ The runtime libraries provide two default serializers:
  * The MGen Binary format Serializer
  * The MGen JSON format Serializer
 
+Generated classes are serializer agnostic and supply interfaces through which you can connect your own writers and readers.
+
 
 #### The MGen Visual Designer
 
