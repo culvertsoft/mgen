@@ -3,6 +3,7 @@ package se.culvertsoft.mgen.javapack.serialization;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 
@@ -42,8 +43,9 @@ public abstract class DynamicWriter extends BuiltInWriter {
 		write(String.valueOf(f));
 	}
 
-	protected void write(final String text) throws IOException {
-		m_stream.write(text.getBytes(charset));
+	protected void write(final String s) throws IOException {
+		final ByteBuffer bb = charset.encode(s);
+		m_stream.write(bb.array(), 0, bb.remaining());
 	}
 
 }

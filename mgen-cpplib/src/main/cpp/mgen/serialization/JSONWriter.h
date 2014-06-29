@@ -80,6 +80,15 @@ private:
     }
 
     template<typename T>
+    void write(const Polymorphic<T>& v) {
+        if (v.get()) {
+            writePoly(*v);
+        } else {
+            m_rapidJsonWriter.Null();
+        }
+    }
+
+    template<typename T>
     void write(const std::vector<T>& v) {
         m_rapidJsonWriter.StartArray();
         for (std::size_t i = 0; i < v.size(); i++)
@@ -95,15 +104,6 @@ private:
             write(it->second);
         }
         m_rapidJsonWriter.EndObject();
-    }
-
-    template<typename T>
-    void write(const Polymorphic<T>& v) {
-        if (v.get()) {
-            writePoly(*v);
-        } else {
-            m_rapidJsonWriter.Null();
-        }
     }
 
     void write(const bool v) { m_rapidJsonWriter.Bool(v); }

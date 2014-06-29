@@ -20,7 +20,8 @@ import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
 
 public class JsonWriter extends DynamicWriter {
 
-	public JsonWriter(final OutputStream outputStream,
+	public JsonWriter(
+			final OutputStream outputStream,
 			final ClassRegistry classRegistry) {
 		super(outputStream, classRegistry);
 	}
@@ -34,13 +35,25 @@ public class JsonWriter extends DynamicWriter {
 		}
 	}
 
-	private void writeName(final String name) throws IOException {
-		write('"' + name + "\":");
+	@Override
+	public void writeMGenObjectField(MGenBase o, Field field)
+			throws IOException {
+		write(",");
+		writeName(field.name());
+		writeMGenObject(o);
 	}
 
-	private void writePair(final String name, final String value)
-			throws IOException {
-		write('"' + name + "\":" + value);
+	@Override
+	public void beginWrite(
+			final MGenBase o,
+			final int nFieldsSet,
+			final int nFieldsTotal) throws IOException {
+		write("{\"__t\":" + quote(o._typeIds16BitBase64String()));
+	}
+
+	@Override
+	public void finishWrite() throws IOException {
+		write("}");
 	}
 
 	@Override
@@ -67,19 +80,15 @@ public class JsonWriter extends DynamicWriter {
 	@Override
 	public void writeInt32Field(final int i, final Field field)
 			throws IOException {
-
 		write(",");
 		writePair(field.name(), String.valueOf(i));
-
 	}
 
 	@Override
 	public void writeInt64Field(final long l, final Field field)
 			throws IOException {
-
 		write(",");
 		writePair(field.name(), String.valueOf(l));
-
 	}
 
 	@Override
@@ -112,8 +121,10 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
-	public void writeMapField(final HashMap<Object, Object> m, final Field field)
-			throws IOException {
+	public
+			void
+			writeMapField(final HashMap<Object, Object> m, final Field field)
+					throws IOException {
 		write(",");
 		writeName(field.name());
 		writeMap(m, (MapType) field.typ());
@@ -124,25 +135,6 @@ public class JsonWriter extends DynamicWriter {
 		write(",");
 		writeName(field.name());
 		writeArray(array, (ArrayType) field.typ());
-	}
-
-	@Override
-	public void writeMGenObjectField(MGenBase o, Field field)
-			throws IOException {
-		write(",");
-		writeName(field.name());
-		writeMGenObject(o);
-	}
-
-	@Override
-	public void beginWrite(final MGenBase o, final int nFieldsSet,
-			final int nFieldsTotal) throws IOException {
-		write("{\"__t\":" + quote(o._typeIds16BitBase64String()));
-	}
-
-	@Override
-	public void finishWrite() throws IOException {
-		write("}");
 	}
 
 	/*******************************************************************
@@ -365,9 +357,18 @@ public class JsonWriter extends DynamicWriter {
 	private String quoteEscape(final String text) {
 		return text != null ? quote(JSONValue.escape(text)) : "null";
 	}
-	
+
 	private String quote(final String in) {
 		return '"' + in + '"';
+	}
+
+	private void writeName(final String name) throws IOException {
+		write('"' + name + "\":");
+	}
+
+	private void writePair(final String name, final String value)
+			throws IOException {
+		write('"' + name + "\":" + value);
 	}
 
 }

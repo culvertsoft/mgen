@@ -15,7 +15,7 @@ import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 
 public abstract class BuiltInWriter implements FieldVisitor {
 
-	protected static final Charset charset = Charset.forName("UTF8");
+	static protected final Charset charset = Charset.forName("UTF8");
 
 	protected final ClassRegistry m_classRegistry;
 	protected final DataOutput m_stream;
