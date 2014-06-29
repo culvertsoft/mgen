@@ -293,9 +293,9 @@ Now we can read these objects back from the buffer in the following manner:
       // Read back the objects. 
       // Note that here the root objects read back are placed on the free store, 
       // so they eventually need to be manually deleted. 
-      MGenBase * obj1 = reader.readMgenObject();
-      MGenBase * obj2 = reader.readMgenObject();
-      MGenBase * obj3 = reader.readMgenObject();
+      MGenBase * obj1 = reader.readObject();
+      MGenBase * obj2 = reader.readObject();
+      MGenBase * obj3 = reader.readObject();
       
       std::vector<MGenBase*> objects;
       objects.push_back(obj1);
@@ -324,7 +324,7 @@ Now we can read these objects back from the buffer in the following manner:
       
       // Ideally we'd wrap it all in a try-catch block to avoid leaking any exceptions unless we want to
       // try {
-      //   reader->readMgenObject();
+      //   reader->readObject();
       // } catch (const mgen::Exception& exception) {
       // // do something. mgen::Exception extends std::runtime_error
       // }
