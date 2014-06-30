@@ -34,15 +34,41 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryWriter extends BuiltInWriter {
 
+	public static final boolean DEFAULT_COMPACT = false;
+	public static final int DEFAULT_MAX_DEPTH = 256;
+
+	private final boolean m_compact;
+	private final long[] m_expectType;
+	private int m_depth;
+
+	public BinaryWriter(
+			final OutputStream stream,
+			final ClassRegistry classRegistry,
+			final boolean compact,
+			final int maxDepth) {
+		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
+				: new DataOutputStream(stream), classRegistry);
+		m_compact = compact;
+		m_expectType = new long[maxDepth];
+		m_depth = 0;
+	}
+
+	public BinaryWriter(
+			final OutputStream stream,
+			final ClassRegistry classRegistry,
+			final boolean compact) {
+		this(stream, classRegistry, compact, DEFAULT_MAX_DEPTH);
+	}
+
 	public BinaryWriter(
 			final OutputStream stream,
 			final ClassRegistry classRegistry) {
-		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
-				: new DataOutputStream(stream), classRegistry);
+		this(stream, classRegistry, DEFAULT_COMPACT);
 	}
 
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
+		m_depth = 0;
 		writeMGenObject(o, true, null);
 	}
 
@@ -51,15 +77,25 @@ public class BinaryWriter extends BuiltInWriter {
 			final MGenBase object,
 			final int nFieldsSet,
 			final int nFieldsTotal) throws IOException {
-		final short[] typeIds = object._typeIds16Bit();
-		writeSize(typeIds.length);
-		for (final short typeId : typeIds)
-			writeInt16(typeId, false);
-		writeSize(nFieldsSet);
+
+		if (shouldOmitIds(object)) {
+			writeSize(nFieldsSet << 1);
+		} else {
+			final short[] typeIds = object._typeIds16Bit();
+			writeSize((typeIds.length << 1) | 0x01);
+			for (final short typeId : typeIds)
+				writeInt16(typeId, false);
+			writeSize(nFieldsSet);
+		}
+
+		m_depth++;
+		if (m_depth >= m_expectType.length)
+			throw new SerializationException("Max recursion depth reached");
 	}
 
 	@Override
 	public void finishWrite() {
+		m_depth--;
 	}
 
 	@Override
@@ -163,6 +199,7 @@ public class BinaryWriter extends BuiltInWriter {
 			writeTypeTag(TAG_CUSTOM);
 
 		if (o != null) {
+			m_expectType[m_depth] = typ != null ? typ.typeId() : 0;
 			o._accept(this);
 		} else {
 			m_stream.writeByte(0);
@@ -561,6 +598,10 @@ public class BinaryWriter extends BuiltInWriter {
 			throw new SerializationException("Unknown type tag for writeObject");
 		}
 
+	}
+
+	private boolean shouldOmitIds(final MGenBase o) {
+		return m_compact && m_depth > 0 && o._typeId() == m_expectType[m_depth];
 	}
 
 	private void writeTypeTag(byte tag) throws IOException {

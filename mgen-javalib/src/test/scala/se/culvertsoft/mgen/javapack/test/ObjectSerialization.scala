@@ -25,13 +25,15 @@ class ObjectSerialization {
     val jsonPrettyWriter = new JsonPrettyWriter(stream, classRegistry)
     val jsonPrettyWriterCompact = new JsonPrettyWriter(stream, classRegistry, true)
     val binaryWriter = new BinaryWriter(stream, classRegistry)
+    val binaryWriterCompact = new BinaryWriter(stream, classRegistry, true)
 
     val writers = Seq(
       jsonWriter,
       jsonWriterCompact,
       jsonPrettyWriter,
       jsonPrettyWriterCompact,
-      binaryWriter)
+      binaryWriter,
+      binaryWriterCompact)
 
     def reset() { stream.reset() }
   }
@@ -69,7 +71,7 @@ class ObjectSerialization {
     assert(invalid.nonEmpty)
 
     for (writer <- state.writers) {
-      valid.foreach(o => AssertNoThrow(writer.writeObject(o)))
+      valid.foreach(o => /*AssertNoThrow*/(writer.writeObject(o)))
       invalid.foreach(o => AssertThrows(writer.writeObject(o)))
     }
 

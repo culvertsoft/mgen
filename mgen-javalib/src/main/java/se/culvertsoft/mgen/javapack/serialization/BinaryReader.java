@@ -31,6 +31,7 @@ import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.UnknownCustomType;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
+import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
@@ -193,9 +194,8 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private void readFields(final MGenBase object) throws IOException {
-
-		final int nFields = readSize();
+	private void readFields(final MGenBase object, final int nFields)
+			throws IOException {
 
 		for (int i = 0; i < nFields; i++)
 			object._readField(readFieldId(), null, this);
@@ -203,10 +203,7 @@ public class BinaryReader extends BuiltInReader {
 		ensureNoMissingReqFields(object);
 	}
 
-	private void skipFields() throws IOException {
-
-		final int nFields = readSize();
-
+	private void skipFields(final int nFields) throws IOException {
 		for (int i = 0; i < nFields; i++) {
 			readFieldId();
 			skip(readTypeTag());
@@ -215,33 +212,45 @@ public class BinaryReader extends BuiltInReader {
 
 	private MGenBase readMGenObject(
 			final boolean readTypeTag,
-			final UnknownCustomType constraint) throws IOException {
+			final UnknownCustomType expectType) throws IOException {
 
 		if (readTypeTag)
 			ensureTypeTag(null, TAG_CUSTOM, readTypeTag());
 
-		final short[] ids = readTypeIds();
+		final int nIdsOrFields = readSize();
 
-		if (ids.length == 0)
+		if (nIdsOrFields == 0)
 			return null;
 
-		final MGenBase object = instantiate(ids, constraint);
+		final short[] ids;
+		final int nFields;
+
+		if ((nIdsOrFields & 0x01) != 0) {
+			ids = readTypeIds(nIdsOrFields >> 1);
+			nFields = readSize();
+		} else { // type ids omitted
+			ids = null;
+			nFields = nIdsOrFields >> 1;
+		}
+
+		if (ids == null && expectType == null) {
+			throw new MissingRequiredFieldsException("Missing type information");
+		}
+
+		final MGenBase object = instantiate(ids, expectType);
 
 		if (object != null) {
-			readFields(object);
+			readFields(object, nFields);
 			ensureNoMissingReqFields(object);
 			return object;
 		} else {
-			skipFields();
+			skipFields(nFields);
 			return null;
 		}
 
 	}
 
-	private short[] readTypeIds() throws IOException {
-
-		final int nTypeIds = readSize();
-
+	private short[] readTypeIds(final int nTypeIds) throws IOException {
 		if (nTypeIds > 0) {
 			final short[] typeIds = new short[nTypeIds];
 			for (int i = 0; i < typeIds.length; i++)
@@ -251,7 +260,6 @@ public class BinaryReader extends BuiltInReader {
 		} else {
 			return NO_IDS;
 		}
-
 	}
 
 	private byte readTypeTag() throws IOException {

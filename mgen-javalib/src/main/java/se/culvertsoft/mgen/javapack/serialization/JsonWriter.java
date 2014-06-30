@@ -159,12 +159,6 @@ public class JsonWriter extends DynamicWriter {
 	 * 
 	 ******************************************************************/
 
-	protected boolean needWriteTypeId(final MGenBase o, final Type expectType) {
-		if (expectType == null || !m_compact)
-			return true;
-		return o._typeId() != expectType.typeId();
-	}
-
 	protected void writeName(final String name) throws IOException {
 		write('"' + name + "\":");
 	}
@@ -426,6 +420,12 @@ public class JsonWriter extends DynamicWriter {
 		if (m_depth >= m_iEntry.length)
 			throw new SerializationException("Max recursion depth reached");
 		m_iEntry[m_depth] = 0;
+	}
+
+	private boolean needWriteTypeId(final MGenBase o, final Type expectType) {
+		if (expectType == null || !m_compact)
+			return true;
+		return o._typeId() != expectType.typeId();
 	}
 
 	private void beginWritePair(final String name) throws IOException {
