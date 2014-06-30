@@ -49,8 +49,7 @@ public class JsonWriter extends DynamicWriter {
 	@Override
 	public void writeMGenObjectField(MGenBase o, Field field)
 			throws IOException {
-		newEntry();
-		writeName(field.name());
+		beginWritePair(field.name());
 		writeMGenObject(o);
 	}
 
@@ -118,33 +117,30 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
-	public void writeStringField(final String s, final Field field)
+	public void writeStringField(final String s, final Field f)
 			throws IOException {
-		beginWritePair(field.name());
+		beginWritePair(f.name());
 		write(quoteEscape(s));
 	}
 
 	@Override
-	public void writeListField(final ArrayList<Object> list, final Field field)
+	public void writeListField(final ArrayList<Object> list, final Field f)
 			throws IOException {
-		newEntry();
-		writeName(field.name());
-		writeList(list, (ListType) field.typ());
+		beginWritePair(f.name());
+		writeList(list, (ListType) f.typ());
 	}
 
 	@Override
 	public void writeMapField(final HashMap<Object, Object> m, final Field f)
 			throws IOException {
-		newEntry();
-		writeName(f.name());
+		beginWritePair(f.name());
 		writeMap(m, (MapType) f.typ());
 	}
 
 	@Override
-	public void writeArrayField(Object array, Field field) throws IOException {
-		newEntry();
-		writeName(field.name());
-		writeArray(array, (ArrayType) field.typ());
+	public void writeArrayField(Object array, Field f) throws IOException {
+		beginWritePair(f.name());
+		writeArray(array, (ArrayType) f.typ());
 	}
 
 	/*******************************************************************
@@ -253,8 +249,7 @@ public class JsonWriter extends DynamicWriter {
 		} else {
 			beginBlock("{");
 			for (final Object key : m.keySet()) {
-				newEntry();
-				writeName(String.valueOf(key));
+				beginWritePair(String.valueOf(key));
 				writeObject(m.get(key), typ.valueType());
 			}
 			endBlock("}", !m.isEmpty());
