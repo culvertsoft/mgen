@@ -64,7 +64,8 @@ object ToolbarsInit {
     toolbar.addSeparator()
     toolbar.addSeparator()
 
-    toolbar.add(Actions.DashBoard.Top.GENERATE)
+    // To me implemented later
+    // toolbar.add(Actions.DashBoard.Top.GENERATE)
 
     toolbar
 

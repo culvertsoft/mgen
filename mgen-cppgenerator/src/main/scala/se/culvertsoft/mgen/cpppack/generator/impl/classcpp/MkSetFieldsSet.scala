@@ -10,6 +10,10 @@ import se.culvertsoft.mgen.cpppack.generator.CppConstruction
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator
+import se.culvertsoft.mgen.api.model.MapType
+import se.culvertsoft.mgen.api.model.ListType
+import se.culvertsoft.mgen.api.model.ListOrArrayType
 
 object MkSetFieldsSet {
 
@@ -23,25 +27,54 @@ object MkSetFieldsSet {
     val allFields = t.getAllFieldsInclSuper()
 
     for (field <- fields) {
-      txtBuffer.tabs(0).textln(s"${t.shortName()}& ${t.shortName()}::${setFieldSet(field, "const bool state, const mgen::FieldSetDepth depth")} {")
-      if (!field.typ().containsMgenCreatedType()) {
-        txtBuffer.tabs(1).textln(s"${isSetName(field)} = state;")
+      ln(s"${t.shortName()}& ${t.shortName()}::${setFieldSet(field, "const bool state, const mgen::FieldSetDepth depth")} {")
+
+      if (CppGenerator.canBeNull(field)) {
+        ln(1, s"m_${field.name()}.ensureIsSet(state);")
+        ln(1, s"if (state && depth == mgen::DEEP)")
+        ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
       } else {
-        txtBuffer.tabs(1).textln(s"${isSetName(field)} = state;")
-        txtBuffer.tabs(1).textln(s"if (depth == mgen::DEEP)")
-        txtBuffer.tabs(2).textln(s"mgen::validation::setFieldSetDeep(m_${field.name()});")
+
+        def setGeneric() {
+          ln(1, "if (!state)")
+          ln(2, s"m_${field.name}.clear();")
+          if (t.containsMgenCreatedType()) {
+            ln(1, s"else if (depth == mgen::DEEP)")
+            ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
+          }
+        }
+
+        def setCustom() {
+          ln(1, "if (depth == mgen::DEEP)")
+          ln(2, s"m_${field.name}._setAllFieldsSet(state, mgen::DEEP);")
+        }
+
+        def setByDefCtor() {
+          ln(1, "if (!state)")
+          ln(2, s"m_${field.name} = ${CppConstruction.defaultConstructNull(field)};")
+        }
+
+        field.typ() match {
+          case t: MapType => setGeneric()
+          case t: ListOrArrayType => setGeneric()
+          case t: CustomType => setCustom()
+          case _ => setByDefCtor()
+        }
+
+        ln(1, s"${isSetName(field)} = state;")
       }
-      txtBuffer.tabs(1).textln(s"return *this;")
-      txtBuffer.tabs(0).textln(s"}")
-      txtBuffer.endl()
+
+      ln(1, s"return *this;")
+      ln(s"}")
+      endl()
     }
 
-    txtBuffer.tabs(0).textln(s"${t.shortName()}& ${t.shortName()}::_setAllFieldsSet(const bool state, const mgen::FieldSetDepth depth) { ")
+    ln(s"${t.shortName()}& ${t.shortName()}::_setAllFieldsSet(const bool state, const mgen::FieldSetDepth depth) { ")
     for (field <- allFields)
-      txtBuffer.tabs(2).textln(s"${setFieldSet(field, "state, depth")};")
-    txtBuffer.tabs(1).textln(s"return *this;")
-    txtBuffer.tabs(0).textln(s"}")
-    txtBuffer.endl()
+      ln(1, s"${setFieldSet(field, "state, depth")};")
+    ln(1, s"return *this;")
+    ln(s"}")
+    endl()
 
   }
 

@@ -32,12 +32,12 @@ public:
     }
 
     template<typename T2>
-    Polymorphic<T>& operator=(const Polymorphic<T2>& v) {
+    Polymorphic& operator=(const Polymorphic<T2>& v) {
         return set<T2>(v.deepCopy());
     }
 
     template<typename T2>
-    Polymorphic<T>& set(T2 * v, const bool managed = true) {
+    Polymorphic& set(T2 * v, const bool managed = true) {
         if (m_ptr && m_managed && v != m_ptr) {
             delete m_ptr;
             m_ptr = 0;
@@ -45,6 +45,10 @@ public:
         m_ptr = v;
         m_managed = managed;
         return *this;
+    }
+
+    Polymorphic& set(T * v, const bool managed = true) {
+        return set<T>(v, managed);
     }
 
     template<typename T2>
@@ -100,8 +104,12 @@ public:
         return m_ptr;
     }
 
-    void set(T * v) {
-        m_ptr = v;
+    void ensureIsSet(const bool state) {
+        if (!state) {
+            set(0);
+        } else if (!m_ptr) {
+            set(new T);
+        }
     }
 
 private:

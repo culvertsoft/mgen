@@ -2,11 +2,8 @@ package se.culvertsoft.mgen.javapack.test
 
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-
 import scala.collection.JavaConversions.collectionAsScalaIterable
-
 import org.junit.Test
-
 import gameworld.types.ClassRegistry
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth
 import se.culvertsoft.mgen.javapack.serialization.BinaryReader
@@ -15,6 +12,7 @@ import se.culvertsoft.mgen.javapack.serialization.BuiltInReader
 import se.culvertsoft.mgen.javapack.serialization.BuiltInWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonReader
 import se.culvertsoft.mgen.javapack.serialization.JsonWriter
+import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter
 
 class ObjectSerialization {
 
@@ -23,8 +21,10 @@ class ObjectSerialization {
     val classRegEntries = classRegistry.entries()
     val stream = new ByteArrayOutputStream
     val jsonWriter = new JsonWriter(stream, classRegistry)
+    val jsonPrettyWriter = new JsonPrettyWriter(stream, classRegistry)
     val binaryWriter = new BinaryWriter(stream, classRegistry)
-    val writers = Seq(jsonWriter, binaryWriter)
+    val writers = Seq(jsonWriter, jsonPrettyWriter, binaryWriter)
+    def reset() { stream.reset() }
   }
 
   def mkTestObjects()(implicit state: TestState) = {
@@ -54,16 +54,14 @@ class ObjectSerialization {
   def testCanWrite() {
     implicit val state = new TestState()
 
-    state.stream.reset()
-
     val (all, valid, invalid) = mkTestObjects()
 
     assert(valid.nonEmpty)
     assert(invalid.nonEmpty)
 
     for (writer <- state.writers) {
-      valid.foreach(o => AssertNoThrow(writer.writeMGenObject(o)))
-      invalid.foreach(o => AssertThrows(writer.writeMGenObject(o)))
+      valid.foreach(o => AssertNoThrow(writer.writeObject(o)))
+      invalid.foreach(o => AssertThrows(writer.writeObject(o)))
     }
 
   }
@@ -72,8 +70,6 @@ class ObjectSerialization {
   def testCanRead() {
     implicit val state = new TestState()
 
-    state.stream.reset()
-
     val (all, valid, invalid) = mkTestObjects()
 
     all foreach (_._setAllFieldsSet(true, FieldSetDepth.DEEP))
@@ -81,18 +77,17 @@ class ObjectSerialization {
     for (writer <- state.writers) {
 
       for (o <- all) {
-        writer.writeMGenObject(o)
+        writer.writeObject(o)
       }
 
       val reader = getReader(writer)
 
-      for (o <- all) {
-        val back = reader.readMGenObject()
-        if (writer == state.jsonWriter)
-          assert(o == back)
+      for (written <- all) {
+        val readBack = reader.readObject()
+        assert(written == readBack)
       }
 
-      state.stream.reset()
+      state.reset()
     }
 
   }

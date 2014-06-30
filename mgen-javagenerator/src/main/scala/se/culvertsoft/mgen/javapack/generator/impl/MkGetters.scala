@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
-
 import Alias.get
 import Alias.isFieldSet
 import Alias.isSetName
@@ -11,6 +10,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
 import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 
 object MkGetters {
 
@@ -22,15 +22,6 @@ object MkGetters {
       txtBuffer.tabs(1).textln(s"public ${getTypeName(field.typ())} ${get(field)} {")
       txtBuffer.tabs(2).textln(s"return m_${field.name()};")
       txtBuffer.tabs(1).textln(s"}").endl()
-    }
-
-    for (field <- t.fields()) {
-      if (!field.typ().isSimple()) {
-        txtBuffer.tabs(1).textln(s"public ${getTypeName(field.typ())} ${get(field, "Mutable")} {")
-        txtBuffer.tabs(2).textln(s"${isSetName(field)} = true;")
-        txtBuffer.tabs(2).textln(s"return m_${field.name()};")
-        txtBuffer.tabs(1).textln(s"}").endl()
-      }
     }
 
     for (field <- t.fields()) {

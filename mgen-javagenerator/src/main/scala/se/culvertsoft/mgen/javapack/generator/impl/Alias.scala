@@ -3,11 +3,15 @@ package se.culvertsoft.mgen.javapack.generator.impl
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 
 object Alias {
 
   def isSetName(f: Field): String = {
-    s"_m_${f.name()}_isSet"
+    if (JavaGenerator.canBeNull(f))
+      s"m_${f.name()} != null"
+    else
+      s"_m_${f.name()}_isSet"
   }
 
   def setFieldSetName(f: Field): String = {
@@ -57,5 +61,5 @@ object Alias {
   def instantiate(t: CustomType): String = {
     s"new ${t.fullName()}()"
   }
-  
+
 }

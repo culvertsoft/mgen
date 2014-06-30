@@ -229,7 +229,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
 
         if (FileUtils.directoryOf(newAbsPath) != FileUtils.directoryOf(oldAbsPath)) {
 
-          project.getFilePathMutable().setWritten("").setAbsolute(newAbsPath)
+          project.getFilePath().setWritten("").setAbsolute(newAbsPath)
 
           val saveDir = new FilePath("", FileUtils.directoryOf(newAbsPath))
           def setSaveDirOfModules(ms: Seq[Module]) {

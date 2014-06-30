@@ -1,70 +1,64 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 
-import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator._
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.mutable.ArrayBuffer
+
 import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.cpppack.generator.CppConstruction
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
-import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
-import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator.canBeNull
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator.writeInitializerList
+import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
 
 object MkAllMembersCtor {
 
   def apply(
     t: CustomType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
-
     implicit val currentModule = module
-
     val allFields = t.getAllFieldsInclSuper()
-    if (allFields.nonEmpty) {
-      txtBuffer.tabs(0).text(s"${t.name()}::${t.name()}(")
-      for (i <- 0 until allFields.size()) {
-        val field = allFields.get(i)
-        val isLastField = i + 1 == allFields.size()
-        txtBuffer.tabs(if (i > 0) 3 else 0).text(s"const ${getTypeName(field)}& ${field.name()}")
-        if (!isLastField) {
-          txtBuffer.comma().endl()
-        }
-      }
-      txtBuffer.textln(") : ")
 
+    def mkArgumentList() {
+      for (field <- allFields) {
+        txtBuffer.tabs(if (field != allFields.head) 3 else 0).text(s"const ${getTypeName(field)}& ${field.name()}")
+        if (field != allFields.last)
+          ln(", ")
+      }
+    }
+
+    def mkInitializerList() {
+
+      val initializerList = new ArrayBuffer[String]
       val fieldsToSuper = allFields -- t.fields
-      if (fieldsToSuper.nonEmpty) {
-        txtBuffer.tabs(2).text(s"${CppGenUtils.getSuperTypeString(t)}(")
-        for (i <- 0 until fieldsToSuper.size()) {
-          val field = fieldsToSuper.get(i)
-          val isLastField = i + 1 == fieldsToSuper.size()
-          txtBuffer.text(field.name())
-          if (!isLastField) {
-            txtBuffer.text(", ")
-          }
-        }
-        txtBuffer.text(")")
-      }
+      val nonNullFields = t.fields().filterNot(canBeNull)
 
-      if (t.fields().nonEmpty) {
-        if (fieldsToSuper.nonEmpty) {
-          txtBuffer.textln(",")
-        }
+      if (fieldsToSuper.nonEmpty)
+        initializerList += MkCtorHelper.mkPassToSuper(fieldsToSuper, t, module)
 
-        for ((field, i) <- t.fields().zipWithIndex) {
-          txtBuffer.tabs(2).textln(s"m_${field.name()}(${field.name()}),")
-        }
+      if (t.fields.nonEmpty) {
 
-        for ((field, i) <- t.fields().zipWithIndex) {
-          txtBuffer.tabs(2).text(s"${isSetName(field)}(true)")
-          if (i + 1 < t.fields().size()) {
-            txtBuffer.comma().endl()
-          }
-        }
+        for (field <- t.fields)
+          initializerList += s"m_${field.name()}(${field.name()})"
+
+        for (field <- nonNullFields)
+          initializerList += s"${isSetName(field)}(true)"
 
       }
-      txtBuffer.tabs(0).textln(" {")
-      txtBuffer.tabs(0).textln("}").endl()
+
+      writeInitializerList(initializerList)
+    }
+
+    if (allFields.nonEmpty) {
+
+      txt(s"${t.name()}::${t.name()}(")
+      mkArgumentList()
+      txt(")")
+      mkInitializerList()
+      ln(" {")
+      ln("}").endl()
     }
   }
 

@@ -236,7 +236,7 @@ class MGenYylex {
 	private boolean zzAtEOF;
 
 	/* user code: */
-	private StringBuffer sb = new StringBuffer();
+	private StringBuilder sb = new StringBuilder();
 
 	int getPosition() {
 		return yychar;
@@ -544,7 +544,7 @@ class MGenYylex {
 				break;
 			case 4: {
 				sb = null;
-				sb = new StringBuffer();
+				sb = new StringBuilder();
 				yybegin(STRING_BEGIN);
 			}
 			case 26:

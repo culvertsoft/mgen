@@ -44,7 +44,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	@Override
-	public final MGenBase readMGenObject() throws IOException {
+	public final MGenBase readObject() throws IOException {
 		return readMGenObject(true, null);
 	}
 

@@ -49,12 +49,12 @@ object LayOutEntities {
 
       module(m, model, allowResize)
 
-      m.getPlacementMutable()
+      m.getPlacement()
         .setX(x)
         .setY(P0.y)
 
       if (allowResize) {
-        m.getPlacementMutable()
+        m.getPlacement()
           .setWidth(DEFAULT_MODULE_WIDTH)
           .setHeight(DEFAULT_MODULE_HEIGHT)
       }
@@ -70,7 +70,7 @@ object LayOutEntities {
 
     if (allowResize) {
       for (c <- module.getTypes()) {
-        c.getPlacementMutable()
+        c.getPlacement()
           .setWidth(DEFAULT_CLASS_WIDTH)
           .setHeight(DEFAULT_CLASS_HEIGHT)
       }

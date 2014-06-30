@@ -1,46 +1,23 @@
-/*
- * JSONWriter.h
- *
- *  Created on: 29 mar 2014
- *      Author: GiGurra
- */
+#ifndef JSON_WRITER_BASE_H_
+#define JSON_WRITER_BASE_H_
 
-#ifndef JSONWRITER_H_
-#define JSONWRITER_H_
-
-#include "mgen/classes/MGenBase.h"
-#include "mgen/serialization/VarInt.h"
-#include "mgen/exceptions/SerializationException.h"
+#include "JsonOutputStream.h"
 #include "mgen/util/missingfields.h"
-#include "mgen/ext/rapidjson/writer.h"
 
 namespace mgen {
-namespace internal {
 
-template<typename OutputStreamType>
-class JSONOutStream {
-public:
-    JSONOutStream(OutputStreamType& stream) : m_stream(stream) {}
-    void Put(const char c) { m_stream.write(&c, 1); }
-
-private:
-    OutputStreamType& m_stream;
-};
-
-} /* namespace internal */
-
-template<typename Stream, typename Registry>
-class JSONWriter {
+template<typename MGenStreamType, typename ClassRegistryType, typename RapidJsonWriterType>
+class JsonWriterBase {
 public:
 
-    JSONWriter(Stream& outputStream, const Registry& classRegistry) :
+    JsonWriterBase(MGenStreamType& outputStream, const ClassRegistryType& classRegistry) :
                     m_outputStream(outputStream),
                     m_jsonStream(m_outputStream),
                     m_rapidJsonWriter(m_jsonStream),
                     m_classRegistry(classRegistry) {
     }
 
-    void writeMgenObject(const MGenBase& object) {
+    void writeObject(const MGenBase& object) {
         writePoly(object);
     }
 
@@ -80,6 +57,15 @@ private:
     }
 
     template<typename T>
+    void write(const Polymorphic<T>& v) {
+        if (v.get()) {
+            writePoly(*v);
+        } else {
+            m_rapidJsonWriter.Null();
+        }
+    }
+
+    template<typename T>
     void write(const std::vector<T>& v) {
         m_rapidJsonWriter.StartArray();
         for (std::size_t i = 0; i < v.size(); i++)
@@ -97,15 +83,6 @@ private:
         m_rapidJsonWriter.EndObject();
     }
 
-    template<typename T>
-    void write(const Polymorphic<T>& v) {
-        if (v.get()) {
-            writePoly(*v);
-        } else {
-            m_rapidJsonWriter.Null();
-        }
-    }
-
     void write(const bool v) { m_rapidJsonWriter.Bool(v); }
     void write(const char v) { m_rapidJsonWriter.Int(v); }
     void write(const short v) { m_rapidJsonWriter.Int(v); }
@@ -115,19 +92,12 @@ private:
     void write(const double v) { m_rapidJsonWriter.Double(v); }
     void write(const std::string& v) { m_rapidJsonWriter.String(v.c_str()); }
 
-    Stream& m_outputStream;
-    internal::JSONOutStream<Stream> m_jsonStream;
-    rapidjson::Writer<internal::JSONOutStream<Stream> > m_rapidJsonWriter;
-    const Registry& m_classRegistry;
+    MGenStreamType& m_outputStream;
+    internal::JsonOutStream<MGenStreamType> m_jsonStream;
+    RapidJsonWriterType m_rapidJsonWriter;
+    const ClassRegistryType& m_classRegistry;
 };
-
-template<typename Stream, typename Registry>
-inline JSONWriter<Stream, Registry> * new_JSONWriter(
-        Stream& outputStream,
-        const Registry& classRegistry) {
-    return new JSONWriter<Stream, Registry>(outputStream, classRegistry);
-}
 
 } /* namespace mgen */
 
-#endif /* JSONWRITER_H_ */
+#endif /* JSON_WRITER_BASE_H_ */

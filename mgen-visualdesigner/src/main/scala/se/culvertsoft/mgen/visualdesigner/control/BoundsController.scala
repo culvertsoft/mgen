@@ -19,7 +19,7 @@ class BoundsController(controller: Controller) extends SubController(controller)
     val x = if (clamped) math.max(_x, 5) else _x
     val y = if (clamped) math.max(_y, 5) else _y
 
-    entity.getPlacementMutable()
+    entity.getPlacement()
       .setX(x)
       .setY(y)
 

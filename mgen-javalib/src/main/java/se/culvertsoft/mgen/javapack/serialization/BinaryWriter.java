@@ -16,6 +16,7 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,20 +34,32 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryWriter extends BuiltInWriter {
 
-	public BinaryWriter(final OutputStream stream,
+	public BinaryWriter(
+			final OutputStream stream,
 			final ClassRegistry classRegistry) {
 		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
 				: new DataOutputStream(stream), classRegistry);
 	}
 
 	@Override
-	public void beginWrite(final MGenBase object, final int nFieldsSet,
+	public void writeObject(final MGenBase o) throws IOException {
+		writeMGenObject(o, true, null);
+	}
+
+	@Override
+	public void beginWrite(
+			final MGenBase object,
+			final int nFieldsSet,
 			final int nFieldsTotal) throws IOException {
 		final short[] typeIds = object._typeIds16Bit();
 		writeSize(typeIds.length);
 		for (final short typeId : typeIds)
 			writeInt16(typeId, false);
 		writeSize(nFieldsSet);
+	}
+
+	@Override
+	public void finishWrite() {
 	}
 
 	@Override
@@ -113,7 +126,8 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	@Override
-	public void writeMapField(final HashMap<Object, Object> map,
+	public void writeMapField(
+			final HashMap<Object, Object> map,
 			final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_MAP);
 		writeMap(map, (MapType) field.typ(), false);
@@ -130,11 +144,7 @@ public class BinaryWriter extends BuiltInWriter {
 	public void writeMGenObjectField(final MGenBase o, final Field field)
 			throws IOException {
 		writeFieldStart(field.id(), TAG_CUSTOM);
-		writeMGenObject(o, false);
-	}
-
-	@Override
-	public void finishWrite() {
+		writeMGenObject(o, false, field.typ());
 	}
 
 	/*******************************************************************
@@ -143,6 +153,22 @@ public class BinaryWriter extends BuiltInWriter {
 	 * - - - - - - - - - - INTERNAL METHODS
 	 * 
 	 ******************************************************************/
+
+	private void writeMGenObject(
+			final MGenBase o,
+			final boolean tag,
+			final Type typ) throws IOException {
+
+		if (tag)
+			writeTypeTag(TAG_CUSTOM);
+
+		if (o != null) {
+			o._accept(this);
+		} else {
+			m_stream.writeByte(0);
+		}
+
+	}
 
 	private void writeFieldStart(final short id, final byte tag)
 			throws IOException {
@@ -202,14 +228,17 @@ public class BinaryWriter extends BuiltInWriter {
 		if (tag)
 			writeTypeTag(TAG_STRING);
 		if (s != null && !s.isEmpty()) {
-			writeSize(s.length());
-			m_stream.write(s.getBytes(charset));
+			final ByteBuffer bb = encodeString(s);
+			writeSize(bb.remaining());
+			m_stream.write(bb.array(), 0, bb.remaining());
 		} else {
 			writeSize(0);
 		}
 	}
 
-	private void writeList(final List<Object> list, final ListType typ,
+	private void writeList(
+			final List<Object> list,
+			final ListType typ,
 			final boolean tag) throws IOException {
 
 		if (tag)
@@ -219,7 +248,8 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
-	private void writeElements(final Collection<Object> list,
+	private void writeElements(
+			final Collection<Object> list,
 			final Type elementType) throws IOException {
 
 		if (list != null && !list.isEmpty()) {
@@ -236,7 +266,9 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
-	private void writeMap(final HashMap<Object, Object> map, final MapType typ,
+	private void writeMap(
+			final HashMap<Object, Object> map,
+			final MapType typ,
 			final boolean tag) throws IOException {
 
 		if (tag)
@@ -255,7 +287,9 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
-	private void writeArray(final Object arrayObj, final ArrayType typ,
+	private void writeArray(
+			final Object arrayObj,
+			final ArrayType typ,
 			final boolean tag) throws IOException {
 
 		if (tag)
@@ -443,7 +477,9 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
-	private void writeObjectArray(final Object[] array, final Type elementType,
+	private void writeObjectArray(
+			final Object[] array,
+			final Type elementType,
 			final boolean tag) throws IOException {
 
 		if (tag)
@@ -519,31 +555,12 @@ public class BinaryWriter extends BuiltInWriter {
 		case CUSTOM:
 		case MGEN_BASE:
 		case UNKNOWN:
-			writeMGenObject((MGenBase) o, tag);
+			writeMGenObject((MGenBase) o, tag, typ);
 			break;
 		default:
 			throw new SerializationException("Unknown type tag for writeObject");
 		}
 
-	}
-
-	public void writeMGenObject(final MGenBase o, final boolean tag)
-			throws IOException {
-
-		if (tag)
-			writeTypeTag(TAG_CUSTOM);
-
-		if (o != null) {
-			o._accept(this);
-		} else {
-			m_stream.writeByte(0);
-		}
-
-	}
-
-	@Override
-	public void writeMGenObject(final MGenBase o) throws IOException {
-		writeMGenObject(o, true);
 	}
 
 	private void writeTypeTag(byte tag) throws IOException {

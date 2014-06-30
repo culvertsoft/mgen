@@ -8,10 +8,8 @@
 #ifndef MGENBINARYWRITER_H_
 #define MGENBINARYWRITER_H_
 
-#include "mgen/classes/MGenBase.h"
-#include "mgen/serialization/VarInt.h"
-#include "mgen/exceptions/SerializationException.h"
 #include "mgen/util/missingfields.h"
+#include "mgen/serialization/VarInt.h"
 #include "mgen/util/endian.h"
 
 namespace mgen {
@@ -24,7 +22,7 @@ public:
             m_outputStream(outputStream), m_classRegistry(classRegistry) {
     }
 
-    void writeMgenObject(const MGenBase& object) {
+    void writeObject(const MGenBase& object) {
         writePoly(object, true);
     }
 
@@ -40,7 +38,7 @@ public:
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
         static const std::vector<short>& typeIds = MGenType::_type_ids_16bit();
 
-    	missingfields::ensureNoMissingFields(object);
+        missingfields::ensureNoMissingFields(object);
 
         writeSize(typeIds.size());
         for (std::size_t i = 0; i < typeIds.size(); i++)
@@ -54,11 +52,6 @@ public:
 
 private:
 
-    void writeFieldStart(const short fieldId, const char tag) {
-        write(fieldId, false);
-        writeTypeTag(tag);
-    }
-
     void writePoly(const MGenBase& v, const bool doTag) {
         writeTagIf(Type::TAG_CUSTOM, doTag);
         m_classRegistry.visitObject(v, *this);
@@ -68,6 +61,16 @@ private:
     void write(const MGenType& v, const bool doTag) {
         writeTagIf(Type::TAG_CUSTOM, doTag);
         v._accept(*this);
+    }
+
+    template<typename T>
+    void write(const Polymorphic<T>& v, const bool doTag) {
+        if (v.get()) {
+            writePoly(*v, doTag);
+        } else {
+            writeTagIf(Type::TAG_CUSTOM, doTag);
+            writeSize(0);
+        }
     }
 
     template<typename T>
@@ -97,16 +100,6 @@ private:
             }
             write(keys, true);
             write(values, true);
-        }
-    }
-
-    template<typename T>
-    void write(const Polymorphic<T>& v, const bool doTag) {
-        if (v.get()) {
-            writePoly(*v, doTag);
-        } else {
-            writeTagIf(Type::TAG_CUSTOM, doTag);
-            writeSize(0);
         }
     }
 
@@ -150,6 +143,11 @@ private:
         writeSize(v.size());
         if (!v.empty())
             m_outputStream.write(v.data(), v.size());
+    }
+
+    void writeFieldStart(const short fieldId, const char tag) {
+        write(fieldId, false);
+        writeTypeTag(tag);
     }
 
     void writeTagIf(const Type::TAG tagValue, const bool doTag) {

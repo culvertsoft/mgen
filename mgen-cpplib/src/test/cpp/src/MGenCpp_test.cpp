@@ -2,8 +2,9 @@
 #include "mgen/serialization/BinaryReader.h"
 #include "mgen/serialization/VectorInputStream.h"
 #include "mgen/serialization/VectorOutputStream.h"
-#include "mgen/serialization/JSONWriter.h"
-#include "mgen/serialization/JSONReader.h"
+#include "mgen/serialization/JsonPrettyWriter.h"
+#include "mgen/serialization/JsonWriter.h"
+#include "mgen/serialization/JsonReader.h"
 
 #include "gameworld/types/ClassRegistry.h"
 
@@ -42,8 +43,8 @@ void testBinary(
         // write it
         buffer.clear();
         inNoClasses.reset();
-        writer.writeMgenObject(entity);
-        readerNoClasses.readMgenObject();
+        writer.writeObject(entity);
+        readerNoClasses.readObject();
         sum += (long long) buffer.size();
     }
 
@@ -57,7 +58,7 @@ void testBinary(
     std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
 
     // Read it
-    TestType * entityBack = static_cast<TestType*>(reader.readMgenObject());
+    TestType * entityBack = static_cast<TestType*>(reader.readObject());
 
     std::cout << "object: " << entityBack << ", typeName: " << entityBack->_typeName() << std::endl;
 
@@ -76,7 +77,7 @@ void testBinary(
 }
 
 template<typename ClassRegType, typename TestType>
-void testJSON(
+void testJson(
         ClassRegType& registry,
         mgen::EmptyClassRegistry& emptyRegistry,
         const TestType& entity) {
@@ -88,20 +89,20 @@ void testJSON(
     mgen::VectorInputStream inNoClasses(buffer);
 
     // Create our serializers
-    mgen::JSONWriter<mgen::VectorOutputStream, gameworld::types::ClassRegistry> writer(out, registry);
-    mgen::JSONReader<mgen::VectorInputStream, gameworld::types::ClassRegistry> reader(in, registry);
-    mgen::JSONReader<mgen::VectorInputStream, mgen::EmptyClassRegistry> readerNoClasses(inNoClasses, emptyRegistry);
+    mgen::JsonWriter<mgen::VectorOutputStream, gameworld::types::ClassRegistry> writer(out, registry);
+    mgen::JsonReader<mgen::VectorInputStream, gameworld::types::ClassRegistry> reader(in, registry);
+    mgen::JsonReader<mgen::VectorInputStream, mgen::EmptyClassRegistry> readerNoClasses(inNoClasses, emptyRegistry);
 
-    writer.writeMgenObject(entity);
-    writer.writeMgenObject(entity);
+    writer.writeObject(entity);
+    writer.writeObject(entity);
 
     const std::string json(buffer.data(), buffer.size());
 
-    std::cout << "JSON: " << std::endl;
+    std::cout << "Json: " << std::endl;
     std::cout << json << std::endl;
 
-    const TestType * back1 = static_cast<TestType*>(reader.readMgenObject());
-    const TestType * back2 = static_cast<TestType*>(reader.readMgenObject());
+    const TestType * back1 = static_cast<TestType*>(reader.readObject());
+    const TestType * back2 = static_cast<TestType*>(reader.readObject());
 
     std::cout << "Read back ptr: " << back1 << std::endl;
     std::cout << "Read back ptr: " << back2 << std::endl;
@@ -110,10 +111,10 @@ void testJSON(
     std::cout << "back2 == entity: " << (*back2 == entity) << std::endl;
     
     buffer.clear();
-    writer.writeMgenObject(*back2);
+    writer.writeObject(*back2);
     const std::string json2(buffer.data(), buffer.size());
         
-    std::cout << "JSON2: " << std::endl;
+    std::cout << "Json2: " << std::endl;
     std::cout << json2 << std::endl;
     
     const double t0 = getCurTimeSeconds();
@@ -124,8 +125,8 @@ void testJSON(
         // write it
         buffer.clear();
         inNoClasses.reset();
-        writer.writeMgenObject(entity);
-        readerNoClasses.readMgenObject();
+        writer.writeObject(entity);
+        readerNoClasses.readObject();
         sum += (long long) buffer.size();
     }
 
@@ -134,7 +135,7 @@ void testJSON(
     const double MB = double(sum) / 1024.0 / 1024.0;
     const double MB_per_sec = MB / dt;
     const int msgs_per_sec = int(double(n) / dt);
-    std::cout << "JSON performance:" << std::endl;
+    std::cout << "Json performance:" << std::endl;
     std::cout << "  MB/s: " << MB_per_sec << std::endl;
     std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
 
@@ -161,7 +162,7 @@ int main() {
     std::cout << "posSet: " << entity._isPositioningSet(mgen::DEEP) << std::endl;
     std::cout << "valid: " << entity._validate(mgen::DEEP) << std::endl;
 
-    testJSON(registry, emptyRegistry, entity);
+    testJson(registry, emptyRegistry, entity);
 
     testBinary(registry, emptyRegistry, entity);
 

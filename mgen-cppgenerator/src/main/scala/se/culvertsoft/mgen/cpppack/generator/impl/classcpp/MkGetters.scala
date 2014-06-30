@@ -10,6 +10,7 @@ import se.culvertsoft.mgen.cpppack.generator.CppConstruction
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 
 object MkGetters {
 
@@ -28,7 +29,8 @@ object MkGetters {
 
     for (field <- t.fields()) {
       txtBuffer.tabs(0).textln(s"${getTypeName(field)}& ${t.shortName()}::${getMutable(field)} {")
-      txtBuffer.tabs(1).textln(s"${isSetName(field)} = true;")
+      if (!CppGenerator.canBeNull(field))
+        txtBuffer.tabs(1).textln(s"${isSetName(field)} = true;")
       txtBuffer.tabs(1).textln(s"return m_${field.name()};")
       txtBuffer.tabs(0).textln(s"}")
       txtBuffer.endl()

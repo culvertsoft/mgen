@@ -1,12 +1,12 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
-
 import Alias.isSetName
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 
 object MkMembers {
 
@@ -20,7 +20,8 @@ object MkMembers {
     }
 
     for (field <- fields) {
-      txtBuffer.tabs(1).textln(s"private boolean ${isSetName(field)};")
+      if (!JavaGenerator.canBeNull(field.typ()))
+        txtBuffer.tabs(1).textln(s"private boolean ${isSetName(field)};")
     }
 
     if (fields.nonEmpty)

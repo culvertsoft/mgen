@@ -221,13 +221,13 @@ class Model(val project: Project) {
     subType.setSuperType(superType.getId())
     if (!superType.hasSubTypes())
       superType.setSubTypes(new ArrayList)
-    superType.getSubTypesMutable().add(subType.getId())
+    superType.getSubTypes().add(subType.getId())
   }
 
   def detachSubType(subType: CustomType, superType: CustomType) {
     subType.unsetSuperType()
     if (superType.hasSubTypes())
-      superType.getSubTypesMutable().remove(subType.getId())
+      superType.getSubTypes().remove(subType.getId())
   }
 
   def detachSuperTypeOf(subType: CustomType) {

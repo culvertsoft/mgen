@@ -59,7 +59,7 @@ class EntityAddController(controller: Controller) extends SubController(controll
     val (parent, position) = findPositionForNewModule(module.getPlacement().getWidth(), module.getPlacement().getHeight())
 
     module
-      .getPlacementMutable()
+      .getPlacement()
       .setX(position.x)
       .setY(position.y)
 
@@ -89,7 +89,7 @@ class EntityAddController(controller: Controller) extends SubController(controll
     parent match {
       case parent: Module =>
         cls
-          .getPlacementMutable()
+          .getPlacement()
           .setX(position.x)
           .setY(position.y)
         return Some(addType(cls, parent))

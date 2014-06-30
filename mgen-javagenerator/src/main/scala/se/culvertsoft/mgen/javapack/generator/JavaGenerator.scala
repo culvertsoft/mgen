@@ -1,9 +1,7 @@
 package se.culvertsoft.mgen.javapack.generator
 
 import java.io.File
-
 import scala.collection.JavaConversions.seqAsJavaList
-
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
@@ -41,6 +39,21 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkToString
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdFields
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdMethods
 import se.culvertsoft.mgen.javapack.generator.impl.MkValidate
+import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.api.model.PrimitiveType
+import se.culvertsoft.mgen.api.model.Field
+
+object JavaGenerator {
+  def canBeNull(f: Field): Boolean = {
+    canBeNull(f.typ())
+  }
+  def canBeNull(t: Type): Boolean = {
+    t match {
+      case t: PrimitiveType => false
+      case _ => true
+    }
+  }
+}
 
 class JavaGenerator extends BuiltInStaticLangGenerator {
 

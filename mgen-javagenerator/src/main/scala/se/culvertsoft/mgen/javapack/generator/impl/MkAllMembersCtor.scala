@@ -2,12 +2,12 @@ package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
-
 import Alias.isSetName
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.fieldTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 
 object MkAllMembersCtor {
 
@@ -44,8 +44,10 @@ object MkAllMembersCtor {
 
       for (field <- t.fields())
         txtBuffer.tabs(2).textln(s"m_${field.name()} = ${field.name()};")
-      for (field <- t.fields())
-        txtBuffer.tabs(2).textln(s"${isSetName(field)} = true;")
+      for (field <- t.fields()) {
+        if (!JavaGenerator.canBeNull(field))
+          txtBuffer.tabs(2).textln(s"${isSetName(field)} = true;")
+      }
 
       txtBuffer.tabs(1).textln("}").endl()
     }
