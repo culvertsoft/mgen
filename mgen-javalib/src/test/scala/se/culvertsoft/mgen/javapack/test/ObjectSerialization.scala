@@ -2,11 +2,8 @@ package se.culvertsoft.mgen.javapack.test
 
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
-
 import scala.collection.JavaConversions.collectionAsScalaIterable
-
 import org.junit.Test
-
 import gameworld.types.ClassRegistry
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth
 import se.culvertsoft.mgen.javapack.serialization.BinaryReader
@@ -15,6 +12,7 @@ import se.culvertsoft.mgen.javapack.serialization.BuiltInReader
 import se.culvertsoft.mgen.javapack.serialization.BuiltInWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonReader
 import se.culvertsoft.mgen.javapack.serialization.JsonWriter
+import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter
 
 class ObjectSerialization {
 
@@ -23,8 +21,9 @@ class ObjectSerialization {
     val classRegEntries = classRegistry.entries()
     val stream = new ByteArrayOutputStream
     val jsonWriter = new JsonWriter(stream, classRegistry)
+    val jsonPrettyWriter = new JsonPrettyWriter(stream, classRegistry)
     val binaryWriter = new BinaryWriter(stream, classRegistry)
-    val writers = Seq(jsonWriter, binaryWriter)
+    val writers = Seq(jsonWriter, jsonPrettyWriter, binaryWriter)
     def reset() { stream.reset() }
   }
 

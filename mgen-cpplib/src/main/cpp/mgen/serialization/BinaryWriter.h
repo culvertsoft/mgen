@@ -8,10 +8,8 @@
 #ifndef MGENBINARYWRITER_H_
 #define MGENBINARYWRITER_H_
 
-#include "mgen/classes/MGenBase.h"
-#include "mgen/serialization/VarInt.h"
-#include "mgen/exceptions/SerializationException.h"
 #include "mgen/util/missingfields.h"
+#include "mgen/serialization/VarInt.h"
 #include "mgen/util/endian.h"
 
 namespace mgen {

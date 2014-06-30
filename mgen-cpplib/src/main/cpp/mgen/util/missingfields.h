@@ -9,6 +9,7 @@
 #define MISSINGFIELDS_H_
 
 #include "mgen/classes/MGenBase.h"
+#include "mgen/exceptions/SerializationException.h"
 
 namespace mgen {
 namespace missingfields {

@@ -20,25 +20,28 @@ import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
 
 public class JsonWriter extends DynamicWriter {
 
-	private final boolean m_prettyPrint;
-	private int m_indentLevel = 0;
+	public static final int DEFAULT_MAX_DEPTH = 256;
+
+	protected final int[] m_iEntry;
+	protected int m_depth = 0;
 
 	public JsonWriter(
 			final OutputStream outputStream,
 			final ClassRegistry classRegistry,
-			final boolean prettyPrint) {
+			final int maxDepth) {
 		super(outputStream, classRegistry);
-		m_prettyPrint = prettyPrint;
+		m_iEntry = new int[maxDepth];
 	}
 
 	public JsonWriter(
 			final OutputStream outputStream,
 			final ClassRegistry classRegistry) {
-		this(outputStream, classRegistry, false);
+		this(outputStream, classRegistry, DEFAULT_MAX_DEPTH);
 	}
 
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
+		m_depth = 0;
 		writeMGenObject(o);
 		flush();
 	}
@@ -46,7 +49,7 @@ public class JsonWriter extends DynamicWriter {
 	@Override
 	public void writeMGenObjectField(MGenBase o, Field field)
 			throws IOException {
-		newEntry(true);
+		newEntry();
 		writeName(field.name());
 		writeMGenObject(o);
 	}
@@ -62,78 +65,76 @@ public class JsonWriter extends DynamicWriter {
 
 	@Override
 	public void finishWrite() throws IOException {
-		endBlock("}", true);
+		endBlock("}", m_iEntry[m_depth] > 0);
 	}
 
 	@Override
 	public void writeBooleanField(final boolean b, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(b), true);
+		writePair(field.name(), String.valueOf(b));
 	}
 
 	@Override
 	public void writeInt8Field(final byte b, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(b), true);
+		writePair(field.name(), String.valueOf(b));
 	}
 
 	@Override
 	public void writeInt16Field(final short s, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(s), true);
+		writePair(field.name(), String.valueOf(s));
 	}
 
 	@Override
 	public void writeInt32Field(final int i, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(i), true);
+		writePair(field.name(), String.valueOf(i));
 	}
 
 	@Override
 	public void writeInt64Field(final long l, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(l), true);
+		writePair(field.name(), String.valueOf(l));
 	}
 
 	@Override
 	public void writeFloat32Field(final float f, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(f), true);
+		writePair(field.name(), String.valueOf(f));
 	}
 
 	@Override
 	public void writeFloat64Field(final double d, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(d), true);
+		writePair(field.name(), String.valueOf(d));
 	}
 
 	@Override
 	public void writeStringField(final String s, final Field field)
 			throws IOException {
-		writePair(field.name(), quoteEscape(s), true);
+		writePair(field.name(), quoteEscape(s));
 	}
 
 	@Override
 	public void writeListField(final ArrayList<Object> list, final Field field)
 			throws IOException {
-		newEntry(true);
+		newEntry();
 		writeName(field.name());
 		writeList(list, (ListType) field.typ());
 	}
 
 	@Override
-	public
-			void
-			writeMapField(final HashMap<Object, Object> m, final Field field)
-					throws IOException {
-		newEntry(true);
-		writeName(field.name());
-		writeMap(m, (MapType) field.typ());
+	public void writeMapField(final HashMap<Object, Object> m, final Field f)
+			throws IOException {
+		newEntry();
+		writeName(f.name());
+		writeMap(m, (MapType) f.typ());
 	}
 
 	@Override
 	public void writeArrayField(Object array, Field field) throws IOException {
-		newEntry(true);
+		newEntry();
 		writeName(field.name());
 		writeArray(array, (ArrayType) field.typ());
 	}
@@ -143,9 +144,24 @@ public class JsonWriter extends DynamicWriter {
 	 * 
 	 * - - - - - - - - - - INTERNAL METHODS
 	 * 
-	 * @throws IOException
 	 * 
 	 ******************************************************************/
+
+	protected void writeName(final String name) throws IOException {
+		write('"' + name + "\":");
+	}
+
+	protected void newEntry() throws IOException {
+		if (m_iEntry[m_depth] > 0)
+			write(",");
+		m_iEntry[m_depth]++;
+	}
+
+	protected void endBlock(final String endString, final boolean hasContents)
+			throws IOException {
+		m_depth--;
+		write(endString);
+	}
 
 	private void writeMGenObject(MGenBase o) throws IOException {
 		if (o == null) {
@@ -202,7 +218,7 @@ public class JsonWriter extends DynamicWriter {
 		} else {
 			beginBlock("[");
 			for (int i = 0; i < o.size(); i++) {
-				newEntry(i > 0);
+				newEntry();
 				writeObject(o.get(i), typ.elementType());
 			}
 			endBlock("]", !o.isEmpty());
@@ -215,13 +231,10 @@ public class JsonWriter extends DynamicWriter {
 			write("null");
 		} else {
 			beginBlock("{");
-			int i = 0;
 			for (final Object key : m.keySet()) {
-				final Object value = m.get(key);
-				newEntry(i > 0);
+				newEntry();
 				writeName(String.valueOf(key));
-				writeObject(value, typ.valueType());
-				i++;
+				writeObject(m.get(key), typ.valueType());
 			}
 			endBlock("}", !m.isEmpty());
 		}
@@ -350,14 +363,13 @@ public class JsonWriter extends DynamicWriter {
 		endBlock("]", false);
 	}
 
-	private void writeObjectArray(final Object[] o, final ArrayType typ)
+	private void writeObjectArray(final Object[] objects, final ArrayType typ)
 			throws IOException {
 		beginBlock("[");
-		for (int i = 0; i < o.length; i++) {
-			newEntry(i > 0);
-			writeObject(o[i], typ.elementType());
+		for (Object o : objects) {
+			writeObject(o, typ.elementType());
 		}
-		endBlock("]", o.length != 0);
+		endBlock("]", objects.length != 0);
 	}
 
 	private String quoteEscape(final String text) {
@@ -368,47 +380,23 @@ public class JsonWriter extends DynamicWriter {
 		return '"' + in + '"';
 	}
 
-	private void writeName(final String name) throws IOException {
-		write('"' + name + "\":");
-		if (m_prettyPrint)
-			write(" ");
-	}
-
-	private void writePair(
-			final String name,
-			final String value,
-			final boolean writeComma) throws IOException {
-		newEntry(writeComma);
+	private void writePair(final String name, final String value)
+			throws IOException {
+		newEntry();
 		writeName(name);
 		write(value);
 	}
 
 	private void writeTypeId(final MGenBase o) throws IOException {
-		writePair("__t", quote(o._typeIds16BitBase64String()), false);
-	}
-
-	private void newEntry(final boolean writeComma) throws IOException {
-		if (writeComma)
-			write(",");
-		if (m_prettyPrint) {
-			write("\n");
-			for (int i = 0; i < m_indentLevel; i++) {
-				write("    ");
-			}
-		}
+		writePair("__t", quote(o._typeIds16BitBase64String()));
 	}
 
 	private void beginBlock(final String beginString) throws IOException {
 		write(beginString);
-		m_indentLevel++;
-	}
-
-	private void endBlock(final String endString, final boolean onNewLine)
-			throws IOException {
-		m_indentLevel--;
-		if (onNewLine)
-			newEntry(false);
-		write(endString);
+		m_depth++;
+		if (m_depth >= m_iEntry.length)
+			throw new SerializationException("Max recursion depth reached");
+		m_iEntry[m_depth] = 0;
 	}
 
 }

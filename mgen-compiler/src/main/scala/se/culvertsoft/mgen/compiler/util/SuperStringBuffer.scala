@@ -8,7 +8,7 @@ class SuperStringBuffer(
   val scopeBegin: String = " {",
   val scopeEnd: String = "}") {
 
-  private var TAB_STRING = "    "
+  private var tabString = "\t"
   private val buffer = new StringBuilder
   private var _tabLevel = 0
 
@@ -17,7 +17,7 @@ class SuperStringBuffer(
 
   def tabs(n: Int) = {
     for (i <- 0 until n)
-      buffer.append(TAB_STRING)
+      buffer.append(tabString)
     this
   }
 
@@ -26,7 +26,7 @@ class SuperStringBuffer(
     this
   }
 
-  def setTabString(s: String) = { TAB_STRING = s }
+  def setTabString(s: String) = { tabString = s }
 
   def endl2() = { buffer.append('\n').append('\n'); this }
   def text(s: String) = { buffer.append(s); this }
