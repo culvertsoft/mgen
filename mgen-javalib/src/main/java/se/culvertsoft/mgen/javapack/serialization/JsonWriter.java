@@ -212,16 +212,16 @@ public class JsonWriter extends DynamicWriter {
 
 	}
 
-	private void writeList(List<Object> o, ListType typ) throws IOException {
-		if (o == null) {
+	private void writeList(List<Object> objects, ListType typ) throws IOException {
+		if (objects == null) {
 			write("null");
 		} else {
 			beginBlock("[");
-			for (int i = 0; i < o.size(); i++) {
+			for (Object o : objects) {
 				newEntry();
-				writeObject(o.get(i), typ.elementType());
+				writeObject(o, typ.elementType());
 			}
-			endBlock("]", !o.isEmpty());
+			endBlock("]", !objects.isEmpty());
 		}
 	}
 
