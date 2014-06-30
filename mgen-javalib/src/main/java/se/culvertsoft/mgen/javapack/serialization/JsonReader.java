@@ -31,7 +31,8 @@ public class JsonReader extends BuiltInReader {
 
 	private final MGenJSONParser m_parser;
 
-	public JsonReader(final InputStream stream,
+	public JsonReader(
+			final InputStream stream,
 			final ClassRegistry classRegistry) {
 		super(stream instanceof DataInputStream ? (DataInputStream) stream
 				: new DataInputStream(stream), classRegistry);
@@ -117,9 +118,11 @@ public class JsonReader extends BuiltInReader {
 	}
 
 	@Override
-	public final MGenBase readMgenObjectField(final Field field,
+	public final MGenBase readMgenObjectField(
+			final Field field,
 			final Object context) throws IOException {
-		return readMGenObject(getJsonObj(field, context),
+		return readMGenObject(
+				getJsonObj(field, context),
 				(UnknownCustomType) field.typ());
 	}
 
@@ -128,13 +131,14 @@ public class JsonReader extends BuiltInReader {
 			throws IOException {
 	}
 
-	private MGenBase readMGenObject(final JSONObject node,
-			final UnknownCustomType constraint) throws IOException {
+	private MGenBase readMGenObject(
+			final JSONObject node,
+			final UnknownCustomType expType) throws IOException {
 
-		if (node == null || node.isEmpty())
+		if (node == null)
 			return null;
 
-		final MGenBase object = instantiate(readIds(node), constraint);
+		final MGenBase object = instantiate(readIds(node, expType), expType);
 
 		if (object != null) {
 			readObjectFields(object, node);
@@ -146,10 +150,21 @@ public class JsonReader extends BuiltInReader {
 
 	}
 
-	private String[] readIds(final JSONObject node) {
+	private String[] readIds(final JSONObject node, final Type expType) {
 
-		final String typeIdsString = node.get("__t").toString();
-		throwMissingFieldIfNull(typeIdsString, "__t");
+		final Object tNode = node.get("__t");
+
+		// Try default type
+		if (tNode == null) {
+			
+			if (expType != null)
+				return null;
+			
+			throw new MissingRequiredFieldsException(
+					"MGenJSonReader.readMGenObject: Missing field '__t'");
+		}
+
+		final String typeIdsString = tNode.toString();
 
 		final String[] ids = new String[typeIdsString.length() / 3];
 		for (int i = 0; i < ids.length; i++)
@@ -447,15 +462,6 @@ public class JsonReader extends BuiltInReader {
 			return readMGenObject((JSONObject) node, (UnknownCustomType) typ);
 		default:
 			throw new UnknownTypeException("Unknown type: " + typ);
-		}
-	}
-
-	protected void throwMissingFieldIfNull(final Object o,
-			final String fieldName) {
-		if (o == null) {
-			throw new MissingRequiredFieldsException(
-					"MGenJSonReader.readMGenObject: Missing field '"
-							+ fieldName + "'");
 		}
 	}
 

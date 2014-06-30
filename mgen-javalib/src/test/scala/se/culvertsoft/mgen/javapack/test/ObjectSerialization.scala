@@ -21,9 +21,18 @@ class ObjectSerialization {
     val classRegEntries = classRegistry.entries()
     val stream = new ByteArrayOutputStream
     val jsonWriter = new JsonWriter(stream, classRegistry)
+    val jsonWriterCompact = new JsonWriter(stream, classRegistry, true)
     val jsonPrettyWriter = new JsonPrettyWriter(stream, classRegistry)
+    val jsonPrettyWriterCompact = new JsonPrettyWriter(stream, classRegistry, true)
     val binaryWriter = new BinaryWriter(stream, classRegistry)
-    val writers = Seq(jsonWriter, jsonPrettyWriter, binaryWriter)
+
+    val writers = Seq(
+      jsonWriter,
+      jsonWriterCompact,
+      jsonPrettyWriter,
+      jsonPrettyWriterCompact,
+      binaryWriter)
+
     def reset() { stream.reset() }
   }
 
