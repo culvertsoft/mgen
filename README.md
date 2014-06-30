@@ -4,11 +4,11 @@
 
 MGen is a toolkit for designing multi langauge data models with built-in functionality such as serialization and type introspection. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code in multiple programming languages may be generated using the MGen Compiler.
 
-The goal of MGen is to to simplify type-safe cross-language collaboration among software components and software teams, allowing changes to the data model without requiring all participants to adapt or rebuild their software.
+The goal of MGen is to to simplify type-safe cross-language data model design and collaboration between software components, while also permitting significant data model changes without requiring all participants to modify their software.
 
-To fit new custom applications, compiler and library extensions can be made without recompiling the MGen tools or libraries through a plug-in based architecture. Modular components include IDL parsers, source code generators and runtime libraries.
+To better fit custom applications, extensions to the MGen toolkit can be made without recompiling the MGen tools or libraries through a plug-in based architecture.
 
-MGen is inspired by several existing tools, such as [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), [Flat Buffers](http://google.github.io/flatbuffers/), [Cap'n Proto](http://kentonv.github.io/capnproto/), [Simple Binary Encoding](https://github.com/real-logic/simple-binary-encoding). 
+MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), [Flat Buffers](http://google.github.io/flatbuffers/), [Cap'n Proto](http://kentonv.github.io/capnproto/), [Simple Binary Encoding](https://github.com/real-logic/simple-binary-encoding). 
 
 ## Table of Contents
 
@@ -261,7 +261,6 @@ Let us then create some objects from the generated classes and set some properti
       Car car1, car2, car3;
       car1.setBrand("Ford");
       car2.setTopSpeed(123);
-      car3.getPositioningMutable().setPosition(VectorR3(3,2,1));
       
 Now let us try to serialize these cars to JSON. This is how we do it:
 
@@ -304,7 +303,7 @@ Now we can read these objects back from the buffer in the following manner:
       
       // What we could do now is dynamic_cast to identify the types, or use one 
       // of the type ids supplied for generated classes:
-      // Here using Car::_type_id, which is a generated globally unique 64bit hash code.
+      // Here using Car::_type_id, which is a 64bit hash code calculated from 'name.space.Type'.
       for (MGenBase obj * : objects) {
         switch(obj->_typeId()) {
           case Car::_type_id:
@@ -331,9 +330,9 @@ Now we can read these objects back from the buffer in the following manner:
 
 ## Download links
 
-The following are links where you can download MGen pre-built. You will notice that the compiler and visual designer also have variants named _assembly_. These are the ones you want to download if you want to use them as standalone executable JAR files.
+The following are links where you can download MGen pre-built. You will notice that the compiler and visual designer also have variants named _assembly_.
 
- * JAR files intended to be used as standalone executables are marked _assembly_. They are packaged with all library dependencies included. 
+ * JAR files marked _assembly_ are standalone executables. They are packaged with all library dependencies included. 
  * JAR files intended as programming libraries are NOT marked _assembly_.
 
 ### Stable
@@ -486,6 +485,8 @@ The runtime libraries work together with generated classes to provide:
 The runtime libraries provide two default serializers:
  * The MGen Binary format Serializer
  * The MGen JSON format Serializer
+
+Generated classes are serializer agnostic and supply interfaces through which you can connect your own writers and readers.
 
 
 #### The MGen Visual Designer
