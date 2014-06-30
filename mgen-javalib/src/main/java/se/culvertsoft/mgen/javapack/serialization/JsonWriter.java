@@ -71,49 +71,57 @@ public class JsonWriter extends DynamicWriter {
 	@Override
 	public void writeBooleanField(final boolean b, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(b));
+		beginWritePair(field.name());
+		write(b);
 	}
 
 	@Override
 	public void writeInt8Field(final byte b, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(b));
+		beginWritePair(field.name());
+		write(b);
 	}
 
 	@Override
 	public void writeInt16Field(final short s, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(s));
+		beginWritePair(field.name());
+		write(s);
 	}
 
 	@Override
 	public void writeInt32Field(final int i, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(i));
+		beginWritePair(field.name());
+		write(i);
 	}
 
 	@Override
 	public void writeInt64Field(final long l, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(l));
+		beginWritePair(field.name());
+		write(l);
 	}
 
 	@Override
 	public void writeFloat32Field(final float f, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(f));
+		beginWritePair(field.name());
+		write(f);
 	}
 
 	@Override
 	public void writeFloat64Field(final double d, final Field field)
 			throws IOException {
-		writePair(field.name(), String.valueOf(d));
+		beginWritePair(field.name());
+		write(d);
 	}
 
 	@Override
 	public void writeStringField(final String s, final Field field)
 			throws IOException {
-		writePair(field.name(), quoteEscape(s));
+		beginWritePair(field.name());
+		write(quoteEscape(s));
 	}
 
 	@Override
@@ -181,13 +189,25 @@ public class JsonWriter extends DynamicWriter {
 
 		switch (typ.typeEnum()) {
 		case BOOL:
+			write((Boolean) o);
+			break;
 		case INT8:
+			write((Byte) o);
+			break;
 		case INT16:
+			write((Short) o);
+			break;
 		case INT32:
+			write((Integer) o);
+			break;
 		case INT64:
+			write((Long) o);
+			break;
 		case FLOAT32:
+			write((Float) o);
+			break;
 		case FLOAT64:
-			write(String.valueOf(o));
+			write((Double) o);
 			break;
 		case STRING:
 			write(quoteEscape((String) o));
@@ -212,7 +232,8 @@ public class JsonWriter extends DynamicWriter {
 
 	}
 
-	private void writeList(List<Object> objects, ListType typ) throws IOException {
+	private void writeList(List<Object> objects, ListType typ)
+			throws IOException {
 		if (objects == null) {
 			write("null");
 		} else {
@@ -380,15 +401,9 @@ public class JsonWriter extends DynamicWriter {
 		return '"' + in + '"';
 	}
 
-	private void writePair(final String name, final String value)
-			throws IOException {
-		newEntry();
-		writeName(name);
-		write(value);
-	}
-
 	private void writeTypeId(final MGenBase o) throws IOException {
-		writePair("__t", quote(o._typeIds16BitBase64String()));
+		beginWritePair("__t");
+		write(quote(o._typeIds16BitBase64String()));
 	}
 
 	private void beginBlock(final String beginString) throws IOException {
@@ -397,6 +412,11 @@ public class JsonWriter extends DynamicWriter {
 		if (m_depth >= m_iEntry.length)
 			throw new SerializationException("Max recursion depth reached");
 		m_iEntry[m_depth] = 0;
+	}
+
+	private void beginWritePair(final String name) throws IOException {
+		newEntry();
+		writeName(name);
 	}
 
 }
