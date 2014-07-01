@@ -8,9 +8,7 @@
 #ifndef MGENBINARYREADER_H_
 #define MGENBINARYREADER_H_
 
-#include "mgen/classes/MGenBase.h"
 #include "mgen/serialization/VarInt.h"
-#include "mgen/exceptions/StreamCorruptedException.h"
 #include "mgen/classes/ClassRegistryBase.h"
 #include "mgen/util/missingfields.h"
 #include "mgen/util/BuiltInSerializerUtil.h"
@@ -43,17 +41,33 @@
 
 namespace mgen {
 
-template<typename Stream, typename Registry>
+template<typename MGenStreamType, typename ClassRegistryType>
 class BinaryReader {
 public:
 
-    BinaryReader(Stream& inputStream, const Registry& classRegistry) :
+    BinaryReader(
+            MGenStreamType& inputStream,
+            const ClassRegistryType& classRegistry,
+            const bool excessiveTypeChecking = false) :
                     m_inputStream(inputStream),
-                    m_classRegistry(classRegistry) {
+                    m_classRegistry(classRegistry),
+                    m_excessiveTypeChecking(excessiveTypeChecking) {
     }
 
     MGenBase * readObject() {
         return readPoly(true, false, -1);
+    }
+
+    template <typename MGenType>
+    MGenType * readObject() {
+        return (MGenType*) readPoly(true, true, MGenType::_type_id);
+    }
+
+    template <typename MGenType>
+    MGenType readStatic() {
+        MGenType out;
+        read(out, true);
+        return out;
     }
 
     template<typename T>
@@ -186,6 +200,8 @@ private:
     void read(MGenType& object, const bool verifyTag) {
         verifyReadTagIf(Type::TAG_OF(object), verifyTag);
         READ_OBJ_HEADER(return);
+        if (m_excessiveTypeChecking)
+            serialutil::checkExpType(m_classRegistry, &object, ids);
         readFields(object, nFields);
     }
 
@@ -289,8 +305,9 @@ private:
         return out;
     }
 
-    Stream& m_inputStream;
-    const Registry& m_classRegistry;
+    MGenStreamType& m_inputStream;
+    const ClassRegistryType& m_classRegistry;
+    const bool m_excessiveTypeChecking;
 
 };
 

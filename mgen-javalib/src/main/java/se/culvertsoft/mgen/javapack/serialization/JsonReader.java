@@ -58,38 +58,41 @@ public class JsonReader extends BuiltInReader {
 	@Override
 	public byte readInt8Field(final Field field, final Object context)
 			throws IOException {
-		return ((Long) (((JSONObject) context).get(field.name()))).byteValue();
+		return ((Number) (((JSONObject) context).get(field.name())))
+				.byteValue();
 	}
 
 	@Override
 	public short readInt16Field(final Field field, final Object context)
 			throws IOException {
-		return ((Long) (((JSONObject) context).get(field.name()))).shortValue();
+		return ((Number) (((JSONObject) context).get(field.name())))
+				.shortValue();
 	}
 
 	@Override
 	public int readInt32Field(final Field field, final Object context)
 			throws IOException {
-		return ((Long) (((JSONObject) context).get(field.name()))).intValue();
+		return ((Number) (((JSONObject) context).get(field.name()))).intValue();
 	}
 
 	@Override
 	public long readInt64Field(final Field field, final Object context)
 			throws IOException {
-		return ((Long) (((JSONObject) context).get(field.name()))).longValue();
+		return ((Number) (((JSONObject) context).get(field.name())))
+				.longValue();
 	}
 
 	@Override
 	public float readFloat32Field(final Field field, final Object context)
 			throws IOException {
-		return ((Double) (((JSONObject) context).get(field.name())))
+		return ((Number) (((JSONObject) context).get(field.name())))
 				.floatValue();
 	}
 
 	@Override
 	public double readFloat64Field(final Field field, final Object context)
 			throws IOException {
-		return ((Double) (((JSONObject) context).get(field.name())))
+		return ((Number) (((JSONObject) context).get(field.name())))
 				.doubleValue();
 	}
 
@@ -156,10 +159,10 @@ public class JsonReader extends BuiltInReader {
 
 		// Try default type
 		if (tNode == null) {
-			
+
 			if (expType != null)
 				return null;
-			
+
 			throw new MissingRequiredFieldsException(
 					"MGenJSonReader.readMGenObject: Missing field '__t'");
 		}
@@ -293,42 +296,42 @@ public class JsonReader extends BuiltInReader {
 	private byte[] readInt8Array(JSONArray node) throws IOException {
 		final byte[] out = new byte[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = ((Long) node.get(i)).byteValue();
+			out[i] = ((Number) node.get(i)).byteValue();
 		return out;
 	}
 
 	private short[] readInt16Array(JSONArray node) throws IOException {
 		final short[] out = new short[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = ((Long) node.get(i)).shortValue();
+			out[i] = ((Number) node.get(i)).shortValue();
 		return out;
 	}
 
 	private int[] readInt32Array(JSONArray node) throws IOException {
 		final int[] out = new int[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = ((Long) node.get(i)).intValue();
+			out[i] = ((Number) node.get(i)).intValue();
 		return out;
 	}
 
 	private long[] readInt64Array(JSONArray node) throws IOException {
 		final long[] out = new long[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = (Long) node.get(i);
+			out[i] = ((Number) node.get(i)).longValue();
 		return out;
 	}
 
 	private float[] readFloat32Array(JSONArray node) throws IOException {
 		final float[] out = new float[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = ((Double) node.get(i)).floatValue();
+			out[i] = ((Number) node.get(i)).floatValue();
 		return out;
 	}
 
 	private double[] readFloat64Array(JSONArray node) throws IOException {
 		final double[] out = new double[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = (Double) node.get(i);
+			out[i] = ((Number) node.get(i)).doubleValue();
 		return out;
 	}
 
@@ -359,7 +362,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Byte> out = new ArrayList<Byte>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : ((Long) o).byteValue());
+			out.add(o == null ? null : ((Number) o).byteValue());
 		}
 		return out;
 	}
@@ -368,7 +371,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Short> out = new ArrayList<Short>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : ((Long) o).shortValue());
+			out.add(o == null ? null : ((Number) o).shortValue());
 		}
 		return out;
 	}
@@ -377,7 +380,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Integer> out = new ArrayList<Integer>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : ((Long) o).intValue());
+			out.add(o == null ? null : ((Number) o).intValue());
 		}
 		return out;
 	}
@@ -386,7 +389,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Long> out = new ArrayList<Long>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : (Long) o);
+			out.add(o == null ? null : ((Number) o).longValue());
 		}
 		return out;
 	}
@@ -395,7 +398,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Float> out = new ArrayList<Float>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : ((Double) o).floatValue());
+			out.add(o == null ? null : ((Number) o).floatValue());
 		}
 		return out;
 	}
@@ -404,7 +407,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Double> out = new ArrayList<Double>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : (Double) o);
+			out.add(o == null ? null : ((Number) o).doubleValue());
 		}
 		return out;
 	}
@@ -437,17 +440,17 @@ public class JsonReader extends BuiltInReader {
 		case BOOL:
 			return (Boolean) node;
 		case INT8:
-			return ((Long) node).byteValue();
+			return ((Number) node).byteValue();
 		case INT16:
-			return ((Long) node).shortValue();
+			return ((Number) node).shortValue();
 		case INT32:
-			return ((Long) node).intValue();
+			return ((Number) node).intValue();
 		case INT64:
-			return ((Long) node).longValue();
+			return ((Number) node).longValue();
 		case FLOAT32:
-			return ((Double) node).floatValue();
+			return ((Number) node).floatValue();
 		case FLOAT64:
-			return (Double) node;
+			return ((Number) node).doubleValue();
 		case STRING:
 			return (String) node;
 		case ARRAY:

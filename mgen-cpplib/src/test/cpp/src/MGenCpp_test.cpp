@@ -65,7 +65,13 @@ void testBinary(
     std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
 
     // Read it
-    TestType * entityBack = static_cast<TestType*>(reader.readObject());
+    const TestType * entityBack = reader.readObject<TestType>();
+
+    // Check typed reading
+    writer.writeObject(entity);
+    TestType entityBack2;
+    reader.readStatic<TestType>();
+
 
     std::cout << "object: " << entityBack << ", typeName: " << entityBack->_typeName() << std::endl;
 
@@ -118,11 +124,15 @@ void testJson(
 
     const std::string json(buffer.data(), buffer.size());
 
-    std::cout << "Json: " << std::endl;
-    std::cout << json << std::endl;
+    // Check typed reading
+    writer.writeObject(entity);
+    writer.writeObject(entity);
+    TestType entityBack2;
+    reader.readStatic<TestType>();
+    reader.readStatic<TestType>();
 
-    const TestType * back1 = static_cast<TestType*>(reader.readObject());
-    const TestType * back2 = static_cast<TestType*>(reader.readObject());
+    const TestType * back1 = reader.readObject<TestType>();
+    const TestType * back2 = reader.readObject<TestType>();
 
     std::cout << "Read back ptr: " << back1 << std::endl;
     std::cout << "Read back ptr: " << back2 << std::endl;
@@ -132,10 +142,6 @@ void testJson(
 
     buffer.clear();
     writer.writeObject(*back2);
-    const std::string json2(buffer.data(), buffer.size());
-
-    std::cout << "Json2: " << std::endl;
-    std::cout << json2 << std::endl;
 
     const double t0 = getCurTimeSeconds();
     const int n = 10000;

@@ -15,6 +15,25 @@
 namespace mgen {
 namespace serialutil {
 
+#define S(x) toString(x)
+
+#define throw_unexpected_type(expect, actual) \
+    throw UnexpectedTypeException(S("Unexpected type! -> Expected type ").append(S(expect)).append(" but got type ").append(S(actual)))
+
+template <typename ClassRegistryType, typename MGenType, typename IdType>
+void throwByUnexpectedIds(
+        const ClassRegistryType& classReg,
+        const MGenType * obj,
+        const std::vector<IdType>& expIds,
+        const std::vector<IdType>& actualIds) {
+    const mgen::ClassRegistryEntry * entry = classReg.getByIds(actualIds);
+    if (entry) {
+        throw_unexpected_type(MGenType::_type_name(), entry->typeName());
+    } else {
+        throw_unexpected_type(MGenType::_type_name(), S("unknown: ").append(S(actualIds)));
+    }
+}
+
 template<typename ReaderType, typename ClassRegType, typename ContextType>
 MGenBase * readObjInternal(
         ReaderType& reader,
@@ -78,6 +97,50 @@ const ClassRegistryEntry * getCompatibleEntry(
     }
 
 }
+
+template<typename MGenClassRegType, typename MGenType, typename IdType>
+void checkExpType(
+        const MGenClassRegType& classReg,
+        const MGenType * o,
+        const std::vector<IdType>& expIds,
+        const std::vector<IdType>& actualIds) {
+
+    // Ids were omitted, so must assume true
+    if (actualIds.empty())
+        return;
+
+    if (actualIds.size() < expIds.size())
+        throwByUnexpectedIds(classReg, o, expIds, actualIds);
+
+    for (int i = 0; i < expIds.size(); i++) {
+        if (actualIds[i] != expIds[i]) {
+            throwByUnexpectedIds(classReg, o, expIds, actualIds);
+        }
+    }
+
+}
+
+template<typename MGenClassRegType, typename MGenType>
+void checkExpType(
+        const MGenClassRegType& classReg,
+        const MGenType * o,
+        const std::vector<std::string>& actualIds) {
+    static const std::vector<std::string>& expIds = MGenType::_type_ids_16bit_base64();
+    checkExpType(classReg, o, expIds, actualIds);
+}
+
+template<typename MGenClassRegType, typename MGenType>
+void checkExpType(
+        const MGenClassRegType& classReg,
+        const MGenType * o,
+        const std::vector<short>& actualIds) {
+    static const std::vector<short>& expIds = MGenType::_type_ids_16bit();
+    checkExpType(classReg, o, expIds, actualIds);
+}
+
+#undef throw_unexpected_type
+
+#undef S
 
 }
 /* namespace serialutil */
