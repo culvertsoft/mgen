@@ -124,12 +124,15 @@ private:
         return m_compact && expId == m_expectType;
     }
 
+protected:
+
     const bool m_compact;
     long long m_expectType;
     MGenStreamType& m_outputStream;
     internal::JsonOutStream<MGenStreamType> m_jsonStream;
     RapidJsonWriterType m_rapidJsonWriter;
     const ClassRegistryType& m_classRegistry;
+
 };
 
 } /* namespace mgen */

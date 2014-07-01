@@ -18,6 +18,7 @@ public:
             const ClassRegistryType& classRegistry,
             const bool compact = super::default_compact) :
                     super(outputStream, classRegistry, compact) {
+        super::m_rapidJsonWriter.SetIndent('\t', 1);
     }
 
 };
