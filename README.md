@@ -318,7 +318,7 @@ Now we can read these objects back from the buffer in the following manner:
       
       // Other ways of reading objects when the type is known are:
       // Car * car1 = reader.readObject<Car>(); // Polymorphic read with type verification (-> heap)
-      // Car car2 = reader.readStatic<Car>(); // Nonpolymorphic read (-> stack)
+      // Car car2 = reader.readStatic<Car>(); // Nonpolymorphic read with type verification (-> stack)
       
       // Ideally we'd wrap it all in a try-catch block to avoid leaking any exceptions unless we want to
       // try {
