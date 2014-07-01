@@ -50,4 +50,6 @@ public interface Reader {
 
 	public MGenBase readObject() throws IOException;
 
+	public <T extends MGenBase> T readObject(final Class<T> typ) throws IOException;
+	
 }

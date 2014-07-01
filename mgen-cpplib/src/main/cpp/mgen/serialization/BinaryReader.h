@@ -199,7 +199,10 @@ private:
     template<typename MGenType>
     void read(MGenType& object, const bool verifyTag) {
         verifyReadTagIf(Type::TAG_OF(object), verifyTag);
-        READ_OBJ_HEADER(return);
+        READ_OBJ_HEADER({
+            mgen::missingfields::ensureNoMissingFields(object);
+            return;
+        });
         if (m_excessiveTypeChecking)
             serialutil::checkExpType(m_classRegistry, &object, ids);
         readFields(object, nFields);

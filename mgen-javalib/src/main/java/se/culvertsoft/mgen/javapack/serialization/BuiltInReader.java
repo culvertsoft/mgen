@@ -1,6 +1,7 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -60,6 +61,18 @@ abstract public class BuiltInReader implements Reader {
 
 		return entry != null ? entry.construct() : null;
 
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends MGenBase> T readObject(final Class<T> typ)
+			throws IOException {
+		final MGenBase out = readObject();
+		if (out != null && typ != null && !typ.isAssignableFrom(out.getClass())) {
+			throw new UnexpectedTypeException("Unexpected type. Expected "
+					+ typ.getName() + " but got " + out.getClass().getName());
+		}
+		return (T) out;
 	}
 
 }
