@@ -7,16 +7,17 @@
 namespace mgen {
 
 template<typename MGenStreamType, typename ClassRegistryType>
-class JsonWriter: public JsonWriterBase<MGenStreamType, ClassRegistryType, rapidjson::Writer<internal::JsonOutStream<MGenStreamType> > > {
-    typedef JsonWriterBase<MGenStreamType, ClassRegistryType, rapidjson::Writer<internal::JsonOutStream<MGenStreamType> > > super;
+class JsonWriter: public JsonWriterBase<MGenStreamType, ClassRegistryType,
+        rapidjson::Writer<internal::JsonOutStream<MGenStreamType> > > {
+    typedef JsonWriterBase<MGenStreamType, ClassRegistryType,
+            rapidjson::Writer<internal::JsonOutStream<MGenStreamType> > > super;
 public:
 
     JsonWriter(
             MGenStreamType& outputStream,
             const ClassRegistryType& classRegistry,
-            const bool compact = super::default_compact,
-            const int maxDepth = super::default_max_depth) :
-            super(outputStream, classRegistry, compact, maxDepth) {
+            const bool compact = super::default_compact) :
+                    super(outputStream, classRegistry, compact) {
     }
 
 };

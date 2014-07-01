@@ -19,22 +19,19 @@ class BinaryWriter {
 public:
 
     static const bool default_compact = false;
-    static const int default_max_depth = 256;
 
     BinaryWriter(
             MGenStreamType& outputStream,
             const ClassRegistryType& classRegistry,
-            const bool compact = default_compact,
-            const int maxDepth = default_max_depth) :
+            const bool compact = default_compact) :
                     m_compact(compact),
-                    m_expectType(maxDepth),
-                    m_depth(0),
+                    m_expectType(-1),
                     m_outputStream(outputStream),
                     m_classRegistry(classRegistry) {
     }
 
     void writeObject(const MGenBase& object) {
-        m_depth = 0;
+        m_expectType = -1;
         writePoly(object, true);
     }
 
@@ -61,13 +58,9 @@ public:
             writeSize(nFieldsSet);
         }
 
-        m_depth++;
-        if (m_depth >= m_expectType.size())
-            throw SerializationException("Max recursion depth reached");
     }
 
     void endVisit() {
-        m_depth--;
     }
 
 private:
@@ -79,7 +72,7 @@ private:
 
     template<typename MGenType>
     void write(const MGenType& v, const bool doTag) {
-        m_expectType[m_depth] = MGenType::_type_id;
+        m_expectType = MGenType::_type_id;
         writeTagIf(Type::TAG_CUSTOM, doTag);
         v._accept(*this);
     }
@@ -87,7 +80,7 @@ private:
     template<typename MGenType>
     void write(const Polymorphic<MGenType>& v, const bool doTag) {
         if (v.get()) {
-            m_expectType[m_depth] = MGenType::_type_id;
+            m_expectType = MGenType::_type_id;
             writePoly(*v, doTag);
         } else {
             writeTagIf(Type::TAG_CUSTOM, doTag);
@@ -207,12 +200,11 @@ private:
     }
 
     bool shouldOmitIds(const long long expId) {
-        return m_compact && m_depth > 0 && expId == m_expectType[m_depth];
+        return m_compact && expId == m_expectType;
     }
 
     const bool m_compact;
-    std::vector<long long> m_expectType;
-    int m_depth;
+    long long m_expectType;
     MGenStreamType& m_outputStream;
     const ClassRegistryType& m_classRegistry;
 };

@@ -35,29 +35,18 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 public class BinaryWriter extends BuiltInWriter {
 
 	public static final boolean DEFAULT_COMPACT = false;
-	public static final int DEFAULT_MAX_DEPTH = 256;
 
 	private final boolean m_compact;
-	private final long[] m_expectType;
-	private int m_depth;
-
-	public BinaryWriter(
-			final OutputStream stream,
-			final ClassRegistry classRegistry,
-			final boolean compact,
-			final int maxDepth) {
-		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
-				: new DataOutputStream(stream), classRegistry);
-		m_compact = compact;
-		m_expectType = new long[maxDepth];
-		m_depth = 0;
-	}
+	private long m_expectType;
 
 	public BinaryWriter(
 			final OutputStream stream,
 			final ClassRegistry classRegistry,
 			final boolean compact) {
-		this(stream, classRegistry, compact, DEFAULT_MAX_DEPTH);
+		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
+				: new DataOutputStream(stream), classRegistry);
+		m_compact = compact;
+		m_expectType = -1;
 	}
 
 	public BinaryWriter(
@@ -68,7 +57,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
-		m_depth = 0;
+		m_expectType = -1;
 		writeMGenObject(o, true, null);
 	}
 
@@ -88,14 +77,10 @@ public class BinaryWriter extends BuiltInWriter {
 			writeSize(nFieldsSet);
 		}
 
-		m_depth++;
-		if (m_depth >= m_expectType.length)
-			throw new SerializationException("Max recursion depth reached");
 	}
 
 	@Override
 	public void finishWrite() {
-		m_depth--;
 	}
 
 	@Override
@@ -199,7 +184,7 @@ public class BinaryWriter extends BuiltInWriter {
 			writeTypeTag(TAG_CUSTOM);
 
 		if (o != null) {
-			m_expectType[m_depth] = typ != null ? typ.typeId() : 0;
+			m_expectType = typ != null ? typ.typeId() : 0;
 			o._accept(this);
 		} else {
 			m_stream.writeByte(0);
@@ -601,7 +586,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	private boolean shouldOmitIds(final MGenBase o) {
-		return m_compact && m_depth > 0 && o._typeId() == m_expectType[m_depth];
+		return m_compact && o._typeId() == m_expectType;
 	}
 
 	private void writeTypeTag(byte tag) throws IOException {

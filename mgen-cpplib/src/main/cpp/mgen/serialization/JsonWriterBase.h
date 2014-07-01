@@ -11,16 +11,13 @@ class JsonWriterBase {
 public:
 
     static const bool default_compact = false;
-    static const int default_max_depth = 256;
 
     JsonWriterBase(
             MGenStreamType& outputStream,
             const ClassRegistryType& classRegistry,
-            const bool compact = default_compact,
-            const int maxDepth = default_max_depth) :
+            const bool compact = default_compact) :
                     m_compact(compact),
-                    m_expectType(maxDepth),
-                    m_depth(0),
+                    m_expectType(-1),
                     m_outputStream(outputStream),
                     m_jsonStream(m_outputStream),
                     m_rapidJsonWriter(m_jsonStream),
@@ -28,7 +25,7 @@ public:
     }
 
     void writeObject(const MGenBase& object) {
-        m_depth = 0;
+        m_expectType = -1;
         writePoly(object);
     }
 
@@ -52,15 +49,9 @@ public:
             m_rapidJsonWriter.String("__t");
             m_rapidJsonWriter.String(idsString.c_str());
         }
-
-        m_depth++;
-        if (m_depth >= m_expectType.size())
-            throw SerializationException("Max recursion depth reached");
-
     }
 
     void endVisit() {
-        m_depth--;
         m_rapidJsonWriter.EndObject();
     }
 
@@ -72,14 +63,14 @@ private:
 
     template<typename MGenType>
     void write(const MGenType& v) {
-        m_expectType[m_depth] = MGenType::_type_id;
+        m_expectType = MGenType::_type_id;
         v._accept(*this);
     }
 
     template<typename MGenType>
     void write(const Polymorphic<MGenType>& v) {
         if (v.get()) {
-            m_expectType[m_depth] = MGenType::_type_id;
+            m_expectType = MGenType::_type_id;
             writePoly(*v);
         } else {
             m_rapidJsonWriter.Null();
@@ -130,12 +121,11 @@ private:
     }
 
     bool shouldOmitIds(const long long expId) {
-        return m_compact && m_depth > 0 && expId == m_expectType[m_depth];
+        return m_compact && expId == m_expectType;
     }
 
     const bool m_compact;
-    std::vector<long long> m_expectType;
-    int m_depth;
+    long long m_expectType;
     MGenStreamType& m_outputStream;
     internal::JsonOutStream<MGenStreamType> m_jsonStream;
     RapidJsonWriterType m_rapidJsonWriter;
