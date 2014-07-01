@@ -129,12 +129,10 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	@Override
-	public
-			MGenBase
-			readMgenObjectField(final Field field, final Object context)
-					throws IOException {
-		ensureTypeTag(field, TAG_CUSTOM, readTypeTag());
-		return readMGenObject(false, (UnknownCustomType) field.typ());
+	public MGenBase readMgenObjectField(final Field f, final Object context)
+			throws IOException {
+		ensureTypeTag(f, TAG_CUSTOM, readTypeTag());
+		return readMGenObject(false, (UnknownCustomType) f.typ());
 	}
 
 	@Override

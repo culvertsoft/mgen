@@ -43,25 +43,39 @@ template<typename ClassRegType, typename IdType>
 const ClassRegistryEntry * getCompatibleEntry(
         const ClassRegType& classReg,
         const std::vector<IdType>& ids,
-        const bool constrained,
-        const long constraint) {
+        const bool isExpType,
+        const long long expType) {
 
-    const ClassRegistryEntry * entry = classReg.getByIds(ids);
+    if (!ids.empty()) {
 
-    if (constrained) {
-        if (!entry) {
-            new UnexpectedTypeException("Unknown type: " + toString(ids));
-        } else if (!entry->isInstanceOfTypeId(constraint)) {
-            const ClassRegistryEntry * expEntry = classReg.getByTypeId(constraint);
-            new UnexpectedTypeException(
-                    std::string("Unexpected type. Expected ")
-                    .append(expEntry ? expEntry->typeName() : " <unknown> ")
-                    .append(" but got ")
-                    .append(entry->typeName()));
+        const ClassRegistryEntry * entry = classReg.getByIds(ids);
+
+        if (isExpType) {
+            if (entry) {
+                if (!entry->isInstanceOfTypeId(expType)) {
+                    const ClassRegistryEntry * expEntry = classReg.getByTypeId(expType);
+                    throw UnexpectedTypeException(
+                            std::string(
+                                    "BuiltInSerializerUtil::getCompatibleEntry: Unexpected type. Expected ").append(
+                                    expEntry ? expEntry->typeName() : " <unknown> ").append(
+                                    " but got ").append(entry->typeName()));
+                }
+
+            } else if (isExpType) {
+                throw UnexpectedTypeException(
+                        "BuiltInSerializerUtil::getCompatibleEntry: Unknown type: "
+                                + toString(ids));
+            }
         }
-    }
 
-    return entry;
+        return entry;
+
+    } else if (isExpType) {
+        return classReg.getByTypeId(expType);
+    } else {
+        throw SerializationException(
+                "BuiltInSerializerUtil::getCompatibleEntry: Missing type information");
+    }
 
 }
 

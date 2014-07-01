@@ -81,10 +81,10 @@ public class BinaryWriter extends BuiltInWriter {
 		if (shouldOmitIds(object)) {
 			writeSize(nFieldsSet << 1);
 		} else {
-			final short[] typeIds = object._typeIds16Bit();
-			writeSize((typeIds.length << 1) | 0x01);
-			for (final short typeId : typeIds)
-				writeInt16(typeId, false);
+			final short[] ids = object._typeIds16Bit();
+			writeSize((ids.length << 1) | 0x01);
+			for (final short id : ids)
+				writeInt16(id, false);
 			writeSize(nFieldsSet);
 		}
 
