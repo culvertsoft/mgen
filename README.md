@@ -316,10 +316,9 @@ Now we can read these objects back from the buffer in the following manner:
         }
       }
       
-      // Or we could just c style cast it for simplicity
-      Car * car1 = (Car*)obj1;
-      Car * car2 = (Car*)obj2;
-      Car * car3 = (Car*)obj3;
+      // Other ways of reading objects when know what you will are:
+      // Car * car1 = reader.readObject<Car>(); // Polymorphic read with type verification (-> heap)
+      // Car car2 = reader.readStatic<Car>(); // Nonpolymorphic read (-> stack)
       
       // Ideally we'd wrap it all in a try-catch block to avoid leaking any exceptions unless we want to
       // try {
