@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
 import java.io.DataInputStream;
-import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -10,6 +9,7 @@ import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
+import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 
 abstract public class BuiltInReader implements Reader {
 
@@ -63,16 +63,16 @@ abstract public class BuiltInReader implements Reader {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public <T extends MGenBase> T readObject(final Class<T> typ)
-			throws IOException {
-		final MGenBase out = readObject();
-		if (out != null && typ != null && !typ.isAssignableFrom(out.getClass())) {
-			throw new UnexpectedTypeException("Unexpected type. Expected "
-					+ typ.getName() + " but got " + out.getClass().getName());
-		}
-		return (T) out;
+	protected ClassRegistryEntry getRegEntry(final Class<?> typ) {
+
+		final ClassRegistryEntry entry = m_clsReg.getByClass(typ);
+
+		if (entry == null)
+			throw new UnknownTypeException("Could not read object of type "
+					+ typ + ", since it is know known by the class registry");
+
+		return entry;
+
 	}
 
 }

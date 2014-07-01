@@ -24,6 +24,7 @@ import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
+import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
 import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 import se.culvertsoft.mgen.javapack.serialization.mgen2jsonsimple.MGenJSONParser;
 
@@ -41,12 +42,23 @@ public class JsonReader extends BuiltInReader {
 
 	@Override
 	public MGenBase readObject() throws IOException {
-		try {
-			final Object parsed = m_parser.parseNext();
-			return readMGenObject((JSONObject) parsed, null);
-		} catch (final ParseException e) {
-			throw new StreamCorruptedException(e);
+		return readMGenObject(parseRootObject(), null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends MGenBase> T readObject(final Class<T> typ)
+			throws IOException {
+
+		final MGenBase out = readMGenObject(parseRootObject(), getRegEntry(typ)
+				.typ());
+
+		if (out != null && !typ.isAssignableFrom(out.getClass())) {
+			throw new UnexpectedTypeException("Unexpected type. Expected "
+					+ typ.getName() + " but got " + out.getClass().getName());
 		}
+
+		return (T) out;
 	}
 
 	@Override
@@ -465,6 +477,14 @@ public class JsonReader extends BuiltInReader {
 			return readMGenObject((JSONObject) node, (UnknownCustomType) typ);
 		default:
 			throw new UnknownTypeException("Unknown type: " + typ);
+		}
+	}
+
+	private JSONObject parseRootObject() throws IOException {
+		try {
+			return (JSONObject) m_parser.parseNext();
+		} catch (final ParseException e) {
+			throw new StreamCorruptedException(e);
 		}
 	}
 

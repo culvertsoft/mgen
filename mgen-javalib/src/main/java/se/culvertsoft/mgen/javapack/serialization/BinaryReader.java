@@ -33,6 +33,7 @@ import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
+import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
@@ -47,6 +48,21 @@ public class BinaryReader extends BuiltInReader {
 	@Override
 	public final MGenBase readObject() throws IOException {
 		return readMGenObject(true, null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends MGenBase> T readObject(final Class<T> typ)
+			throws IOException {
+
+		final MGenBase out = readMGenObject(true, getRegEntry(typ).typ());
+
+		if (out != null && !typ.isAssignableFrom(out.getClass())) {
+			throw new UnexpectedTypeException("Unexpected type. Expected "
+					+ typ.getName() + " but got " + out.getClass().getName());
+		}
+
+		return (T) out;
 	}
 
 	@Override
