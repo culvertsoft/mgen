@@ -11,8 +11,12 @@ class JsonWriter: public JsonWriterBase<MGenStreamType, ClassRegistryType, rapid
     typedef JsonWriterBase<MGenStreamType, ClassRegistryType, rapidjson::Writer<internal::JsonOutStream<MGenStreamType> > > super;
 public:
 
-    JsonWriter(MGenStreamType& outputStream, const ClassRegistryType& classRegistry) :
-            super(outputStream, classRegistry) {
+    JsonWriter(
+            MGenStreamType& outputStream,
+            const ClassRegistryType& classRegistry,
+            const bool compact = super::default_compact,
+            const int maxDepth = super::default_max_depth) :
+            super(outputStream, classRegistry, compact, maxDepth) {
     }
 
 };

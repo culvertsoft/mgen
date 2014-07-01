@@ -31,9 +31,16 @@ void testBinary(
     mgen::VectorInputStream inNoClasses(buffer);
 
     // Create our serializers
-    mgen::BinaryWriter<mgen::VectorOutputStream, gameworld::types::ClassRegistry> writer(out, registry);
-    mgen::BinaryReader<mgen::VectorInputStream, gameworld::types::ClassRegistry> reader(in, registry);
-    mgen::BinaryReader<mgen::VectorInputStream, mgen::EmptyClassRegistry> readerNoClasses(inNoClasses, emptyRegistry);
+    mgen::BinaryWriter<mgen::VectorOutputStream, gameworld::types::ClassRegistry> writer(
+            out,
+            registry,
+            true);
+    mgen::BinaryReader<mgen::VectorInputStream, gameworld::types::ClassRegistry> reader(
+            in,
+            registry);
+    mgen::BinaryReader<mgen::VectorInputStream, mgen::EmptyClassRegistry> readerNoClasses(
+            inNoClasses,
+            emptyRegistry);
 
     const double t0 = getCurTimeSeconds();
     const int n = 100000;
@@ -66,11 +73,19 @@ void testBinary(
     std::cout << "brand: " << (entity.getBrand() == entityBack->getBrand()) << std::endl;
     std::cout << "getId: " << (entity.getId() == entityBack->getId()) << std::endl;
     std::cout << "getNWheels: " << (entity.getNWheels() == entityBack->getNWheels()) << std::endl;
-    std::cout << "getTopSpeed: " << (entity.getTopSpeed() == entityBack->getTopSpeed()) << std::endl;
-    std::cout << "getPositioning: " << (entity.getPositioning() == entityBack->getPositioning()) << std::endl;
-    std::cout << "getAcceleration: " << (entity.getPositioning().getAcceleration() == entityBack->getPositioning().getAcceleration()) << std::endl;
-    std::cout << "getPosition: " << (entity.getPositioning().getPosition() == entityBack->getPositioning().getPosition()) << std::endl;
-    std::cout << "getVelocity: " << (entity.getPositioning().getVelocity() == entityBack->getPositioning().getVelocity()) << std::endl;
+    std::cout << "getTopSpeed: " << (entity.getTopSpeed() == entityBack->getTopSpeed())
+            << std::endl;
+    std::cout << "getPositioning: " << (entity.getPositioning() == entityBack->getPositioning())
+            << std::endl;
+    std::cout << "getAcceleration: "
+            << (entity.getPositioning().getAcceleration()
+                    == entityBack->getPositioning().getAcceleration()) << std::endl;
+    std::cout << "getPosition: "
+            << (entity.getPositioning().getPosition() == entityBack->getPositioning().getPosition())
+            << std::endl;
+    std::cout << "getVelocity: "
+            << (entity.getPositioning().getVelocity() == entityBack->getPositioning().getVelocity())
+            << std::endl;
 
     std::cout << "acc1ptr: " << entity.getPositioning().getAcceleration().get() << std::endl;
 
@@ -89,9 +104,14 @@ void testJson(
     mgen::VectorInputStream inNoClasses(buffer);
 
     // Create our serializers
-    mgen::JsonWriter<mgen::VectorOutputStream, gameworld::types::ClassRegistry> writer(out, registry);
+    mgen::JsonPrettyWriter<mgen::VectorOutputStream, gameworld::types::ClassRegistry> writer(
+            out,
+            registry,
+            true);
     mgen::JsonReader<mgen::VectorInputStream, gameworld::types::ClassRegistry> reader(in, registry);
-    mgen::JsonReader<mgen::VectorInputStream, mgen::EmptyClassRegistry> readerNoClasses(inNoClasses, emptyRegistry);
+    mgen::JsonReader<mgen::VectorInputStream, mgen::EmptyClassRegistry> readerNoClasses(
+            inNoClasses,
+            emptyRegistry);
 
     writer.writeObject(entity);
     writer.writeObject(entity);
@@ -109,14 +129,14 @@ void testJson(
 
     std::cout << "back1 == entity: " << (*back1 == entity) << std::endl;
     std::cout << "back2 == entity: " << (*back2 == entity) << std::endl;
-    
+
     buffer.clear();
     writer.writeObject(*back2);
     const std::string json2(buffer.data(), buffer.size());
-        
+
     std::cout << "Json2: " << std::endl;
     std::cout << json2 << std::endl;
-    
+
     const double t0 = getCurTimeSeconds();
     const int n = 10000;
 
@@ -162,9 +182,15 @@ int main() {
     std::cout << "posSet: " << entity._isPositioningSet(mgen::DEEP) << std::endl;
     std::cout << "valid: " << entity._validate(mgen::DEEP) << std::endl;
 
-    testJson(registry, emptyRegistry, entity);
+    try {
 
-    testBinary(registry, emptyRegistry, entity);
+        testJson(registry, emptyRegistry, entity);
+
+        testBinary(registry, emptyRegistry, entity);
+
+    } catch (const mgen::Exception& exception) {
+        std::cout << "Caught: " << exception.what() << std::endl;
+    }
 
 #ifdef _MSC_VER
     _getch();

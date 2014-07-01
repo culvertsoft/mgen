@@ -11,8 +11,12 @@ class JsonPrettyWriter: public JsonWriterBase<MGenStreamType, ClassRegistryType,
     typedef JsonWriterBase<MGenStreamType, ClassRegistryType, rapidjson::PrettyWriter<internal::JsonOutStream<MGenStreamType> > > super;
 public:
 
-    JsonPrettyWriter(MGenStreamType& outputStream, const ClassRegistryType& classRegistry) :
-            super(outputStream, classRegistry) {
+    JsonPrettyWriter(
+            MGenStreamType& outputStream,
+            const ClassRegistryType& classRegistry,
+            const bool compact = super::default_compact,
+            const int maxDepth = super::default_max_depth) :
+            super(outputStream, classRegistry, compact, maxDepth) {
     }
 
 };

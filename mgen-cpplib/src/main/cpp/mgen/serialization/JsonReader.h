@@ -17,6 +17,8 @@
 #include "mgen/util/missingfields.h"
 #include "mgen/util/BuiltInSerializerUtil.h"
 
+#include <iostream>
+
 namespace mgen {
 namespace internal {
 
@@ -27,7 +29,10 @@ class JsonInStream {
 public:
 
     JsonInStream(InputStreamType * stream) :
-            m_nRead(0), m_buf(0x00), m_peeked(false), m_stream(stream) {
+                    m_nRead(0),
+                    m_buf(0x00),
+                    m_peeked(false),
+                    m_stream(stream) {
     }
 
     char Peek() const {
@@ -90,7 +95,9 @@ public:
     typedef rapidjson::Document::GenericValue::ConstValueIterator ArrayIterator;
 
     JsonReader(Stream& inputStream, const Registry& classRegistry) :
-            m_inputStream(inputStream), m_jsonStream(&m_inputStream), m_clsReg(classRegistry) {
+                    m_inputStream(inputStream),
+                    m_jsonStream(&m_inputStream),
+                    m_clsReg(classRegistry) {
     }
 
     MGenBase * readObject() {
@@ -98,7 +105,7 @@ public:
                 rapidjson::kParseDefaultFlags>(m_jsonStream);
         if (!doc.HasParseError()) {
             const Node& node = doc;
-            return readMgenObject(node, false, -1);
+            return readPoly(node, false, -1);
         } else {
             throw StreamCorruptedException(
                     std::string("JsonReader::readMgenObject(): Could not parse json, reason: ").append(
@@ -134,36 +141,28 @@ public:
 
 private:
 
-    MGenBase * readMgenObject(
-            const Node& node,
-            const bool constrained,
-            const long long expectTypeId,
-            MGenBase * object = 0) {
+    MGenBase * readPoly(const Node& node, const bool constrained, const long long expectTypeId) {
+
+        if (node.IsNull())
+            return 0;
 
         const std::vector<std::string> ids = readIds(node);
 
-        if (!ids.empty()) {
+        const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(
+                m_clsReg,
+                ids,
+                constrained,
+                expectTypeId);
 
-            const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(
-                    m_clsReg,
-                    ids,
-                    constrained,
-                    expectTypeId);
+        if (entry)
+            return serialutil::readObjInternal(*this, m_clsReg, node, 0, *entry);
 
-            if (entry)
-                object = serialutil::readObjInternal(*this, m_clsReg, node, object, *entry);
-
-        }
-
-        return object;
+        return 0;
 
     }
 
     const std::vector<std::string> readIds(const Node& node) {
         static const std::vector<std::string> emptyIds(0);
-
-        if (node.IsNull())
-            return emptyIds;
 
         const Node& v = node["__t"];
         if (v.IsString()) {
@@ -179,11 +178,8 @@ private:
             return ids;
 
         } else {
-            throw SerializationException(
-                    std::string("JsonReader.h::readMGenObject: Node is missing \"__t\" field."));
+            return emptyIds;
         }
-
-        return emptyIds;
 
     }
 
@@ -214,22 +210,23 @@ private:
         }
     }
 
-    template<typename T>
-    void read(Polymorphic<T>& v, const Node& node) {
+    template<typename MGenType>
+    void read(Polymorphic<MGenType>& object, const Node& node) {
         if (node.IsObject()) {
-            v.set((T*) readMgenObject(node, true, T::_type_id));
+            object.set((MGenType*) readPoly(node, true, MGenType::_type_id));
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type(T::_type_name(), "something_wrong");
+            throw_unexpected_type(MGenType::_type_name(), "something_wrong");
         }
     }
 
-    void read(MGenBase& v, const Node& node) {
+    template<typename MGenType>
+    void read(MGenType& object, const Node& node) {
         if (node.IsObject()) {
-            readMgenObject(node, true, v._typeId(), &v);
+            readFields(object, node);
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type(v._typeName(), "something_wrong");
+            throw_unexpected_type(object._typeName(), "something_wrong");
         }
     }
 
