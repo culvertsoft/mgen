@@ -21,3 +21,10 @@ doc:
 	#  DOCUMENTATION MGEN-CPPGENERATOR      #
 	#########################################
 	sbt doc
+    
+run-tests:
+	#######################################
+	#      TESTING MGEN-CPPGENERATOR      #
+	#######################################
+    #NOT_YET_IMPLEMENTED#
+    

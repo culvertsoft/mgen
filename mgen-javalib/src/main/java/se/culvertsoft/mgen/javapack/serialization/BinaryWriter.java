@@ -34,15 +34,30 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryWriter extends BuiltInWriter {
 
+	public static final boolean DEFAULT_COMPACT = false;
+
+	private final boolean m_compact;
+	private long m_expectType;
+
+	public BinaryWriter(
+			final OutputStream stream,
+			final ClassRegistry classRegistry,
+			final boolean compact) {
+		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
+				: new DataOutputStream(stream), classRegistry);
+		m_compact = compact;
+		m_expectType = -1;
+	}
+
 	public BinaryWriter(
 			final OutputStream stream,
 			final ClassRegistry classRegistry) {
-		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
-				: new DataOutputStream(stream), classRegistry);
+		this(stream, classRegistry, DEFAULT_COMPACT);
 	}
 
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
+		m_expectType = -1;
 		writeMGenObject(o, true, null);
 	}
 
@@ -51,11 +66,17 @@ public class BinaryWriter extends BuiltInWriter {
 			final MGenBase object,
 			final int nFieldsSet,
 			final int nFieldsTotal) throws IOException {
-		final short[] typeIds = object._typeIds16Bit();
-		writeSize(typeIds.length);
-		for (final short typeId : typeIds)
-			writeInt16(typeId, false);
-		writeSize(nFieldsSet);
+
+		if (shouldOmitIds(object)) {
+			writeSize(nFieldsSet << 1);
+		} else {
+			final short[] ids = object._typeIds16Bit();
+			writeSize((ids.length << 1) | 0x01);
+			for (final short id : ids)
+				writeInt16(id, false);
+			writeSize(nFieldsSet);
+		}
+
 	}
 
 	@Override
@@ -163,6 +184,7 @@ public class BinaryWriter extends BuiltInWriter {
 			writeTypeTag(TAG_CUSTOM);
 
 		if (o != null) {
+			m_expectType = typ != null ? typ.typeId() : 0;
 			o._accept(this);
 		} else {
 			m_stream.writeByte(0);
@@ -561,6 +583,10 @@ public class BinaryWriter extends BuiltInWriter {
 			throw new SerializationException("Unknown type tag for writeObject");
 		}
 
+	}
+
+	private boolean shouldOmitIds(final MGenBase o) {
+		return m_compact && o._typeId() == m_expectType;
 	}
 
 	private void writeTypeTag(byte tag) throws IOException {

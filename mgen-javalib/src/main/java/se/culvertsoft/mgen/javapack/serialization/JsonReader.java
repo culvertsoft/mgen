@@ -24,6 +24,7 @@ import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
+import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
 import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 import se.culvertsoft.mgen.javapack.serialization.mgen2jsonsimple.MGenJSONParser;
 
@@ -31,7 +32,8 @@ public class JsonReader extends BuiltInReader {
 
 	private final MGenJSONParser m_parser;
 
-	public JsonReader(final InputStream stream,
+	public JsonReader(
+			final InputStream stream,
 			final ClassRegistry classRegistry) {
 		super(stream instanceof DataInputStream ? (DataInputStream) stream
 				: new DataInputStream(stream), classRegistry);
@@ -40,12 +42,23 @@ public class JsonReader extends BuiltInReader {
 
 	@Override
 	public MGenBase readObject() throws IOException {
-		try {
-			final Object parsed = m_parser.parseNext();
-			return readMGenObject((JSONObject) parsed, null);
-		} catch (final ParseException e) {
-			throw new StreamCorruptedException(e);
+		return readMGenObject(parseRootObject(), null);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T extends MGenBase> T readObject(final Class<T> typ)
+			throws IOException {
+
+		final MGenBase out = readMGenObject(parseRootObject(), getRegEntry(typ)
+				.typ());
+
+		if (out != null && !typ.isAssignableFrom(out.getClass())) {
+			throw new UnexpectedTypeException("Unexpected type. Expected "
+					+ typ.getName() + " but got " + out.getClass().getName());
 		}
+
+		return (T) out;
 	}
 
 	@Override
@@ -57,38 +70,41 @@ public class JsonReader extends BuiltInReader {
 	@Override
 	public byte readInt8Field(final Field field, final Object context)
 			throws IOException {
-		return ((Long) (((JSONObject) context).get(field.name()))).byteValue();
+		return ((Number) (((JSONObject) context).get(field.name())))
+				.byteValue();
 	}
 
 	@Override
 	public short readInt16Field(final Field field, final Object context)
 			throws IOException {
-		return ((Long) (((JSONObject) context).get(field.name()))).shortValue();
+		return ((Number) (((JSONObject) context).get(field.name())))
+				.shortValue();
 	}
 
 	@Override
 	public int readInt32Field(final Field field, final Object context)
 			throws IOException {
-		return ((Long) (((JSONObject) context).get(field.name()))).intValue();
+		return ((Number) (((JSONObject) context).get(field.name()))).intValue();
 	}
 
 	@Override
 	public long readInt64Field(final Field field, final Object context)
 			throws IOException {
-		return ((Long) (((JSONObject) context).get(field.name()))).longValue();
+		return ((Number) (((JSONObject) context).get(field.name())))
+				.longValue();
 	}
 
 	@Override
 	public float readFloat32Field(final Field field, final Object context)
 			throws IOException {
-		return ((Double) (((JSONObject) context).get(field.name())))
+		return ((Number) (((JSONObject) context).get(field.name())))
 				.floatValue();
 	}
 
 	@Override
 	public double readFloat64Field(final Field field, final Object context)
 			throws IOException {
-		return ((Double) (((JSONObject) context).get(field.name())))
+		return ((Number) (((JSONObject) context).get(field.name())))
 				.doubleValue();
 	}
 
@@ -117,9 +133,11 @@ public class JsonReader extends BuiltInReader {
 	}
 
 	@Override
-	public final MGenBase readMgenObjectField(final Field field,
+	public final MGenBase readMgenObjectField(
+			final Field field,
 			final Object context) throws IOException {
-		return readMGenObject(getJsonObj(field, context),
+		return readMGenObject(
+				getJsonObj(field, context),
 				(UnknownCustomType) field.typ());
 	}
 
@@ -128,13 +146,14 @@ public class JsonReader extends BuiltInReader {
 			throws IOException {
 	}
 
-	private MGenBase readMGenObject(final JSONObject node,
-			final UnknownCustomType constraint) throws IOException {
+	private MGenBase readMGenObject(
+			final JSONObject node,
+			final UnknownCustomType expType) throws IOException {
 
-		if (node == null || node.isEmpty())
+		if (node == null)
 			return null;
 
-		final MGenBase object = instantiate(readIds(node), constraint);
+		final MGenBase object = instantiate(readIds(node, expType), expType);
 
 		if (object != null) {
 			readObjectFields(object, node);
@@ -146,10 +165,21 @@ public class JsonReader extends BuiltInReader {
 
 	}
 
-	private String[] readIds(final JSONObject node) {
+	private String[] readIds(final JSONObject node, final Type expType) {
 
-		final String typeIdsString = node.get("__t").toString();
-		throwMissingFieldIfNull(typeIdsString, "__t");
+		final Object tNode = node.get("__t");
+
+		// Try default type
+		if (tNode == null) {
+
+			if (expType != null)
+				return null;
+
+			throw new MissingRequiredFieldsException(
+					"MGenJSonReader.readMGenObject: Missing field '__t'");
+		}
+
+		final String typeIdsString = tNode.toString();
 
 		final String[] ids = new String[typeIdsString.length() / 3];
 		for (int i = 0; i < ids.length; i++)
@@ -278,42 +308,42 @@ public class JsonReader extends BuiltInReader {
 	private byte[] readInt8Array(JSONArray node) throws IOException {
 		final byte[] out = new byte[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = ((Long) node.get(i)).byteValue();
+			out[i] = ((Number) node.get(i)).byteValue();
 		return out;
 	}
 
 	private short[] readInt16Array(JSONArray node) throws IOException {
 		final short[] out = new short[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = ((Long) node.get(i)).shortValue();
+			out[i] = ((Number) node.get(i)).shortValue();
 		return out;
 	}
 
 	private int[] readInt32Array(JSONArray node) throws IOException {
 		final int[] out = new int[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = ((Long) node.get(i)).intValue();
+			out[i] = ((Number) node.get(i)).intValue();
 		return out;
 	}
 
 	private long[] readInt64Array(JSONArray node) throws IOException {
 		final long[] out = new long[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = (Long) node.get(i);
+			out[i] = ((Number) node.get(i)).longValue();
 		return out;
 	}
 
 	private float[] readFloat32Array(JSONArray node) throws IOException {
 		final float[] out = new float[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = ((Double) node.get(i)).floatValue();
+			out[i] = ((Number) node.get(i)).floatValue();
 		return out;
 	}
 
 	private double[] readFloat64Array(JSONArray node) throws IOException {
 		final double[] out = new double[node.size()];
 		for (int i = 0; i < node.size(); i++)
-			out[i] = (Double) node.get(i);
+			out[i] = ((Number) node.get(i)).doubleValue();
 		return out;
 	}
 
@@ -344,7 +374,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Byte> out = new ArrayList<Byte>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : ((Long) o).byteValue());
+			out.add(o == null ? null : ((Number) o).byteValue());
 		}
 		return out;
 	}
@@ -353,7 +383,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Short> out = new ArrayList<Short>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : ((Long) o).shortValue());
+			out.add(o == null ? null : ((Number) o).shortValue());
 		}
 		return out;
 	}
@@ -362,7 +392,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Integer> out = new ArrayList<Integer>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : ((Long) o).intValue());
+			out.add(o == null ? null : ((Number) o).intValue());
 		}
 		return out;
 	}
@@ -371,7 +401,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Long> out = new ArrayList<Long>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : (Long) o);
+			out.add(o == null ? null : ((Number) o).longValue());
 		}
 		return out;
 	}
@@ -380,7 +410,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Float> out = new ArrayList<Float>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : ((Double) o).floatValue());
+			out.add(o == null ? null : ((Number) o).floatValue());
 		}
 		return out;
 	}
@@ -389,7 +419,7 @@ public class JsonReader extends BuiltInReader {
 		final ArrayList<Double> out = new ArrayList<Double>(node.size());
 		for (int i = 0; i < node.size(); i++) {
 			final Object o = node.get(i);
-			out.add(o == null ? null : (Double) o);
+			out.add(o == null ? null : ((Number) o).doubleValue());
 		}
 		return out;
 	}
@@ -422,17 +452,17 @@ public class JsonReader extends BuiltInReader {
 		case BOOL:
 			return (Boolean) node;
 		case INT8:
-			return ((Long) node).byteValue();
+			return ((Number) node).byteValue();
 		case INT16:
-			return ((Long) node).shortValue();
+			return ((Number) node).shortValue();
 		case INT32:
-			return ((Long) node).intValue();
+			return ((Number) node).intValue();
 		case INT64:
-			return ((Long) node).longValue();
+			return ((Number) node).longValue();
 		case FLOAT32:
-			return ((Double) node).floatValue();
+			return ((Number) node).floatValue();
 		case FLOAT64:
-			return (Double) node;
+			return ((Number) node).doubleValue();
 		case STRING:
 			return (String) node;
 		case ARRAY:
@@ -450,12 +480,11 @@ public class JsonReader extends BuiltInReader {
 		}
 	}
 
-	protected void throwMissingFieldIfNull(final Object o,
-			final String fieldName) {
-		if (o == null) {
-			throw new MissingRequiredFieldsException(
-					"MGenJSonReader.readMGenObject: Missing field '"
-							+ fieldName + "'");
+	private JSONObject parseRootObject() throws IOException {
+		try {
+			return (JSONObject) m_parser.parseNext();
+		} catch (final ParseException e) {
+			throw new StreamCorruptedException(e);
 		}
 	}
 

@@ -9,6 +9,7 @@ import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
+import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 
 abstract public class BuiltInReader implements Reader {
 
@@ -23,17 +24,19 @@ abstract public class BuiltInReader implements Reader {
 		m_clsReg = classRegistry;
 	}
 
-	protected MGenBase instantiate(String[] ids, UnknownCustomType constraint) {
+	protected MGenBase instantiate(String[] ids, UnknownCustomType expType) {
 
-		final ClassRegistryEntry entry = m_clsReg.getByTypeIds16BitBase64(ids);
+		final ClassRegistryEntry entry = ids != null ? m_clsReg
+				.getByTypeIds16BitBase64(ids) : m_clsReg.getById(expType
+				.typeId());
 
-		if (constraint != null) {
+		if (expType != null) {
 			if (entry == null) {
 				throw new UnexpectedTypeException("Unknown type: "
 						+ Arrays.toString(ids));
-			} else if (!entry.isInstanceOfTypeId(constraint.typeId())) {
+			} else if (!entry.isInstanceOfTypeId(expType.typeId())) {
 				throw new UnexpectedTypeException("Unexpected type. Expected "
-						+ constraint.fullName() + " but got " + entry.clsName());
+						+ expType.fullName() + " but got " + entry.clsName());
 			}
 		}
 
@@ -41,21 +44,34 @@ abstract public class BuiltInReader implements Reader {
 
 	}
 
-	protected MGenBase instantiate(short[] ids, UnknownCustomType constraint) {
+	protected MGenBase instantiate(short[] ids, UnknownCustomType expType) {
 
-		final ClassRegistryEntry entry = m_clsReg.getByTypeIds16Bit(ids);
+		final ClassRegistryEntry entry = ids != null ? m_clsReg
+				.getByTypeIds16Bit(ids) : m_clsReg.getById(expType.typeId());
 
-		if (constraint != null) {
+		if (expType != null) {
 			if (entry == null) {
 				throw new UnexpectedTypeException("Unknown type: "
 						+ Arrays.toString(ids));
-			} else if (!entry.isInstanceOfTypeId(constraint.typeId())) {
+			} else if (!entry.isInstanceOfTypeId(expType.typeId())) {
 				throw new UnexpectedTypeException("Unexpected type. Expected "
-						+ constraint.fullName() + " but got " + entry.clsName());
+						+ expType.fullName() + " but got " + entry.clsName());
 			}
 		}
 
 		return entry != null ? entry.construct() : null;
+
+	}
+
+	protected ClassRegistryEntry getRegEntry(final Class<?> typ) {
+
+		final ClassRegistryEntry entry = m_clsReg.getByClass(typ);
+
+		if (entry == null)
+			throw new UnknownTypeException("Could not read object of type "
+					+ typ + ", since it is know known by the class registry");
+
+		return entry;
 
 	}
 

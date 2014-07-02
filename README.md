@@ -4,7 +4,7 @@
 
 MGen is a toolkit for designing multi langauge data models with built-in functionality such as serialization and type introspection. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code in multiple programming languages may be generated using the MGen Compiler.
 
-The goal of MGen is to to simplify type-safe cross-language data model design and collaboration between software components, while also permitting significant data model changes without requiring all participants to modify their software.
+The goal of MGen is to to simplify type-safe cross-language data model design and collaboration between software components, while also permitting significant data model changes without requiring all participants to rebuild their software.
 
 To better fit custom applications, extensions to the MGen toolkit can be made without recompiling the MGen tools or libraries through a plug-in based architecture.
 
@@ -264,7 +264,7 @@ Let us then create some objects from the generated classes and set some properti
       
 Now let us try to serialize these cars to JSON. This is how we do it:
 
-      // First we create the class registry. For the curious, it handles dynamic method dispatch to visitor methods with template arguments (the serializer being the template argument).
+      // First we create a class registry. For the curious, it handles dynamic method dispatch to visitor methods with template arguments (the serializer being the template argument).
       ClassRegistry classRegistry;
       
       // We will serialize our objects to this std::vector of bytes
@@ -316,10 +316,9 @@ Now we can read these objects back from the buffer in the following manner:
         }
       }
       
-      // Or we could just c style cast it for simplicity
-      Car * car1 = (Car*)obj1;
-      Car * car2 = (Car*)obj2;
-      Car * car3 = (Car*)obj3;
+      // Other ways of reading objects when the type is known are:
+      // Car * car1 = reader.readObject<Car>(); // Polymorphic read (-> heap)
+      // Car car2 = reader.readStatic<Car>(); // Nonpolymorphic read (-> stack)
       
       // Ideally we'd wrap it all in a try-catch block to avoid leaking any exceptions unless we want to
       // try {

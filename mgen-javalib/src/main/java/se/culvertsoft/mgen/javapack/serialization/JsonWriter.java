@@ -21,28 +21,39 @@ import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
 public class JsonWriter extends DynamicWriter {
 
 	public static final int DEFAULT_MAX_DEPTH = 256;
+	public static final boolean DEFAULT_COMPACT = false;
 
+	protected final boolean m_compact;
 	protected final int[] m_iEntry;
 	protected int m_depth = 0;
 
 	public JsonWriter(
 			final OutputStream outputStream,
 			final ClassRegistry classRegistry,
+			final boolean compact,
 			final int maxDepth) {
 		super(outputStream, classRegistry);
+		m_compact = compact;
 		m_iEntry = new int[maxDepth];
 	}
 
 	public JsonWriter(
 			final OutputStream outputStream,
+			final ClassRegistry classRegistry,
+			final boolean compact) {
+		this(outputStream, classRegistry, compact, DEFAULT_MAX_DEPTH);
+	}
+
+	public JsonWriter(
+			final OutputStream outputStream,
 			final ClassRegistry classRegistry) {
-		this(outputStream, classRegistry, DEFAULT_MAX_DEPTH);
+		this(outputStream, classRegistry, DEFAULT_COMPACT);
 	}
 
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
 		m_depth = 0;
-		writeMGenObject(o);
+		writeMGenObject(o, null);
 		flush();
 	}
 
@@ -50,7 +61,7 @@ public class JsonWriter extends DynamicWriter {
 	public void writeMGenObjectField(MGenBase o, Field field)
 			throws IOException {
 		beginWritePair(field.name());
-		writeMGenObject(o);
+		writeMGenObject(o, field.typ());
 	}
 
 	@Override
@@ -58,13 +69,10 @@ public class JsonWriter extends DynamicWriter {
 			final MGenBase o,
 			final int nFieldsSet,
 			final int nFieldsTotal) throws IOException {
-		beginBlock("{");
-		writeTypeId(o);
 	}
 
 	@Override
 	public void finishWrite() throws IOException {
-		endBlock("}", m_iEntry[m_depth] > 0);
 	}
 
 	@Override
@@ -167,11 +175,16 @@ public class JsonWriter extends DynamicWriter {
 		write(endString);
 	}
 
-	private void writeMGenObject(MGenBase o) throws IOException {
+	private void writeMGenObject(MGenBase o, Type expectType)
+			throws IOException {
 		if (o == null) {
 			write("null");
 		} else {
+			beginBlock("{");
+			if (needWriteTypeId(o, expectType))
+				writeTypeId(o);
 			o._accept(this);
+			endBlock("}", m_iEntry[m_depth] > 0);
 		}
 	}
 
@@ -220,7 +233,7 @@ public class JsonWriter extends DynamicWriter {
 		case MGEN_BASE:
 		case UNKNOWN:
 		case CUSTOM:
-			writeMGenObject((MGenBase) o);
+			writeMGenObject((MGenBase) o, typ);
 			break;
 		default:
 			throw new SerializationException("Unknown type for writeObject");
@@ -407,6 +420,12 @@ public class JsonWriter extends DynamicWriter {
 		if (m_depth >= m_iEntry.length)
 			throw new SerializationException("Max recursion depth reached");
 		m_iEntry[m_depth] = 0;
+	}
+
+	private boolean needWriteTypeId(final MGenBase o, final Type expectType) {
+		if (expectType == null || !m_compact)
+			return true;
+		return o._typeId() != expectType.typeId();
 	}
 
 	private void beginWritePair(final String name) throws IOException {

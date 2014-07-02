@@ -61,22 +61,43 @@ run-compiler:
 run-visualdesigner:
 	cd mgen-visualdesigner && make run
 
-test:
+run-tests:
 	#########################################################
 	#                                                       #
 	#       RUNNING ALL TESTS                               #
 	#                                                       #
 	#########################################################
-	cd mgen-api && make test
-	cd mgen-compiler && make test
-	cd mgen-cppgenerator && make test
-	cd mgen-javagenerator && make test
-	cd mgen-javascriptgenerator && make test
-	cd mgen-cpplib && make test
-	cd mgen-javalib && make test
-	cd mgen-visualdesigner && make test
+	cd mgen-api && make run-tests
+	cd mgen-compiler && make run-tests
+	cd mgen-cppgenerator && make run-tests
+	cd mgen-javagenerator && make run-tests
+	#cd mgen-javascriptgenerator && make run-tests
+	cd mgen-cpplib && make run-tests
+	cd mgen-javalib && make run-tests
+	cd mgen-visualdesigner && make run-tests
 	#########################################################
 	#                                                       #
 	#        DONE RUNNING ALL TEST                          #
+	#                                                       #
+	#########################################################
+
+
+doc:
+	#########################################################
+	#                                                       #
+	#       MAKING DOCUMENTATION                            #
+	#                                                       #
+	#########################################################
+	cd mgen-api && make doc
+	cd mgen-compiler && make doc
+	cd mgen-cppgenerator && make doc
+	cd mgen-javagenerator && make doc
+	#cd mgen-javascriptgenerator && make doc
+	cd mgen-cpplib && make doc
+	cd mgen-javalib && make doc
+	cd mgen-visualdesigner && make doc
+	#########################################################
+	#                                                       #
+	#        DONE MAKING DOCUMENTATION                      #
 	#                                                       #
 	#########################################################

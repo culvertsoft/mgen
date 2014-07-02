@@ -13,6 +13,9 @@ import se.culvertsoft.mgen.javapack.serialization.BuiltInWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonReader
 import se.culvertsoft.mgen.javapack.serialization.JsonWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter
+import gameworld.types.basemodule1.Car
+import gameworld.types.basemodule1.Vehicle
+import gameworld.types.basemodule1.Item
 
 class ObjectSerialization {
 
@@ -21,9 +24,20 @@ class ObjectSerialization {
     val classRegEntries = classRegistry.entries()
     val stream = new ByteArrayOutputStream
     val jsonWriter = new JsonWriter(stream, classRegistry)
+    val jsonWriterCompact = new JsonWriter(stream, classRegistry, true)
     val jsonPrettyWriter = new JsonPrettyWriter(stream, classRegistry)
+    val jsonPrettyWriterCompact = new JsonPrettyWriter(stream, classRegistry, true)
     val binaryWriter = new BinaryWriter(stream, classRegistry)
-    val writers = Seq(jsonWriter, jsonPrettyWriter, binaryWriter)
+    val binaryWriterCompact = new BinaryWriter(stream, classRegistry, true)
+
+    val writers = Seq(
+      jsonWriter,
+      jsonWriterCompact,
+      jsonPrettyWriter,
+      jsonPrettyWriterCompact,
+      binaryWriter,
+      binaryWriterCompact)
+
     def reset() { stream.reset() }
   }
 
@@ -60,7 +74,7 @@ class ObjectSerialization {
     assert(invalid.nonEmpty)
 
     for (writer <- state.writers) {
-      valid.foreach(o => AssertNoThrow(writer.writeObject(o)))
+      valid.foreach(o => /*AssertNoThrow*/ (writer.writeObject(o)))
       invalid.foreach(o => AssertThrows(writer.writeObject(o)))
     }
 
@@ -92,4 +106,45 @@ class ObjectSerialization {
 
   }
 
+  @Test
+  def testExplicitReadType() {
+    implicit val state = new TestState()
+
+    val (all, valid, invalid) = mkTestObjects()
+
+    all foreach (_._setAllFieldsSet(true, FieldSetDepth.DEEP))
+
+    val car = new Car
+    car._setAllFieldsSet(true, FieldSetDepth.DEEP)
+
+    for (writer <- state.writers) {
+
+      state.reset()
+
+      {
+        writer.writeObject(car)
+        val reader = getReader(writer)
+        val carBack = reader.readObject(classOf[Car])
+        assert(carBack == car)
+        state.reset()
+      }
+
+      {
+        writer.writeObject(car)
+        val reader = getReader(writer)
+        val carBack = reader.readObject(classOf[Vehicle])
+        assert(carBack == car)
+        state.reset()
+      }
+
+      {
+        writer.writeObject(car)
+        val reader = getReader(writer)
+        AssertThrows(reader.readObject(classOf[Item]))
+        state.reset()
+      }
+
+    }
+
+  }
 }

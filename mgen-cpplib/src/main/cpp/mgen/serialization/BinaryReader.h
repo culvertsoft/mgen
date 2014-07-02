@@ -8,28 +8,66 @@
 #ifndef MGENBINARYREADER_H_
 #define MGENBINARYREADER_H_
 
-#include "mgen/classes/MGenBase.h"
 #include "mgen/serialization/VarInt.h"
-#include "mgen/exceptions/StreamCorruptedException.h"
 #include "mgen/classes/ClassRegistryBase.h"
 #include "mgen/util/missingfields.h"
 #include "mgen/util/BuiltInSerializerUtil.h"
 
+/*********************************************
+ *
+ *
+ *              HELPER MACROS
+ *
+ ********************************************/
+
 #define S(x) toString(x)
+
+#define READ_OBJ_HEADER(retCall) \
+    const int nIdsOrFields = readSize(); \
+    if (nIdsOrFields == 0) retCall; \
+    const bool hasIds = (nIdsOrFields & 0x01) != 0; \
+    const int nIds = hasIds ? (nIdsOrFields >> 1) : 0; \
+    std::vector<short> ids(nIds); \
+    for (int i = 0; i < nIds; i++) \
+        read(ids[i], false); \
+    const int nFields = hasIds ? readSize() : (nIdsOrFields >> 1);
+
+/*********************************************
+ *
+ *
+ *                  IMPL
+ *
+ ********************************************/
 
 namespace mgen {
 
-template<typename Stream, typename Registry>
+template<typename MGenStreamType, typename ClassRegistryType>
 class BinaryReader {
 public:
 
-    BinaryReader(Stream& inputStream, const Registry& classRegistry) :
-            m_inputStream(inputStream), m_classRegistry(classRegistry) {
-
+    BinaryReader(
+            MGenStreamType& inputStream,
+            const ClassRegistryType& classRegistry,
+            const bool excessiveTypeChecking = false) :
+                    m_inputStream(inputStream),
+                    m_classRegistry(classRegistry),
+                    m_excessiveTypeChecking(excessiveTypeChecking) {
     }
 
     MGenBase * readObject() {
-        return readMgenObject(true, false, -1);
+        return readPoly(true, false, -1);
+    }
+
+    template <typename MGenType>
+    MGenType * readObject() {
+        return (MGenType*) readPoly(true, true, MGenType::_type_id);
+    }
+
+    template <typename MGenType>
+    MGenType readStatic() {
+        MGenType out;
+        read(out, true);
+        return out;
     }
 
     template<typename T>
@@ -42,61 +80,38 @@ public:
     }
 
     template<typename ClassType>
-    void readFields(ClassType& object, const int /*context*/) {
-
-        const int nFields = readSize();
-
+    void readFields(ClassType& object, const int nFields) {
         for (int i = 0; i < nFields; i++) {
             const short fieldId = readFieldId();
             object._readField(fieldId, fieldId, *this);
         }
-
         mgen::missingfields::ensureNoMissingFields(object);
     }
 
 private:
 
-    int context_ignore;
-
-    MGenBase * readMgenObject(
+    MGenBase * readPoly(
             const bool verifyTag,
             const bool constrained,
-            const long long expectTypeId,
-            MGenBase * object = 0) {
+            const long long expectTypeId) {
 
         verifyReadTagIf(Type::TAG_CUSTOM, verifyTag);
 
-        const int nIds = readSize();
+        READ_OBJ_HEADER(return 0);
 
-        if (nIds > 0) {
+        const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(
+                m_classRegistry,
+                ids,
+                constrained,
+                expectTypeId);
 
-            const ClassRegistryEntry * entry = getCompatibleEntry(nIds, constrained, expectTypeId);
-
-            if (entry) {
-                object = serialutil::readObjInternal(
-                        *this,
-                        m_classRegistry,
-                        context_ignore,
-                        object,
-                        *entry);
-            } else {
-                skipFields();
-            }
-
+        if (entry) {
+            return serialutil::readObjInternal(*this, m_classRegistry, nFields, 0, *entry);
+        } else {
+            skipFields(nFields);
+            return 0;
         }
 
-        return object;
-
-    }
-
-    const ClassRegistryEntry * getCompatibleEntry(
-            const int nIds,
-            const bool constrained,
-            const long long expectTypeId) {
-        std::vector<short> ids(nIds);
-        for (int i = 0; i < nIds; i++)
-            read(ids[i], false);
-        return serialutil::getCompatibleEntry(m_classRegistry, ids, constrained, expectTypeId);
     }
 
     void skipList() {
@@ -116,8 +131,7 @@ private:
         }
     }
 
-    void skipFields() {
-        const int nFields = readSize();
+    void skipFields(const int nFields) {
         for (int i = 0; i < nFields; i++) {
             readFieldId();
             skip(readTag());
@@ -125,12 +139,8 @@ private:
     }
 
     void skipCustom() {
-        const int nIds = readSize();
-        if (nIds > 0) {
-            for (int i = 0; i < nIds; i++)
-                readRaw<short>();
-            skipFields();
-        }
+        READ_OBJ_HEADER(return);
+        skipFields(nFields);
     }
 
 #define SKIP_CASE_READ(tag, skipcall) case tag: {skipcall; break;}
@@ -183,12 +193,19 @@ private:
     template<typename T>
     void read(Polymorphic<T>& v, const bool verifyTag) {
         verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        v.set((T*) readMgenObject(false, true, T::_type_id));
+        v.set((T*) readPoly(false, true, T::_type_id));
     }
 
-    void read(MGenBase& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        readMgenObject(false, true, v._typeId(), &v);
+    template<typename MGenType>
+    void read(MGenType& object, const bool verifyTag) {
+        verifyReadTagIf(Type::TAG_OF(object), verifyTag);
+        READ_OBJ_HEADER({
+            mgen::missingfields::ensureNoMissingFields(object);
+            return;
+        });
+        if (m_excessiveTypeChecking)
+            serialutil::checkExpType(m_classRegistry, &object, ids);
+        readFields(object, nFields);
     }
 
     void read(bool& v, const bool verifyTag) {
@@ -291,13 +308,15 @@ private:
         return out;
     }
 
-    Stream& m_inputStream;
-    const Registry& m_classRegistry;
+    MGenStreamType& m_inputStream;
+    const ClassRegistryType& m_classRegistry;
+    const bool m_excessiveTypeChecking;
 
 };
 
 } /* namespace mgen */
 
+#undef READ_OBJ_HEADER
 #undef S
 
 #endif /* MGENBINARYREADER_H_ */

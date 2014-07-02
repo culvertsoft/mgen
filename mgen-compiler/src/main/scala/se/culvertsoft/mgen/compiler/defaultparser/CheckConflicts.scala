@@ -7,6 +7,7 @@ import scala.collection.mutable.HashSet
 
 import se.culvertsoft.mgen.api.exceptions.TypeConflictException
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Project
 
@@ -63,6 +64,16 @@ object CheckConflicts {
 
     assertNoDuplicates(allTypes, (t: CustomType) => (t.superType.typeId, t.typeId16Bit)) { (t1, t2) =>
       throw new TypeConflictException(s"Conflicting 16 bit type IDs with same super type. Types: ${t1.fullName} and ${t2.fullName()}, with super type ${t1.superType().fullName}.")
+    }
+
+    for (t <- allTypes) {
+      val fields = t.fields()
+      assertNoDuplicates(fields, (f: Field) => f.name) { (f1, f2) =>
+        throw new TypeConflictException(s"Conflicting field names for type ${t.fullName()}: ${f1} and ${f2}.")
+      }
+      assertNoDuplicates(fields, (f: Field) => f.id) { (f1, f2) =>
+        throw new TypeConflictException(s"Conflicting field ids for type ${t.fullName()}: ${f1} and ${f2}.")
+      }
     }
 
   }

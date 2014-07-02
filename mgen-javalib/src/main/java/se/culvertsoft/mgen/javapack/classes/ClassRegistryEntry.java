@@ -1,5 +1,8 @@
 package se.culvertsoft.mgen.javapack.classes;
 
+import se.culvertsoft.mgen.api.model.UnknownCustomType;
+import se.culvertsoft.mgen.api.model.impl.UnknownCustomTypeImpl;
+
 public class ClassRegistryEntry {
 
 	public ClassRegistryEntry(
@@ -12,6 +15,7 @@ public class ClassRegistryEntry {
 		m_typeIds = typeIds;
 		m_clsName = className;
 		m_ctor = ctor;
+		m_type = new UnknownCustomTypeImpl(m_clsName, typeId);
 	}
 
 	private static Class<?> lkupClass(final String className) {
@@ -45,6 +49,10 @@ public class ClassRegistryEntry {
 	public Class<?> cls() {
 		return m_cls;
 	}
+	
+	public UnknownCustomType typ() {
+		return m_type;
+	}
 
 	public boolean isInstanceOfTypeId(final long typeId) {
 		for (int i = m_typeIds.length - 1; i >= 0; i--) {
@@ -60,5 +68,6 @@ public class ClassRegistryEntry {
 	private final long[] m_typeIds;
 	private final String m_clsName;
 	private final Ctor m_ctor;
+	private final UnknownCustomType m_type;
 
 }

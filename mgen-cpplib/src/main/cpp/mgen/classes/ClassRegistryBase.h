@@ -16,6 +16,8 @@ namespace mgen {
 class ClassRegistryBase {
 public:
 
+    typedef std::map<long long, ClassRegistryEntry> EntryMap;
+
     static const int INVALID_16BIT_ID = 0xFFFFFFFF;
 
     template<typename T>
@@ -40,6 +42,10 @@ public:
     int getTypeId16bitFromTypeId16BitBase64(const std::string& typeId16bitBase64) const {
         const std::map<std::string, int>::const_iterator it = m_typeId16BitBase642TypeId16Bit.find(typeId16bitBase64);
         return it != m_typeId16BitBase642TypeId16Bit.end() ? it->second : INVALID_16BIT_ID;
+    }
+
+    const EntryMap& entries() {
+        return m_typeId2Entry;
     }
 
 private:

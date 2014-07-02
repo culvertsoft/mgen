@@ -8,80 +8,19 @@
 #ifndef JsonREADER_H_
 #define JsonREADER_H_
 
-#include "mgen/classes/MGenBase.h"
-#include "mgen/serialization/VarInt.h"
-#include "mgen/exceptions/StreamCorruptedException.h"
-#include "mgen/classes/ClassRegistryBase.h"
-#include "mgen/util/missingfields.h"
 #include "mgen/ext/rapidjson/document.h"
-#include "mgen/util/missingfields.h"
-#include "mgen/util/BuiltInSerializerUtil.h"
+#include "mgen/classes/ClassRegistryBase.h"
+#include "mgen/exceptions/StreamCorruptedException.h"
+#include "JsonInputStream.h"
 
 namespace mgen {
-namespace internal {
 
-#define throw_unexpected_type(expect, actual) throw SerializationException(std::string("JsonReader: unexpected type! -> Expected type ").append(expect).append(" but got type ").append(actual))
+#define S(x) toString(x)
 
-template<typename InputStreamType>
-class JsonInStream {
-public:
+#define throw_unexpected_type(expect, actual) \
+    throw UnexpectedTypeException(S("Unexpected type! -> Expected type ").append(S(expect)).append(" but got type ").append(S(actual)))
 
-    JsonInStream(InputStreamType * stream) :
-            m_nRead(0), m_buf(0x00), m_peeked(false), m_stream(stream) {
-    }
-
-    char Peek() const {
-        if (!m_peeked) {
-            m_buf = const_cast<JsonInStream&>(*this).readByte();
-            m_peeked = true;
-        }
-        return m_buf;
-    }
-
-    char Take() {
-        m_nRead++;
-        if (m_peeked) {
-            m_peeked = false;
-            return m_buf;
-        } else {
-            return readByte();
-        }
-    }
-
-    std::size_t Tell() {
-        return m_nRead;
-    }
-
-    char * PutBegin() {
-        throw SerializationException("JsonInStream::PutBegin(): BUG: Should not be called!");
-    }
-
-    void Put(const char c) {
-        throw SerializationException("JsonInStream::Put(): BUG: Should not be called!");
-    }
-
-    size_t PutEnd(char * begin) {
-        throw SerializationException("JsonInStream::PutEnd(): BUG: Should not be called!");
-    }
-
-private:
-
-    char readByte() {
-        char out;
-        m_stream->read(&out, 1);
-        return out;
-    }
-
-    int m_nRead;
-    mutable char m_buf;
-    mutable bool m_peeked;
-    InputStreamType * m_stream;
-
-};
-
-} /* namespace internal */
-
-template<typename Stream, typename Registry>
+template<typename MGenStreamType, typename ClassRegistryType>
 class JsonReader {
 public:
 
@@ -89,21 +28,30 @@ public:
     typedef rapidjson::Document::GenericValue::ConstMemberIterator MemberIterator;
     typedef rapidjson::Document::GenericValue::ConstValueIterator ArrayIterator;
 
-    JsonReader(Stream& inputStream, const Registry& classRegistry) :
-            m_inputStream(inputStream), m_jsonStream(&m_inputStream), m_clsReg(classRegistry) {
+    JsonReader(
+            MGenStreamType& inputStream,
+            const ClassRegistryType& classRegistry,
+            const bool excessiveTypeChecking = false) :
+                    m_inputStream(inputStream),
+                    m_jsonStream(&m_inputStream),
+                    m_clsReg(classRegistry),
+                    m_excessiveTypeChecking(excessiveTypeChecking) {
     }
 
     MGenBase * readObject() {
-        const rapidjson::Document& doc = m_rapidJsonDocument.ParseStream<
-                rapidjson::kParseDefaultFlags>(m_jsonStream);
-        if (!doc.HasParseError()) {
-            const Node& node = doc;
-            return readMgenObject(node, false, -1);
-        } else {
-            throw StreamCorruptedException(
-                    std::string("JsonReader::readMgenObject(): Could not parse json, reason: ").append(
-                            doc.GetParseError()));
-        }
+        return readPoly(readDocumentRoot(), false, -1);
+    }
+
+    template <typename MGenType>
+    MGenType * readObject() {
+        return (MGenType*) readPoly(readDocumentRoot(), true, MGenType::_type_id);
+    }
+
+    template<typename MGenType>
+    MGenType readStatic() {
+        MGenType out;
+        read(out, readDocumentRoot());
+        return out;
     }
 
     template<typename FieldType>
@@ -134,36 +82,28 @@ public:
 
 private:
 
-    MGenBase * readMgenObject(
-            const Node& node,
-            const bool constrained,
-            const long long expectTypeId,
-            MGenBase * object = 0) {
+    MGenBase * readPoly(const Node& node, const bool constrained, const long long expectTypeId) {
+
+        if (node.IsNull())
+            return 0;
 
         const std::vector<std::string> ids = readIds(node);
 
-        if (!ids.empty()) {
+        const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(
+                m_clsReg,
+                ids,
+                constrained,
+                expectTypeId);
 
-            const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(
-                    m_clsReg,
-                    ids,
-                    constrained,
-                    expectTypeId);
+        if (entry)
+            return serialutil::readObjInternal(*this, m_clsReg, node, 0, *entry);
 
-            if (entry)
-                object = serialutil::readObjInternal(*this, m_clsReg, node, object, *entry);
-
-        }
-
-        return object;
+        return 0;
 
     }
 
     const std::vector<std::string> readIds(const Node& node) {
         static const std::vector<std::string> emptyIds(0);
-
-        if (node.IsNull())
-            return emptyIds;
 
         const Node& v = node["__t"];
         if (v.IsString()) {
@@ -179,11 +119,8 @@ private:
             return ids;
 
         } else {
-            throw SerializationException(
-                    std::string("JsonReader.h::readMGenObject: Node is missing \"__t\" field."));
+            return emptyIds;
         }
-
-        return emptyIds;
 
     }
 
@@ -196,7 +133,7 @@ private:
                 read(v[i], node[i]);
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type("array", "something_wrong");
+            throw_unexpected_type("array", "something_else");
         }
     }
 
@@ -210,26 +147,29 @@ private:
             }
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type("map", "something_wrong");
+            throw_unexpected_type("map", "something_else");
         }
     }
 
-    template<typename T>
-    void read(Polymorphic<T>& v, const Node& node) {
+    template<typename MGenType>
+    void read(Polymorphic<MGenType>& object, const Node& node) {
         if (node.IsObject()) {
-            v.set((T*) readMgenObject(node, true, T::_type_id));
+            object.set((MGenType*) readPoly(node, true, MGenType::_type_id));
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type(T::_type_name(), "something_wrong");
+            throw_unexpected_type(MGenType::_type_name(), "something_else");
         }
     }
 
-    void read(MGenBase& v, const Node& node) {
+    template<typename MGenType>
+    void read(MGenType& object, const Node& node) {
         if (node.IsObject()) {
-            readMgenObject(node, true, v._typeId(), &v);
+            if (m_excessiveTypeChecking)
+                serialutil::checkExpType(m_clsReg, &object, readIds(node));
+            readFields(object, node);
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type(v._typeName(), "something_wrong");
+            throw_unexpected_type(object._typeName(), "something_else");
         }
     }
 
@@ -237,7 +177,7 @@ private:
         if (node.IsBool()) {
             v = node.GetBool();
         } else {
-            throw_unexpected_type("bool", "something_wrong");
+            throw_unexpected_type("bool", "something_else");
         }
     }
 
@@ -265,7 +205,7 @@ private:
             v = node.GetString();
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type("string", "something_wrong");
+            throw_unexpected_type("string", "something_else");
         }
     }
 
@@ -299,14 +239,29 @@ private:
         return T();
     }
 
-    Stream& m_inputStream;
-    internal::JsonInStream<Stream> m_jsonStream;
+    const rapidjson::Document& readDocumentRoot() {
+        const rapidjson::Document& node = m_rapidJsonDocument.ParseStream<
+                rapidjson::kParseDefaultFlags>(m_jsonStream);
+        if (!node.HasParseError()) {
+            return node;
+        } else {
+            throw StreamCorruptedException(
+                    std::string("JsonReader::readDocumentRoot(): Could not parse json, reason: ").append(
+                            node.GetParseError()));
+        }
+    }
+
+    MGenStreamType& m_inputStream;
+    internal::JsonInStream<MGenStreamType> m_jsonStream;
     rapidjson::Document m_rapidJsonDocument;
-    const Registry& m_clsReg;
+    const ClassRegistryType& m_clsReg;
+    const bool m_excessiveTypeChecking;
 
 };
 
 #undef throw_unexpected_type
+
+#undef S
 
 } /* namespace mgen */
 

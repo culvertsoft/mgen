@@ -10,14 +10,22 @@ public class JsonPrettyWriter extends JsonWriter {
 	public JsonPrettyWriter(
 			final OutputStream outputStream,
 			final ClassRegistry classRegistry,
+			final boolean compact,
 			final int maxDepth) {
-		super(outputStream, classRegistry, maxDepth);
+		super(outputStream, classRegistry, compact, maxDepth);
+	}
+
+	public JsonPrettyWriter(
+			final OutputStream outputStream,
+			final ClassRegistry classRegistry,
+			final boolean compact) {
+		this(outputStream, classRegistry, compact, DEFAULT_MAX_DEPTH);
 	}
 
 	public JsonPrettyWriter(
 			final OutputStream outputStream,
 			final ClassRegistry classRegistry) {
-		this(outputStream, classRegistry, DEFAULT_MAX_DEPTH);
+		this(outputStream, classRegistry, DEFAULT_COMPACT);
 	}
 
 	@Override

@@ -14,15 +14,24 @@
 
 namespace mgen {
 
-template<typename Stream, typename Registry>
+template<typename MGenStreamType, typename ClassRegistryType>
 class BinaryWriter {
 public:
 
-    BinaryWriter(Stream& outputStream, const Registry& classRegistry) :
-            m_outputStream(outputStream), m_classRegistry(classRegistry) {
+    static const bool default_compact = false;
+
+    BinaryWriter(
+            MGenStreamType& outputStream,
+            const ClassRegistryType& classRegistry,
+            const bool compact = default_compact) :
+                    m_compact(compact),
+                    m_expectType(-1),
+                    m_outputStream(outputStream),
+                    m_classRegistry(classRegistry) {
     }
 
     void writeObject(const MGenBase& object) {
+        m_expectType = -1;
         writePoly(object, true);
     }
 
@@ -36,14 +45,18 @@ public:
 
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
-        static const std::vector<short>& typeIds = MGenType::_type_ids_16bit();
+        static const std::vector<short>& ids = MGenType::_type_ids_16bit();
 
         missingfields::ensureNoMissingFields(object);
 
-        writeSize(typeIds.size());
-        for (std::size_t i = 0; i < typeIds.size(); i++)
-            write(typeIds[i], false);
-        writeSize(nFieldsSet);
+        if (shouldOmitIds(MGenType::_type_id)) {
+            writeSize(nFieldsSet << 1);
+        } else {
+            writeSize((int(ids.size()) << 1) | 0x01);
+            for (std::size_t i = 0; i < ids.size(); i++)
+                write(ids[i], false);
+            writeSize(nFieldsSet);
+        }
 
     }
 
@@ -59,13 +72,15 @@ private:
 
     template<typename MGenType>
     void write(const MGenType& v, const bool doTag) {
+        m_expectType = MGenType::_type_id;
         writeTagIf(Type::TAG_CUSTOM, doTag);
         v._accept(*this);
     }
 
-    template<typename T>
-    void write(const Polymorphic<T>& v, const bool doTag) {
+    template<typename MGenType>
+    void write(const Polymorphic<MGenType>& v, const bool doTag) {
         if (v.get()) {
+            m_expectType = MGenType::_type_id;
             writePoly(*v, doTag);
         } else {
             writeTagIf(Type::TAG_CUSTOM, doTag);
@@ -184,8 +199,14 @@ private:
         m_outputStream.write(&v, sizeof(T));
     }
 
-    Stream& m_outputStream;
-    const Registry& m_classRegistry;
+    bool shouldOmitIds(const long long expId) {
+        return m_compact && expId == m_expectType;
+    }
+
+    const bool m_compact;
+    long long m_expectType;
+    MGenStreamType& m_outputStream;
+    const ClassRegistryType& m_classRegistry;
 };
 
 } /* namespace mgen */

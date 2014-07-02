@@ -7,12 +7,18 @@
 namespace mgen {
 
 template<typename MGenStreamType, typename ClassRegistryType>
-class JsonPrettyWriter: public JsonWriterBase<MGenStreamType, ClassRegistryType, rapidjson::PrettyWriter<internal::JsonOutStream<MGenStreamType> > > {
-    typedef JsonWriterBase<MGenStreamType, ClassRegistryType, rapidjson::PrettyWriter<internal::JsonOutStream<MGenStreamType> > > super;
+class JsonPrettyWriter: public JsonWriterBase<MGenStreamType, ClassRegistryType,
+        rapidjson::PrettyWriter<internal::JsonOutStream<MGenStreamType> > > {
+    typedef JsonWriterBase<MGenStreamType, ClassRegistryType,
+            rapidjson::PrettyWriter<internal::JsonOutStream<MGenStreamType> > > super;
 public:
 
-    JsonPrettyWriter(MGenStreamType& outputStream, const ClassRegistryType& classRegistry) :
-            super(outputStream, classRegistry) {
+    JsonPrettyWriter(
+            MGenStreamType& outputStream,
+            const ClassRegistryType& classRegistry,
+            const bool compact = super::default_compact) :
+                    super(outputStream, classRegistry, compact) {
+        super::m_rapidJsonWriter.SetIndent('\t', 1);
     }
 
 };
