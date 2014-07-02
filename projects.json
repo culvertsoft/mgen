@@ -4,7 +4,7 @@
 	"def_files": {
 		"java-assembly": [ "%PROJECT-assembly-%VERSION.jar" ],
 		"java": ["%PROJECT-%VERSION.jar", "%PROJECT-%VERSION-javadoc.jar", "%PROJECT-%VERSION-sources.jar"],
-		"cpp": ["%PROJECT-test"]
+		"cpp": []
 	},
 
 	"path_to_projects": "./",
