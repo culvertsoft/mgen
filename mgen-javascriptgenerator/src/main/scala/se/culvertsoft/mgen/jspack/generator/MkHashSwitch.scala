@@ -16,7 +16,7 @@ object MkHashSwitch {
           if (t.subTypes().nonEmpty) {
             apply(t.subTypes(), depth + 1)
           }
-          ln("return registry.classRegistry[\"" + t.fullName() + "\"];")
+          ln("return \"" + t.fullName() + "\";")
         }
       }
     }
