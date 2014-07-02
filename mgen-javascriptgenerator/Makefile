@@ -20,4 +20,11 @@ doc:
 	#############################################
 	#  DOCUMENTATION MGEN-JAVASCRIPTGENERATOR   #
 	#############################################
-	sbt doc
+	sbt doc	
+    
+run-tests:
+	##########################################
+	#     TESTING MGEN-JAVASCRIPTGENERATOR   #
+	##########################################
+    #NOT_YET_IMPLEMENTED#
+	

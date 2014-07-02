@@ -36,3 +36,10 @@ doc:
 	#  DOCUMENTATION MGEN-VISUALDESIGNER    #
 	#########################################
 	sbt doc
+    
+run-tests:
+	#####################################
+	#     TESTING MGEN-VISUALDESIGNER   #
+	#####################################
+    #NOT_YET_IMPLEMENTED#
+	

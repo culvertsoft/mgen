@@ -12,7 +12,7 @@ eclipse:
 
 clean:
 	#########################################
-	#    CLEANING MGEN-COMPILER             #
+	#        CLEANING MGEN-COMPILER         #
 	#########################################
 	sbt clean
 
@@ -22,6 +22,12 @@ run:	all
 
 doc:
 	#########################################
-	#  DOCUMENTATION MGEN-COMPILER          #
+	#     DOCUMENTATION MGEN-COMPILER       #
 	#########################################
 	sbt doc
+    
+run-tests:
+	###################################
+	#      TESTING MGEN-COMPILER      #
+	####################################
+    #NOT_YET_IMPLEMENTED#
