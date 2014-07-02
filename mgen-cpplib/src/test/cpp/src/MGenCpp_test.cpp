@@ -1,10 +1,6 @@
 
 #include "TestBase.h"
 
-#ifdef _MSC_VER
-#include <conio.h>
-#endif
-
 namespace tut {
 test_runner_singleton runner;
 }
