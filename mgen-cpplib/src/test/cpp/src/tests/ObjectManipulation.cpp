@@ -1,0 +1,39 @@
+/*
+ * ObjectManipulation.cpp
+ *
+ *  Created on: 2 jul 2014
+ *      Author: GiGurra
+ */
+
+#include "TestBase.h"
+
+struct ObjectManipulationTestData {
+};
+
+BEGIN_TEST_GROUP(ObjectManipulation)
+
+/////////////////////////////////////////////////////////////////////
+
+BEGIN_TEST("Create some objects")
+
+
+END_TEST
+
+/////////////////////////////////////////////////////////////////////
+
+BEGIN_TEST("Delete some objects")
+
+
+END_TEST
+
+/////////////////////////////////////////////////////////////////////
+
+BEGIN_TEST("Compare some objects")
+
+
+END_TEST
+
+/////////////////////////////////////////////////////////////////////
+
+END_TEST_GROUP
+
