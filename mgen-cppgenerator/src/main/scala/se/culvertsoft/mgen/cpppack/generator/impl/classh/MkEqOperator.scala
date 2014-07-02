@@ -13,6 +13,7 @@ object MkEqOperator {
     implicit val currentModule = module
 
     txtBuffer.tabs(1).textln(s"bool operator==(const ${t.shortName()}& other) const;")
+    txtBuffer.tabs(1).textln(s"bool operator!=(const ${t.shortName()}& other) const;")
     txtBuffer.endl()
 
   }

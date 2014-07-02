@@ -20,17 +20,22 @@ object MkEqOperator {
     implicit val currentModule = module
 
     val allFields = t.getAllFieldsInclSuper()
-    txtBuffer.tabs(0).textln(s"bool ${t.shortName()}::operator==(const ${t.shortName()}& other) const {")
-    txtBuffer.tabs(1).text("return true")
+    ln(s"bool ${t.shortName()}::operator==(const ${t.shortName()}& other) const {")
+    ln(1, "return true")
     for (field <- allFields) {
-      txtBuffer.endl().tabs(2).text(s" && ${isFieldSet(field, "mgen::SHALLOW")} == other.${isFieldSet(field, "mgen::SHALLOW")}")
+      ln(2, s" && ${isFieldSet(field, "mgen::SHALLOW")} == other.${isFieldSet(field, "mgen::SHALLOW")}")
     }
     for (field <- allFields) {
-      txtBuffer.endl().tabs(2).text(s" && ${get(field)} == other.${get(field)}")
+      ln(2, s" && ${get(field)} == other.${get(field)}")
     }
-    txtBuffer.textln(";")
-    txtBuffer.tabs(0).textln(s"}")
-    txtBuffer.endl()
+    ln(";")
+    ln(s"}")
+    endl()
+
+    ln(s"bool ${t.shortName()}::operator!=(const ${t.shortName()}& other) const {")
+    ln(1, "return !(*this == other);")
+    ln(s"}")
+    endl()
 
   }
 
