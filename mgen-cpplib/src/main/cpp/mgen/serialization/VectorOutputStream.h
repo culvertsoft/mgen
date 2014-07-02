@@ -27,6 +27,10 @@ public:
                 reinterpret_cast<const char*>(src) + nBytes);
     }
 
+    void reset() {
+        m_data.clear();
+    }
+
 private:
     std::vector<char>& m_data;
 

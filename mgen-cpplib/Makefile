@@ -1,7 +1,7 @@
 
 MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 
-all:
+all: generate-test-model
 	##################################################
 	#   NO BUILD REQUIRED FOR MGEN-CPPLIB (.h-only)  #
 	##################################################
@@ -42,14 +42,14 @@ generate-test-model:	create-target-directory
 
 build-test:	generate-test-model
 	#########################################
-	#   BUILDING MGEN-CPPLIB-TEST           #
+	#       BUILDING MGEN-CPPLIB-TESTS      #
 	#########################################
 	cd target && cmake -DCMAKE_BUILD_TYPE=Release -G "Unix Makefiles" ../src/test/cpp/src/
 	cd target && make all
 
 run-tests: build-test
-	#######################################
-	#      TESTING MGEN-CPPGENERATOR      #
-	#######################################
+	##################################
+	#      TESTING MGEN-CPP-LIB      #
+	##################################
 	cd target && ./mgen-cpplib-test
     

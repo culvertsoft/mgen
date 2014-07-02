@@ -30,8 +30,8 @@
 
 #define BEGIN_TEST_GROUP(grpName) \
 namespace tut { \
-struct grpName##TestData {}; \
-typedef test_group<grpName##TestData> TestGroupType; \
+struct grpName##TestDataDummy {}; \
+typedef test_group<grpName##TestDataDummy> TestGroupType; \
 typedef TestGroupType::object testObject; \
 TestGroupType grpName##TestGroup(STRINGIFY(grpName)" tests"); \
 int grpName##zero = __COUNTER__; \

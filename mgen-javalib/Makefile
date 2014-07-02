@@ -1,6 +1,6 @@
 MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 
-all:
+all: generate-test-model
 	#########################################
 	#     BUILDING MGEN-JAVALIB             #
 	#########################################

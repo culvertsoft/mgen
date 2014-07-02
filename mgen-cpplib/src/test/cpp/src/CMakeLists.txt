@@ -15,6 +15,7 @@ add_executable(
 	mgen_unity_build.cpp	
 	OsTime.cpp		
 	tests/ObjectManipulation.cpp
+	tests/Serialization.cpp
 	tests/Performance.cpp
 )
 

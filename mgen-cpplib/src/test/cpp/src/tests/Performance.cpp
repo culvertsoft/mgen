@@ -46,6 +46,8 @@ BEGIN_TEST_GROUP(Performance)
 
 BEGIN_TEST("Binary")
 
+    LOG("");
+
     PerfTestData testData;
     TestType& entity = testData.entity;
     ClassRegType& registry = testData.registry;
@@ -80,9 +82,8 @@ BEGIN_TEST("Binary")
     const double MB = double(sum) / 1024.0 / 1024.0;
     const double MB_per_sec = MB / dt;
     const int msgs_per_sec = int(double(n) / dt);
-    std::cout << "BINARY performance:" << std::endl;
-    std::cout << "  MB/s: " << MB_per_sec << std::endl;
-    std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
+    std::cout << "    MB/s (W+R): " << MB_per_sec << std::endl;
+    std::cout << "    msgs/s: " << msgs_per_sec << std::endl;
 
     // Read it
     const TestType * entityBack = reader.readObject<TestType>();
@@ -99,6 +100,8 @@ END_TEST
 /////////////////////////////////////////////////////////////////////
 
 BEGIN_TEST("Json")
+
+    LOG("");
 
     PerfTestData testData;
     TestType& entity = testData.entity;
@@ -157,9 +160,8 @@ BEGIN_TEST("Json")
     const double MB = double(sum) / 1024.0 / 1024.0;
     const double MB_per_sec = MB / dt;
     const int msgs_per_sec = int(double(n) / dt);
-    std::cout << "Json performance:" << std::endl;
-    std::cout << "  MB/s: " << MB_per_sec << std::endl;
-    std::cout << "  msgs/s: " << msgs_per_sec << std::endl;
+    std::cout << "    MB/s (W+R): " << MB_per_sec << std::endl;
+    std::cout << "    msgs/s: " << msgs_per_sec << std::endl;
 
 END_TEST
 

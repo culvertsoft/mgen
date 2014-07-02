@@ -11,9 +11,6 @@
 using namespace gameworld::types;
 using namespace gameworld::types::basemodule1;
 
-struct ManipTestData {
-};
-
 BEGIN_TEST_GROUP(ObjectManipulation)
 
 /////////////////////////////////////////////////////////////////////
@@ -58,6 +55,12 @@ BEGIN_TEST("Compare some objects")
         delete object1;
         delete object2;
     }
+
+    Car a, b;
+    a.setBrand("123");
+    b.setBrand("321");
+
+    ASSERT(a != b);
 
 END_TEST
 
