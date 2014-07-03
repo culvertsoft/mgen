@@ -10,7 +10,7 @@ To better fit custom applications, extensions to the MGen toolkit can be made wi
 
 MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), [Flat Buffers](http://google.github.io/flatbuffers/), [Cap'n Proto](http://kentonv.github.io/capnproto/), [Simple Binary Encoding](https://github.com/real-logic/simple-binary-encoding). 
 
-Also check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
+Check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
 ## Table of Contents
 
