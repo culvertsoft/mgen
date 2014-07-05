@@ -16,3 +16,5 @@ retrieveManaged := true
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false
+
+publishArtifact in (Compile, packageDoc) := false

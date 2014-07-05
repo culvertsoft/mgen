@@ -17,5 +17,6 @@ add_executable(
 	tests/ObjectManipulation.cpp
 	tests/Serialization.cpp
 	tests/Performance.cpp
+	tests/WhitepaperExample.cpp
 )
 
