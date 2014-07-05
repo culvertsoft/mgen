@@ -1,7 +1,7 @@
 VERSION = SNAPSHOT
 export MGEN_BUILD_VERSION = $(VERSION)
 
-all:
+all: check
 	#########################################################
 	#                                                       #
 	#           BUILDING MGEN                               #
@@ -20,6 +20,11 @@ all:
 	#         DONE BUILDING MGEN                            #
 	#                                                       #
 	#########################################################
+
+check: sbt-check
+
+sbt-check:
+	@hash sbt 2>/dev/null || { echo >&2 "I require sbt but it's not installed.  Aborting."; exit 1; }
 
 clean:
 	#########################################################
