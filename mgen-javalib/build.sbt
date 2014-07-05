@@ -24,3 +24,5 @@ libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false
+
+publishArtifact in (Compile, packageDoc) := false
