@@ -15,7 +15,7 @@ clean:
 	#########################################
 	#     CLEANING MGEN-VISUALDESIGNER      #
 	#########################################
-	rm src_generated -rf
+	rm -rf src_generated
 	touch .cache && rm .cache
 	sbt clean
 

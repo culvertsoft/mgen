@@ -17,8 +17,8 @@ clean:
 	#     CLEANING MGEN-JAVALIB             #
 	#########################################
 	sbt clean
-	rm target/* -rf
-	rm src_generated/* -rf
+	rm -rf target/*
+	rm -rf src_generated/*
 
 generate-test-model:
 	############################################
