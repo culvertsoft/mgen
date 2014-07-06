@@ -1,10 +1,32 @@
 {
 	"__COMMENT__": " This file is used for the nightly build script to specify what files should be uploaded. ",
-
 	"def_files": {
-		"java-assembly": [ "%PROJECT-assembly-%VERSION.jar" ],
-		"java": ["%PROJECT-%VERSION.jar", "%PROJECT-%VERSION-javadoc.jar", "%PROJECT-%VERSION-sources.jar"],
-		"cpp": []
+		"java-assembly": [ 
+			{ 
+				"source": "target/%PROJECT-assembly-%VERSION.jar",
+				"target": "%PROJECT-assembly-%VERSION.jar"
+			}
+		],
+		"java": [
+			{
+				"source": "target/%PROJECT-%VERSION.jar",
+				"target": "%PROJECT-%VERSION.jar"
+			},
+			{
+				"source": "target/%PROJECT-%VERSION-javadoc.jar",
+				"target": "%PROJECT-%VERSION-javadoc.jar"
+			},
+			{
+				"source": "target/%PROJECT-%VERSION-sources.jar",
+				"target": "%PROJECT-%VERSION-sources.jar"
+			}
+		],
+		"cpp": [
+			{
+				"source": "/src/main/cpp/mgen",
+				"target": "mgen"
+			}
+		]
 	},
 
 	"path_to_projects": "./",
