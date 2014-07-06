@@ -1,22 +1,24 @@
 /*exported mGenGenerate */
 
-"use strict";
-
 var mGenJsonHandler = function(builder) {
+    "use strict";
     this.builder = builder;
 };
 
 mGenJsonHandler.prototype.createObjectFromJSONString = function(data) {
+    "use strict";
     if (typeof data !== "string") throw "Create from string needs a string argument";
     var object = JSON.parse(data);
     return this.createObjectFromJSON(object);
 };
 
 mGenJsonHandler.prototype.createObjectFromJSON = function(object) {
+    "use strict";
     return new(this.builder.getClassWithId(object.__t))(object);
 };
 
 mGenJsonHandler.prototype.toJSONString = function(object) {
+    "use strict";
     return JSON.stringify(object);
 };
 
@@ -38,7 +40,7 @@ mGenJsonHandler.prototype.toJSONString = function(object) {
  * @return a Builder object.
  */
 function mGenGenerate(registry, settings) {
-
+    "use strict";
     settings = settings || {};
     settings = {
         warn: (typeof settings.warn === "undefined") ? true : settings.warn,
@@ -82,18 +84,34 @@ function mGenGenerate(registry, settings) {
         return true;
     };
 
+    /**
+    * @param typeId {string} base64 hash for the class
+    * @return {bool} true if the class exist in the builder, false otherwise.
+    */
     Builder.hasClassWithId = function(typeId) {
         return registry.lookup(typeId) !== undefined;
     };
 
+    /**
+    * @param typeId {string} base64 hash for the class
+    * @return {constructor} returns a class constructor for the specified typeid.
+    */
     Builder.getClassWithId = function(typeId) {
         return Builder.getClass(registry.lookup(typeId));
     };
 
+    /**
+    * @param type path {string} the complete type path (or shorthand version) for the class, i.e "module1.module2.ClassName" or "ClassName"
+    * @return {bool} true if the class exist in the builder, false otherwise.
+    */
     Builder.hasClass = function(path) {
         return registry.classRegistry[path] !== undefined || typeof Builder[path] !== undefined;
     };
 
+    /**
+    * @param type path {string} the complete type path for the class, i.e "module1.module2.ClassName"
+    * @return {constructor} returns a class constructor for the specified typeid.
+    */
     Builder.getClass = function(path) {
         return treeIndexGet(Builder, path);
     };
@@ -104,6 +122,22 @@ function mGenGenerate(registry, settings) {
             registerClass(registry.classRegistry[obj_key], obj_key);
         }
     }
+
+    var obj;
+    //lets find each super and create inheritance
+    for (obj in registry.classRegistry) {
+        setParent(obj);
+    }
+
+    // The shorthand notation can create conflicts. Lets make sure we mark them as such.
+    for (obj in registry.classRegistry) {
+        if (registry.classRegistry.hasOwnProperty(obj_key)) {
+            handleConflict(obj_key);
+        }
+    }
+    obj = undefined;
+
+    /* CREATION HELPER FUNCTIONS */
 
     function setParent(obj) {
         if (registry.classRegistry.hasOwnProperty(obj)) {
@@ -122,12 +156,24 @@ function mGenGenerate(registry, settings) {
         }
     }
 
-    //lets find each super and create inheritance
-    for (var obj in registry.classRegistry) {
-        setParent(obj);
+    function handleConflict(path) {
+        var shortName = getShortName(path);
+        var obj = Builder[shortName];
+        if( Array.isArray(obj) ){ // its a conflict
+            Builder[shortName]  = createConflictConstructor(obj);
+        }
     }
 
-    /* CREATION HELPER FUNCTIONS */
+    function createConflictConstructor(arr) {
+        return function(){
+            var e = "Call to conflicting constructor, please use full path istead of shorthand notation. \n";
+            e = e + "Possible versions are: \n";
+            for (var classPath in arr) {
+                e = e + "\t" + classPath + "\n";
+            }
+            throw e;
+        };
+    }
 
     function getShortName(path) {
         var a = path.split(".");
@@ -170,14 +216,15 @@ function mGenGenerate(registry, settings) {
             Builder[getShortName(path)] = C;
         } else {
             var C_ = new C("NO_CONSTRUCT");
-            //TODO: we have a collision. Lets create a list of all the collisions and then later turn it into a warning for the user.
+            // we have a collision. Lets create a list of all the collisions and then later turn it into a warning for the user.
             if (typeof Builder[getShortName(path)] == "function") {
+                //create collision list
                 var C1 = new Builder[getShortName(path)]("NO_CONSTRUCT");
                 Builder[getShortName(path)] = [getTypePath(C1), getTypePath(C_)];
             } else {
+                // append to collision list
                 Builder[getShortName(path)].push(getTypePath(new C_("NO_CONSTRUCT")));
             }
-
         }
     }
 
@@ -430,6 +477,7 @@ function mGenGenerate(registry, settings) {
     }
 
     function getTypePathFromHashArray(hashArray) {
+        //TODO: Fixme?
         return registry.hashRegistry[getLastHash(hashArray)];
     }
 
