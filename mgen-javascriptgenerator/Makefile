@@ -21,7 +21,7 @@ doc:
 	#  DOCUMENTATION MGEN-JAVASCRIPTGENERATOR   #
 	#############################################
 	sbt doc	
-    
+
 run-tests:
 	##########################################
 	#     TESTING MGEN-JAVASCRIPTGENERATOR   #
