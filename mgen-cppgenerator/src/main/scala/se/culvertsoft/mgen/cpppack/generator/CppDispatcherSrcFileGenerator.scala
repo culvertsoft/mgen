@@ -33,7 +33,7 @@ object CppDispatchSrcFileGenerator extends CppDispatchGenerator(SrcFile) {
       "handler.handleUnknown(object);",
       topLevelTypes,
       t => s"${MkLongTypeName.cpp(t)}::_type_id_16bit",
-      t => s"handler.handle(reinterpret_cast<${MkLongTypeName.cpp(t)}&>(object));")
+      t => s"handler.handle(static_cast<${MkLongTypeName.cpp(t)}&>(object));")
 
     ln("}").endl()
 

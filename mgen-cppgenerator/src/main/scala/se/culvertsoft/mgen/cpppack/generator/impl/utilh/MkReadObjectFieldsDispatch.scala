@@ -36,7 +36,7 @@ object MkReadObjectFieldsDispatch {
       "return;",
       topLevelTypes,
       t => s"${MkLongTypeName.cpp(t)}::_type_id_16bit",
-      t => s"reader.readFields(reinterpret_cast<${fullName(t)}&>(o), context);")
+      t => s"reader.readFields(static_cast<${fullName(t)}&>(o), context);")
 
     ln(nTabs + 1, "return;")
     /*
