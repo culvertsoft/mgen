@@ -30,8 +30,13 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	private Set<CustomType> m_allReferencedExtTypes;
 	private Set<CustomType> m_directDependencies;
 
-	public CustomTypeImpl(final String name, final Module module,
-			final Type superType, final List<Field> fields) {
+	private Short m_16bitIdOverride;
+
+	public CustomTypeImpl(
+			final String name,
+			final Module module,
+			final Type superType,
+			final List<Field> fields) {
 		super(TypeEnum.CUSTOM);
 		m_name = name;
 		m_fullName = module.path() + "." + m_name;
@@ -47,11 +52,24 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 		m_allReferencedTypesExclSuper = null;
 		m_allReferencedExtTypes = null;
 		m_directDependencies = null;
+		m_16bitIdOverride = null;
 	}
 
-	public CustomTypeImpl(final String name, final Module module,
+	public CustomTypeImpl(
+			final String name,
+			final Module module,
 			final Type superType) {
 		this(name, module, superType, new ArrayList<Field>());
+	}
+
+	public short typeId16Bit() {
+		return m_16bitIdOverride != null ? m_16bitIdOverride : super
+				.typeId16Bit();
+	}
+
+	public CustomTypeImpl override16BitId(final short id) {
+		m_16bitIdOverride = id;
+		return this;
 	}
 
 	public void setSuperType(final Type superType) {
@@ -131,7 +149,8 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 					.getAllReferencedModulesInclSuper());
 
 			for (final Field field : m_fields)
-				m_allReferencedModules.addAll(field.typ()
+				m_allReferencedModules.addAll(field
+						.typ()
 						.getAllReferencedModulesInclSuper());
 
 		}
@@ -151,7 +170,8 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 					.getAllReferencedTypesInclSuper());
 
 			for (final Field field : m_fields)
-				m_allReferencedTypes.addAll(field.typ()
+				m_allReferencedTypes.addAll(field
+						.typ()
 						.getAllReferencedTypesInclSuper());
 
 		}
@@ -168,7 +188,8 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 			m_allReferencedTypesExclSuper = new HashSet<CustomType>();
 
 			for (final Field field : m_fields)
-				m_allReferencedTypesExclSuper.addAll(field.typ()
+				m_allReferencedTypesExclSuper.addAll(field
+						.typ()
 						.getAllReferencedTypesInclSuper());
 
 		}

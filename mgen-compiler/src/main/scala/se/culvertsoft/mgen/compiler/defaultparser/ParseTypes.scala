@@ -8,7 +8,8 @@ import se.culvertsoft.mgen.api.model.MGenBaseType
 import se.culvertsoft.mgen.api.model.impl.CustomTypeImpl
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
 import se.culvertsoft.mgen.api.model.impl.UnknownCustomTypeImpl
-import se.culvertsoft.mgen.api.util.CRC64
+import scala.util.Try
+import scala.util.Success
 
 object ParseType {
 
@@ -23,6 +24,12 @@ object ParseType {
       }
 
     val clas = new CustomTypeImpl(name, module, superType)
+
+    node.getAttribString("id") match {
+      case Some(idString) => clas.override16BitId(java.lang.Short.decode(idString))
+      case _ =>
+    }
+
     val fields = node.child.map { ParseField(_, clas.fullName) }
     clas.setFields(fields)
 
