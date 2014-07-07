@@ -1,5 +1,6 @@
 {
 	"__COMMENT__": " This file is used for the nightly build script to specify what files should be uploaded. ",
+	
 	"def_files": {
 		"java-assembly": [ 
 			{ 
@@ -24,7 +25,7 @@
 		"cpp": [
 			{
 				"source": "/src/main/cpp/mgen",
-				"target": "mgen"
+				"target": "include/mgen"
 			}
 		]
 	},

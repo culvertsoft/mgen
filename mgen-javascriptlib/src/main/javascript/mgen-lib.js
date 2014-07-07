@@ -85,33 +85,33 @@ function mGenGenerate(registry, settings) {
     };
 
     /**
-    * @param typeId {string} base64 hash for the class
-    * @return {bool} true if the class exist in the builder, false otherwise.
-    */
+     * @param typeId {string} base64 hash for the class
+     * @return {bool} true if the class exist in the builder, false otherwise.
+     */
     Builder.hasClassWithId = function(typeId) {
         return registry.lookup(typeId) !== undefined;
     };
 
     /**
-    * @param typeId {string} base64 hash for the class
-    * @return {constructor} returns a class constructor for the specified typeid.
-    */
+     * @param typeId {string} base64 hash for the class
+     * @return {constructor} returns a class constructor for the specified typeid.
+     */
     Builder.getClassWithId = function(typeId) {
         return Builder.getClass(registry.lookup(typeId));
     };
 
     /**
-    * @param type path {string} the complete type path (or shorthand version) for the class, i.e "module1.module2.ClassName" or "ClassName"
-    * @return {bool} true if the class exist in the builder, false otherwise.
-    */
+     * @param type path {string} the complete type path (or shorthand version) for the class, i.e "module1.module2.ClassName" or "ClassName"
+     * @return {bool} true if the class exist in the builder, false otherwise.
+     */
     Builder.hasClass = function(path) {
         return registry.classRegistry[path] !== undefined || typeof Builder[path] !== undefined;
     };
 
     /**
-    * @param type path {string} the complete type path for the class, i.e "module1.module2.ClassName"
-    * @return {constructor} returns a class constructor for the specified typeid.
-    */
+     * @param type path {string} the complete type path for the class, i.e "module1.module2.ClassName"
+     * @return {constructor} returns a class constructor for the specified typeid.
+     */
     Builder.getClass = function(path) {
         return treeIndexGet(Builder, path);
     };
@@ -159,13 +159,13 @@ function mGenGenerate(registry, settings) {
     function handleConflict(path) {
         var shortName = getShortName(path);
         var obj = Builder[shortName];
-        if( Array.isArray(obj) ){ // its a conflict
-            Builder[shortName]  = createConflictConstructor(obj);
+        if (Array.isArray(obj)) { // its a conflict
+            Builder[shortName] = createConflictConstructor(obj);
         }
     }
 
     function createConflictConstructor(arr) {
-        return function(){
+        return function() {
             var e = "Call to conflicting constructor, please use full path istead of shorthand notation. \n";
             e = e + "Possible versions are: \n";
             for (var classPath in arr) {
@@ -184,7 +184,7 @@ function mGenGenerate(registry, settings) {
         var original_path = path;
 
         function recTreeIndexGet(obj, path) {
-            if (typeof path == "string") {
+            if (typeof path === "string") {
                 return recTreeIndexGet(obj, path.split("."));
             } else if (path.length === 0 || obj[path[0]] === undefined) {
                 if (typeof obj !== "function") {
@@ -199,9 +199,9 @@ function mGenGenerate(registry, settings) {
     }
 
     function treeIndexSet(obj, path, value) {
-        if (typeof path == "string") {
+        if (typeof path === "string") {
             treeIndexSet(obj, path.split("."), value);
-        } else if (path.length == 1) {
+        } else if (path.length === 1) {
             obj[path[0]] = value;
         } else {
             obj[path[0]] = obj[path[0]] || {};
@@ -210,33 +210,37 @@ function mGenGenerate(registry, settings) {
     }
 
     function registerClass(obj, path) {
-        var C = createClass(obj);
-        treeIndexSet(Builder, path, C);
+        var ClassConstructor = createClass(obj);
+        treeIndexSet(Builder, path, ClassConstructor);
         if (!Builder[getShortName(path)]) {
-            Builder[getShortName(path)] = C;
+            Builder[getShortName(path)] = ClassConstructor;
         } else {
-            var C_ = new C("NO_CONSTRUCT");
             // we have a collision. Lets create a list of all the collisions and then later turn it into a warning for the user.
-            if (typeof Builder[getShortName(path)] == "function") {
-                //create collision list
-                var C1 = new Builder[getShortName(path)]("NO_CONSTRUCT");
-                Builder[getShortName(path)] = [getTypePath(C1), getTypePath(C_)];
+
+            var currentClassType = (new ClassConstructor("NO_CONSTRUCT")).__t;
+            var currentClassPath = registry.lookup(currentClassType);
+
+            if (typeof Builder[getShortName(path)] === "function") {
+                var collidingClassType = (new Builder[getShortName(path)]("NO_CONSTRUCT")).__t;
+                var collidingClassPath = registry.lookup(collidingClassType.__t);
+                
+                Builder[getShortName(path)] = [collidingClassPath, currentClassPath];
             } else {
                 // append to collision list
-                Builder[getShortName(path)].push(getTypePath(new C_("NO_CONSTRUCT")));
+                Builder[getShortName(path)].push(currentClassPath);
             }
         }
     }
 
     function createClass(obj) {
         return function(data, options) {
-            if (data == "NO_CONSTRUCT") {
+            if (data === "NO_CONSTRUCT") {
                 this.__t = obj.__t;
                 return;
             }
 
             var default_construction = false;
-            if (data == "DEFAULT") {
+            if (data === "DEFAULT") {
                 default_construction = true;
                 data = null;
             }
@@ -247,12 +251,12 @@ function mGenGenerate(registry, settings) {
 
             if (data) {
                 if (data.__t) {
-                    var objTypeHash = getLastHash(obj.mGenTypeHash);
-                    var dataTypeHash = getLastHash(data.__t);
-                    //check if they data corresponds to created object.
+                    var objTypeHash = obj.__t;
+                    var dataTypeHash = data.__t;
+
+                    //If the data does not fit the corresponding type then check if it is a derived type.
                     if (objTypeHash != dataTypeHash) {
-                        // check if data is a child to type.
-                        if (isHashInList(data.__t, objTypeHash)) {
+                        if (isDerivedType(data.__t, objTypeHash)) {
                             return new(Builder.getClass(registry.hashRegistry[dataTypeHash]))(data);
                         } else {
                             throw " Tried to create " + registry.hashRegistry[objTypeHash] + " but got " + registry.hashRegistry[dataTypeHash];
@@ -270,7 +274,7 @@ function mGenGenerate(registry, settings) {
                             for (var pos in obj) {
                                 if (pos != "__t") possible += " \t " + pos + " \n ";
                             }
-                            throw getTypePathFromHashArray(obj.mGenTypeHash) + " does not have field " + _key +
+                            throw registry.lookup(obj.__t) + " does not have field " + _key +
                                 " \n Possible options are: \n" + possible + " \n ";
                         }
                     }
@@ -281,7 +285,7 @@ function mGenGenerate(registry, settings) {
             for (var field in obj) {
                 if (!obj.hasOwnProperty(field)) continue;
 
-                if (field == "__t") {
+                if (field === "__t") {
                     this.__t = obj.__t;
                 } else {
                     try {
@@ -435,7 +439,7 @@ function mGenGenerate(registry, settings) {
             throw "Tried to create " + type + " but data was of type: " + (typeof value);
         }
 
-        if (isNumeric(parseInt(value, 10)) && (parseFloat(value, 10) == parseInt(value, 10))) {
+        if (isNumeric(parseInt(value, 10)) && (parseFloat(value, 10) === parseInt(value, 10))) {
             var lim = Math.pow(2, size - 1);
             if (value > lim - 1 || value < -lim) {
                 throw value + " is out of range for int" + size;
@@ -444,7 +448,6 @@ function mGenGenerate(registry, settings) {
         } else {
             throw "Tried to create " + type + " but data ( " + value + " ) was not a valid integer.";
         }
-
     }
 
     function checkFloat(value, size, type) {
@@ -469,16 +472,15 @@ function mGenGenerate(registry, settings) {
     }
 
     function getTypePath(obj) {
-        return getTypePathFromHashArray(obj.__t);
+        return registry.lookup(obj.__t);
     }
 
-    function getLastHash(hashArray) {
-        return hashArray[hashArray.length - 1];
-    }
-
-    function getTypePathFromHashArray(hashArray) {
-        //TODO: Fixme?
-        return registry.hashRegistry[getLastHash(hashArray)];
+    /**
+     * @param derived {string} hash from derived type
+     * @param base {string} hash from base type
+     */
+    function isDerivedType(derived, base) {
+        return derived.substr(0, base.length - 1) === base;
     }
 
     function getParentTypePath(obj) {
@@ -490,17 +492,12 @@ function mGenGenerate(registry, settings) {
         }
     }
 
-    function isHashInList(hashArray, hash) {
-        return hashArray.indexOf(hash) !== -1;
-    }
-
     function extend(options, settings) {
         for (var field in settings) {
             if (!settings.hasOwnProperty(field)) continue;
             options[field] = (typeof options[field] === "undefined") ? settings[field] : options[field];
         }
     }
-
 
     return Builder;
 }
