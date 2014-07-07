@@ -68,8 +68,20 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	}
 
 	public CustomTypeImpl override16BitId(final short id) {
-		m_16bitIdOverride = id;
+		if (id != super.typeId16Bit())
+			m_16bitIdOverride = id;
+		else
+			m_16bitIdOverride = null;
 		return this;
+	}
+
+	public CustomTypeImpl remove16BitIdOverride() {
+		m_16bitIdOverride = null;
+		return this;
+	}
+	
+	public boolean hasIdOverride() {
+		return m_16bitIdOverride != null;
 	}
 
 	public void setSuperType(final Type superType) {

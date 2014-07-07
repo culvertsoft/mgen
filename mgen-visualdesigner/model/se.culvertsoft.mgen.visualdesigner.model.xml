@@ -38,6 +38,7 @@
             <superType type="EntityIdBase"/>
             <subTypes type="list[EntityIdBase]"/>
             <fields type="list[CustomTypeField]"/>
+            <idOverride type="int16"/>
         </CustomType>
         <Module extends="PlacedEntity">
             <settings type="map[string, string]"/>
@@ -55,6 +56,7 @@
         <CustomTypeField extends="Entity">
             <type type="FieldType" flags="required"/>
             <flags type="list[string]"/>
+            <idOverride type="int16"/>
         </CustomTypeField>
         <FieldType> </FieldType>
         <BuiltInType extends="FieldType"> </BuiltInType>

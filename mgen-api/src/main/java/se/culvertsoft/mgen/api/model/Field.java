@@ -26,13 +26,14 @@ public class Field {
 			final String ownerClassName,
 			final String name,
 			final Type type,
-			final List<String> flags) {
+			final List<String> flags,
+			final short id) {
 		m_ownerClassName = ownerClassName;
 		m_name = name;
 		m_type = type;
 		m_flags = flags != null ? flags : (List<String>) Collections.EMPTY_LIST;
 		m_directDependencies = new HashSet<CustomType>();
-		m_id = Hasher.static_16bit(m_name);
+		m_id = id;
 		m_idBase64 = Base64.encode(m_id);
 		m_required = m_flags.contains("required");
 		m_polymorphic = m_flags.contains("polymorphic");
@@ -75,17 +76,21 @@ public class Field {
 	}
 
 	public Field transformToType(final Type type) {
-		return new Field(m_ownerClassName, m_name, type, m_flags);
+		return new Field(m_ownerClassName, m_name, type, m_flags, m_id);
 	}
 
 	public short id() {
 		return m_id;
 	}
+	
+	public boolean hasIdOverride() {
+		return m_id != Hasher.static_16bit(m_name);
+	}
 
 	public String idBase64() {
 		return m_idBase64;
 	}
-	
+
 	public boolean isRequired() {
 		return m_required;
 	}

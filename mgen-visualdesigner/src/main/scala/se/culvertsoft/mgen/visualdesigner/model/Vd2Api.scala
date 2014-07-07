@@ -108,7 +108,8 @@ object Vd2Api {
       parentClass.fullName(),
       vdField.getName(),
       cvtFieldType(vdField.getType()),
-      vdField.getFlags())
+      vdField.getFlags(),
+      vdField.getIdOverride())
   }
 
   private def cvtType(vdClass: VdClass, parentModule: ApiModuleImpl)(implicit cvState: Vd2ApiConversionState): ApiClassImpl = {
@@ -122,6 +123,9 @@ object Vd2Api {
         MGenBaseType.INSTANCE
 
     val t = new ApiClassImpl(vdClass.getName(), parentModule, apiSuperType)
+    
+    t.override16BitId(vdClass.getIdOverride())
+    
     cvState.apiObjLkup.put(Type2String.getClassPath(vdClass), t)
 
     t.setFields(vdClass.getFields.map(cvtField(_, t)))

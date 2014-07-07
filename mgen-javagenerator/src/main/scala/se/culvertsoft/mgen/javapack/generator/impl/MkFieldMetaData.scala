@@ -40,7 +40,8 @@ object MkFieldMetaData {
           .text(quote(t.fullName())).commaSpace()
           .text(quote(field.name())).commaSpace()
           .text(mkMetaData(field.typ())).commaSpace()
-          .text(s"$flagsString);")
+          .text(s"$flagsString").commaSpace()
+          .text(s"(short)${field.id()});")
           .endl()
       }
       txtBuffer.endl()

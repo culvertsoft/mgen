@@ -20,7 +20,9 @@ public interface CustomType extends Type {
 	public List<Type> superTypeHierarchy();
 
 	public List<Field> fields();
-
+	
+	public boolean hasIdOverride();
+	
 	public List<Field> getAllFieldsInclSuper();
 
 	public Set<CustomType> getAllReferencedTypesExclSuper();

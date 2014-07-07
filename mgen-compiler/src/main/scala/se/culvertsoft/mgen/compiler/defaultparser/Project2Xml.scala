@@ -87,11 +87,13 @@ object Project2Xml {
 
   def type2xml(typ: CustomType)(implicit currentModule: Module): scala.xml.Node = {
 
+    val idString = if (typ.hasIdOverride) typ.typeId16Bit().toString else null
+    
     val xml =
       (if (typ.hasSuperType())
-        <CustomType extends={ type2string(typ.superType()) }>{ typ.fields map field2xml } </CustomType>
+        <CustomType extends={ type2string(typ.superType()) } id ={ idString }>{ typ.fields map field2xml } </CustomType>
       else
-        <CustomType>{ typ.fields map field2xml } </CustomType>)
+        <CustomType id ={ idString }>{ typ.fields map field2xml } </CustomType>)
         .copy(label = typ.name)
 
     xml
@@ -120,12 +122,13 @@ object Project2Xml {
     val flags = field.flags().map(_.trim).filter(_.nonEmpty)
     val typeString = type2string(field.typ)
     val flagsString = s"${flags.mkString(", ")}"
+    val idString = if (field.hasIdOverride()) field.id().toString else null
 
     val xml =
       (if (flags.nonEmpty)
-        <fieldname type={ typeString } flags={ flagsString }/>
+        <fieldname type={ typeString } flags={ flagsString } id ={ idString }/>
       else
-        <fieldname type={ typeString }/>)
+        <fieldname type={ typeString } id ={ idString }/>)
         .copy(label = field.name)
 
     xml
