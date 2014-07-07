@@ -10,6 +10,7 @@
 
 #include "mgen/ext/rapidjson/document.h"
 #include "mgen/classes/ClassRegistryBase.h"
+#include "mgen/util/BuiltInSerializerUtil.h"
 #include "mgen/exceptions/StreamCorruptedException.h"
 #include "JsonInputStream.h"
 
