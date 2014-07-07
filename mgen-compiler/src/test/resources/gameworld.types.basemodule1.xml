@@ -5,7 +5,7 @@
 	<Types>
 
 		<VectorR3 id="0x01">
-			<x type="int" />
+			<x type="int" id="123"/>
 			<y type="float" />
 			<z type="double" />
 		</VectorR3>

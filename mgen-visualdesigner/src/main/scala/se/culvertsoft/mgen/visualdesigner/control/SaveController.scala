@@ -15,8 +15,8 @@ import se.culvertsoft.mgen.compiler.Output
 import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
-import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.ClassRegistry
+import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.model.FilePath
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.ModelConversion

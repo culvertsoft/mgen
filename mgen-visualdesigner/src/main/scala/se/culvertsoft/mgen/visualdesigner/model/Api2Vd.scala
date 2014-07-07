@@ -30,7 +30,6 @@ import ModelConversion.VdProject
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
-import se.culvertsoft.mgen.visualdesigner.model.ModelConversion.VdModule
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 
 case class UnlinkedId(val apiType: ModelConversion.ApiCustomType) extends EntityId
@@ -187,7 +186,7 @@ object Api2Vd {
     cls.setParent(parent.getId)
 
     cls.setFields(toJava(apiClass.fields().map(cvtField(_, cls, state))))
-    
+
     cls.setIdOverride(apiClass.typeId16Bit())
 
     cls

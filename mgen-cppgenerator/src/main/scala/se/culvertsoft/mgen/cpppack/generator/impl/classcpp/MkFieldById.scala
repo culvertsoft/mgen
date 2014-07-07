@@ -1,15 +1,14 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 
-import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator._
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import scala.collection.JavaConversions.asScalaBuffer
+
 import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.cpppack.generator.CppConstruction
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
-import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
-import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldIdString
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldMetaString
 
 object MkFieldById {
 
@@ -20,18 +19,25 @@ object MkFieldById {
     implicit val currentModule = module
 
     val allFields = t.getAllFieldsInclSuper()
-    
-    txtBuffer.tabs(0).textln(s"const mgen::Field * ${t.shortName()}::_fieldById(const short hash) const {")
-    txtBuffer.tabs(1).textln(s"switch (hash) {")
+
+    ln(0, s"const mgen::Field * ${t.shortName()}::_fieldById(const short hash) const {")
+    ln(1, s"switch (hash) {")
     for (field <- allFields) {
-      txtBuffer.tabs(1).textln(s"case ${fieldIdString(field)}:")
-      txtBuffer.tabs(2).textln(s"return &${fieldMetaString(field)};")
+      ln(1, s"case ${fieldIdString(field)}:")
+      ln(2, s"return &${fieldMetaString(field)};")
     }
-    txtBuffer.tabs(1).textln(s"default:")
-    txtBuffer.tabs(2).textln(s"return 0;");
-    txtBuffer.tabs(1).textln(s"}")
-    txtBuffer.tabs(0).textln(s"}")
-    txtBuffer.endl()
+    ln(1, s"default:")
+    ln(2, s"return 0;");
+    ln(1, s"}")
+    ln(0, s"}")
+    endl()
+
+    ln(0, s"const mgen::Field * ${t.shortName()}::_fieldByName(const std::string& name) const {")
+    ln(1, s"static const std::map<std::string, const mgen::Field*> name2meta = _field_names2metadata_make();")
+    ln(1, s"const std::map<std::string, const mgen::Field*>::const_iterator it = name2meta.find(name);")
+    ln(1, s"return it != name2meta.end() ? it->second : 0;")
+    ln(0, s"}")
+    endl()
 
   }
 
