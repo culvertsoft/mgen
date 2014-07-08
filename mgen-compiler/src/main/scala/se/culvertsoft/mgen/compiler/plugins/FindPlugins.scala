@@ -55,7 +55,7 @@ class FindPlugins(pluginPaths_in: Seq[String]) {
 
     parss.put(classOf[DefaultParser].getName(), classOf[DefaultParser])
 
-    classNames.map(className => {
+    classNames.foreach { className =>
       val cls = Class.forName(className, false, classLoader)
       if (!Modifier.isAbstract(cls.getModifiers()))
         if (classOf[Parser].isAssignableFrom(cls)) {
@@ -63,7 +63,7 @@ class FindPlugins(pluginPaths_in: Seq[String]) {
         } else if (classOf[Generator].isAssignableFrom(cls)) {
           gens.put(cls.asInstanceOf[Class[Generator]].getName(), cls.asInstanceOf[Class[Generator]])
         }
-    })
+    }
 
     (parss, gens)
 
