@@ -15,11 +15,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.ParseException;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
+import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.api.model.UnknownCustomType;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
@@ -138,7 +138,7 @@ public class JsonReader extends BuiltInReader {
 			final Object context) throws IOException {
 		return readMGenObject(
 				getJsonObj(field, context),
-				(UnknownCustomType) field.typ());
+				(CustomType) field.typ());
 	}
 
 	@Override
@@ -148,7 +148,7 @@ public class JsonReader extends BuiltInReader {
 
 	private MGenBase readMGenObject(
 			final JSONObject node,
-			final UnknownCustomType expType) throws IOException {
+			final CustomType expType) throws IOException {
 
 		if (node == null)
 			return null;
@@ -252,7 +252,6 @@ public class JsonReader extends BuiltInReader {
 		case ARRAY:
 		case LIST:
 		case MAP:
-		case MGEN_BASE:
 		case CUSTOM:
 		case UNKNOWN:
 			return readObjectArray(node, typ);
@@ -288,7 +287,6 @@ public class JsonReader extends BuiltInReader {
 		case ARRAY:
 		case LIST:
 		case MAP:
-		case MGEN_BASE:
 		case CUSTOM:
 		case UNKNOWN:
 			return readObjectList(node, typ);
@@ -471,10 +469,9 @@ public class JsonReader extends BuiltInReader {
 			return readList((ListType) typ, (JSONArray) node);
 		case MAP:
 			return readMap((MapType) typ, (JSONObject) node);
-		case MGEN_BASE:
 		case CUSTOM:
 		case UNKNOWN:
-			return readMGenObject((JSONObject) node, (UnknownCustomType) typ);
+			return readMGenObject((JSONObject) node, (CustomType) typ);
 		default:
 			throw new UnknownTypeException("Unknown type: " + typ);
 		}

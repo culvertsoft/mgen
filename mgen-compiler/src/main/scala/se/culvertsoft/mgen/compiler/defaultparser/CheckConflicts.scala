@@ -62,8 +62,8 @@ object CheckConflicts {
       throw new TypeConflictException(s"Conflicting 64 bit type IDs (wow you're unlucky!) for types: ${t1.fullName} and ${t2.fullName()}. Change one of their names.")
     }
 
-    assertNoDuplicates(allTypes, (t: CustomType) => (t.superType.typeId, t.typeId16Bit)) { (t1, t2) =>
-      throw new TypeConflictException(s"Conflicting 16 bit type IDs with same super type. Types: ${t1.fullName} and ${t2.fullName()}, with super type ${t1.superType().fullName}.")
+    assertNoDuplicates(allTypes, (t: CustomType) => (if (t.hasSuperType) t.superType.typeId else null, t.typeId16Bit)) { (t1, t2) =>
+      throw new TypeConflictException(s"Conflicting 16 bit type IDs with same super type. Types: ${t1.fullName} and ${t2.fullName()}, with super type ${t1.superType()}.")
     }
 
     for (t <- allTypes) {

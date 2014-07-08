@@ -6,12 +6,6 @@ public interface Type {
 
 	public Class<?> classOf();
 
-	public long typeId();
-
-	public short typeId16Bit();
-
-	public String typeId16BitBase64();
-
 	public TypeEnum typeEnum();
 
 	public boolean isPrimitive();

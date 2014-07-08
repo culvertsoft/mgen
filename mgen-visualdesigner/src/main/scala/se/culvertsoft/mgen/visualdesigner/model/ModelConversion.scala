@@ -10,7 +10,7 @@ object ModelConversion {
   type ApiGenerator = se.culvertsoft.mgen.api.plugins.GeneratorDescriptor
   type ApiProjectImpl = se.culvertsoft.mgen.api.model.impl.ProjectImpl
   type ApiModuleImpl = se.culvertsoft.mgen.api.model.impl.ModuleImpl
-  type ApiClassImpl = se.culvertsoft.mgen.api.model.impl.CustomTypeImpl
+  type ApiClassImpl = se.culvertsoft.mgen.api.model.impl.LinkedCustomType
   type ApiType = se.culvertsoft.mgen.api.model.Type
 
   type VdModel = se.culvertsoft.mgen.visualdesigner.model.Model
@@ -59,7 +59,7 @@ object ModelConversion {
   type ApiListTypeImpl = se.culvertsoft.mgen.api.model.impl.ListTypeImpl
   type ApiArrayTypeImpl = se.culvertsoft.mgen.api.model.impl.ArrayTypeImpl
   type ApiMapTypeImpl = se.culvertsoft.mgen.api.model.impl.MapTypeImpl
-  type ApiCustomTypeImpl = se.culvertsoft.mgen.api.model.impl.CustomTypeImpl
+  type ApiLinkedCustomType = se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 
   val ApiBoolTypeInstance = se.culvertsoft.mgen.api.model.BoolType.INSTANCE
   val ApiInt8TypeInstance = se.culvertsoft.mgen.api.model.Int8Type.INSTANCE

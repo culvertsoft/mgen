@@ -72,7 +72,6 @@ public class Marker {
 		case MAP:
 			setMap((Map<?, ?>) a, (MapType) type);
 		case CUSTOM:
-		case MGEN_BASE:
 		case UNKNOWN:
 			setFieldSetDeep((MGenBase) a, null);
 		}

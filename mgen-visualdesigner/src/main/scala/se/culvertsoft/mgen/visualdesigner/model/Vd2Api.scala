@@ -1,19 +1,17 @@
 package se.culvertsoft.mgen.visualdesigner.model
 
 import java.io.File
-
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
-
 import ModelConversion.ApiArrayTypeImpl
 import ModelConversion.ApiBoolTypeInstance
 import ModelConversion.ApiClassImpl
 import ModelConversion.ApiCustomType
-import ModelConversion.ApiCustomTypeImpl
+import ModelConversion.ApiLinkedCustomType
 import ModelConversion.ApiEntity
 import ModelConversion.ApiField
 import ModelConversion.ApiFloat32TypeInstance
@@ -50,11 +48,11 @@ import ModelConversion.VdModel
 import ModelConversion.VdModule
 import ModelConversion.VdProject
 import ModelConversion.VdStringType
-import se.culvertsoft.mgen.api.model.MGenBaseType
-import se.culvertsoft.mgen.api.model.impl.UnknownCustomTypeImpl
+import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import se.culvertsoft.mgen.compiler.defaultparser.LinkTypes
 import se.culvertsoft.mgen.compiler.defaultparser.ParseState
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
+import se.culvertsoft.mgen.api.util.Hasher
 
 class Vd2ApiConversionState(val srcModel: Model) {
   import ModelConversion._
@@ -73,11 +71,11 @@ object Vd2Api {
     new ApiGenerator(vdGenerator.getName(), vdGenerator.getGeneratorClassName(), settings)
   }
 
-  private def getApiCustomType(fullClassPath: String)(implicit cvState: Vd2ApiConversionState): ApiType = {
-    cvState.apiObjLkup.getOrElseUpdate(fullClassPath, new UnknownCustomTypeImpl(fullClassPath, -1)).asInstanceOf[ApiType]
+  private def getApiCustomType(fullClassPath: String)(implicit cvState: Vd2ApiConversionState): ApiCustomType = {
+    cvState.apiObjLkup.getOrElseUpdate(fullClassPath, new UnlinkedCustomType(fullClassPath, -1)).asInstanceOf[ApiCustomType]
   }
 
-  private def getApiCustomType(vdType: VdClass)(implicit cvState: Vd2ApiConversionState): ApiType = {
+  private def getApiCustomType(vdType: VdClass)(implicit cvState: Vd2ApiConversionState): ApiCustomType = {
     getApiCustomType(Type2String.getClassPath(vdType)(cvState.srcModel))
   }
 
@@ -103,13 +101,27 @@ object Vd2Api {
     }
   }
 
+  def getId16Bit(e: VdEntity)(implicit cvState: Vd2ApiConversionState): Short = {
+    implicit val model = cvState.srcModel
+    val (has, get, name) = e match {
+      case e: VdField => (() => e.hasId16Bit, () => e.getId16Bit, () => e.getName)
+      case e: VdClass => (() => e.hasId16Bit, () => e.getId16Bit, () => Type2String.getClassPath(e))
+    }
+    if (has()) {
+      get()
+    } else {
+      Hasher.static_16bit(name())
+    }
+
+  }
+
   private def cvtField(vdField: VdField, parentClass: ApiType)(implicit cvState: Vd2ApiConversionState): ApiField = {
     new ApiField(
       parentClass.fullName(),
       vdField.getName(),
       cvtFieldType(vdField.getType()),
       vdField.getFlags(),
-      vdField.getIdOverride())
+      getId16Bit(vdField))
   }
 
   private def cvtType(vdClass: VdClass, parentModule: ApiModuleImpl)(implicit cvState: Vd2ApiConversionState): ApiClassImpl = {
@@ -120,12 +132,10 @@ object Vd2Api {
       if (vdClass.hasSuperType() && vdClass.getSuperType() != null)
         getApiCustomType(model.getEntity(vdClass.getSuperType).get.asInstanceOf[VdClass])
       else
-        MGenBaseType.INSTANCE
+        null
 
-    val t = new ApiClassImpl(vdClass.getName(), parentModule, apiSuperType)
-    
-    t.override16BitId(vdClass.getIdOverride())
-    
+    val t = new ApiClassImpl(vdClass.getName(), parentModule, getId16Bit(vdClass), apiSuperType)
+
     cvState.apiObjLkup.put(Type2String.getClassPath(vdClass), t)
 
     t.setFields(vdClass.getFields.map(cvtField(_, t)))
@@ -211,7 +221,7 @@ object Vd2Api {
       val path = pair._1
       val e = pair._2
       e match {
-        case e: ApiCustomTypeImpl =>
+        case e: ApiLinkedCustomType =>
           parseState.typeLookup.typesFullName.put(path, e)
         case _ =>
       }
@@ -224,7 +234,7 @@ object Vd2Api {
       def checkClassLinkage(t: ApiCustomType) {
         if ((t.hasSuperType() && !t.superType().isTypeKnown()) ||
           t.fields().exists(!_.typ().isTypeKnown())) {
-          parseState.needLinkage.types += t.asInstanceOf[ApiCustomTypeImpl]
+          parseState.needLinkage.types += t.asInstanceOf[ApiLinkedCustomType]
         }
       }
 

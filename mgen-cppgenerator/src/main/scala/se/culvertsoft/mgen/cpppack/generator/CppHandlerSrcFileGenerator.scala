@@ -32,7 +32,7 @@ object CppHandlerSrcFileGenerator extends CppHandlerGenerator(SrcFile) {
     }
 
     def mkHandler(t: CustomType) {
-      val passCall = (if (t.hasSuperType()) s"handle(static_cast<${MkLongTypeName.cpp(t.superType.asInstanceOf[CustomType])}&>(o))" else "handleDiscard(o)")
+      val passCall = (if (t.hasSuperType()) s"handle(static_cast<${MkLongTypeName.cpp(t.superType)}&>(o))" else "handleDiscard(o)")
       ln(s"void Handler::handle(${MkLongTypeName.cpp(t)}& o) {")
       ln(1, s"$passCall;")
       ln("}")

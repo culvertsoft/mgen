@@ -5,11 +5,17 @@ import java.util.Set;
 
 public interface CustomType extends Type {
 
+	public long typeId();
+
+	public short typeId16Bit();
+
+	public String typeId16BitBase64();
+
 	public String name();
 
 	public Module module();
 
-	public Type superType();
+	public CustomType superType();
 
 	public boolean hasSuperType();
 
@@ -17,12 +23,10 @@ public interface CustomType extends Type {
 
 	public List<CustomType> subTypes();
 
-	public List<Type> superTypeHierarchy();
+	public List<CustomType> superTypeHierarchy();
 
 	public List<Field> fields();
-	
-	public boolean hasIdOverride();
-	
+
 	public List<Field> getAllFieldsInclSuper();
 
 	public Set<CustomType> getAllReferencedTypesExclSuper();

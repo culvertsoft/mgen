@@ -173,7 +173,6 @@ public class DeepCopyer {
 			return deepCopyList((List<Object>) o, (ListType) type);
 		case MAP:
 			return deepCopyMap((HashMap<Object, Object>) o, (MapType) type);
-		case MGEN_BASE:
 		case UNKNOWN:
 		case CUSTOM:
 			return deepCopyMGenObject((MGenBase) o);

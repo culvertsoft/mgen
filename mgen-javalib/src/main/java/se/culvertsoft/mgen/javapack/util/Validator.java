@@ -74,7 +74,6 @@ public class Validator {
 		case MAP:
 			return validateMap((Map<?, ?>) a, (MapType) type);
 		case CUSTOM:
-		case MGEN_BASE:
 		case UNKNOWN:
 			return validateFieldDeep((MGenBase) a, null);
 		}

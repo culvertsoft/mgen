@@ -23,12 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
+import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListOrArrayType;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.api.model.UnknownCustomType;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
@@ -148,7 +148,7 @@ public class BinaryReader extends BuiltInReader {
 	public MGenBase readMgenObjectField(final Field f, final Object context)
 			throws IOException {
 		ensureTypeTag(f, TAG_CUSTOM, readTypeTag());
-		return readMGenObject(false, (UnknownCustomType) f.typ());
+		return readMGenObject(false, (CustomType) f.typ());
 	}
 
 	@Override
@@ -226,7 +226,7 @@ public class BinaryReader extends BuiltInReader {
 
 	private MGenBase readMGenObject(
 			final boolean readTypeTag,
-			final UnknownCustomType expectType) throws IOException {
+			final CustomType expectType) throws IOException {
 
 		if (readTypeTag)
 			ensureTypeTag(null, TAG_CUSTOM, readTypeTag());
@@ -467,7 +467,7 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_MAP:
 			return readMap(false, (MapType) expectType);
 		case TAG_CUSTOM:
-			return readMGenObject(false, (UnknownCustomType) expectType);
+			return readMGenObject(false, (CustomType) expectType);
 		default:
 			throw new StreamCorruptedException("Unknown type tag: " + typeTag);
 		}

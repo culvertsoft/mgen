@@ -4,40 +4,42 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.ArrayBuffer
 import XmlUtils.RichXmlNode
-import se.culvertsoft.mgen.api.model.MGenBaseType
-import se.culvertsoft.mgen.api.model.impl.CustomTypeImpl
+import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
-import se.culvertsoft.mgen.api.model.impl.UnknownCustomTypeImpl
+import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import scala.util.Try
 import scala.util.Success
+import se.culvertsoft.mgen.api.util.Hasher
 
 object ParseType {
 
-  def apply(node: scala.xml.Node, module: ModuleImpl)(implicit cache: ParseState): CustomTypeImpl = {
+  def apply(node: scala.xml.Node, module: ModuleImpl)(implicit cache: ParseState): LinkedCustomType = {
 
     val name = node.label
+    val fullName = s"${module.path}.$name"
 
     val superType =
       node.getAttribString("extends") match {
-        case Some(superTypeName) => new UnknownCustomTypeImpl(superTypeName, -1)
-        case _ => MGenBaseType.INSTANCE
+        case Some(superTypeName) => new UnlinkedCustomType(superTypeName, -1)
+        case _ => null
       }
 
-    val clas = new CustomTypeImpl(name, module, superType)
+    val id16Bit =
+      node.getAttribString("id") match {
+        case Some(idString) => java.lang.Short.decode(idString).toShort
+        case _ => Hasher.static_16bit(fullName)
+      }
 
-    node.getAttribString("id") match {
-      case Some(idString) => clas.override16BitId(java.lang.Short.decode(idString))
-      case _ =>
-    }
+    val clas = new LinkedCustomType(name, module, id16Bit, superType)
 
     val fields = node.child.map { ParseField(_, clas.fullName) }
     clas.setFields(fields)
 
     cache.typeLookup.typesFullName.put(clas.fullName(), clas)
-    cache.typeLookup.typesShortName.getOrElseUpdate(clas.shortName(), new ArrayBuffer[CustomTypeImpl])
+    cache.typeLookup.typesShortName.getOrElseUpdate(clas.shortName(), new ArrayBuffer[LinkedCustomType])
     cache.typeLookup.typesShortName(clas.shortName()) += clas
 
-    if (clas.superType() != MGenBaseType.INSTANCE || clas.fields().exists(!_.typ().isTypeKnown()))
+    if (clas.hasSuperType() || clas.fields().exists(!_.typ().isTypeKnown()))
       cache.needLinkage.types += clas
 
     clas

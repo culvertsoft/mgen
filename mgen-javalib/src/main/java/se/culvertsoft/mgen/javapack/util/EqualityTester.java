@@ -254,7 +254,6 @@ public class EqualityTester {
 		case MAP:
 			return areMapsEqual((Map<?, ?>) a, (Map<?, ?>) b, (MapType) type);
 		case CUSTOM:
-		case MGEN_BASE:
 		case UNKNOWN:
 			return areEqual((MGenBase) a, (MGenBase) b, type);
 		}

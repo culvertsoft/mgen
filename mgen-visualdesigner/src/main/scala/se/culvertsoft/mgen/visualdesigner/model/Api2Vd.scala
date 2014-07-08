@@ -187,7 +187,7 @@ object Api2Vd {
 
     cls.setFields(toJava(apiClass.fields().map(cvtField(_, cls, state))))
 
-    cls.setIdOverride(apiClass.typeId16Bit())
+    cls.setId16Bit(apiClass.typeId16Bit())
 
     cls
   }
@@ -198,7 +198,7 @@ object Api2Vd {
     fld.setParent(parent.getId)
     parent.getFields().add(fld)
     fld.setType(cvtFieldType(apiField, state))
-    fld.setIdOverride(apiField.id())
+    fld.setId16Bit(apiField.id())
     fld
   }
 

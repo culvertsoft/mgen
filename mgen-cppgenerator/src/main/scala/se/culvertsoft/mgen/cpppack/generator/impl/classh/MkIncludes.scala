@@ -17,7 +17,7 @@ object MkIncludes {
     implicit val currentModule = module
 
     val types = t.getDirectDependencies() - t
-    if (t.superType().typeEnum() == TypeEnum.MGEN_BASE)
+    if (!t.hasSuperType())
       CppGenUtils.include("mgen/classes/MGenBase.h")
     for (tRef <- types)
       CppGenUtils.include(tRef)

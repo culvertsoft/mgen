@@ -14,7 +14,6 @@ public class BinaryTypeTag {
 	public static final byte TAG_MAP = (byte) 9;
 	public static final byte TAG_CUSTOM = (byte) 10;
 	public static final byte TAG_UNKNOWN = (byte) 10;
-	public static final byte TAG_MGENBASE = (byte) 10;
 
 	public static final byte TAG_BIT8 = (byte) 0x80;
 	public static final byte TAG_BIT7 = (byte) (0x80 >> 1);

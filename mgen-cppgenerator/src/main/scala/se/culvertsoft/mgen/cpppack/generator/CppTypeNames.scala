@@ -7,7 +7,6 @@ import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListType
-import se.culvertsoft.mgen.api.model.MGenBaseType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
@@ -51,7 +50,6 @@ object CppTypeNames {
             s"Polymorphic<$name> "
           else
             name
-        case TypeEnum.MGEN_BASE => MGenBaseType.INSTANCE.fullName()
         case x => throw new GenerationException(s"Don't know how to handle type $x")
       }
     })

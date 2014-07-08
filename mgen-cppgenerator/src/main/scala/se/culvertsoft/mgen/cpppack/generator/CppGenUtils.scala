@@ -18,10 +18,10 @@ object CppGenUtils {
   }
 
   def getSuperTypeString(t: CustomType): String = {
-    if (t.superType().typeEnum() == TypeEnum.MGEN_BASE)
+    if (!t.hasSuperType())
       "mgen::MGenBase"
     else {
-      val superModule = t.superType().asInstanceOf[CustomType].module()
+      val superModule = t.superType().module()
       if (superModule == t.module())
         t.superType().shortName()
       else

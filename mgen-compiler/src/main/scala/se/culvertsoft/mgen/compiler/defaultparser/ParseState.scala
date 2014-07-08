@@ -5,7 +5,7 @@ import scala.collection.mutable.HashMap
 
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.impl.CustomTypeImpl
+import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
 
@@ -17,12 +17,12 @@ class ParseState {
   }
 
   object typeLookup {
-    val typesShortName = new HashMap[String, ArrayBuffer[CustomTypeImpl]]
-    val typesFullName = new HashMap[String, CustomTypeImpl]
+    val typesShortName = new HashMap[String, ArrayBuffer[LinkedCustomType]]
+    val typesFullName = new HashMap[String, LinkedCustomType]
   }
 
   object needLinkage {
-    val types = new ArrayBuffer[CustomTypeImpl]
+    val types = new ArrayBuffer[LinkedCustomType]
   }
 
   def allTypes(): Seq[CustomType] = {

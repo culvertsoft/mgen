@@ -14,7 +14,7 @@ public class ModuleImpl implements Module {
 	private final String m_filePath;
 	private final String m_absoluteFilePath;
 	private final Map<String, String> m_settings;
-	private LinkedHashMap<String, CustomTypeImpl> m_types;
+	private LinkedHashMap<String, LinkedCustomType> m_types;
 
 	public ModuleImpl(final String path, final String filePath,
 			final String absoluteFilePath, final Map<String, String> settings) {
@@ -22,7 +22,7 @@ public class ModuleImpl implements Module {
 		m_filePath = filePath;
 		m_absoluteFilePath = absoluteFilePath;
 		m_settings = settings;
-		m_types = new LinkedHashMap<String, CustomTypeImpl>();
+		m_types = new LinkedHashMap<String, LinkedCustomType>();
 	}
 
 	public Map<String, String> settings() {
@@ -46,18 +46,18 @@ public class ModuleImpl implements Module {
 		return (Map<String, CustomType>) ((Map) m_types);
 	}
 
-	public HashMap<String, CustomTypeImpl> typesMutable() {
+	public HashMap<String, LinkedCustomType> typesMutable() {
 		return m_types;
 	}
 
-	public void setTypes(final List<CustomTypeImpl> types) {
+	public void setTypes(final List<LinkedCustomType> types) {
 		m_types.clear();
-		for (final CustomTypeImpl type : types) {
+		for (final LinkedCustomType type : types) {
 			addType(type);
 		}
 	}
 
-	public void addType(final CustomTypeImpl type) {
+	public void addType(final LinkedCustomType type) {
 		m_types.put(type.name(), type);
 	}
 

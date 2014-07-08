@@ -20,7 +20,7 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 
 	public ArrayTypeImpl(final String writtenElemType) {
 		super(TypeEnum.ARRAY);
-		m_elementType = new UnknownCustomTypeImpl(writtenElemType, -1);
+		m_elementType = new UnlinkedCustomType(writtenElemType, -1);
 	}
 
 	public Type elementType() {
@@ -29,7 +29,6 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 
 	protected void setElemType(final Type elemType) {
 		m_elementType = elemType;
-		resetHashCaches();
 	}
 
 	@Override

@@ -20,7 +20,7 @@ public class ListTypeImpl extends TypeImpl implements ListType {
 
 	public ListTypeImpl(final String writtenElemType) {
 		super(TypeEnum.LIST);
-		m_elementType = new UnknownCustomTypeImpl(writtenElemType, -1);
+		m_elementType = new UnlinkedCustomType(writtenElemType, -1);
 	}
 
 	public Type elementType() {
@@ -29,7 +29,6 @@ public class ListTypeImpl extends TypeImpl implements ListType {
 
 	public void setElementType(final Type elementType) {
 		m_elementType = elementType;
-		resetHashCaches();
 	}
 
 	@Override

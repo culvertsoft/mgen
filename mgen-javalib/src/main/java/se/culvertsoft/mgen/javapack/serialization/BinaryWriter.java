@@ -23,6 +23,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
+import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
@@ -165,7 +166,7 @@ public class BinaryWriter extends BuiltInWriter {
 	public void writeMGenObjectField(final MGenBase o, final Field field)
 			throws IOException {
 		writeFieldStart(field.id(), TAG_CUSTOM);
-		writeMGenObject(o, false, field.typ());
+		writeMGenObject(o, false, (CustomType) field.typ());
 	}
 
 	/*******************************************************************
@@ -178,7 +179,7 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeMGenObject(
 			final MGenBase o,
 			final boolean tag,
-			final Type typ) throws IOException {
+			final CustomType typ) throws IOException {
 
 		if (tag)
 			writeTypeTag(TAG_CUSTOM);
@@ -575,9 +576,8 @@ public class BinaryWriter extends BuiltInWriter {
 			writeMap((HashMap<Object, Object>) o, (MapType) typ, tag);
 			break;
 		case CUSTOM:
-		case MGEN_BASE:
 		case UNKNOWN:
-			writeMGenObject((MGenBase) o, tag, typ);
+			writeMGenObject((MGenBase) o, tag, (CustomType) typ);
 			break;
 		default:
 			throw new SerializationException("Unknown type tag for writeObject");

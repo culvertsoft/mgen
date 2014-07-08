@@ -4,7 +4,6 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 import scala.xml.PrettyPrinter
-
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.BoolType
 import se.culvertsoft.mgen.api.model.CustomType
@@ -23,6 +22,7 @@ import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.GeneratorDescriptor
+import se.culvertsoft.mgen.api.util.Hasher
 
 object Project2Xml {
 
@@ -87,7 +87,8 @@ object Project2Xml {
 
   def type2xml(typ: CustomType)(implicit currentModule: Module): scala.xml.Node = {
 
-    val idString = if (typ.hasIdOverride) typ.typeId16Bit().toString else null
+    val autoId = Hasher.static_16bit(typ.fullName)
+    val idString = if (typ.typeId16Bit != autoId) typ.typeId16Bit.toString else null
     
     val xml =
       (if (typ.hasSuperType())

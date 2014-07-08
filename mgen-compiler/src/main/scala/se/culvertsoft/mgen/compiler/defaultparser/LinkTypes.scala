@@ -4,16 +4,17 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 
 import se.culvertsoft.mgen.api.model.ArrayType
+import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
-import se.culvertsoft.mgen.api.model.UnknownCustomType
 import se.culvertsoft.mgen.api.model.impl.ArrayTypeImpl
-import se.culvertsoft.mgen.api.model.impl.CustomTypeImpl
+import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.ListTypeImpl
 import se.culvertsoft.mgen.api.model.impl.MapTypeImpl
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
+import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 
 object LinkTypes {
 
@@ -29,7 +30,7 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
     link(root)
   }
 
-  private def replace(t: Type)(implicit parent: CustomTypeImpl): Type = {
+  private def replace(t: Type)(implicit parent: LinkedCustomType): Type = {
 
     val out = t.typeEnum() match {
       case TypeEnum.ARRAY =>
@@ -43,7 +44,7 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
         new MapTypeImpl(replace(mapType.keyType()), replace(mapType.valueType()))
       case TypeEnum.UNKNOWN =>
 
-        val unknownType = t.asInstanceOf[UnknownCustomType]
+        val unknownType = t.asInstanceOf[UnlinkedCustomType]
         val written = unknownType.writtenType
 
         val fullNames = cache.typeLookup.typesFullName
@@ -76,13 +77,14 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
     // Link fields and super types of unfinished types
     for (t <- cache.needLinkage.types) {
       implicit val parent = t
-      t.setSuperType(replace(t.superType()))
+      if (t.hasSuperType())
+        t.setSuperType(replace(t.superType).asInstanceOf[CustomType])
       t.setFields(t.fields().map { f => f.transformToType(replace(f.typ)) })
     }
 
     for (t <- cache.typeLookup.typesFullName.values) {
       t.superType() match {
-        case s: CustomTypeImpl => s.addSubType(t);
+        case s: LinkedCustomType => s.addSubType(t);
         case _ =>
       }
     }

@@ -7,18 +7,19 @@ import java.util.Set;
 
 import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Field;
-import se.culvertsoft.mgen.api.model.MGenBaseType;
 import se.culvertsoft.mgen.api.model.Module;
-import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
+import se.culvertsoft.mgen.api.util.Base64;
+import se.culvertsoft.mgen.api.util.Hasher;
 
-public class CustomTypeImpl extends TypeImpl implements CustomType {
+public class LinkedCustomType extends TypeImpl implements CustomType {
 
-	private String m_name;
-	private String m_fullName;
-	private Module m_module;
-	private Type m_superType;
-	private List<Type> m_superTypeHierarchy;
+	private final String m_name;
+	private final String m_fullName;
+	private final Module m_module;
+	private final short m_id16Bit;
+	private CustomType m_superType;
+	private List<CustomType> m_superTypeHierarchy;
 	private List<CustomType> m_subTypes;
 	private ArrayList<Field> m_fields;
 
@@ -30,19 +31,18 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	private Set<CustomType> m_allReferencedExtTypes;
 	private Set<CustomType> m_directDependencies;
 
-	private Short m_16bitIdOverride;
-
-	public CustomTypeImpl(
+	public LinkedCustomType(
 			final String name,
 			final Module module,
-			final Type superType,
-			final List<Field> fields) {
+			final short id16Bit,
+			final CustomType superType) {
 		super(TypeEnum.CUSTOM);
 		m_name = name;
 		m_fullName = module.path() + "." + m_name;
+		m_id16Bit = id16Bit;
 		m_module = module;
 		m_superType = superType;
-		m_fields = new ArrayList<Field>(fields);
+		m_fields = new ArrayList<Field>();
 		m_superTypeHierarchy = null;
 		m_subTypes = new ArrayList<CustomType>();
 		m_allFieldsInclSuper = null;
@@ -52,51 +52,33 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 		m_allReferencedTypesExclSuper = null;
 		m_allReferencedExtTypes = null;
 		m_directDependencies = null;
-		m_16bitIdOverride = null;
 	}
 
-	public CustomTypeImpl(
-			final String name,
-			final Module module,
-			final Type superType) {
-		this(name, module, superType, new ArrayList<Field>());
+	@Override
+	public long typeId() {
+		return Hasher.static_64bit(m_fullName);
 	}
 
+	@Override
+	public String typeId16BitBase64() {
+		return Base64.encode(typeId16Bit());
+	}
+
+	@Override
 	public short typeId16Bit() {
-		return m_16bitIdOverride != null ? m_16bitIdOverride : super
-				.typeId16Bit();
+		return m_id16Bit;
 	}
 
-	public CustomTypeImpl override16BitId(final short id) {
-		if (id != super.typeId16Bit())
-			m_16bitIdOverride = id;
-		else
-			m_16bitIdOverride = null;
-		return this;
-	}
-
-	public CustomTypeImpl remove16BitIdOverride() {
-		m_16bitIdOverride = null;
-		return this;
-	}
-	
-	public boolean hasIdOverride() {
-		return m_16bitIdOverride != null;
-	}
-
-	public void setSuperType(final Type superType) {
+	public void setSuperType(final CustomType superType) {
 		m_superType = superType;
-		resetHashCaches();
 	}
 
 	public void setFields(final List<Field> fields) {
 		m_fields = new ArrayList<Field>(fields);
-		resetHashCaches();
 	}
 
 	public void addField(final Field field) {
 		m_fields.add(field);
-		resetHashCaches();
 	}
 
 	public String name() {
@@ -107,7 +89,7 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 		return m_module;
 	}
 
-	public Type superType() {
+	public CustomType superType() {
 		return m_superType;
 	}
 
@@ -137,10 +119,10 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 
 			m_allFieldsInclSuper = new ArrayList<Field>();
 
-			final Type s = superType();
-			if (s.typeEnum() == TypeEnum.CUSTOM)
-				m_allFieldsInclSuper.addAll(((CustomType) s)
-						.getAllFieldsInclSuper());
+			if (hasSuperType()) {
+				m_allFieldsInclSuper
+						.addAll(superType().getAllFieldsInclSuper());
+			}
 
 			m_allFieldsInclSuper.addAll(m_fields);
 
@@ -157,8 +139,11 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 			m_allReferencedModules = new HashSet<Module>();
 
 			m_allReferencedModules.add(module());
-			m_allReferencedModules.addAll(superType()
-					.getAllReferencedModulesInclSuper());
+
+			if (hasSuperType()) {
+				m_allReferencedModules.addAll(superType()
+						.getAllReferencedModulesInclSuper());
+			}
 
 			for (final Field field : m_fields)
 				m_allReferencedModules.addAll(field
@@ -178,8 +163,11 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 			m_allReferencedTypes = new HashSet<CustomType>();
 
 			m_allReferencedTypes.add(this);
-			m_allReferencedTypes.addAll(superType()
-					.getAllReferencedTypesInclSuper());
+
+			if (hasSuperType()) {
+				m_allReferencedTypes.addAll(superType()
+						.getAllReferencedTypesInclSuper());
+			}
 
 			for (final Field field : m_fields)
 				m_allReferencedTypes.addAll(field
@@ -236,12 +224,9 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 
 			m_allReferencedExtTypes = new HashSet<CustomType>();
 
-			for (final Type t : getAllReferencedTypesInclSuper()) {
-				if (t.typeEnum() == TypeEnum.CUSTOM) {
-					final CustomType customType = (CustomType) t;
-					if (customType.module() != module()) {
-						m_allReferencedExtTypes.add(customType);
-					}
+			for (final CustomType t : getAllReferencedTypesInclSuper()) {
+				if (t.module() != module()) {
+					m_allReferencedExtTypes.add(t);
 				}
 			}
 
@@ -258,8 +243,8 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 
 			m_directDependencies = new HashSet<CustomType>();
 
-			if (superType().typeEnum() == TypeEnum.CUSTOM) {
-				m_directDependencies.add((CustomType) superType());
+			if (hasSuperType()) {
+				m_directDependencies.add(superType());
 			}
 
 			for (final Field f : m_fields) {
@@ -272,14 +257,14 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public List<Type> superTypeHierarchy() {
+	public List<CustomType> superTypeHierarchy() {
 
 		if (m_superTypeHierarchy == null) {
 
-			final List<Type> l = new ArrayList<Type>();
+			final List<CustomType> l = new ArrayList<CustomType>();
 
-			if (superType().typeEnum() == TypeEnum.CUSTOM)
-				l.addAll(((CustomType) superType()).superTypeHierarchy());
+			if (hasSuperType())
+				l.addAll(superType().superTypeHierarchy());
 
 			l.add(this);
 
@@ -300,13 +285,18 @@ public class CustomTypeImpl extends TypeImpl implements CustomType {
 	}
 
 	@Override
+	public String toString() {
+		return m_fullName;
+	}
+
+	@Override
 	public boolean containsMgenCreatedType() {
 		return true;
 	}
 
 	@Override
 	public boolean hasSuperType() {
-		return superType() != MGenBaseType.INSTANCE;
+		return superType() != null;
 	}
 
 	@Override

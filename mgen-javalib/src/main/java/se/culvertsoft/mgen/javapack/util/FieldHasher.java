@@ -190,7 +190,6 @@ public class FieldHasher {
 		case MAP:
 			return calcMap((Map<?, ?>) a, (MapType) type);
 		case CUSTOM:
-		case MGEN_BASE:
 		case UNKNOWN:
 			return calcMgenObject((MGenBase) a, type);
 		}

@@ -81,7 +81,7 @@ object MkFieldMetaData {
         s"new ${modelPkg}.impl.ArrayTypeImpl(${mkMetaData(ta.elementType())})"
       case TypeEnum.CUSTOM =>
         val tc = t.asInstanceOf[CustomType]
-        s"new ${modelPkg}.impl.UnknownCustomTypeImpl(${quote(tc.fullName())}, ${tc.typeId()}L)"
+        s"new ${modelPkg}.impl.UnlinkedCustomType(${quote(tc.fullName())}, ${tc.typeId()}L)"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }
   }

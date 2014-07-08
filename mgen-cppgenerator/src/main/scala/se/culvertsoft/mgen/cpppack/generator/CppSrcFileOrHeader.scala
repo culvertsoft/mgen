@@ -88,21 +88,14 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
   def mkIncludeGuardStart(module: Module, t: CustomType) {}
 
-  def getQualifiedClassNameOf(t: Type): String = {
-    if (t.typeEnum() == TypeEnum.MGEN_BASE) {
-      "mgen::MGenBase"
-    } else {
-      t.fullName().replaceAllLiterally(".", "::")
-    }
-  }
-
   def getSuperTypeNameString(t: CustomType): String = {
-    if (t.superType().typeEnum() == TypeEnum.CUSTOM) {
-      val superModuleSameAsOurs = t.superType().asInstanceOf[CustomType].module() == t.module();
-      val superNameString = if (superModuleSameAsOurs) t.superType().shortName() else getQualifiedClassNameOf(t.superType())
-      superNameString
+    if (t.hasSuperType()) {
+      if (t.superType.module == t.module)
+        t.superType.shortName
+      else
+        t.fullName.replaceAllLiterally(".", "::")
     } else {
-      getQualifiedClassNameOf(t.superType())
+      "mgen::MGenBase"
     }
   }
 

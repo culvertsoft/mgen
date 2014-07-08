@@ -25,8 +25,8 @@ public class MapTypeImpl extends TypeImpl implements MapType {
 			final String writtenKeyType,
 			final String writtenValueType) {
 		super(TypeEnum.MAP);
-		m_keyType = new UnknownCustomTypeImpl(writtenKeyType, -1);
-		m_valueType = new UnknownCustomTypeImpl(writtenValueType, -1);
+		m_keyType = new UnlinkedCustomType(writtenKeyType, -1);
+		m_valueType = new UnlinkedCustomType(writtenValueType, -1);
 	}
 
 	public Type keyType() {
@@ -39,12 +39,10 @@ public class MapTypeImpl extends TypeImpl implements MapType {
 
 	public void setKeyType(final Type keyType) {
 		m_keyType = keyType;
-		resetHashCaches();
 	}
 
 	public void setValueType(final Type valueType) {
 		m_valueType = valueType;
-		resetHashCaches();
 	}
 
 	@Override
