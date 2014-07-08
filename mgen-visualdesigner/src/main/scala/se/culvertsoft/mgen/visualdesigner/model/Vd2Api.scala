@@ -1,17 +1,17 @@
 package se.culvertsoft.mgen.visualdesigner.model
 
 import java.io.File
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
-import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
+
 import ModelConversion.ApiArrayTypeImpl
 import ModelConversion.ApiBoolTypeInstance
 import ModelConversion.ApiClassImpl
 import ModelConversion.ApiCustomType
-import ModelConversion.ApiLinkedCustomType
 import ModelConversion.ApiEntity
 import ModelConversion.ApiField
 import ModelConversion.ApiFloat32TypeInstance
@@ -21,6 +21,7 @@ import ModelConversion.ApiInt16TypeInstance
 import ModelConversion.ApiInt32TypeInstance
 import ModelConversion.ApiInt64TypeInstance
 import ModelConversion.ApiInt8TypeInstance
+import ModelConversion.ApiLinkedCustomType
 import ModelConversion.ApiListTypeImpl
 import ModelConversion.ApiMapTypeImpl
 import ModelConversion.ApiModule
@@ -33,6 +34,7 @@ import ModelConversion.VdArrayType
 import ModelConversion.VdBoolType
 import ModelConversion.VdClass
 import ModelConversion.VdCustomTypeRef
+import ModelConversion.VdEntity
 import ModelConversion.VdField
 import ModelConversion.VdFieldType
 import ModelConversion.VdFloat32Type
@@ -49,10 +51,10 @@ import ModelConversion.VdModule
 import ModelConversion.VdProject
 import ModelConversion.VdStringType
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
+import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.compiler.defaultparser.LinkTypes
 import se.culvertsoft.mgen.compiler.defaultparser.ParseState
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
-import se.culvertsoft.mgen.api.util.Hasher
 
 class Vd2ApiConversionState(val srcModel: Model) {
   import ModelConversion._
@@ -110,7 +112,7 @@ object Vd2Api {
     if (has()) {
       get()
     } else {
-      Hasher.static_16bit(name())
+      CRC16.calc(name())
     }
 
   }
@@ -232,14 +234,14 @@ object Vd2Api {
     def checkProjectLinkage(project: ApiProject) {
 
       def checkClassLinkage(t: ApiCustomType) {
-        if ((t.hasSuperType() && !t.superType().isTypeKnown()) ||
-          t.fields().exists(!_.typ().isTypeKnown())) {
+        if ((t.hasSuperType() && !t.superType().isLinked()) ||
+          t.fields().exists(!_.typ().isLinked())) {
           parseState.needLinkage.types += t.asInstanceOf[ApiLinkedCustomType]
         }
       }
 
       def checkModuleLinkage(m: ApiModule) {
-        m.types.values foreach checkClassLinkage
+        m.types foreach checkClassLinkage
       }
 
       if (!doneProjects.contains(project.filePath)) {

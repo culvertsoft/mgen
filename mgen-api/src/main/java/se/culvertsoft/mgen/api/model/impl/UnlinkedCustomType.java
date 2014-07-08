@@ -45,12 +45,12 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public boolean isTypeKnown() {
+	public boolean isLinked() {
 		return false;
 	}
 
 	@Override
-	public boolean containsMgenCreatedType() {
+	public boolean containsCustomType() {
 		return true;
 	}
 
@@ -69,15 +69,9 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public Set<Module> getAllReferencedModulesInclSuper() {
+	public Set<CustomType> referencedTypes() {
 		throw new MGenException(
-				"Type details unknown: Cannot call getAllReferencedModulesInclSuper()");
-	}
-
-	@Override
-	public Set<CustomType> getAllReferencedTypesInclSuper() {
-		throw new MGenException(
-				"Type details unknown: Cannot call getAllReferencedTypesInclSuper()");
+				"Type details unknown: Cannot call referencedTypes()");
 	}
 
 	@Override
@@ -131,33 +125,15 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public List<Field> getAllFieldsInclSuper() {
+	public List<Field> fieldsInclSuper() {
 		throw new MGenException(
-				"Type details unknown: Cannot call getAllFieldsInclSuper()");
+				"Type details unknown: Cannot call fieldsInclSuper()");
 	}
 
 	@Override
-	public Set<CustomType> getAllReferencedTypesExclSuper() {
+	public Set<CustomType> directDependencies() {
 		throw new MGenException(
-				"Type details unknown: Cannot call getAllReferencedTypesExclSuper()");
-	}
-
-	@Override
-	public Set<Module> getAllReferencedExtModulesInclSuper() {
-		throw new MGenException(
-				"Type details unknown: Cannot call getAllReferencedExtModulesInclSuper()");
-	}
-
-	@Override
-	public Set<CustomType> getAllReferencedExtTypesInclSuper() {
-		throw new MGenException(
-				"Type details unknown: Cannot call getAllReferencedExtTypesInclSuper()");
-	}
-
-	@Override
-	public Set<CustomType> getDirectDependencies() {
-		throw new MGenException(
-				"Type details unknown: Cannot call getDirectDependencies()");
+				"Type details unknown: Cannot call directDependencies()");
 	}
 
 }

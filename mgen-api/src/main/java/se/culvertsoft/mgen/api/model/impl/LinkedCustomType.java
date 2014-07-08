@@ -10,7 +10,7 @@ import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 import se.culvertsoft.mgen.api.util.Base64;
-import se.culvertsoft.mgen.api.util.Hasher;
+import se.culvertsoft.mgen.api.util.CRC64;
 
 public class LinkedCustomType extends TypeImpl implements CustomType {
 
@@ -23,12 +23,8 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	private List<CustomType> m_subTypes;
 	private ArrayList<Field> m_fields;
 
-	private ArrayList<Field> m_allFieldsInclSuper;
-	private Set<Module> m_allReferencedModules;
-	private Set<Module> m_allReferencedExtModules;
+	private ArrayList<Field> m_fieldsInclSuper;
 	private Set<CustomType> m_allReferencedTypes;
-	private Set<CustomType> m_allReferencedTypesExclSuper;
-	private Set<CustomType> m_allReferencedExtTypes;
 	private Set<CustomType> m_directDependencies;
 
 	public LinkedCustomType(
@@ -45,18 +41,14 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 		m_fields = new ArrayList<Field>();
 		m_superTypeHierarchy = null;
 		m_subTypes = new ArrayList<CustomType>();
-		m_allFieldsInclSuper = null;
-		m_allReferencedModules = null;
-		m_allReferencedExtModules = null;
+		m_fieldsInclSuper = null;
 		m_allReferencedTypes = null;
-		m_allReferencedTypesExclSuper = null;
-		m_allReferencedExtTypes = null;
 		m_directDependencies = null;
 	}
 
 	@Override
 	public long typeId() {
-		return Hasher.static_64bit(m_fullName);
+		return CRC64.calc(m_fullName);
 	}
 
 	@Override
@@ -108,55 +100,31 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public boolean isTypeKnown() {
+	public boolean isLinked() {
 		return true;
 	}
 
 	@Override
-	public List<Field> getAllFieldsInclSuper() {
+	public List<Field> fieldsInclSuper() {
 
-		if (m_allFieldsInclSuper == null) {
+		if (m_fieldsInclSuper == null) {
 
-			m_allFieldsInclSuper = new ArrayList<Field>();
+			m_fieldsInclSuper = new ArrayList<Field>();
 
 			if (hasSuperType()) {
-				m_allFieldsInclSuper
-						.addAll(superType().getAllFieldsInclSuper());
+				m_fieldsInclSuper
+						.addAll(superType().fieldsInclSuper());
 			}
 
-			m_allFieldsInclSuper.addAll(m_fields);
+			m_fieldsInclSuper.addAll(m_fields);
 
 		}
 
-		return m_allFieldsInclSuper;
+		return m_fieldsInclSuper;
 	}
 
 	@Override
-	public Set<Module> getAllReferencedModulesInclSuper() {
-
-		if (m_allReferencedModules == null) {
-
-			m_allReferencedModules = new HashSet<Module>();
-
-			m_allReferencedModules.add(module());
-
-			if (hasSuperType()) {
-				m_allReferencedModules.addAll(superType()
-						.getAllReferencedModulesInclSuper());
-			}
-
-			for (final Field field : m_fields)
-				m_allReferencedModules.addAll(field
-						.typ()
-						.getAllReferencedModulesInclSuper());
-
-		}
-
-		return m_allReferencedModules;
-	}
-
-	@Override
-	public Set<CustomType> getAllReferencedTypesInclSuper() {
+	public Set<CustomType> referencedTypes() {
 
 		if (m_allReferencedTypes == null) {
 
@@ -166,13 +134,13 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 
 			if (hasSuperType()) {
 				m_allReferencedTypes.addAll(superType()
-						.getAllReferencedTypesInclSuper());
+						.referencedTypes());
 			}
 
 			for (final Field field : m_fields)
 				m_allReferencedTypes.addAll(field
 						.typ()
-						.getAllReferencedTypesInclSuper());
+						.referencedTypes());
 
 		}
 
@@ -181,63 +149,7 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public Set<CustomType> getAllReferencedTypesExclSuper() {
-
-		if (m_allReferencedTypesExclSuper == null) {
-
-			m_allReferencedTypesExclSuper = new HashSet<CustomType>();
-
-			for (final Field field : m_fields)
-				m_allReferencedTypesExclSuper.addAll(field
-						.typ()
-						.getAllReferencedTypesInclSuper());
-
-		}
-
-		return m_allReferencedTypesExclSuper;
-
-	}
-
-	@Override
-	public Set<Module> getAllReferencedExtModulesInclSuper() {
-
-		if (m_allReferencedExtModules == null) {
-
-			m_allReferencedExtModules = new HashSet<Module>();
-
-			for (final Module m : getAllReferencedModulesInclSuper()) {
-				if (m != module()) {
-					m_allReferencedExtModules.add(m);
-				}
-			}
-
-		}
-
-		return m_allReferencedExtModules;
-
-	}
-
-	@Override
-	public Set<CustomType> getAllReferencedExtTypesInclSuper() {
-
-		if (m_allReferencedExtTypes == null) {
-
-			m_allReferencedExtTypes = new HashSet<CustomType>();
-
-			for (final CustomType t : getAllReferencedTypesInclSuper()) {
-				if (t.module() != module()) {
-					m_allReferencedExtTypes.add(t);
-				}
-			}
-
-		}
-
-		return m_allReferencedExtTypes;
-
-	}
-
-	@Override
-	public Set<CustomType> getDirectDependencies() {
+	public Set<CustomType> directDependencies() {
 
 		if (m_directDependencies == null) {
 
@@ -248,7 +160,7 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 			}
 
 			for (final Field f : m_fields) {
-				m_directDependencies.addAll(f.getDirectDependencies());
+				m_directDependencies.addAll(f.directDependencies());
 			}
 
 		}
@@ -290,7 +202,7 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public boolean containsMgenCreatedType() {
+	public boolean containsCustomType() {
 		return true;
 	}
 

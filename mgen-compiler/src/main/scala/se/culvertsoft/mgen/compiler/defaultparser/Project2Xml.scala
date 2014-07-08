@@ -22,7 +22,7 @@ import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.GeneratorDescriptor
-import se.culvertsoft.mgen.api.util.Hasher
+import se.culvertsoft.mgen.api.util.CRC16
 
 object Project2Xml {
 
@@ -36,11 +36,11 @@ object Project2Xml {
       <Project>
         { project.generators map generator2xml }
         { project.dependencies map dependency2xmlReference }
-        { project.modules.filter(_.types.values.nonEmpty) map { x => <Module>{ x.filePath() }</Module> } }
+        { project.modules.filter(_.types.nonEmpty) map { x => <Module>{ x.filePath() }</Module> } }
       </Project>
 
     sources += XmlSourceFile(project.absoluteFilePath, projectXml)
-    sources ++= project.modules.filter(_.types.values.nonEmpty) map module2xmlSource
+    sources ++= project.modules.filter(_.types.nonEmpty) map module2xmlSource
 
     convert(sources)
 
@@ -78,7 +78,7 @@ object Project2Xml {
     val xml =
       <Module>
         <Types>
-          { module.types.values map type2xml }
+          { module.types map type2xml }
         </Types>
       </Module>
 
@@ -87,7 +87,7 @@ object Project2Xml {
 
   def type2xml(typ: CustomType)(implicit currentModule: Module): scala.xml.Node = {
 
-    val autoId = Hasher.static_16bit(typ.fullName)
+    val autoId = CRC16.calc(typ.fullName)
     val idString = if (typ.typeId16Bit != autoId) typ.typeId16Bit.toString else null
     
     val xml =

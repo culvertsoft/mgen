@@ -48,7 +48,7 @@ object CheckConflicts {
     val state = gatherModulesFromProject(project)
 
     val allModules = state.modulesFound.toSeq
-    val allTypes = allModules.flatMap(_.types.values)
+    val allTypes = allModules.flatMap(_.types)
 
     assertNoDuplicates(allModules, (m: Module) => m.path) { (m1, m2) =>
       throw new TypeConflictException(s"Module defined twice with same path: ${m1.path}, on file paths: [${m1.absoluteFilePath}, ${m2.absoluteFilePath}]")

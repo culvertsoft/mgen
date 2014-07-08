@@ -17,7 +17,7 @@ object MkMetadataFieldMakers {
 
     implicit val currentModule = module
     
-    for (field <- t.getAllFieldsInclSuper())
+    for (field <- t.fieldsInclSuper())
       ln(1, s"static std::vector<std::string> ${fieldMetaString(field, false)}_flags_make();")
     ln(1, "static std::vector<long long> _type_ids_make();");
     ln(1, "static std::vector<short> _type_ids_16bit_make();");

@@ -19,7 +19,7 @@ object MkNumFieldsSet {
 
     implicit val currentModule = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
     txtBuffer.tabs(0).textln(s"int ${t.shortName()}::_numFieldsSet(const mgen::FieldSetDepth depth) const {")
     txtBuffer.tabs(1).textln(s"int out = 0;")
     for (field <- allFields)

@@ -9,7 +9,7 @@ import se.culvertsoft.mgen.api.model.impl.ModuleImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import scala.util.Try
 import scala.util.Success
-import se.culvertsoft.mgen.api.util.Hasher
+import se.culvertsoft.mgen.api.util.CRC16
 
 object ParseType {
 
@@ -27,7 +27,7 @@ object ParseType {
     val id16Bit =
       node.getAttribString("id") match {
         case Some(idString) => java.lang.Short.decode(idString).toShort
-        case _ => Hasher.static_16bit(fullName)
+        case _ => CRC16.calc(fullName)
       }
 
     val clas = new LinkedCustomType(name, module, id16Bit, superType)
@@ -39,7 +39,7 @@ object ParseType {
     cache.typeLookup.typesShortName.getOrElseUpdate(clas.shortName(), new ArrayBuffer[LinkedCustomType])
     cache.typeLookup.typesShortName(clas.shortName()) += clas
 
-    if (clas.hasSuperType() || clas.fields().exists(!_.typ().isTypeKnown()))
+    if (clas.hasSuperType() || clas.fields().exists(!_.typ().isLinked()))
       cache.needLinkage.types += clas
 
     clas

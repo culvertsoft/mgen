@@ -15,7 +15,7 @@ object MkFieldById {
 
     implicit val m = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     ln(1, "@Override")
     ln(1, s"public $fieldClsString _fieldById(final short fieldId) {")

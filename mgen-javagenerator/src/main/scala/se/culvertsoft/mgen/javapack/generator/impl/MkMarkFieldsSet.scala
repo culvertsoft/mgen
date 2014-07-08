@@ -21,7 +21,7 @@ object MkMarkFieldsSet {
     implicit val m = module
 
     val fields = t.fields()
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     for (field <- fields) {
       ln(1, s"public ${t.shortName()} ${setFieldSet(field, s"final boolean state, final ${fieldSetDepthClsString} depth")} {")
@@ -37,7 +37,7 @@ object MkMarkFieldsSet {
         ln(2, s"${isSetName(field)} = state;")
       }
 
-      if (field.typ().containsMgenCreatedType()) {
+      if (field.typ().containsCustomType()) {
         ln(2, s"if (depth == ${fieldSetDepthClsString}.DEEP)")
         ln(3, s"${setFieldSetClsString}.setFieldSetDeep(${get(field)}, ${fieldMetadata(field)}.typ());")
       }

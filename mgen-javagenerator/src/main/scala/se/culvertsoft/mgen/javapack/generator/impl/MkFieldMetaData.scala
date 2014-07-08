@@ -24,7 +24,7 @@ object MkFieldMetaData {
 
     implicit val m = module
 
-    val fields = t.getAllFieldsInclSuper()
+    val fields = t.fieldsInclSuper()
 
     if (fields.nonEmpty) {
       for (field <- fields) {

@@ -2,7 +2,6 @@ package se.culvertsoft.mgen.visualdesigner.model
 
 import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.HashMap
 
 import ModelConversion.ApiArrayType
@@ -168,7 +167,7 @@ object Api2Vd {
         }
         vdModule.setSaveDir(getSaveDir(apiModule))
         vdModule.setSettings(toJava(apiModule.settings()))
-        vdModule.setTypes(toJava(apiModule.types.values.map(cvtClass(_, vdModule, state))))
+        vdModule.setTypes(toJava(apiModule.types.map(cvtClass(_, vdModule, state))))
         vdModule
     }
   }

@@ -14,7 +14,7 @@ object MkToString {
 
     implicit val m = module
 
-    val fields = t.getAllFieldsInclSuper()
+    val fields = t.fieldsInclSuper()
 
     txtBuffer.tabs(1).textln("@Override")
 

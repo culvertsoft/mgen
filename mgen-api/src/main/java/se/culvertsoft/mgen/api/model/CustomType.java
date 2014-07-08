@@ -27,14 +27,8 @@ public interface CustomType extends Type {
 
 	public List<Field> fields();
 
-	public List<Field> getAllFieldsInclSuper();
+	public List<Field> fieldsInclSuper();
 
-	public Set<CustomType> getAllReferencedTypesExclSuper();
-
-	public Set<Module> getAllReferencedExtModulesInclSuper();
-
-	public Set<CustomType> getAllReferencedExtTypesInclSuper();
-
-	public Set<CustomType> getDirectDependencies();
+	public Set<CustomType> directDependencies();
 
 }

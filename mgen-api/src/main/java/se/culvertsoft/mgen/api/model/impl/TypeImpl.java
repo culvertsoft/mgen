@@ -17,28 +17,14 @@ public abstract class TypeImpl implements Type {
 		return m_enum;
 	}
 
-	public boolean isPrimitive() {
-		return false;
-	}
-
-	public boolean isSimple() {
-		return false;
-	}
-
-	public abstract String fullName();
-
 	@Override
 	public String toString() {
 		return fullName();
 	}
 
 	@Override
-	public byte binaryTypeTag() {
+	public byte typeTag() {
 		return typeEnum().binaryMetadatTag();
-	}
-
-	public boolean isMGenCreatedType() {
-		return typeEnum() == TypeEnum.UNKNOWN || typeEnum() == TypeEnum.CUSTOM;
 	}
 
 	@Override

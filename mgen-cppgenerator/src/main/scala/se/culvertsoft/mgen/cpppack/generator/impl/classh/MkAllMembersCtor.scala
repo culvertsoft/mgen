@@ -15,7 +15,7 @@ object MkAllMembersCtor {
 
     implicit val currentModule = module
 
-    val allFields = t.getAllFieldsInclSuper();
+    val allFields = t.fieldsInclSuper();
     if (allFields.nonEmpty) {
       txtBuffer.tabs(1).text(s"${t.name()}(")
       for (i <- 0 until allFields.size()) {

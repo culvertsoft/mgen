@@ -10,9 +10,4 @@ public abstract class PrimitiveTypeImpl extends SimpleTypeImpl implements
 		super(typeEnum);
 	}
 
-	@Override
-	public boolean isPrimitive() {
-		return true;
-	}
-
 }

@@ -1,8 +1,11 @@
 package se.culvertsoft.mgen.api.util;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 
 public class CRC32 {
+
+	private final static Charset charset = Charset.forName("UTF8");
 
 	private static int[] table = new int[] { 0x00000000, 0x77073096,
 			0xee0e612c, 0x990951ba, 0x076dc419, 0x706af48f, 0xe963a535,
@@ -83,4 +86,9 @@ public class CRC32 {
 	public static int calc(final byte[] bytes) {
 		return calc(ByteBuffer.wrap(bytes, 0, bytes.length));
 	}
+
+	public static int calc(final String buffer) {
+		return calc(buffer.getBytes(charset));
+	}
+
 }

@@ -5,7 +5,6 @@ import java.util.Set;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.CustomType;
-import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 
@@ -42,18 +41,13 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 	}
 
 	@Override
-	public boolean isTypeKnown() {
-		return m_elementType.isTypeKnown();
+	public boolean isLinked() {
+		return m_elementType.isLinked();
 	}
 
 	@Override
-	public Set<Module> getAllReferencedModulesInclSuper() {
-		return m_elementType.getAllReferencedModulesInclSuper();
-	}
-
-	@Override
-	public Set<CustomType> getAllReferencedTypesInclSuper() {
-		return m_elementType.getAllReferencedTypesInclSuper();
+	public Set<CustomType> referencedTypes() {
+		return m_elementType.referencedTypes();
 	}
 
 	@Override
@@ -109,8 +103,8 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 	}
 
 	@Override
-	public boolean containsMgenCreatedType() {
-		return elementType().containsMgenCreatedType();
+	public boolean containsCustomType() {
+		return elementType().containsCustomType();
 	}
 
 }

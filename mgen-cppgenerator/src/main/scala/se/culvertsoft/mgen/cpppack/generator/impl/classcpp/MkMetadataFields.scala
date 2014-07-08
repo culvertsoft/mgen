@@ -19,7 +19,7 @@ object MkMetadataFields {
 
     implicit val currentModule = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     // Own type data
     ln(s"const std::string& ${t.shortName()}::_type_name() {")

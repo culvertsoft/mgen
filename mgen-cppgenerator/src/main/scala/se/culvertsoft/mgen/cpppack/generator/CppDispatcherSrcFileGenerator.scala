@@ -19,7 +19,7 @@ object CppDispatchSrcFileGenerator extends CppDispatchGenerator(SrcFile) {
 
   override def mkDispatch(param: UtilClassGenParam) {
 
-    val allTypes = param.modules.flatMap(_.types()).map(_._2).distinct
+    val allTypes = param.modules.flatMap(_.types())
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     ln(s"void dispatch(mgen::MGenBase& object, ${param.nameSpaceString}::Handler& handler) {")

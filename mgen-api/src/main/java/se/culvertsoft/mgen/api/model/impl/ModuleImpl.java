@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.api.model.impl;
 
-import java.util.HashMap;
-import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,15 +13,18 @@ public class ModuleImpl implements Module {
 	private final String m_filePath;
 	private final String m_absoluteFilePath;
 	private final Map<String, String> m_settings;
-	private LinkedHashMap<String, LinkedCustomType> m_types;
+	private final ArrayList<LinkedCustomType> m_types;
 
-	public ModuleImpl(final String path, final String filePath,
-			final String absoluteFilePath, final Map<String, String> settings) {
+	public ModuleImpl(
+			final String path,
+			final String filePath,
+			final String absoluteFilePath,
+			final Map<String, String> settings) {
 		m_path = path;
 		m_filePath = filePath;
 		m_absoluteFilePath = absoluteFilePath;
 		m_settings = settings;
-		m_types = new LinkedHashMap<String, LinkedCustomType>();
+		m_types = new ArrayList<LinkedCustomType>();
 	}
 
 	public Map<String, String> settings() {
@@ -42,11 +44,11 @@ public class ModuleImpl implements Module {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public Map<String, CustomType> types() {
-		return (Map<String, CustomType>) ((Map) m_types);
+	public List<CustomType> types() {
+		return (List) m_types;
 	}
 
-	public HashMap<String, LinkedCustomType> typesMutable() {
+	public List<LinkedCustomType> typesMutable() {
 		return m_types;
 	}
 
@@ -58,7 +60,7 @@ public class ModuleImpl implements Module {
 	}
 
 	public void addType(final LinkedCustomType type) {
-		m_types.put(type.name(), type);
+		m_types.add(type);
 	}
 
 }

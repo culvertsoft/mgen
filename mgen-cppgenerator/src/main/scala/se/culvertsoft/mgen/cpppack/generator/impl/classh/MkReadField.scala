@@ -15,7 +15,7 @@ object MkReadField {
 
     implicit val currentModule = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     txtBuffer.tabs(1).textln(s"template<typename ReaderType, typename ReadContextType>")
     txtBuffer.tabs(1).textln(s"void _readField(const short fieldId, ReadContextType& context, ReaderType& reader) {")

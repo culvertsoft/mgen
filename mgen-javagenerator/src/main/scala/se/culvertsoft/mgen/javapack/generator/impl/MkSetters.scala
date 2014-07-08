@@ -16,7 +16,7 @@ object MkSetters {
     implicit val m = module
 
     val thisFields = t.fields()
-    val superFields = t.getAllFieldsInclSuper() -- thisFields
+    val superFields = t.fieldsInclSuper() -- thisFields
 
     for (field <- thisFields) {
       txtBuffer.tabs(1).textln(s"public ${t.name()} ${set(field, s"final ${getTypeName(field.typ())} ${field.name()}")} {")

@@ -20,7 +20,7 @@ object MkSetters {
     implicit val currentModule = module
 
     val thisFields = t.fields().toSeq
-    val superFields = t.getAllFieldsInclSuper() -- thisFields
+    val superFields = t.fieldsInclSuper() -- thisFields
 
     val superString = CppGenUtils.getSuperTypeString(t)
 
@@ -32,12 +32,12 @@ object MkSetters {
         ln(1, s"${t.shortName()}& ${set(field, s"const ${getTypeName(field)}& ${field.name()}")};")
 
         // By-value-setters with 'const T&' in
-        if (field.typ().isMGenCreatedType() && field.isPolymorphic()) {
+        if (field.typ.isInstanceOf[CustomType] && field.isPolymorphic()) {
           ln(1, s"${t.shortName()}& ${set(field, s"const ${getTypeName(field.typ(), false)} & ${field.name()}")};")
         }
 
         // By-reference-setters with 'T *' in
-        if (field.typ().isMGenCreatedType() && field.isPolymorphic()) {
+        if (field.typ.isInstanceOf[CustomType] && field.isPolymorphic()) {
           ln(1, s"${t.shortName()}& ${set(field, s"${getTypeName(field.typ(), false)} * ${field.name()}, const bool managePtr = true")};")
         }
 

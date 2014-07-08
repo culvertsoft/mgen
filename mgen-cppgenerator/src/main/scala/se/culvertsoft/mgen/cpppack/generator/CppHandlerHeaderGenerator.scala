@@ -18,7 +18,7 @@ object CppHandlerHeaderGenerator extends CppHandlerGenerator(Header) {
     ln(1, "public:")
     endl()
 
-    val allTypes = param.modules.flatMap(_.types).map(_._2).distinct
+    val allTypes = param.modules.flatMap(_.types)
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     ln(1, s"Handler();")

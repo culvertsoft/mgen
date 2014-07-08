@@ -22,15 +22,15 @@ object MkValidate {
     txtBuffer.tabs(0).textln(s"bool ${t.shortName()}::_validate(const mgen::FieldSetDepth depth) const { ")
     txtBuffer.tabs(1).textln(s"if (depth == mgen::SHALLOW) {")
     txtBuffer.tabs(2).text(s"return true")
-    for (field <- t.getAllFieldsInclSuper().filter(_.isRequired()))
+    for (field <- t.fieldsInclSuper().filter(_.isRequired()))
       txtBuffer.endl().tabs(4).text(s"&& ${isFieldSet(field, "mgen::SHALLOW")}")
     txtBuffer.textln(s";")
     txtBuffer.tabs(1).textln(s"} else {")
     txtBuffer.tabs(2).text(s"return true")
-    for (field <- t.getAllFieldsInclSuper()) {
+    for (field <- t.fieldsInclSuper()) {
       if (field.isRequired())
         txtBuffer.endl().tabs(4).text(s"&& ${isFieldSet(field, "mgen::DEEP")}")
-      else if (field.typ().containsMgenCreatedType())
+      else if (field.typ().containsCustomType())
         txtBuffer.endl().tabs(4).text(s"&& (!${isFieldSet(field, "mgen::SHALLOW")} || ${isFieldSet(field, "mgen::DEEP")})")
     }
     txtBuffer.textln(s";")

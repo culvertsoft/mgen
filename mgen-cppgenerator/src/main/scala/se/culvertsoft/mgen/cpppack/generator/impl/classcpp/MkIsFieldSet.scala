@@ -22,7 +22,7 @@ object MkIsFieldSet {
 
     txtBuffer.tabs(0).textln(s"bool ${t.shortName()}::_isFieldSet(const mgen::Field& field, const mgen::FieldSetDepth depth) const {")
     txtBuffer.tabs(1).textln(s"switch(field.id()) {")
-    for (field <- t.getAllFieldsInclSuper()) {
+    for (field <- t.fieldsInclSuper()) {
       txtBuffer.tabs(2).textln(s"case (${fieldIdString(field)}):")
       txtBuffer.tabs(3).textln(s"return ${isFieldSet(field, "depth")};")
     }
@@ -34,7 +34,7 @@ object MkIsFieldSet {
 
     for (field <- t.fields()) {
       txtBuffer.tabs(0).textln(s"bool ${t.shortName()}::${isFieldSet(field, "const mgen::FieldSetDepth depth")} const {")
-      if (field.typ().containsMgenCreatedType()) {
+      if (field.typ().containsCustomType()) {
         
         val shallowCall = if (CppGenerator.canBeNull(field)) s"m_${field.name()}.get()" else isSetName(field)
         

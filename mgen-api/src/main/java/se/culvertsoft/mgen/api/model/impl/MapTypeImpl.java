@@ -6,7 +6,6 @@ import java.util.Set;
 
 import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.MapType;
-import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 
@@ -57,23 +56,15 @@ public class MapTypeImpl extends TypeImpl implements MapType {
 	}
 
 	@Override
-	public boolean isTypeKnown() {
-		return m_keyType.isTypeKnown() && m_valueType.isTypeKnown();
+	public boolean isLinked() {
+		return m_keyType.isLinked() && m_valueType.isLinked();
 	}
 
 	@Override
-	public Set<Module> getAllReferencedModulesInclSuper() {
-		final HashSet<Module> out = new HashSet<Module>();
-		out.addAll(m_keyType.getAllReferencedModulesInclSuper());
-		out.addAll(m_valueType.getAllReferencedModulesInclSuper());
-		return out;
-	}
-
-	@Override
-	public Set<CustomType> getAllReferencedTypesInclSuper() {
+	public Set<CustomType> referencedTypes() {
 		final HashSet<CustomType> out = new HashSet<CustomType>();
-		out.addAll(m_keyType.getAllReferencedTypesInclSuper());
-		out.addAll(m_valueType.getAllReferencedTypesInclSuper());
+		out.addAll(m_keyType.referencedTypes());
+		out.addAll(m_valueType.referencedTypes());
 		return out;
 	}
 
@@ -83,9 +74,9 @@ public class MapTypeImpl extends TypeImpl implements MapType {
 	}
 
 	@Override
-	public boolean containsMgenCreatedType() {
-		return keyType().containsMgenCreatedType()
-				|| valueType().containsMgenCreatedType();
+	public boolean containsCustomType() {
+		return keyType().containsCustomType()
+				|| valueType().containsCustomType();
 	}
 
 }

@@ -18,7 +18,7 @@ object MkFieldById {
 
     implicit val currentModule = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     ln(0, s"const mgen::Field * ${t.shortName()}::_fieldById(const short id) const {")
     ln(1, s"switch (id) {")

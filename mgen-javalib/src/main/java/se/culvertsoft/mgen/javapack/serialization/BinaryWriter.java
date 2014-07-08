@@ -278,7 +278,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 			writeSize(list.size());
 
-			writeTypeTag(elementType.binaryTypeTag());
+			writeTypeTag(elementType.typeTag());
 
 			for (final Object o : list)
 				writeObject(o, elementType, false);
@@ -511,7 +511,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 			writeSize(array.length);
 
-			writeTypeTag(elementType.binaryTypeTag());
+			writeTypeTag(elementType.typeTag());
 
 			for (final Object o : array)
 				writeObject(o, elementType, false);

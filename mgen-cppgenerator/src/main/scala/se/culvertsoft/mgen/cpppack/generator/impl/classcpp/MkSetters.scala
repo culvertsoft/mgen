@@ -21,7 +21,7 @@ object MkSetters {
 
     implicit val currentModule = module
     val thisFields = t.fields().toSeq
-    val superFields = t.getAllFieldsInclSuper() -- thisFields
+    val superFields = t.fieldsInclSuper() -- thisFields
 
     val superString = CppGenUtils.getSuperTypeString(t)
 

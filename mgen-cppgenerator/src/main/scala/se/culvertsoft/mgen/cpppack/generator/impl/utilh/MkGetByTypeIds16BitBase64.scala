@@ -14,7 +14,7 @@ object MkGetByTypeIds16BitBase64 {
     referencedModules: Seq[Module],
     generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
-    val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
+    val allTypes = referencedModules.flatMap(_.types)
 
     ln(nTabs, s"const mgen::ClassRegistryEntry * $namespaceString::ClassRegistry::getByIds(const std::vector<std::string>& ids) const {")
 

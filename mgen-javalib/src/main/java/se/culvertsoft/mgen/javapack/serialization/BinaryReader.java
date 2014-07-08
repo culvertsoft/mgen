@@ -483,7 +483,7 @@ public class BinaryReader extends BuiltInReader {
 
 			final byte rcvdTag = readTypeTag();
 			if (expectType != null) {
-				final byte expTag = expectType.elementType().binaryTypeTag();
+				final byte expTag = expectType.elementType().typeTag();
 				ensureTypeTag(null, expTag, rcvdTag);
 			}
 			return readArray2(nElements, rcvdTag, expectType);
@@ -541,8 +541,8 @@ public class BinaryReader extends BuiltInReader {
 
 		final byte readElemTag = readTypeTag();
 
-		if (constraint != null && constraint.binaryTypeTag() != readElemTag)
-			throwUnexpectTag("", constraint.binaryTypeTag(), readElemTag);
+		if (constraint != null && constraint.typeTag() != readElemTag)
+			throwUnexpectTag("", constraint.typeTag(), readElemTag);
 
 		final ArrayList<Object> out = new ArrayList<Object>(nElements);
 

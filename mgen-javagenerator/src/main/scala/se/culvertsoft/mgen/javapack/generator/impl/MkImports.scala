@@ -19,7 +19,7 @@ import se.culvertsoft.mgen.javapack.generator.JavaConstants.validatorClsStringQ
 object MkImports {
 
   def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
-    val allReferencedExtTypes = t.getAllReferencedExtTypesInclSuper()
+    val allReferencedExtTypes = t.referencedTypes().filter(_.module != module)
     txtBuffer.textln(s"import ${fieldClsStringQ};")
     for (referencedExtType <- allReferencedExtTypes)
       txtBuffer.textln(s"import ${referencedExtType.module().path()};")
@@ -27,12 +27,12 @@ object MkImports {
     txtBuffer.textln(s"import ${fieldSetDepthClsStringQ};")
     txtBuffer.textln(s"import ${fieldVisitorClsStringQ};")
     txtBuffer.textln(s"import ${readerClsStringQ};")
-    if (t.getAllFieldsInclSuper().nonEmpty) {
+    if (t.fieldsInclSuper().nonEmpty) {
       txtBuffer.textln(s"import ${eqTesterClsStringQ};")
       txtBuffer.textln(s"import ${deepCopyerClsStringQ};")
       txtBuffer.textln(s"import ${fieldHasherClsStringQ};")
     }
-    if (t.fields().exists(_.typ().containsMgenCreatedType())) {
+    if (t.fields().exists(_.typ().containsCustomType())) {
       txtBuffer.textln(s"import ${validatorClsStringQ};")
       txtBuffer.textln(s"import ${setFieldSetClsStringQ};")
     }

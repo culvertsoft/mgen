@@ -18,7 +18,7 @@ object MkMetadataFieldMakers {
 
     implicit val currentModule = module
     
-    for (field <- t.getAllFieldsInclSuper()) {
+    for (field <- t.fieldsInclSuper()) {
       ln(s"std::vector<std::string> ${t.shortName()}::${fieldMetaString(field, false)}_flags_make() {")
       ln(1, s"std::vector<std::string> out;")
       for (tag <- field.flags())
@@ -62,7 +62,7 @@ object MkMetadataFieldMakers {
 
     ln(s"std::vector<mgen::Field> ${t.shortName()}::_field_metadatas_make() {");
     ln(1, s"std::vector<mgen::Field> out;")
-    for (field <- t.getAllFieldsInclSuper())
+    for (field <- t.fieldsInclSuper())
       ln(1, s"out.push_back(${fieldMetaString(field)});")
     ln(1, s"return out;")
     ln(s"}")
@@ -70,7 +70,7 @@ object MkMetadataFieldMakers {
 
     ln(s"std::map<std::string, const mgen::Field*> ${t.shortName()}::_field_names2metadata_make() {");
     ln(1, s"std::map<std::string, const mgen::Field*> out;")
-    for (field <- t.getAllFieldsInclSuper())
+    for (field <- t.fieldsInclSuper())
       ln(1, s"out[${quote(field.name)}] = &${fieldMetaString(field)};")
     ln(1, s"return out;")
     ln(s"}")

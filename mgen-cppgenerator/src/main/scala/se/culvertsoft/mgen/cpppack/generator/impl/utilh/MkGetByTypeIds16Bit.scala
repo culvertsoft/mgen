@@ -14,7 +14,7 @@ object MkGetByTypeIds16Bit {
     referencedModules: Seq[Module],
     generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
-    val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
+    val allTypes = referencedModules.flatMap(_.types)
 
     ln(nTabs, s"const mgen::ClassRegistryEntry * $namespaceString::ClassRegistry::getByIds(const std::vector<short>& ids) const {")
 
@@ -23,7 +23,7 @@ object MkGetByTypeIds16Bit {
 
     txtBuffer.endl()
 
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
 
     ln(nTabs + 1, "int i = 0;")
     MkTypeIdSwitch.apply(

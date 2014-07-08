@@ -7,6 +7,8 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkLongTypeName
 
+import scala.collection.JavaConversions._
+
 object CppHandlerSrcFileGenerator extends CppHandlerGenerator(SrcFile) {
 
   override def mkIncludes(param: UtilClassGenParam) {
@@ -17,7 +19,7 @@ object CppHandlerSrcFileGenerator extends CppHandlerGenerator(SrcFile) {
   override def mkClassContents(param: UtilClassGenParam) {
     super.mkClassContents(param)
 
-    val allTypes = param.modules.flatMap(_.types).map(_._2).distinct
+    val allTypes = param.modules.flatMap(_.types)
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     ln("Handler::Handler() {}").endl()

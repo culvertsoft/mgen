@@ -18,8 +18,8 @@ object MkVisitorDispatch {
     generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
     val nTabs = 1
-    val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+    val allTypes = referencedModules.flatMap(_.types)
+    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
 
     for (constString <- List("", "const ")) {
 

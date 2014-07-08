@@ -1,5 +1,6 @@
 package se.culvertsoft.mgen.api.model;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -44,12 +45,10 @@ public interface Module {
 	public String absoluteFilePath();
 
 	/**
-	 * Returns the types defined within this module. The types are returned in a
-	 * map where the key is the full type name (<module_path>.<typeName>) and
-	 * the value is the type.
+	 * Returns the types defined within this module.
 	 * 
 	 * @return The types defined within this module.
 	 */
-	public Map<String, CustomType> types();
+	public List<CustomType> types();
 
 }

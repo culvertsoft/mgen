@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.compiler.defaultparser
 import scala.collection.JavaConversions.seqAsJavaList
 import XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.api.util.Hasher
+import se.culvertsoft.mgen.api.util.CRC16
 
 object ParseField {
 
@@ -15,7 +15,7 @@ object ParseField {
     val typeString = node.getAttribString("type").getOrElse(ThrowRTE(s"Missing type attribute for field ${name}"))
     val typ = ParseFieldType(typeString)
     val flagString = node.getAttribString("flags").getOrElse("")
-    val idOverride = node.getAttribString("id").map(java.lang.Short.decode(_).shortValue()).getOrElse(Hasher.static_16bit(name))
+    val idOverride = node.getAttribString("id").map(java.lang.Short.decode(_).shortValue()).getOrElse(CRC16.calc(name))
     new Field(
       ownerClassName,
       name,

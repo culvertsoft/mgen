@@ -17,7 +17,7 @@ object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFil
     val mkUnityBuild = param.settings.getOrElse("generate_unity_build", throw new GenerationException("Missing <generate_unity_build> setting for C++ generator")).toBoolean
 
     if (mkUnityBuild) {
-      val ts = param.modules.flatMap(_.types.values).distinct
+      val ts = param.modules.flatMap(_.types)
       for (t <- ts)
         CppGenUtils.include(t, ".cpp")
       CppGenUtils.include(CppDispatchGenerator.includeStringCpp(param.nameSpaceString))
@@ -31,8 +31,8 @@ object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFil
   override def mkDefaultCtor(param: UtilClassGenParam) {
     ln(s"ClassRegistry::ClassRegistry() {")
     for (m <- param.modules)
-      for (t <- m.types().values())
-        ln(1, s"add<${t.fullName().replaceAllLiterally(".", "::")}>();")
+      for (t <- m.types)
+        ln(1, s"add<${t.fullName.replaceAllLiterally(".", "::")}>();")
     ln(s"}").endl()
   }
 

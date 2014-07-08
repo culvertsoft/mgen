@@ -17,8 +17,8 @@ object MkRequiredMembersCtor {
 
     implicit val currentModule = module
 
-    val reqAndOptFields = t.getAllFieldsInclSuper().toBuffer
-    val reqFields = t.getAllFieldsInclSuper().filter(_.isRequired())
+    val reqAndOptFields = t.fieldsInclSuper().toBuffer
+    val reqFields = t.fieldsInclSuper().filter(_.isRequired())
     val fieldsToSuper = reqFields -- t.fields
     val nonNullFields = t.fields.filterNot(canBeNull)
 

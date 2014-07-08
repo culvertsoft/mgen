@@ -13,7 +13,7 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 object CppGenerator {
 
   def canBeNull(f: Field): Boolean = {
-    f.typ().isMGenCreatedType() && f.isPolymorphic()
+    f.typ.isInstanceOf[CustomType] && f.isPolymorphic()
   }
 
   def writeInitializerList(list: Seq[String])(implicit txtBuffer: SuperStringBuffer) {

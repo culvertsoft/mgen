@@ -19,7 +19,7 @@ object MkEqOperator {
 
     implicit val currentModule = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
     ln(s"bool ${t.shortName()}::operator==(const ${t.shortName()}& other) const {")
     ln(1, "return true")
     for (field <- allFields) {

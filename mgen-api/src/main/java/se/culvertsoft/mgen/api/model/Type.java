@@ -7,25 +7,17 @@ public interface Type {
 	public Class<?> classOf();
 
 	public TypeEnum typeEnum();
-
-	public boolean isPrimitive();
-
-	public boolean isSimple();
+	
+	public byte typeTag();
 
 	public String shortName();
 
 	public String fullName();
 
-	public boolean isTypeKnown();
+	public boolean isLinked();
 
-	public boolean containsMgenCreatedType();
+	public boolean containsCustomType();
 
-	public boolean isMGenCreatedType();
-
-	public byte binaryTypeTag();
-
-	public Set<Module> getAllReferencedModulesInclSuper();
-
-	public Set<CustomType> getAllReferencedTypesInclSuper();
+	public Set<CustomType> referencedTypes();
 
 }

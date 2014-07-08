@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import se.culvertsoft.mgen.api.util.Base64;
-import se.culvertsoft.mgen.api.util.Hasher;
+import se.culvertsoft.mgen.api.util.CRC16;
 
 public class Field {
 
@@ -82,9 +82,9 @@ public class Field {
 	public short id() {
 		return m_id;
 	}
-	
+
 	public boolean hasIdOverride() {
-		return m_id != Hasher.static_16bit(m_name);
+		return m_id != CRC16.calc(m_name);
 	}
 
 	public String idBase64() {
@@ -108,7 +108,7 @@ public class Field {
 		return m_name + ": " + m_type + " (flags: " + m_flags + ")";
 	}
 
-	public Set<CustomType> getDirectDependencies() {
+	public Set<CustomType> directDependencies() {
 		return m_directDependencies;
 	}
 
