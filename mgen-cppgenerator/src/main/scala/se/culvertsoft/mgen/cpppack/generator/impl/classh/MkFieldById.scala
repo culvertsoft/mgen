@@ -14,7 +14,7 @@ object MkFieldById {
     
     implicit val currentModule = module
 
-    ln(1, s"const mgen::Field * _fieldById(const short hash) const;")
+    ln(1, s"const mgen::Field * _fieldById(const short id) const;")
     ln(1, s"const mgen::Field * _fieldByName(const std::string& name) const;")
     
   }

@@ -20,8 +20,8 @@ object MkFieldById {
 
     val allFields = t.getAllFieldsInclSuper()
 
-    ln(0, s"const mgen::Field * ${t.shortName()}::_fieldById(const short hash) const {")
-    ln(1, s"switch (hash) {")
+    ln(0, s"const mgen::Field * ${t.shortName()}::_fieldById(const short id) const {")
+    ln(1, s"switch (id) {")
     for (field <- allFields) {
       ln(1, s"case ${fieldIdString(field)}:")
       ln(2, s"return &${fieldMetaString(field)};")
