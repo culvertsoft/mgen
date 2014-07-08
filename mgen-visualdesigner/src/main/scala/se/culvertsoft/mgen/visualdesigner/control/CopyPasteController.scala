@@ -169,6 +169,13 @@ class CopyPasteController(controller: Controller) extends SubController(controll
         // Replace own id if needed
         if (idReplacements.contains(id)) {
           e.setId(idReplacements(id))
+          e match {
+            case e: CustomType => e.unsetId16Bit()
+            case e: CustomTypeField => e.unsetId16Bit()
+          }
+          
+          // TODO Replace name if duplicate
+          
         }
 
         // Replace parent id if needed
