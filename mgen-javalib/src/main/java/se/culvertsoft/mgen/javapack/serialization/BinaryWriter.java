@@ -1,6 +1,5 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
-import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_ARRAY;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_BOOL;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_CUSTOM;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_FLOAT32;
@@ -158,7 +157,7 @@ public class BinaryWriter extends BuiltInWriter {
 	@Override
 	public void writeArrayField(final Object arrayObj, final Field field)
 			throws IOException {
-		writeFieldStart(field.id(), TAG_ARRAY);
+		writeFieldStart(field.id(), TAG_LIST);
 		writeArray(arrayObj, (ArrayType) field.typ(), false);
 	}
 
@@ -316,7 +315,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final boolean tag) throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (arrayObj != null) {
 
@@ -359,7 +358,7 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (array != null && array.length != 0) {
 
@@ -380,7 +379,7 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (array != null && array.length != 0) {
 
@@ -399,7 +398,7 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (array != null && array.length != 0) {
 
@@ -420,7 +419,7 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (array != null && array.length != 0) {
 
@@ -441,7 +440,7 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (array != null && array.length != 0) {
 
@@ -462,7 +461,7 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (array != null && array.length != 0) {
 
@@ -483,7 +482,7 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (array != null && array.length != 0) {
 
@@ -506,7 +505,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final boolean tag) throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_ARRAY);
+			writeTypeTag(TAG_LIST);
 
 		if (array != null && array.length != 0) {
 

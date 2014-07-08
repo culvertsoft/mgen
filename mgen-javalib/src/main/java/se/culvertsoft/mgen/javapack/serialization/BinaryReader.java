@@ -1,6 +1,5 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
-import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_ARRAY;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_BOOL;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_CUSTOM;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_FLOAT32;
@@ -124,7 +123,7 @@ public class BinaryReader extends BuiltInReader {
 	@Override
 	public Object readArrayField(final Field field, final Object context)
 			throws IOException {
-		ensureTypeTag(field, TAG_ARRAY, readTypeTag());
+		ensureTypeTag(field, TAG_LIST, readTypeTag());
 		return readArray(false, (ArrayType) field.typ());
 	}
 
@@ -476,7 +475,7 @@ public class BinaryReader extends BuiltInReader {
 	private Object readArray(final boolean readTag, final ArrayType expectType)
 			throws IOException {
 		if (readTag)
-			ensureTypeTag(null, TAG_ARRAY, readTypeTag());
+			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
 		final int nElements = readSize();
 
