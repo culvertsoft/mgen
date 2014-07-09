@@ -10,7 +10,6 @@
 
 #include "mgen/metadata/Field.h"
 #include "mgen/metadata/FieldSetDepth.h"
-#include "mgen/util/hash.h"
 
 namespace mgen {
 

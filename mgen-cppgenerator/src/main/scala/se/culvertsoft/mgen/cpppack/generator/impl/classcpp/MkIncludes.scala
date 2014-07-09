@@ -19,7 +19,6 @@ object MkIncludes {
     implicit val currentModule = module
 
     CppGenUtils.include(t)
-    CppGenUtils.include("mgen/util/hash.h")
     CppGenUtils.include("mgen/util/validation.h")
     txtBuffer.endl()
 

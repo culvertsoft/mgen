@@ -33,7 +33,7 @@ namespace tut { \
 struct grpName##TestDataDummy {}; \
 typedef test_group<grpName##TestDataDummy> TestGroupType; \
 typedef TestGroupType::object testObject; \
-TestGroupType grpName##TestGroup(STRINGIFY(grpName)" tests"); \
+TestGroupType grpName##TestGroup(MGEN_STRINGIFY(grpName)" tests"); \
 int grpName##zero = __COUNTER__; \
 template<> \
 template<> \
@@ -44,7 +44,7 @@ void testObject::test<__COUNTER__>() { \
 template<> \
 template<> \
 void testObject::test<__COUNTER__>() { \
-    set_test_name(STRINGIFY(tstName)); \
+    set_test_name(MGEN_STRINGIFY(tstName)); \
     LOG(""); \
     LOG_CONTINUE("  Running test " << get_test_name());
 
@@ -61,7 +61,7 @@ void testObject::test<__COUNTER__>() { \
 #define LOG_CONTINUE(x) std::cout << x
 #define LOG(x) std::cout << x << std::endl
 #define ERR(x) std::cerr << x << std::cerr
-#define FILE_LINE __FILE__ "::" STRINGIFY(__LINE__) ":"
+#define FILE_LINE __FILE__ "::" MGEN_STRINGIFY(__LINE__) ":"
 
 #define ASSERTMSG(msg, condition) ensure(FILE_LINE ":" msg, condition)
 #define ASSERT(condition) ensure(FILE_LINE, condition)
