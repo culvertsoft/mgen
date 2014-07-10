@@ -40,9 +40,16 @@
             <fields type="list[CustomTypeField]"/>
             <id16Bit type="int16"/>
         </CustomType>
+        <EnumEntry extends="Entity">
+            <constant type="String"/>
+        </EnumEntry>
+        <EnumType extends="PlacedEntity">
+            <entries type="list[EnumEntry]"/>
+        </EnumType>
         <Module extends="PlacedEntity">
             <settings type="map[string, string]"/>
             <submodules type="list[Module]"/>
+            <enums type="list[EnumType]"/>
             <types type="list[CustomType]"/>
             <saveDir type="FilePath"/>
         </Module>
