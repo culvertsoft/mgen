@@ -79,7 +79,7 @@ BEGIN_TEST_GROUP(Serialization)
 static int s_nSerializers = 0;
 
 template<typename WriterType, typename ReaderType>
-void haveSerializers(SerializationTestData& testData, WriterType& writer, ReaderType& reader) {
+static void haveSerializers(SerializationTestData& testData, WriterType& writer, ReaderType& reader) {
     s_nSerializers++;
 }
 
@@ -135,7 +135,7 @@ END_TEST
 /////////////////////////////////////////////////////////////////////
 
 template<typename WriterType, typename ReaderType>
-void canWriteRead(SerializationTestData& testData, WriterType& writer, ReaderType& reader) {
+static void canWriteRead(SerializationTestData& testData, WriterType& writer, ReaderType& reader) {
 
     ClassRegistry& registry = testData.registry;
     const ClassRegistry::EntryMap& entries = registry.entries();
@@ -165,6 +165,51 @@ BEGIN_TEST("Can write/read")
     ClassRegistry& registry = testData.registry;
 
     FOREACH_SERIALIZER(canWriteRead);
+
+END_TEST
+
+/////////////////////////////////////////////////////////////////////
+
+template<typename WriterType, typename ReaderType>
+static void testEnums(SerializationTestData& testData, WriterType& writer, ReaderType& reader) {
+
+    ClassRegistry& registry = testData.registry;
+    const ClassRegistry::EntryMap& entries = registry.entries();
+
+    VectorR3 v1, v2;
+    ASSERT(v1 == v2);
+
+    v1.setKind(kind_pretty);
+    ASSERT(v1 != v2);
+
+    v2.setKind(kind_ugly);
+    ASSERT(v1 != v2);
+
+    v1.setKind(kind_pretty);
+    v2.setKind(kind_pretty);
+    ASSERT(v1 == v2);
+
+    v2.setKind(kind_ugly);
+    ASSERT(v1 != v2);
+    writer.writeObject(v1);
+    writer.writeObject(v2);
+
+    VectorR3 v1back = reader.template readStatic<VectorR3>();
+    VectorR3 v2back = reader.template readStatic<VectorR3>();
+
+    ASSERT(v1 == v1back);
+    ASSERT(v2 == v2back);
+    ASSERT(v1 != v2);
+
+    testData.reset();
+}
+
+BEGIN_TEST("Enums")
+
+    SerializationTestData testData;
+    ClassRegistry& registry = testData.registry;
+
+    FOREACH_SERIALIZER(testEnums);
 
 END_TEST
 
