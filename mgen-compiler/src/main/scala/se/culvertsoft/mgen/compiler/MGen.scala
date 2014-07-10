@@ -117,6 +117,11 @@ object MGen {
       case Failure(err) =>
         println
         println("*** COMPILATION FAILED (see error log below) ***")
+        println
+        printHelp
+        println
+        System.err.flush()
+        System.out.flush()
         throw err
     }
 
