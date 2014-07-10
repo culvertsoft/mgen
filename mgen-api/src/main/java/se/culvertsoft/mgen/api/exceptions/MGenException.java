@@ -7,7 +7,7 @@ public class MGenException extends RuntimeException {
 	public MGenException() {
 		super();
 	}
-	
+
 	public MGenException(final String reason) {
 		super(reason);
 	}

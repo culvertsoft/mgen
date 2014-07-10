@@ -57,5 +57,5 @@ public interface Module {
 	 * @return The enumerations defined within this module.
 	 */
 	public List<EnumType> enums();
-	
+
 }

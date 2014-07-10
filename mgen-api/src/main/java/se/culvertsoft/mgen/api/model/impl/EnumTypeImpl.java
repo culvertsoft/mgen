@@ -1,12 +1,9 @@
 package se.culvertsoft.mgen.api.model.impl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import se.culvertsoft.mgen.api.exceptions.MGenException;
-import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.EnumEntry;
 import se.culvertsoft.mgen.api.model.EnumType;
 import se.culvertsoft.mgen.api.model.Module;
@@ -51,11 +48,6 @@ public class EnumTypeImpl extends SimpleTypeImpl implements EnumType {
 		return false;
 	}
 
-	@Override
-	public Set<CustomType> referencedTypes() {
-		return Collections.emptySet();
-	}
-	
 	public void setEntries(final List<EnumEntryImpl> entries) {
 		m_entries.clear();
 		m_entries.addAll(entries);
@@ -64,7 +56,7 @@ public class EnumTypeImpl extends SimpleTypeImpl implements EnumType {
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<EnumEntry> entries() {
-		return (List)m_entries;
+		return (List) m_entries;
 	}
 
 	@Override

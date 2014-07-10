@@ -1,7 +1,5 @@
 package se.culvertsoft.mgen.api.model;
 
-import java.util.Set;
-
 /**
  * Base interface for all compiler data types.
  * 
@@ -55,10 +53,5 @@ public interface Type {
 	 * useful for generic types and containers, where it's not always obvious.
 	 */
 	public boolean containsCustomType();
-
-	/**
-	 * Returns the set of types referenced from this type.
-	 */
-	public Set<CustomType> referencedTypes();
 
 }

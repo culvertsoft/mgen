@@ -97,11 +97,16 @@ public interface CustomType extends Type {
 	public List<Field> fieldsInclSuper();
 
 	/**
-	 * Returns the types that this type depends on, non-recursively
+	 * Returns the set of types referenced from this type.
 	 * 
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public Set<CustomType> directDependencies();
+	public Set<CustomType> referencedClasses();
+
+	/**
+	 * Returns the set of types referenced from this type.
+	 */
+	public Set<EnumType> referencedEnums();
 
 }

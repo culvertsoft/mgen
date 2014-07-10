@@ -1,10 +1,8 @@
 package se.culvertsoft.mgen.api.model.impl;
 
 import java.lang.reflect.Array;
-import java.util.Set;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
-import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 
@@ -46,11 +44,6 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 	}
 
 	@Override
-	public Set<CustomType> referencedTypes() {
-		return m_elementType.referencedTypes();
-	}
-
-	@Override
 	public Class<?> doClassOf() {
 		try {
 			switch (m_elementType.typeEnum()) {
@@ -71,8 +64,7 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 			case STRING:
 				return String[].class;
 			default:
-				return Class.forName("[L" + m_elementType.classOf().getName()
-						+ ";");
+				return Class.forName("[L" + m_elementType.classOf().getName() + ";");
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);

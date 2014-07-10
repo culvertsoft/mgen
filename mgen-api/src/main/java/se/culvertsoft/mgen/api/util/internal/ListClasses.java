@@ -9,8 +9,7 @@ import java.util.jar.JarFile;
 
 public class ListClasses {
 
-	public static List<String> namesInJar(final String pathToJar)
-			throws IOException {
+	public static List<String> namesInJar(final String pathToJar) throws IOException {
 
 		final ArrayList<String> out = new ArrayList<String>();
 		final JarFile jarFile = new JarFile(pathToJar);

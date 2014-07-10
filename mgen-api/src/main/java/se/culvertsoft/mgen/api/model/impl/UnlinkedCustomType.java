@@ -5,6 +5,7 @@ import java.util.Set;
 
 import se.culvertsoft.mgen.api.exceptions.MGenException;
 import se.culvertsoft.mgen.api.model.CustomType;
+import se.culvertsoft.mgen.api.model.EnumType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.TypeEnum;
@@ -69,21 +70,13 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public Set<CustomType> referencedTypes() {
-		throw new MGenException(
-				"Type details unknown: Cannot call referencedTypes()");
-	}
-
-	@Override
 	public String typeId16BitBase64() {
-		throw new MGenException(
-				"Type details unknown: Cannot call typeId16BitBase64()");
+		throw new MGenException("Type details unknown: Cannot call typeId16BitBase64()");
 	}
 
 	@Override
 	public short typeId16Bit() {
-		throw new MGenException(
-				"Type details unknown: Cannot call typeId16Bit()");
+		throw new MGenException("Type details unknown: Cannot call typeId16Bit()");
 	}
 
 	@Override
@@ -98,14 +91,12 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 
 	@Override
 	public boolean hasSuperType() {
-		throw new MGenException(
-				"Type details unknown: Cannot call hasSuperType()");
+		throw new MGenException("Type details unknown: Cannot call hasSuperType()");
 	}
 
 	@Override
 	public boolean hasSubTypes() {
-		throw new MGenException(
-				"Type details unknown: Cannot call hasSubTypes()");
+		throw new MGenException("Type details unknown: Cannot call hasSubTypes()");
 	}
 
 	@Override
@@ -115,8 +106,7 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 
 	@Override
 	public List<CustomType> superTypeHierarchy() {
-		throw new MGenException(
-				"Type details unknown: Cannot call superTypeHierarchy()");
+		throw new MGenException("Type details unknown: Cannot call superTypeHierarchy()");
 	}
 
 	@Override
@@ -126,14 +116,17 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 
 	@Override
 	public List<Field> fieldsInclSuper() {
-		throw new MGenException(
-				"Type details unknown: Cannot call fieldsInclSuper()");
+		throw new MGenException("Type details unknown: Cannot call fieldsInclSuper()");
 	}
 
 	@Override
-	public Set<CustomType> directDependencies() {
-		throw new MGenException(
-				"Type details unknown: Cannot call directDependencies()");
+	public Set<CustomType> referencedClasses() {
+		throw new MGenException("Type details unknown: Cannot call referencedClasses()");
+	}
+
+	@Override
+	public java.util.Set<EnumType> referencedEnums() {
+		throw new MGenException("Type details unknown: Cannot call referencedEnums()");
 	}
 
 }

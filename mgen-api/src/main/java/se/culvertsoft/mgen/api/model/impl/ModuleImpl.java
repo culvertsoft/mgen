@@ -63,7 +63,7 @@ public class ModuleImpl implements Module {
 	public List<EnumTypeImpl> enumsMutable() {
 		return m_enums;
 	}
-	
+
 	public void setTypes(final List<LinkedCustomType> types) {
 		m_types.clear();
 		m_types.addAll(types);
@@ -73,7 +73,7 @@ public class ModuleImpl implements Module {
 		m_enums.clear();
 		m_enums.addAll(enums);
 	}
-	
+
 	public void addType(final LinkedCustomType type) {
 		m_types.add(type);
 	}

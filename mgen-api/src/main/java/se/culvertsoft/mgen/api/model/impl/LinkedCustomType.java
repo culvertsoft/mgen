@@ -5,9 +5,14 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.CustomType;
+import se.culvertsoft.mgen.api.model.EnumType;
 import se.culvertsoft.mgen.api.model.Field;
+import se.culvertsoft.mgen.api.model.ListType;
+import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Module;
+import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 import se.culvertsoft.mgen.api.util.Base64;
 import se.culvertsoft.mgen.api.util.CRC64;
@@ -24,8 +29,8 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	private ArrayList<Field> m_fields;
 
 	private ArrayList<Field> m_fieldsInclSuper;
-	private Set<CustomType> m_allReferencedTypes;
-	private Set<CustomType> m_directDependencies;
+	private Set<CustomType> m_referencedClasses;
+	private Set<EnumType> m_referencedEnums;
 
 	public LinkedCustomType(
 			final String name,
@@ -42,8 +47,8 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 		m_superTypeHierarchy = null;
 		m_subTypes = new ArrayList<CustomType>();
 		m_fieldsInclSuper = null;
-		m_allReferencedTypes = null;
-		m_directDependencies = null;
+		m_referencedClasses = null;
+		m_referencedEnums = null;
 	}
 
 	@Override
@@ -112,8 +117,7 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 			m_fieldsInclSuper = new ArrayList<Field>();
 
 			if (hasSuperType()) {
-				m_fieldsInclSuper
-						.addAll(superType().fieldsInclSuper());
+				m_fieldsInclSuper.addAll(superType().fieldsInclSuper());
 			}
 
 			m_fieldsInclSuper.addAll(m_fields);
@@ -124,48 +128,10 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public Set<CustomType> referencedTypes() {
-
-		if (m_allReferencedTypes == null) {
-
-			m_allReferencedTypes = new HashSet<CustomType>();
-
-			m_allReferencedTypes.add(this);
-
-			if (hasSuperType()) {
-				m_allReferencedTypes.addAll(superType()
-						.referencedTypes());
-			}
-
-			for (final Field field : m_fields)
-				m_allReferencedTypes.addAll(field
-						.typ()
-						.referencedTypes());
-
-		}
-
-		return m_allReferencedTypes;
-
-	}
-
-	@Override
-	public Set<CustomType> directDependencies() {
-
-		if (m_directDependencies == null) {
-
-			m_directDependencies = new HashSet<CustomType>();
-
-			if (hasSuperType()) {
-				m_directDependencies.add(superType());
-			}
-
-			for (final Field f : m_fields) {
-				m_directDependencies.addAll(f.directDependencies());
-			}
-
-		}
-
-		return m_directDependencies;
+	public Set<CustomType> referencedClasses() {
+		if (m_referencedClasses == null)
+			findReferences();
+		return m_referencedClasses;
 	}
 
 	@Override
@@ -221,9 +187,59 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 		return m_subTypes;
 	}
 
+	@Override
+	public java.util.Set<EnumType> referencedEnums() {
+		if (m_referencedEnums == null)
+			findReferences();
+		return m_referencedEnums;
+	}
+
 	public CustomType addSubType(final CustomType t) {
 		m_subTypes.add(t);
 		return this;
+	}
+
+	private void findReferences() {
+
+		final Set<EnumType> enums = new HashSet<EnumType>();
+		final Set<CustomType> classes = new HashSet<CustomType>();
+
+		if (hasSuperType())
+			classes.add(superType());
+
+		for (final Field f : m_fields)
+			findReferences(f.typ(), classes, enums);
+
+		m_referencedEnums = enums;
+		m_referencedClasses = classes;
+	}
+
+	private void findReferences(
+			final Type t,
+			final Set<CustomType> classes,
+			final Set<EnumType> enums) {
+
+		switch (t.typeEnum()) {
+		case ENUM:
+			enums.add((EnumType) t);
+			break;
+		case CUSTOM:
+			classes.add((CustomType) t);
+			break;
+		case ARRAY:
+			findReferences(((ArrayType) t).elementType(), classes, enums);
+			break;
+		case LIST:
+			findReferences(((ListType) t).elementType(), classes, enums);
+			break;
+		case MAP:
+			findReferences(((MapType) t).keyType(), classes, enums);
+			findReferences(((MapType) t).valueType(), classes, enums);
+			break;
+		default:
+			break;
+		}
+
 	}
 
 }

@@ -37,7 +37,7 @@ object MkEnum {
       if (entry != entries.last)
         ln(",")
     }
-    ln(1, ";")
+    ln(";")
     ln()
 
     ln(1, s"final int m_intValue;")
