@@ -416,11 +416,9 @@ public class JsonReader extends BuiltInReader {
 	}
 
 	private Enum<?> readEnum(EnumType typ, String writtenName) {
-
 		if (writtenName == null)
 			return null;
-
-		return readEnum(writtenName, typ);
+		return typ.get(writtenName);
 	}
 
 	private Object readObject(Object node, Type typ) throws IOException {

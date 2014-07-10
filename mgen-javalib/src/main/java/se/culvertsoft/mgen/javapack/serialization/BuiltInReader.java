@@ -5,7 +5,6 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import se.culvertsoft.mgen.api.model.CustomType;
-import se.culvertsoft.mgen.api.model.EnumType;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
@@ -71,15 +70,6 @@ abstract public class BuiltInReader implements Reader {
 
 		return entry;
 
-	}
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	protected Enum<?> readEnum(final String writtenName, final EnumType typ) {
-		try {
-			return Enum.valueOf((Class<Enum>) typ.classOf(), writtenName);
-		} catch (final IllegalArgumentException e) {
-			return null;
-		}
 	}
 
 }

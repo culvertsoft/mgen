@@ -75,4 +75,12 @@ public class EnumTypeImpl extends SimpleTypeImpl implements EnumType {
 		}
 	}
 
+	public Enum<?> get(final String entryStringName) {
+		throw new MGenException("Type details unknown: Cannot call get(String)");
+	}
+
+	public Enum<?> get(final int entryIntvalue) {
+		throw new MGenException("Type details unknown: Cannot call get(int)");
+	}
+
 }

@@ -531,7 +531,7 @@ public class BinaryReader extends BuiltInReader {
 
 	private Enum<?> readEnum(final boolean readTag, final EnumType typ) throws IOException {
 		final String writtenName = readString(readTag);
-		return readEnum(writtenName, typ);
+		return typ.get(writtenName);
 	}
 
 }
