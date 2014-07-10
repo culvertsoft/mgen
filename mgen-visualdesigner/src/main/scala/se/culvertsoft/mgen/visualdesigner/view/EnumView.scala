@@ -110,7 +110,7 @@ class EnumView(override val entity: EnumType, controller: Controller)
       labelPanel.removeAll()
       labelPanel.setOpaque(false)
       labelPanel.setLayout(new MigLayout("center, insets 2 0 0 0"))
-      labelPanel.add(nameLabel, "gapleft 5")
+      labelPanel.add(nameLabel, "align center")
       labelPanel.validate()
       labelPanel.repaint()
     }
