@@ -147,7 +147,6 @@ object MGen {
     println("  -help: displays this help ")
     println("  -project=\"myProjectFile.xml\": specify project file (Required)")
     println("  -parser=\"se.culvertsoft.Dummyparser,se.coocoo.MyParser\": specify IDL parser (Optional) ")
-    println("  -linker=\"se.culvertsoft.dummyLinker.Linker1\": specify module linker parser (Optional) ")
     println("  -plugin_paths=\"my/external/path1, my/external/path2\": specify additional plugin paths (Optional) ")
     println("  -output_path=\"specify output path (Optional) ")
   }
