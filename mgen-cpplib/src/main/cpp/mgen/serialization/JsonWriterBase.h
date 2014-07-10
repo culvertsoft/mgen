@@ -67,6 +67,7 @@ private:
 
     template<typename EnumType>
     void write(const EnumType v, const int) {
+        write(get_enum_name(v));
     }
 
     template<typename MGenTypeOrEnum>

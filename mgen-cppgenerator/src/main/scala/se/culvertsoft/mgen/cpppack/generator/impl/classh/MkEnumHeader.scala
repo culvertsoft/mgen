@@ -20,6 +20,7 @@ object MkEnumHeader {
     implicit val txtBuffer = new SuperStringBuffer
     implicit val currentModule = module
     val namespaces = currentModule.path().split("\\.")
+    val fullname = _e.fullName().replaceAllLiterally(".", "::")
 
     val name = _e.shortName()
     val entries = _e.entries() ++ List(new EnumEntryImpl("UNKNOWN", null))
@@ -55,13 +56,18 @@ object MkEnumHeader {
     ln("};")
     ln()
 
-    ln(s"$name _get_enum_value(const $name /* type_evidence */, const std::string& enumName);")
+    CppGenUtils.mkNameSpacesEnd(namespaces)
+    
+    CppGenUtils.mkNameSpaces(List("mgen"))
+    
+    
+    ln(s"$fullname get_enum_value(const $fullname /* type_evidence */, const std::string& enumName);")
     ln()
 
-    ln(s"const std::string& _get_enum_name(const $name enumValue);");
+    ln(s"const std::string& get_enum_name(const $fullname enumValue);");
     ln()
     
-    CppGenUtils.mkNameSpacesEnd(namespaces)
+    CppGenUtils.mkNameSpacesEnd(List("mgen"))
     CppGenUtils.mkIncludeGuardEnd()
     txtBuffer.toString()
 

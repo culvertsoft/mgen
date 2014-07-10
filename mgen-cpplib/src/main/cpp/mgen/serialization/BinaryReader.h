@@ -45,10 +45,8 @@ template<typename MGenStreamType, typename ClassRegistryType>
 class BinaryReader {
 public:
 
-    BinaryReader(
-            MGenStreamType& inputStream,
-            const ClassRegistryType& classRegistry,
-            const bool excessiveTypeChecking = false) :
+    BinaryReader(MGenStreamType& inputStream, const ClassRegistryType& classRegistry, const bool excessiveTypeChecking =
+            false) :
                     m_inputStream(inputStream),
                     m_classRegistry(classRegistry),
                     m_excessiveTypeChecking(excessiveTypeChecking) {
@@ -58,12 +56,12 @@ public:
         return readPoly(true, false, -1);
     }
 
-    template <typename MGenType>
+    template<typename MGenType>
     MGenType * readObject() {
         return (MGenType*) readPoly(true, true, MGenType::_type_id);
     }
 
-    template <typename MGenType>
+    template<typename MGenType>
     MGenType readStatic() {
         MGenType out;
         read(out, true);
@@ -90,10 +88,7 @@ public:
 
 private:
 
-    MGenBase * readPoly(
-            const bool verifyTag,
-            const bool constrained,
-            const long long expectTypeId) {
+    MGenBase * readPoly(const bool verifyTag, const bool constrained, const long long expectTypeId) {
 
         verifyReadTagIf(Type::TAG_CUSTOM, verifyTag);
 
@@ -196,8 +191,15 @@ private:
         v.set((T*) readPoly(false, true, T::_type_id));
     }
 
+    template<typename EnumType>
+    void read(EnumType& e, const int /* type_evidence */, const bool verifyTag) {
+        std::string str;
+        read(str, verifyTag);
+        e = get_enum_value(e, str);
+    }
+
     template<typename MGenType>
-    void read(MGenType& object, const bool verifyTag) {
+    void read(MGenType& object, const MGenBase& /* type_evidence */, const bool verifyTag) {
         verifyReadTagIf(Type::TAG_OF(object), verifyTag);
         READ_OBJ_HEADER({
             mgen::missingfields::ensureNoMissingFields(object);
@@ -206,6 +208,11 @@ private:
         if (m_excessiveTypeChecking)
             serialutil::checkExpType(m_classRegistry, &object, ids);
         readFields(object, nFields);
+    }
+
+    template<typename MGenTypeOrEnum>
+    void read(MGenTypeOrEnum& v, const bool verifyTag) {
+        read(v, v, verifyTag);
     }
 
     void read(bool& v, const bool verifyTag) {
@@ -266,8 +273,8 @@ private:
             const Type::TAG tag = readTag();
             if (tag != expTag) {
                 throw UnexpectedTypeException(
-                        S("BinaryReader::verifyReadTagIf: Unexpected tag ").append(S(expTag)).append(
-                                " but got ").append(S(tag)));
+                        S("BinaryReader::verifyReadTagIf: Unexpected tag ").append(S(expTag)).append(" but got ").append(
+                                S(tag)));
             }
         }
     }

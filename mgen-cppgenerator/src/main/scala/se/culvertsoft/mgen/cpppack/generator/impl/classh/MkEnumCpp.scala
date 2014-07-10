@@ -22,7 +22,9 @@ object MkEnumCpp {
     val namespaces = currentModule.path().split("\\.")
 
     val name = _e.shortName()
+    val fullname = _e.fullName().replaceAllLiterally(".", "::")
     val entries = _e.entries() ++ List(new EnumEntryImpl("UNKNOWN", null))
+    val ns = namespaces.mkString("::")
 
     txtBuffer.clear()
 
@@ -53,21 +55,26 @@ object MkEnumCpp {
     ln(1, s"return out;")
     ln(s"}")
     ln()
+    
+    CppGenUtils.mkNameSpacesEnd(namespaces)
+    
+    CppGenUtils.mkNameSpaces(List("mgen"))
+    
 
-    ln(s"$name _get_enum_value(const $name /* type_evidence */, const std::string& enumName) {")
-    ln(1, s"static const std::map<std::string, $name> lkup = _mk_${name}_enum_lkup_map();")
-    ln(1, s"std::map<std::string, $name>::const_iterator it = lkup.find(enumName);")
-    ln(1, s"return it != lkup.end() ? it->second : ${name}_UNKNOWN;")
+    ln(s"$fullname get_enum_value(const $fullname /* type_evidence */, const std::string& enumName) {")
+    ln(1, s"static const std::map<std::string, $fullname> lkup = ${ns}::_mk_${name}_enum_lkup_map();")
+    ln(1, s"std::map<std::string, $fullname>::const_iterator it = lkup.find(enumName);")
+    ln(1, s"return it != lkup.end() ? it->second : $ns::${name}_UNKNOWN;")
     ln(s"}")
     ln()
 
-    ln(s"const std::string& _get_enum_name(const $name enumValue) {");
+    ln(s"const std::string& get_enum_name(const $fullname enumValue) {");
     for (e <- entries)
       ln(1, s"const static std::string ${e.name}_name(${quote(e.name)});")
 
-    ln(1, s"switch (value) {")
+    ln(1, s"switch (enumValue) {")
     for (e <- entries) {
-      ln(2, s"case ${name}_${e.name}:")
+      ln(2, s"case $ns::${name}_${e.name}:")
       ln(3, s"return ${e.name}_name;")
     }
     ln(2, s"default:")
@@ -76,7 +83,8 @@ object MkEnumCpp {
     ln(s"}")
     ln()
 
-    CppGenUtils.mkNameSpacesEnd(namespaces)
+    CppGenUtils.mkNameSpacesEnd(List("mgen"))
+    
     txtBuffer.toString()
 
   }

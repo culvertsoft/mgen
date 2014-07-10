@@ -1,12 +1,13 @@
 #include "TestBase.h"
 
+#include "gameworld/types/ClassRegistry.h"
+#include "gameworld/types/Dispatcher.h"
+
 #include "mgen/serialization/VectorInputStream.h"
 #include "mgen/serialization/VectorOutputStream.h"
 #include "mgen/serialization/JsonWriter.h"
 #include "mgen/serialization/JsonReader.h"
 
-#include "gameworld/types/ClassRegistry.h"
-#include "gameworld/types/Dispatcher.h"
 
 /////////////////////////////////////////////////////////////////////
 

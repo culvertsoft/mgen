@@ -7,6 +7,7 @@
 
 #include "TestBase.h"
 
+#include "gameworld/types/ClassRegistry.h"
 #include "mgen/serialization/BinaryWriter.h"
 #include "mgen/serialization/BinaryReader.h"
 #include "mgen/serialization/VectorInputStream.h"
@@ -14,7 +15,6 @@
 #include "mgen/serialization/JsonPrettyWriter.h"
 #include "mgen/serialization/JsonWriter.h"
 #include "mgen/serialization/JsonReader.h"
-#include "gameworld/types/ClassRegistry.h"
 
 /////////////////////////////////////////////////////////////////////
 

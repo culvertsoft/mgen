@@ -21,6 +21,7 @@ class Type {
 public:
 
     enum ENUM {
+        ENUM_ENUM,
         ENUM_BOOL,
         ENUM_INT8,
         ENUM_INT16,

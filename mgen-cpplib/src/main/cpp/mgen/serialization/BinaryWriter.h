@@ -71,12 +71,22 @@ private:
     }
 
     template<typename MGenType>
-    void write(const MGenType& v, const bool doTag) {
+    void write(const MGenType& v, const MGenBase&, const bool doTag) {
         m_expectType = MGenType::_type_id;
         writeTagIf(Type::TAG_CUSTOM, doTag);
         v._accept(*this);
     }
 
+    template<typename EnumType>
+    void write(const EnumType v, const int, const bool doTag) {
+        write(get_enum_name(v), doTag);
+    }
+    
+    template<typename MGenTypeOrEnum>
+    void write(const MGenTypeOrEnum& v, const bool doTag) {
+        write(v, v, doTag);
+    }
+    
     template<typename MGenType>
     void write(const Polymorphic<MGenType>& v, const bool doTag) {
         if (v.get()) {

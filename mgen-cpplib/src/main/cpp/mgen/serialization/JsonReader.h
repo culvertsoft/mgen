@@ -29,10 +29,8 @@ public:
     typedef rapidjson::Document::GenericValue::ConstMemberIterator MemberIterator;
     typedef rapidjson::Document::GenericValue::ConstValueIterator ArrayIterator;
 
-    JsonReader(
-            MGenStreamType& inputStream,
-            const ClassRegistryType& classRegistry,
-            const bool excessiveTypeChecking = false) :
+    JsonReader(MGenStreamType& inputStream, const ClassRegistryType& classRegistry, const bool excessiveTypeChecking =
+            false) :
                     m_inputStream(inputStream),
                     m_jsonStream(&m_inputStream),
                     m_clsReg(classRegistry),
@@ -43,7 +41,7 @@ public:
         return readPoly(readDocumentRoot(), false, -1);
     }
 
-    template <typename MGenType>
+    template<typename MGenType>
     MGenType * readObject() {
         return (MGenType*) readPoly(readDocumentRoot(), true, MGenType::_type_id);
     }
@@ -90,11 +88,7 @@ private:
 
         const std::vector<std::string> ids = readIds(node);
 
-        const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(
-                m_clsReg,
-                ids,
-                constrained,
-                expectTypeId);
+        const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(m_clsReg, ids, constrained, expectTypeId);
 
         if (entry)
             return serialutil::readObjInternal(*this, m_clsReg, node, 0, *entry);
@@ -162,8 +156,15 @@ private:
         }
     }
 
+    template<typename EnumType>
+    void read(EnumType& e, const int /* type_evidence */, const Node& node) {
+        std::string str;
+        read(str, node);
+        e = get_enum_value(e, str);
+    }
+
     template<typename MGenType>
-    void read(MGenType& object, const Node& node) {
+    void read(MGenType& object, const MGenBase& /* type_evidence */, const Node& node) {
         if (node.IsObject()) {
             if (m_excessiveTypeChecking)
                 serialutil::checkExpType(m_clsReg, &object, readIds(node));
@@ -172,6 +173,11 @@ private:
         } else {
             throw_unexpected_type(object._typeName(), "something_else");
         }
+    }
+
+    template<typename MGenTypeOrEnum>
+    void read(MGenTypeOrEnum& v, const Node& node) {
+        read(v, v, node);
     }
 
     void read(bool& v, const Node& node) {
@@ -241,8 +247,7 @@ private:
     }
 
     const rapidjson::Document& readDocumentRoot() {
-        const rapidjson::Document& node = m_rapidJsonDocument.ParseStream<
-                rapidjson::kParseDefaultFlags>(m_jsonStream);
+        const rapidjson::Document& node = m_rapidJsonDocument.ParseStream<rapidjson::kParseDefaultFlags>(m_jsonStream);
         if (!node.HasParseError()) {
             return node;
         } else {
