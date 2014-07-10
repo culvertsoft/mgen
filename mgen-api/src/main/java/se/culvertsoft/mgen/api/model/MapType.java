@@ -11,7 +11,7 @@ public interface MapType extends Type {
 	public Type keyType();
 
 	/**
-	 * The type of the keys of this map
+	 * The type of the values of this map
 	 */
 	public Type valueType();
 
