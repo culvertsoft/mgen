@@ -1,12 +1,14 @@
 package se.culvertsoft.mgen.compiler.defaultparser
 
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 import scala.xml.PrettyPrinter
+
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.BoolType
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.EnumEntry
+import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Float32Type
 import se.culvertsoft.mgen.api.model.Float64Type
@@ -77,6 +79,9 @@ object Project2Xml {
 
     val xml =
       <Module>
+        <Enums>
+          { module.enums map enum2xml }
+        </Enums>
         <Types>
           { module.types map type2xml }
         </Types>
@@ -85,16 +90,24 @@ object Project2Xml {
     XmlSourceFile(module.absoluteFilePath(), xml)
   }
 
+  def enum2xml(typ: EnumType)(implicit currentModule: Module): scala.xml.Node = {
+    <EnumType>{ typ.entries map enumentry2xml }</EnumType>.copy(label = typ.shortName)
+  }
+
+  def enumentry2xml(entry: EnumEntry)(implicit currentModule: Module): scala.xml.Node = {
+    <entry>{ entry.constant } </entry>.copy(label = entry.name)
+  }
+
   def type2xml(typ: CustomType)(implicit currentModule: Module): scala.xml.Node = {
 
     val autoId = CRC16.calc(typ.fullName)
     val idString = if (typ.typeId16Bit != autoId) typ.typeId16Bit.toString else null
-    
+
     val xml =
       (if (typ.hasSuperType())
-        <CustomType extends={ type2string(typ.superType()) } id ={ idString }>{ typ.fields map field2xml } </CustomType>
+        <CustomType extends={ type2string(typ.superType()) } id={ idString }>{ typ.fields map field2xml } </CustomType>
       else
-        <CustomType id ={ idString }>{ typ.fields map field2xml } </CustomType>)
+        <CustomType id={ idString }>{ typ.fields map field2xml } </CustomType>)
         .copy(label = typ.name)
 
     xml
@@ -127,9 +140,9 @@ object Project2Xml {
 
     val xml =
       (if (flags.nonEmpty)
-        <fieldname type={ typeString } flags={ flagsString } id ={ idString }/>
+        <fieldname type={ typeString } flags={ flagsString } id={ idString }/>
       else
-        <fieldname type={ typeString } id ={ idString }/>)
+        <fieldname type={ typeString } id={ idString }/>)
         .copy(label = field.name)
 
     xml

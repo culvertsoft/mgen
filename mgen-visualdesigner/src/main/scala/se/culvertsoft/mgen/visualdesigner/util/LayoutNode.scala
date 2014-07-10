@@ -1,22 +1,25 @@
 package se.culvertsoft.mgen.visualdesigner.util
 
 import java.awt.Point
+
 import scala.collection.JavaConversions.asScalaBuffer
+
 import LayOutEntities.DEFAULT_SPACING_X
 import LayOutEntities.DEFAULT_SPACING_Y
 import LayOutEntities.DEFAULT_WALL_OFFSET_X
 import LayOutEntities.DEFAULT_WALL_OFFSET_Y
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
+import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.Module
-import se.culvertsoft.mgen.visualdesigner.model.Entity
-import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
 
 abstract class LayoutNode(model: Model, module: Module) {
   def parent(): Option[LayoutNode]
   def children(): Seq[LayoutNode]
   def width(): Double
   def height(): Double
+  def halfWidth(): Double
   def placeAt(x: Double, y: Double)
   def name(): String
 
@@ -29,10 +32,9 @@ abstract class LayoutNode(model: Model, module: Module) {
 
 class TopLayoutNode(xOffset: Double, module: Module, model: Model) extends LayoutNode(model, module) {
 
-  import LayOutEntities._
-
   val children =
-    module
+    module.getEnums().map(new EnumLayoutNode(_, module, model, Some(this))) ++
+      module
       .getTypes()
       .filter(e => !e.hasSuperType || !isInThisModule(e.getSuperType()))
       .map(new ClassLayoutNode(_, module, model, Some(this)))
@@ -103,5 +105,45 @@ class ClassLayoutNode(
   }
 
   def name(): String = clas.getName()
+
+}
+
+class EnumLayoutNode(
+  val e: EnumType,
+  val module: Module,
+  val model: Model,
+  val parent: Option[LayoutNode]) extends LayoutNode(model, module) {
+
+  import LayOutEntities._
+
+  private var _pos = new Point(0, 0)
+
+  val children: Seq[ClassLayoutNode] = Nil
+
+  val widthOfChildren = if (children.nonEmpty) children.map(_.width).sum else 0.0
+  val heightOfChildren = if (children.nonEmpty) children.map(_.height).max else 0.0
+  val depthOfChildren: Int = if (children.nonEmpty) children.map(_.depthOfChildren + 1).max else 0
+  val widthOfTopClass = e.getPlacement().getWidth() + DEFAULT_SPACING_X
+  val heightOfTopClass = e.getPlacement().getHeight()
+  val width: Double = math.max(widthOfTopClass, widthOfChildren)
+  val height: Double = heightOfChildren + heightOfTopClass
+  val halfWidth = width / 2
+
+  def placeAt(xCtr: Double, yCtr: Double) {
+
+    e.getPlacement()
+      .setX((xCtr - e.getPlacement().getWidth() / 2).toInt)
+      .setY(yCtr.toInt)
+
+    var x = xCtr - halfWidth
+    for (c <- children) {
+      x += c.halfWidth
+      c.placeAt(x, yCtr + heightOfTopClass + DEFAULT_SPACING_Y)
+      x += c.halfWidth
+    }
+
+  }
+
+  def name(): String = e.getName()
 
 }

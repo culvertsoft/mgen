@@ -4,12 +4,10 @@ import java.awt.AWTEvent
 import java.awt.Point
 import java.awt.event.KeyEvent
 import java.awt.event.MouseEvent
-
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.reflect.ClassTag
-
 import javax.swing.JFrame
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
@@ -27,6 +25,9 @@ import se.culvertsoft.mgen.visualdesigner.view.AbstractView
 import se.culvertsoft.mgen.visualdesigner.view.ContentPane
 import se.culvertsoft.mgen.visualdesigner.view.Selectable
 import se.culvertsoft.mgen.visualdesigner.view.ViewManager
+import se.culvertsoft.mgen.visualdesigner.model.UserDefinedType
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
 
 class Controller(
 
@@ -183,39 +184,62 @@ class Controller(
     oldModel.updateCache()
     newModel.updateCache()
 
-    val oldClasses = oldModel.findEach[CustomType]()
-    val newClasses = newModel.findEach[CustomType]()
+    val newEntities = newModel.findEach[UserDefinedType]()
 
     val out = new ArrayBuffer[(Entity, AbstractView)]
 
     // Find classes that can be replaced with old ones
-    for (newClass <- newClasses) {
-      oldModel.getEntity(newClass.getId()) match {
-        case Some(oldClass: CustomType) =>
+    for (newEntity <- newEntities) {
+      oldModel.getEntity(newEntity.getId()) match {
+        case Some(oldEntity: UserDefinedType) =>
 
           // Begin by setting all old placements to the new ones
-          oldClass.setPlacement(newClass.getPlacement())
+          oldEntity.setPlacement(newEntity.getPlacement())
 
           // Now check if they are equal (scala: "==" is ok)
-          if (oldClass == newClass) {
+          if (oldEntity == newEntity) {
 
             // Replace newClass with oldClass
-            val newParent = newModel.parentOf(newClass).get.asInstanceOf[Module]
-            val idx = newParent.getTypes().indexOf(newClass)
-            newParent.getTypes().set(idx, oldClass)
+            val newParent = newModel.parentOf(newEntity).get.asInstanceOf[Module]
 
-            val clsView = viewMgr.view(oldClass)
+            newEntity match {
+              case eNew: CustomType =>
 
-            // Ensure the view is resized properly
-            clsView.updateBounds()
+                val eOld = oldEntity.asInstanceOf[CustomType]
 
-            out += ((oldClass, clsView))
+                val idx = newParent.getTypes().indexOf(eNew)
+                newParent.getTypes().set(idx, eOld)
 
-            for (oldField <- oldClass.getFields()) {
-              val fldView = viewMgr.view(oldField)
-              out += ((oldField, fldView))
+                val clsView = viewMgr.view(eOld)
+
+                // Ensure the view is resized properly
+                clsView.updateBounds()
+
+                out += ((eOld, clsView))
+
+                for (oldField <- eOld.getFields()) {
+                  val fldView = viewMgr.view(oldField)
+                  out += ((oldField, fldView))
+                }
+
+              case eNew: EnumType =>
+                val eOld = oldEntity.asInstanceOf[EnumType]
+
+                val idx = newParent.getEnums().indexOf(eNew)
+                newParent.getEnums().set(idx, eOld)
+
+                val clsView = viewMgr.view(eOld)
+
+                // Ensure the view is resized properly
+                clsView.updateBounds()
+
+                out += ((eOld, clsView))
+
+                for (oldEntry <- eOld.getEntries()) {
+                  val fldView = viewMgr.view(oldEntry)
+                  out += ((oldEntry, fldView))
+                }
             }
-
           }
 
         case _ =>
@@ -234,6 +258,7 @@ class Controller(
     val oldModel = _model
 
     val keepableClassViews = if (allowCaching) getKeepableClassViews(oldModel, newModel) else Nil
+    println(keepableClassViews.map(_._1.getName()))
 
     _model = newModel
 
@@ -425,4 +450,12 @@ class Controller(
     }
   }
 
+  def changeEnumEntryConstant(e: EnumEntry, newConstant: String) {
+    if (newConstant != e.getConstant()) {
+      val trimmed = if (newConstant != null && newConstant.trim().nonEmpty) newConstant.trim() else null
+      e.setConstant(trimmed)
+      triggerObservers(_.onEntityModified(e, false, model.parentOf(e)))
+    }
+  }
+  
 }

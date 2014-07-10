@@ -1,10 +1,8 @@
 package se.culvertsoft.mgen.visualdesigner.view.autobox2
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
-
 import se.culvertsoft.mgen.visualdesigner.ClassRegistry
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
 import se.culvertsoft.mgen.visualdesigner.model.GenericType
 import se.culvertsoft.mgen.visualdesigner.model.ListOrArrayType
@@ -12,6 +10,7 @@ import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.NoType
 import se.culvertsoft.mgen.visualdesigner.model.PrimitiveType
 import se.culvertsoft.mgen.visualdesigner.model.SimpleType
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
 
 object FieldTypes {
 
@@ -44,7 +43,7 @@ object FieldTypes {
   def getSuperType(t: CustomType)(implicit model: Model): FieldType = {
     if (t.hasSuperType()) {
       model.superTypeOf(t) match {
-        case Some(superType) => new CustomTypeRef(superType.getId())
+        case Some(superType) => new UserTypeRef(superType.getId())
         case None => new NoType
       }
     } else {

@@ -3,14 +3,12 @@ package se.culvertsoft.mgen.visualdesigner.view
 import java.awt.Container
 import java.awt.Dimension
 
-import scala.collection.JavaConversions.asScalaBuffer
-
 import se.culvertsoft.mgen.visualdesigner.control.Controller
-import se.culvertsoft.mgen.visualdesigner.model.CustomType
+import se.culvertsoft.mgen.visualdesigner.model.Entity
 
-class ClassViewLayout(
-   classView: ClassView,
-   clas: CustomType,
+class ClassOrEnumViewLayout(
+   classView: ScrollableView,
+   fGetChildren: () => Seq[Entity],
    controller: Controller) extends AbsoluteLayout {
 
    val xFieldPad = 2
@@ -25,7 +23,7 @@ class ClassViewLayout(
    override def layoutContainer(parent: Container) {
 
       val y0 = yFieldPad + 1
-      val fields = clas.getFields()
+      val fields = fGetChildren()
       val x = xFieldPad
       val w = math.max(40, classView.scrollpane.getWidth() - 2 * xFieldPad - 2)
       val h = innerFieldHeight
@@ -41,7 +39,8 @@ class ClassViewLayout(
    }
 
    override def minimumLayoutSize(parent: Container): Dimension = {
-      val h = clas.getFields().size() * outerFieldHeight
+     val types = fGetChildren()
+      val h = fGetChildren().size * outerFieldHeight
       new Dimension(math.max(100, classView.scrollpane.getWidth() - 10), h)
    }
 

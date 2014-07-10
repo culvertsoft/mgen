@@ -33,7 +33,6 @@ import ModelConversion.ApiType
 import ModelConversion.VdArrayType
 import ModelConversion.VdBoolType
 import ModelConversion.VdClass
-import ModelConversion.VdCustomTypeRef
 import ModelConversion.VdEntity
 import ModelConversion.VdField
 import ModelConversion.VdFieldType
@@ -50,6 +49,7 @@ import ModelConversion.VdModel
 import ModelConversion.VdModule
 import ModelConversion.VdProject
 import ModelConversion.VdStringType
+import ModelConversion.VdUserTypeRef
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.compiler.defaultparser.LinkTypes
@@ -81,7 +81,7 @@ object Vd2Api {
     getApiCustomType(Type2String.getClassPath(vdType)(cvState.srcModel))
   }
 
-  private def getApiCustomType(vdType: CustomTypeRef)(implicit cvState: Vd2ApiConversionState): ApiType = {
+  private def getApiCustomType(vdType: UserTypeRef)(implicit cvState: Vd2ApiConversionState): ApiType = {
     getApiCustomType(cvState.srcModel.getEntity(vdType.getId()).get.asInstanceOf[VdClass])
   }
 
@@ -98,7 +98,7 @@ object Vd2Api {
       case t: VdListType => new ApiListTypeImpl(cvtFieldType(t.getElementType()))
       case t: VdArrayType => new ApiArrayTypeImpl(cvtFieldType(t.getElementType()))
       case t: VdMapType => new ApiMapTypeImpl(cvtFieldType(t.getKeyType), cvtFieldType(t.getValueType))
-      case t: VdCustomTypeRef => getApiCustomType(t)
+      case t: VdUserTypeRef => getApiCustomType(t)
       case _ => throw new RuntimeException(s"Unknown field type: ${t}")
     }
   }
@@ -124,6 +124,23 @@ object Vd2Api {
       cvtFieldType(vdField.getType()),
       vdField.getFlags(),
       getId16Bit(vdField))
+  }
+
+  private def cvtEnumEntry(vdEntry: VdEnumEntry, parentEnum: ApiEnum)(implicit cvState: Vd2ApiConversionState): ApiEnumEntryImpl = {
+    new ApiEnumEntryImpl(vdEntry.getName(), vdEntry.getConstant())
+  }
+  
+  private def cvtEnum(vdEnum: VdEnum, parentModule: ApiModuleImpl)(implicit cvState: Vd2ApiConversionState): ApiEnumTypeImpl = {
+
+    implicit val model = cvState.srcModel
+
+    val t = new ApiEnumTypeImpl(vdEnum.getName(), Type2String.getClassPath(vdEnum), parentModule)
+
+    cvState.apiObjLkup.put(Type2String.getClassPath(vdEnum), t)
+
+    t.setEntries(vdEnum.getEntries.map(cvtEnumEntry(_, t)))
+
+    t
   }
 
   private def cvtType(vdClass: VdClass, parentModule: ApiModuleImpl)(implicit cvState: Vd2ApiConversionState): ApiClassImpl = {
@@ -175,6 +192,7 @@ object Vd2Api {
 
     cvState.apiObjLkup.put(fullModuleName, apiModule)
 
+    apiModule.setEnums(vdModule.getEnums().map(cvtEnum(_, apiModule)))
     apiModule.setTypes(vdModule.getTypes().map(cvtType(_, apiModule)))
 
     out += apiModule

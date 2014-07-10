@@ -12,6 +12,8 @@ object ModelConversion {
   type ApiModuleImpl = se.culvertsoft.mgen.api.model.impl.ModuleImpl
   type ApiClassImpl = se.culvertsoft.mgen.api.model.impl.LinkedCustomType
   type ApiType = se.culvertsoft.mgen.api.model.Type
+  type ApiEnum = se.culvertsoft.mgen.api.model.EnumType
+  type ApiEnumEntry = se.culvertsoft.mgen.api.model.EnumEntry
 
   type VdModel = se.culvertsoft.mgen.visualdesigner.model.Model
   type VdEntity = se.culvertsoft.mgen.visualdesigner.model.Entity
@@ -21,7 +23,11 @@ object ModelConversion {
   type VdField = se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
   type VdFieldType = se.culvertsoft.mgen.visualdesigner.model.FieldType
   type VdGenerator = se.culvertsoft.mgen.visualdesigner.model.Generator
+  type VdEnum = se.culvertsoft.mgen.visualdesigner.model.EnumType
+  type VdEnumEntry = se.culvertsoft.mgen.visualdesigner.model.EnumEntry
+  type VdUserDefinedType = se.culvertsoft.mgen.visualdesigner.model.UserDefinedType
 
+  type VdEnumType = se.culvertsoft.mgen.visualdesigner.model.EnumType
   type VdBoolType = se.culvertsoft.mgen.visualdesigner.model.BoolType
   type VdInt8Type = se.culvertsoft.mgen.visualdesigner.model.Int8Type
   type VdInt16Type = se.culvertsoft.mgen.visualdesigner.model.Int16Type
@@ -33,8 +39,9 @@ object ModelConversion {
   type VdListType = se.culvertsoft.mgen.visualdesigner.model.ListType
   type VdArrayType = se.culvertsoft.mgen.visualdesigner.model.ArrayType
   type VdMapType = se.culvertsoft.mgen.visualdesigner.model.MapType
-  type VdCustomTypeRef = se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
+  type VdUserTypeRef = se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
 
+  type ApiEnumType = se.culvertsoft.mgen.api.model.EnumType
   type ApiBoolType = se.culvertsoft.mgen.api.model.BoolType
   type ApiInt8Type = se.culvertsoft.mgen.api.model.Int8Type
   type ApiInt16Type = se.culvertsoft.mgen.api.model.Int16Type
@@ -47,7 +54,10 @@ object ModelConversion {
   type ApiArrayType = se.culvertsoft.mgen.api.model.ArrayType
   type ApiMapType = se.culvertsoft.mgen.api.model.MapType
   type ApiCustomType = se.culvertsoft.mgen.api.model.CustomType
+  type ApiUserDefinedType = se.culvertsoft.mgen.api.model.UserDefinedType
 
+  type ApiEnumEntryImpl = se.culvertsoft.mgen.api.model.impl.EnumEntryImpl
+  type ApiEnumTypeImpl = se.culvertsoft.mgen.api.model.impl.EnumTypeImpl
   type ApiBoolTypeImpl = se.culvertsoft.mgen.api.model.impl.BoolTypeImpl
   type ApiInt8TypeImpl = se.culvertsoft.mgen.api.model.impl.Int8TypeImpl
   type ApiInt16TypeImpl = se.culvertsoft.mgen.api.model.impl.Int16TypeImpl

@@ -15,6 +15,8 @@ import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 import se.culvertsoft.mgen.visualdesigner.view.ModuleView
 import se.culvertsoft.mgen.visualdesigner.model.FilePath
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
 
 class EntityAddController(controller: Controller) extends SubController(controller) {
 
@@ -124,7 +126,20 @@ class EntityAddController(controller: Controller) extends SubController(controll
 
   }
 
-  def addField() {
+  def addEntry(t: EnumType, name: String) {
+
+    val f = EntityFactory.mkEnumEntry(name, null)
+
+    f.setParent(t.getId())
+    t.add(f)
+
+    add(f, t)
+
+    controller.select(t, true)
+
+  }
+  
+  def addFieldOrEntry() {
     if (controller.checkHasExactlySelected(1)) {
       val e = controller.selectedEntities()(0)
       e match {
@@ -134,7 +149,13 @@ class EntityAddController(controller: Controller) extends SubController(controll
             case _ =>
           }
         case t: CustomType => addField(t, "newField")
-        case _ => controller.viewMgr.popupPreconditionFailed("You need to select a class to add a field.")
+        case t: EnumEntry =>
+          controller.model().parentOf(t) match {
+            case Some(t: EnumType) => addEntry(t, "newEnumEntry")
+            case _ =>
+          }
+        case t: EnumType => addEntry(t, "newEnumEntry")
+        case _ => controller.viewMgr.popupPreconditionFailed("You need to select a class or enum to add a field/entry.")
       }
     }
   }

@@ -107,8 +107,8 @@ object Actions {
       def NEW_TYPE(implicit c: Controller) = MkAction("New Class/Type", Icons.DashBoard.Left.NEW_TYPE) {
         c.entityAddMgr.addType()
       }
-      def NEW_FIELD(implicit c: Controller) = MkAction("Add Field", Icons.DashBoard.Left.NEW_FIELD, "Add field to selected Class") {
-        c.entityAddMgr.addField()
+      def NEW_FIELD(implicit c: Controller) = MkAction("Add Field/Entry", Icons.DashBoard.Left.NEW_FIELD, "Add field/entry to selected class/enum") {
+        c.entityAddMgr.addFieldOrEntry()
       }
 
     }
@@ -238,8 +238,8 @@ object Actions {
       def NEW_TYPE(implicit c: Controller) = MkAction("New Class/Type", Icons.MainMenu.Tools.NEW_TYPE, HotKey.ctrl('T')) {
         c.entityAddMgr.addType()
       }
-      def NEW_FIELD(implicit c: Controller) = MkAction("Add Field", Icons.MainMenu.Tools.NEW_FIELD, HotKey.ctrl(KeyEvent.VK_ADD), "Add field to selected Class") {
-        c.entityAddMgr.addField()
+      def NEW_FIELD(implicit c: Controller) = MkAction("Add Field/Entry", Icons.MainMenu.Tools.NEW_FIELD, HotKey.ctrl(KeyEvent.VK_ADD), "Add field/entry to selected class/enum") {
+        c.entityAddMgr.addFieldOrEntry()
       }
 
       def ALIGN_X_RIGHT_BTN(implicit c: Controller) = MkAction("Align to Right", Icons.MainMenu.Tools.ALIGN_X_RIGHT_ICON, HotKey.ctrl(KeyEvent.VK_RIGHT)) {

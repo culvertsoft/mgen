@@ -4,22 +4,23 @@ import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 
-import ModelConversion.ApiCustomType
 import ModelConversion.ApiModule
 import ModelConversion.ApiProject
+import ModelConversion.ApiUserDefinedType
 import ModelConversion.VdClass
 import ModelConversion.VdModule
 import ModelConversion.VdProject
+import ModelConversion.VdUserDefinedType
 
 class Api2VdConversionState {
 
   private val projects = new HashMap[String, VdProject] // absoluteFilePath->Project
   private val modules = new HashMap[String, VdModule] // absoluteFilePath->Module
-  private val types = new HashMap[ApiCustomType, VdClass]
+  private val types = new HashMap[ApiUserDefinedType, VdUserDefinedType]
   private val projectsSplitDone = new HashSet[String] // absoluteFilePath
 
-  private val _unlinkedFieldTypes = new ArrayBuffer[CustomTypeRef]
-  private val _unlinkedClasses = new ArrayBuffer[VdClass]
+  private val _unlinkedFieldTypes = new ArrayBuffer[UserTypeRef]
+  private val _unlinkedTypes = new ArrayBuffer[VdUserDefinedType]
 
   def converted(apiProject: ApiProject): Option[VdProject] = {
     projects.get(apiProject.absoluteFilePath)
@@ -29,7 +30,7 @@ class Api2VdConversionState {
     modules.get(apiModule.absoluteFilePath)
   }
 
-  def converted(apiType: ApiCustomType): Option[VdClass] = {
+  def converted(apiType: ApiUserDefinedType): Option[VdUserDefinedType] = {
     types.get(apiType)
   }
 
@@ -41,7 +42,7 @@ class Api2VdConversionState {
     modules.put(apiModule.absoluteFilePath, vdModule)
   }
 
-  def markConverted(apiType: ApiCustomType, vdType: VdClass) {
+  def markConverted(apiType: ApiUserDefinedType, vdType: VdUserDefinedType) {
     types.put(apiType, vdType)
   }
 
@@ -53,16 +54,16 @@ class Api2VdConversionState {
     projectsSplitDone += p.getFilePath.getAbsolute
   }
 
-  def getLinked(apiType: ApiCustomType): VdClass = {
-    types.get(apiType).getOrElse(throw new RuntimeException(s"Could not convert ${apiType.name}"))
+  def getLinked(apiType: ApiUserDefinedType): VdUserDefinedType = {
+    types.get(apiType).getOrElse(throw new RuntimeException(s"Could not convert ${apiType.shortName}"))
   }
 
-  def addUnlinked(t: CustomTypeRef) {
+  def addUnlinked(t: UserTypeRef) {
     _unlinkedFieldTypes += t
   }
 
-  def addUnlinked(c: VdClass) {
-    _unlinkedClasses += c
+  def addUnlinked(c: VdUserDefinedType) {
+    _unlinkedTypes += c
   }
 
   def unlinkedFieldTypes() = {
@@ -70,7 +71,7 @@ class Api2VdConversionState {
   }
 
   def unlinkedClasses() = {
-    _unlinkedClasses
+    _unlinkedTypes
   }
 
 }

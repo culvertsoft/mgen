@@ -3,10 +3,7 @@ package se.culvertsoft.mgen.visualdesigner.view
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Graphics2D
-
-import scala.collection.JavaConversions.asScalaBuffer
 import scala.language.reflectiveCalls
-
 import javax.swing.JCheckBox
 import javax.swing.JLabel
 import javax.swing.ScrollPaneConstants
@@ -16,23 +13,25 @@ import se.culvertsoft.mgen.visualdesigner.control.Controller
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.Entity
 import se.culvertsoft.mgen.visualdesigner.model.NoType
-import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
 import se.culvertsoft.mgen.visualdesigner.view.autobox2.AutoBoxListener
 import se.culvertsoft.mgen.visualdesigner.view.autobox2.FieldTypeAutoBoxItem
 import se.culvertsoft.mgen.visualdesigner.view.autobox2.SuperTypeAutoComboBox2
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
 
-object ClassView {
-  val BG_COLOR = new Color(210, 210, 210)
+import scala.collection.JavaConversions._
+
+object EnumView {
+  val BG_COLOR = ClassView.BG_COLOR
 }
 
-class ClassView(override val entity: CustomType, controller: Controller)
+class EnumView(override val entity: EnumType, controller: Controller)
   extends ScrollableView(entity, controller)
   with BackGrounded
   with Bordered
   with Labeled
   with Selectable
   with SelectionBoxable
-  with Inheritable
   with Movable
   with Resizeable
   with CursorChanging {
@@ -43,21 +42,11 @@ class ClassView(override val entity: CustomType, controller: Controller)
     if (child eq entity) {
       nameLabel.setText(nameLabel.getText())
       nameLabel.updateTooltipText()
-      superTypeComboBox.onNewSuperType(entity.getSuperType())
       if (validate)
         super.validate()
       super.repaint()
     }
 
-    if (entity.hasSuperType()) {
-      if (controller.model.existsReference(entity.getSuperType(), child)) {
-        superTypeComboBox.update()
-      }
-    }
-  }
-
-  val abstractCheckBox = new JCheckBox() {
-    addMouseListener(selectMouseListenerWOFocus)
   }
 
   val nameLabel = new JLabel {
@@ -75,39 +64,8 @@ class ClassView(override val entity: CustomType, controller: Controller)
     setHorizontalAlignment(SwingConstants.CENTER)
   }
 
-  val colonLabel = new JLabel(":") {
-    addMouseListener(selectMouseListenerWFocus)
-    addMouseListener(moveByMouseListener)
-    addMouseListener(renameDblClickMouseListener)
-  }
-
-  val superTypeComboBox = new SuperTypeAutoComboBox2(entity, controller) {
-    addExternalMouseListener(selectMouseListenerWOFocus)
-    addMouseListener(renameDblClickMouseListener)
-    override def getMinimumSize(): Dimension = {
-      new Dimension(0, super.getMinimumSize().height)
-    }
-    addObserver(new AutoBoxListener[FieldTypeAutoBoxItem]() {
-      override def finishedItem(item: FieldTypeAutoBoxItem) {
-        println("Finished super")
-        item.fieldType match {
-          case fieldType: UserTypeRef =>
-            val t = controller.model.getEntity(fieldType.getId()).get.asInstanceOf[CustomType]
-            controller.changeSuperType(entity, t)
-          case fieldType: NoType =>
-            controller.removeSuperTypeOf(entity)
-        }
-      }
-    })
-    /* override def getPreferredSize(): Dimension = {
-         new Dimension(80, super.getMinimumSize().height)
-      }*/
-    setMaximumSize(new Dimension(9999, colonLabel.getPreferredSize().height))
-
-  }
-
   override def desiredViewComplexity(): ViewComplexity = {
-    if (ClassView.this.width < 100 || controller.viewMgr.isIconOverrideActive) {
+    if (EnumView.this.width < 100 || controller.viewMgr.isIconOverrideActive) {
       VIEW_COMPLEXITY_SIMPLE
     } else {
       VIEW_COMPLEXITY_COMPLEX
@@ -121,14 +79,9 @@ class ClassView(override val entity: CustomType, controller: Controller)
     }
   }
 
-  //superTypeComboBox.setMaximumSize(new Dimension(width() / 3, superTypeComboBox.getPreferredSize().height))
-  superTypeComboBox.setOpaque(false)
-  abstractCheckBox.setOpaque(false)
-  abstractCheckBox.setToolTipText("abstract")
-
   scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 
-  val layout = new ClassOrEnumViewLayout(this, () => entity.getFields(), controller)
+  val layout = new ClassOrEnumViewLayout(this, () => entity.getEntries(), controller)
   innerPanel().setLayout(layout)
 
   resetViewComplexity()
@@ -157,10 +110,7 @@ class ClassView(override val entity: CustomType, controller: Controller)
       labelPanel.removeAll()
       labelPanel.setOpaque(false)
       labelPanel.setLayout(new MigLayout("center, insets 2 0 0 0"))
-      //labelPanel.add(abstractCheckBox, " width 5%, gapleft 5")
       labelPanel.add(nameLabel, "gapleft 5")
-      labelPanel.add(colonLabel, "gapleft 3")
-      labelPanel.add(superTypeComboBox, "gapleft 5, width 30%" /*, width 30%, wrap, "gapleft 10, width 30%!"*/ )
       labelPanel.validate()
       labelPanel.repaint()
     }
@@ -175,11 +125,11 @@ class ClassView(override val entity: CustomType, controller: Controller)
   }
 
   override def labelBackgroundColor(): Color = {
-    ClassView.BG_COLOR
+    EnumView.BG_COLOR
   }
 
   override def backgroundColor(): Color = {
-    ClassView.BG_COLOR
+    EnumView.BG_COLOR
   }
 
   override def resizeableAtCorners(): Boolean = {

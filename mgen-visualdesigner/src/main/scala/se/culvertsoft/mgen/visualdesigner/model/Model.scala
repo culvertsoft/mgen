@@ -284,7 +284,7 @@ class Model(val project: Project) {
   private def foreachReferencedClass[A](t: FieldType)(f: CustomType => A) {
     def foreachReferencedClass(fieldType: FieldType) {
       fieldType match {
-        case fieldType: CustomTypeRef =>
+        case fieldType: UserTypeRef =>
           getCustomType(fieldType.getId()) foreach f
         case fieldType: GenericType =>
           fieldType match {
@@ -318,8 +318,8 @@ class Model(val project: Project) {
 
   def foreachReferencedClass[A](t: CustomType)(f: CustomType => A) {
     import scala.collection.JavaConversions._
-    val superType = if (t.hasSuperType()) new CustomTypeRef(t.getSuperType()) else null
-    val subTypes = if (t.hasSubTypes()) t.getSubTypes().map(id => new CustomTypeRef(id)) else null
+    val superType = if (t.hasSuperType()) new UserTypeRef(t.getSuperType()) else null
+    val subTypes = if (t.hasSubTypes()) t.getSubTypes().map(id => new UserTypeRef(id)) else null
     val fields = if (t.hasFields()) t.getFields().map(_.getType()) else null
 
     if (superType != null) {
@@ -349,9 +349,9 @@ class Model(val project: Project) {
     return false
   }
 
-  def existsReference(id: EntityIdBase, to: Entity): Boolean = {
-    getEntity(id) match {
-      case Some(t: CustomType) => existsReference(new CustomTypeRef(id), to)
+  def existsReference(from: EntityIdBase, to: Entity): Boolean = {
+    getEntity(from) match {
+      case Some(t: CustomType) => existsReference(new UserTypeRef(from), to)
       case None => false
       case _ => ???
     }

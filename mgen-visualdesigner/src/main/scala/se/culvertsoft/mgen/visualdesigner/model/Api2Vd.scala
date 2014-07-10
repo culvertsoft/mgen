@@ -15,7 +15,7 @@ import ModelConversion.ApiInt16Type
 import ModelConversion.ApiInt32Type
 import ModelConversion.ApiInt64Type
 import ModelConversion.ApiInt8Type
-import ModelConversion.ApiListType
+import ModelConversion._
 import ModelConversion.ApiMapType
 import ModelConversion.ApiModule
 import ModelConversion.ApiProject
@@ -31,7 +31,7 @@ import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 
-case class UnlinkedId(val apiType: ModelConversion.ApiCustomType) extends EntityId
+case class UnlinkedId(val apiType: ModelConversion.ApiUserDefinedType) extends EntityId
 
 object Api2Vd {
   import ModelConversion._
@@ -168,8 +168,28 @@ object Api2Vd {
         vdModule.setSaveDir(getSaveDir(apiModule))
         vdModule.setSettings(toJava(apiModule.settings()))
         vdModule.setTypes(toJava(apiModule.types.map(cvtClass(_, vdModule, state))))
+        vdModule.setEnums(toJava(apiModule.enums.map(cvtEnum(_, vdModule, state))))
         vdModule
     }
+  }
+
+  def cvtEnum(apiEnum: ApiEnumType, module: VdModule, state: Api2VdConversionState): VdEnum = {
+    val vdEnum = EntityFactory.mkEnum(apiEnum.shortName)
+    state.markConverted(apiEnum, vdEnum)
+    
+    vdEnum.setEntries(toJava(apiEnum.entries.map(cvtEnumEntry(_, module, state))))
+
+    module.getEnums().add(vdEnum)
+    vdEnum.setParent(module.getId)
+
+    vdEnum
+  }
+  
+  def cvtEnumEntry(apiEnumEntry: ApiEnumEntry, parent: VdModule, state: Api2VdConversionState): VdEnumEntry = {
+    val const = if (apiEnumEntry.constant != null && apiEnumEntry.constant.trim.nonEmpty) apiEnumEntry.constant else null
+    val entry = EntityFactory.mkEnumEntry(apiEnumEntry.name, const)
+    entry.setParent(parent.getId)
+    entry
   }
 
   def cvtClass(apiClass: ApiCustomType, parent: VdModule, state: Api2VdConversionState): VdClass = {
@@ -232,7 +252,11 @@ object Api2Vd {
         case t: ApiArrayType => new ArrayType(cv(t.elementType))
         case t: ApiMapType => new MapType(cv(t.keyType).asInstanceOf[SimpleType], cv(t.valueType))
         case t: ApiCustomType =>
-          val fld = new CustomTypeRef(new UnlinkedId(t))
+          val fld = new UserTypeRef(new UnlinkedId(t))
+          state.addUnlinked(fld)
+          fld
+        case t: ApiEnumType =>
+          val fld = new UserTypeRef(new UnlinkedId(t))
           state.addUnlinked(fld)
           fld
       }
@@ -243,10 +267,14 @@ object Api2Vd {
   def linkTypes(state: Api2VdConversionState, model: Model, apiProject: ApiProject) {
 
     for (c <- state.unlinkedClasses) {
-      val id = c.getSuperType().asInstanceOf[UnlinkedId]
-      val superType = state.getLinked(id.apiType)
-      superType.getSubTypes().add(c.getId())
-      c.setSuperType(superType.getId)
+      c match {
+        case c: VdClass =>
+          val id = c.getSuperType().asInstanceOf[UnlinkedId]
+          val superType = state.getLinked(id.apiType).asInstanceOf[VdClass]
+          superType.getSubTypes().add(c.getId())
+          c.setSuperType(superType.getId)
+        case c: VdEnum => // Doesn't have unlinked children          
+      }
     }
 
     for (f <- state.unlinkedFieldTypes) {
