@@ -11,6 +11,8 @@ import scala.util.Try
 import scala.util.Success
 import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.api.model.impl.EnumTypeImpl
+import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.api.model.UserDefinedType
 
 object ParseEnum {
 
@@ -24,6 +26,10 @@ object ParseEnum {
     val entries = node.child.map { ParseEnumEntry(_, module) }
 
     enumeration.setEntries(entries)
+
+    cache.typeLookup.typesFullName.put(enumeration.fullName(), enumeration)
+    cache.typeLookup.typesShortName.getOrElseUpdate(enumeration.shortName(), new ArrayBuffer[UserDefinedType])
+    cache.typeLookup.typesShortName(enumeration.shortName()) += enumeration
 
     enumeration
   }

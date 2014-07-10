@@ -9,6 +9,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.enumImplClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.eqTesterClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldHasherClsStringQ

@@ -2,13 +2,15 @@ package se.culvertsoft.mgen.api.model;
 
 import java.util.List;
 
+import se.culvertsoft.mgen.api.model.impl.EnumTypeImpl;
+
 /**
  * Represents an enumeration
  * 
  * @author GiGurra
  * 
  */
-public interface EnumType extends SimpleType {
+public interface EnumType extends SimpleType, UserDefinedType {
 
 	/**
 	 * The entries of this enumeration.
@@ -26,5 +28,7 @@ public interface EnumType extends SimpleType {
 	 *             If called outside the compiler
 	 */
 	public Module module();
+
+	public static final EnumType INSTANCE = new EnumTypeImpl("0xFFFF", "UNKNOWN", null);
 
 }

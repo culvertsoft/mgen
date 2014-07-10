@@ -20,6 +20,7 @@ object MkEnum {
 
     MkPackage(packagePath)
 
+    ln(s"import ${JavaConstants.enumImplClsStringQ};")
     ln(s"import ${JavaConstants.mgenEnumClsString};")
     ln()
 
@@ -61,6 +62,8 @@ object MkEnum {
     ln(1, "}")
     ln()
 
+    ln(1, s"public static final ${JavaConstants.enumImplClsString} _TYPE = new ${JavaConstants.enumImplClsString}(${quote(_e.shortName)}, ${quote(_e.fullName)});")
+    
     ln("}")
 
     txtBuffer.toString()

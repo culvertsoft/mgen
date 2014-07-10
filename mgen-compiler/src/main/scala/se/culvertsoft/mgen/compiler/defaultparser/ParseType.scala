@@ -10,6 +10,7 @@ import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import scala.util.Try
 import scala.util.Success
 import se.culvertsoft.mgen.api.util.CRC16
+import se.culvertsoft.mgen.api.model.UserDefinedType
 
 object ParseType {
 
@@ -36,7 +37,7 @@ object ParseType {
     clas.setFields(fields)
 
     cache.typeLookup.typesFullName.put(clas.fullName(), clas)
-    cache.typeLookup.typesShortName.getOrElseUpdate(clas.shortName(), new ArrayBuffer[LinkedCustomType])
+    cache.typeLookup.typesShortName.getOrElseUpdate(clas.shortName(), new ArrayBuffer[UserDefinedType])
     cache.typeLookup.typesShortName(clas.shortName()) += clas
 
     if (clas.hasSuperType() || clas.fields().exists(!_.typ().isLinked()))

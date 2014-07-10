@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
-
 import Alias.fieldId
 import Alias.fieldMetadata
 import se.culvertsoft.mgen.api.exceptions.GenerationException
@@ -16,7 +15,8 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsString
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.modelPkg
+import se.culvertsoft.mgen.javapack.generator.JavaConstants._
+import se.culvertsoft.mgen.api.model.EnumType
 
 object MkFieldMetaData {
 
@@ -82,6 +82,7 @@ object MkFieldMetaData {
       case TypeEnum.CUSTOM =>
         val tc = t.asInstanceOf[CustomType]
         s"new ${modelPkg}.impl.UnlinkedCustomType(${quote(tc.fullName())}, ${tc.typeId()}L)"
+      case TypeEnum.ENUM => s"${t.shortName}._TYPE"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }
   }

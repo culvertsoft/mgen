@@ -19,6 +19,10 @@ public class FieldHasher {
 	 * 
 	 * *************************************************************/
 
+	public static int calc(final Enum<?> e, final Type type) {
+		return e != null ? e.hashCode() : 0;
+	}
+
 	public static int calc(final boolean a, final Type type) {
 		return a ? 1231 : 1237;
 	}

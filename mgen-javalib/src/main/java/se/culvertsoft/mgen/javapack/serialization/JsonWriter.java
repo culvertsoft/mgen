@@ -147,6 +147,11 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
+	public void writeEnumField(Enum<?> e, Field field) throws IOException {
+		writeStringField(e != null ? e.toString() : null, field);
+	}
+
+	@Override
 	public void writeArrayField(Object array, Field f) throws IOException {
 		beginWritePair(f.name());
 		writeArray(array, (ArrayType) f.typ());
@@ -198,6 +203,9 @@ public class JsonWriter extends DynamicWriter {
 		}
 
 		switch (typ.typeEnum()) {
+		case ENUM:
+			write(o != null ? o.toString() : null);
+			break;
 		case BOOL:
 			write((Boolean) o);
 			break;

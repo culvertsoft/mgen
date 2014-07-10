@@ -83,8 +83,12 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
     }
 
     for (t <- cache.typeLookup.typesFullName.values) {
-      t.superType() match {
-        case s: LinkedCustomType => s.addSubType(t);
+      t match {
+        case t: CustomType =>
+          t.superType() match {
+            case s: LinkedCustomType => s.addSubType(t);
+            case _ =>
+          }
         case _ =>
       }
     }

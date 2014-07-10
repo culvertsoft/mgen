@@ -24,6 +24,7 @@ object JavaToString {
         case TypeEnum.MAP => membName
         case TypeEnum.LIST => membName
         case TypeEnum.ARRAY => s"java.util.Arrays.deepToString($membName)"
+        case TypeEnum.ENUM => membName
         case TypeEnum.CUSTOM => membName
         case x => throw new GenerationException(s"Don't know how to handle type $x")
       }

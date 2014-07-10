@@ -9,7 +9,7 @@ import java.util.Set;
  * @author GiGurra
  * 
  */
-public interface CustomType extends Type {
+public interface CustomType extends UserDefinedType {
 
 	/**
 	 * 64 bit id hashed from the qualified type name of this class
@@ -31,14 +31,6 @@ public interface CustomType extends Type {
 	 * The written name of this type
 	 */
 	public String name();
-
-	/**
-	 * The that this class is defined within
-	 * 
-	 * @throws RuntimeException
-	 *             If called outside the compiler
-	 */
-	public Module module();
 
 	/**
 	 * The super type of this class, or null if it has none

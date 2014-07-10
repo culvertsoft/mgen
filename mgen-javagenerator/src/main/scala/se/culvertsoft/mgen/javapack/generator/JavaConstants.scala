@@ -32,6 +32,9 @@ object JavaConstants {
   val eqTesterClsString = s"EqualityTester"
   val eqTesterClsStringQ = s"${javapackPkg}.util.${eqTesterClsString}"
 
+  val enumImplClsString = "EnumTypeImpl"
+  val enumImplClsStringQ = s"se.culvertsoft.mgen.api.model.impl.${enumImplClsString}"
+  
   val fieldClsString = s"Field"
   val readerClsString = s"Reader"
   val fieldVisitorClsString = s"FieldVisitor"

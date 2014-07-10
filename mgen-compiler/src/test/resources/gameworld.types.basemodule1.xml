@@ -15,6 +15,11 @@
             <file_io/>
             <database/>
         </transport>
+        
+        <kind>
+            <pretty/>
+            <ugly/>
+        </kind>
     </Enums>
 
 	<Types>
@@ -23,6 +28,7 @@
 			<x type="int" id="123"/>
 			<y type="float" />
 			<z type="double" />
+            <kind type="kind" />
 		</VectorR3>
 
 		<Matrix4x4d id="0x02">
