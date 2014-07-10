@@ -70,7 +70,6 @@ class CppGenerator extends BuiltInStaticLangGenerator {
   }
 
   override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    println("Generating enum " + t.shortName())
     Nil
   }
 

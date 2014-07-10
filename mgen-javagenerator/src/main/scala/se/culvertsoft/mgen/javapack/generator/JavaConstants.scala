@@ -25,6 +25,7 @@ object JavaConstants {
   val fieldHasherClsStringQ = s"${utilPkg}.${fieldHasherClsString}"
 
   val mgenBaseClsString = s"${javapackPkg}.classes.MGenBase"
+  val mgenEnumClsString = s"${javapackPkg}.classes.MGenEnum"
   val clsRegistryClsString = s"${javapackPkg}.classes.ClassRegistry"
   val clsRegistryEntryClsString = s"ClassRegistryEntry"
   val clsRegistryEntryClsStringQ = s"$javapackPkg.classes.$clsRegistryEntryClsString"

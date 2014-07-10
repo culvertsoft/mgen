@@ -5,7 +5,7 @@
     <Enums>
         <priority>
             <low/>
-            <medium/>
+            <medium>15</medium>
             <high/>
         </priority>
         
