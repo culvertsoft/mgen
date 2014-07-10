@@ -113,13 +113,11 @@ object MGen {
 
     compileResult match {
       case Success(_) =>
+        println("*** COMPILATION SUCCESS ***")
       case Failure(err) =>
-        err.printStackTrace()
-        System.err.flush()
-        System.out.flush()
         println
-        println("*** COMPILATION FAILED (see error log above) ***")
-        printHelp()
+        println("*** COMPILATION FAILED (see error log below) ***")
+        throw err
     }
 
   }
