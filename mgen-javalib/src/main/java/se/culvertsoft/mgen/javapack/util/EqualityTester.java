@@ -231,6 +231,8 @@ public class EqualityTester {
 			return false;
 
 		switch (type.typeEnum()) {
+		case ENUM:
+			return a == b;
 		case BOOL:
 			return ((Boolean) a).equals((Boolean) b);
 		case INT8:

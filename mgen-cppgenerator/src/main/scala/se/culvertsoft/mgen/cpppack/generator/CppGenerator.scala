@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.JavaConversions.seqAsJavaList
-
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
@@ -9,6 +8,7 @@ import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.api.model.EnumType
 
 object CppGenerator {
 
@@ -32,7 +32,7 @@ object CppGenerator {
 
 class CppGenerator extends BuiltInStaticLangGenerator {
 
-  def generateTopLevelMetaSources(
+  override def generateTopLevelMetaSources(
     folder: String,
     packagePath: String,
     referencedModules: Seq[Module],
@@ -60,13 +60,18 @@ class CppGenerator extends BuiltInStaticLangGenerator {
 
   }
 
-  def generateModuleMetaSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+  override def generateModuleMetaSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     Nil
   }
 
-  def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+  override def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     List(CppHeader.generate(module, t, generatorSettings),
       CppSrcFile.generate(module, t, generatorSettings))
+  }
+
+  override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+    println("Generating enum " + t.shortName())
+    Nil
   }
 
 }

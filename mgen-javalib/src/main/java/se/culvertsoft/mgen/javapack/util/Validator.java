@@ -58,6 +58,7 @@ public class Validator {
 		if (a == null)
 			return true;
 		switch (type.typeEnum()) {
+		case ENUM:
 		case BOOL:
 		case INT8:
 		case INT16:

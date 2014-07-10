@@ -167,6 +167,8 @@ public class FieldHasher {
 			return 0;
 
 		switch (type.typeEnum()) {
+		case ENUM:
+			a.hashCode();
 		case BOOL:
 			return calc(((Boolean) a), type);
 		case INT8:

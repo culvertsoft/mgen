@@ -42,6 +42,7 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkValidate
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.PrimitiveType
 import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.EnumType
 
 object JavaGenerator {
   def canBeNull(f: Field): Boolean = {
@@ -50,6 +51,7 @@ object JavaGenerator {
   def canBeNull(t: Type): Boolean = {
     t match {
       case t: PrimitiveType => false
+      case t: EnumType => false
       case _ => true
     }
   }
@@ -102,6 +104,10 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     val fileName = t.name() + ".java"
     val sourceCode = generateClassSourceCode(t)
     List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
+  }
+
+  override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+    Nil
   }
 
   def generateClassSourceCode(t: CustomType): String = {

@@ -106,7 +106,6 @@ object MGen {
         throw new AnalysisException(s"Generators generated no code...")
 
       // Write the actual code to disk 
-      // TODO: don't overwrite existing identical files (build times)
       Output.write(generatedSources, settings.get("output_path"))
 
     }

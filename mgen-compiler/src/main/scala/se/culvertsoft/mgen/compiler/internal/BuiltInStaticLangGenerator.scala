@@ -4,11 +4,13 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.JavaConversions.mapAsScalaMap
+import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.JavaConverters.mapAsScalaMapConverter
 import scala.collection.mutable.ArrayBuffer
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.Generator
@@ -56,6 +58,10 @@ abstract class BuiltInStaticLangGenerator extends Generator {
 
     val out = new ArrayBuffer[GeneratedSourceFile]
 
+    // Generate enums for this module
+    for (e <- module.enums())
+      out ++= generateEnumSources(module, e, generatorSettings)
+
     // Generate classes for this module
     for (t <- module.types())
       out ++= generateClassSources(module, t, generatorSettings)
@@ -67,8 +73,9 @@ abstract class BuiltInStaticLangGenerator extends Generator {
     out
   }
 
-  def generateTopLevelMetaSources(folder: String, packagePath: String, referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile]
-  def generateModuleMetaSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile]
-  def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile]
+  def generateTopLevelMetaSources(folder: String, packagePath: String, referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = { Nil }
+  def generateModuleMetaSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = { Nil }
+  def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = { Nil }
+  def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = { Nil }
 
 }

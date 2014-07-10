@@ -56,6 +56,7 @@ public class Marker {
 		if (a == null)
 			return;
 		switch (type.typeEnum()) {
+		case ENUM:
 		case BOOL:
 		case INT8:
 		case INT16:
