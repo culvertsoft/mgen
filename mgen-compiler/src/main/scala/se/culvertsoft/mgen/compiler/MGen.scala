@@ -102,7 +102,7 @@ object MGen {
 
     // Write the actual code to disk 
     // TODO: don't overwrite existing identical files (build times)
-    Output.write(generatedSources)
+    Output.write(generatedSources, settings.get("output_path"))
 
   }
 
@@ -128,6 +128,7 @@ object MGen {
     println("  -parser=\"se.culvertsoft.Dummyparser,se.coocoo.MyParser\": specify IDL parser (Optional) ")
     println("  -linker=\"se.culvertsoft.dummyLinker.Linker1\": specify module linker parser (Optional) ")
     println("  -plugin_paths=\"my/external/path1, my/external/path2\": specify additional plugin paths (Optional) ")
+    println("  -output_path=\"specify output path (Optional) ")
   }
 
   def trimKeyVal(in: String): String = {
