@@ -45,10 +45,17 @@ public interface Module {
 	public String absoluteFilePath();
 
 	/**
-	 * Returns the types defined within this module.
+	 * Returns the classes defined within this module.
 	 * 
-	 * @return The types defined within this module.
+	 * @return The classes defined within this module.
 	 */
 	public List<CustomType> types();
 
+	/**
+	 * Returns the enumerations defined within this module.
+	 * 
+	 * @return The enumerations defined within this module.
+	 */
+	public List<EnumType> enums();
+	
 }

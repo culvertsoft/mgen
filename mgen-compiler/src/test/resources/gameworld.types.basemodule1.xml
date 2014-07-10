@@ -2,6 +2,21 @@
 
 <Module>
 
+    <Enums>
+        <priority>
+            <low/>
+            <medium/>
+            <high/>
+        </priority>
+        
+        <transport>
+            <udp/>
+            <tcp/>
+            <file_io/>
+            <database/>
+        </transport>
+    </Enums>
+
 	<Types>
 
 		<VectorR3 id="0x01">

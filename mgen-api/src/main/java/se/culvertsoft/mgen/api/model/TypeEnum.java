@@ -12,7 +12,11 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_LIST;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_MAP;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 
+/**
+ * Convenience enumeration for switching on field and class types.
+ */
 public enum TypeEnum {
+	ENUM(TAG_STRING),
 	BOOL(TAG_BOOL),
 	INT8(TAG_INT8),
 	INT16(TAG_INT16),
