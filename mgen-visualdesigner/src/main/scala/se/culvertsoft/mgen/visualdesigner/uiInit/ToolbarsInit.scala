@@ -101,6 +101,7 @@ object ToolbarsInit {
 
     toolbar.add(Actions.DashBoard.Left.NEW_MODULE)
     toolbar.add(Actions.DashBoard.Left.NEW_TYPE)
+    toolbar.add(Actions.DashBoard.Left.NEW_ENUM)
     toolbar.add(Actions.DashBoard.Left.NEW_FIELD)
     toolbar.addSeparator()
 

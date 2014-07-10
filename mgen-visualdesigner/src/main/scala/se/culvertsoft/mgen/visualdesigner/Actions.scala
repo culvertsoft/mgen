@@ -107,6 +107,9 @@ object Actions {
       def NEW_TYPE(implicit c: Controller) = MkAction("New Class/Type", Icons.DashBoard.Left.NEW_TYPE) {
         c.entityAddMgr.addType()
       }
+      def NEW_ENUM(implicit c: Controller) = MkAction("New Enumeration", Icons.DashBoard.Left.NEW_TYPE) {
+        c.entityAddMgr.addEnum()
+      }
       def NEW_FIELD(implicit c: Controller) = MkAction("Add Field/Entry", Icons.DashBoard.Left.NEW_FIELD, "Add field/entry to selected class/enum") {
         c.entityAddMgr.addFieldOrEntry()
       }
@@ -129,14 +132,6 @@ object Actions {
       }
       def SAVE_AS(implicit c: Controller) = MkAction("Save Project As", Icons.MainMenu.File.SAVE, HotKey.ctrl().shift('S')) {
         c.saveMgr.saveAs()
-      }
-      def IMPORT_PROJECT(implicit c: Controller) = MkAction("Import Sub Project", Icons.MainMenu.File.IMPORT_PROJECT, HotKey.ctrl('I'), "Import a sub project into this project") {
-      }
-      def IMPORT_MODULE(implicit c: Controller) = MkAction("Import Module", Icons.MainMenu.File.IMPORT_MODULE, HotKey.ctrl().shift('I'), "Import a module into this project") {
-      }
-      def EXPORT_PROJECT(implicit c: Controller) = MkAction("Export Sub Project", Icons.MainMenu.File.EXPORT_PROJECT, HotKey.ctrl('E'), "Export a sub project from this project") {
-      }
-      def EXPORT_MODULE(implicit c: Controller) = MkAction("Export Module", Icons.MainMenu.File.EXPORT_MODULE, HotKey.ctrl().shift('E'), "Export a module from this project") {
       }
       def EXIT(implicit c: Controller) = MkAction("Exit", Icons.MainMenu.File.EXIT, HotKey.alt(KeyEvent.VK_F4)) {
         c.saveMgr.closeApplication()
@@ -237,6 +232,9 @@ object Actions {
       }
       def NEW_TYPE(implicit c: Controller) = MkAction("New Class/Type", Icons.MainMenu.Tools.NEW_TYPE, HotKey.ctrl('T')) {
         c.entityAddMgr.addType()
+      }
+      def NEW_ENUM(implicit c: Controller) = MkAction("New Enumeration", Icons.MainMenu.Tools.NEW_TYPE, HotKey.ctrl('E')) {
+        c.entityAddMgr.addEnum()
       }
       def NEW_FIELD(implicit c: Controller) = MkAction("Add Field/Entry", Icons.MainMenu.Tools.NEW_FIELD, HotKey.ctrl(KeyEvent.VK_ADD), "Add field/entry to selected class/enum") {
         c.entityAddMgr.addFieldOrEntry()

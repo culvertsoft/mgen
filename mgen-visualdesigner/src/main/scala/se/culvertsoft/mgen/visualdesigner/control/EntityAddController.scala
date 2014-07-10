@@ -50,7 +50,7 @@ class EntityAddController(controller: Controller) extends SubController(controll
     val absoluteDir = FileUtils.directoryOf(controller.model.project.getFilePath().getAbsolute())
     new FilePath(writtenDir, absoluteDir)
   }
-  
+
   def addModule() {
 
     val module = EntityFactory.mkModule("NewModule", getNewModuleSaveDir())
@@ -72,6 +72,45 @@ class EntityAddController(controller: Controller) extends SubController(controll
 
     controller.select(parent, true)
 
+  }
+
+  def addEnum(): Option[EnumType] = {
+
+    if (!controller.checkHasExactlySelected(1))
+      return None
+
+    if (!controller.checkAllSelectedAreOfType[Module]("Classes can only be added to Modules. Select a module before trying to add a class."))
+      return None
+
+    val e = EntityFactory.mkEnum("NewEnum")
+
+    val (parent, position) = findPositionForNewModule(
+      e.getPlacement().getWidth(),
+      e.getPlacement().getHeight())
+
+    parent match {
+      case parent: Module =>
+        e
+          .getPlacement()
+          .setX(position.x)
+          .setY(position.y)
+        return Some(addEnum(e, parent))
+    }
+
+    return None
+
+  }
+
+  def addEnum(e: EnumType, parent: Module): EnumType = {
+
+    parent.add(e)
+    e.setParent(parent.getId())
+
+    add(e, parent)
+
+    controller.select(parent, true)
+
+    e
   }
 
   def addType(): Option[CustomType] = {
@@ -138,7 +177,7 @@ class EntityAddController(controller: Controller) extends SubController(controll
     controller.select(t, true)
 
   }
-  
+
   def addFieldOrEntry() {
     if (controller.checkHasExactlySelected(1)) {
       val e = controller.selectedEntities()(0)

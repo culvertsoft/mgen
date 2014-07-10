@@ -19,13 +19,6 @@ object MainMenuInit {
     fileMenu.add(Actions.MainMenu.File.SAVE)
     fileMenu.add(Actions.MainMenu.File.SAVE_AS)
     fileMenu.addSeparator()
-    /*
-    fileMenu.add(Actions.MainMenu.File.IMPORT_PROJECT)
-    fileMenu.add(Actions.MainMenu.File.IMPORT_MODULE)
-    fileMenu.addSeparator()
-    fileMenu.add(Actions.MainMenu.File.EXPORT_PROJECT)
-    fileMenu.add(Actions.MainMenu.File.EXPORT_MODULE)
-    fileMenu.addSeparator()*/
 
     fileMenu.add(Actions.MainMenu.File.EXIT)
 
@@ -65,6 +58,7 @@ object MainMenuInit {
     val toolsMenu = new JMenu("Tools")
     toolsMenu.add(Actions.MainMenu.Tools.NEW_MODULE)
     toolsMenu.add(Actions.MainMenu.Tools.NEW_TYPE)
+    toolsMenu.add(Actions.MainMenu.Tools.NEW_ENUM)
     toolsMenu.add(Actions.MainMenu.Tools.NEW_FIELD)
     toolsMenu.addSeparator()
     toolsMenu.addSeparator()
