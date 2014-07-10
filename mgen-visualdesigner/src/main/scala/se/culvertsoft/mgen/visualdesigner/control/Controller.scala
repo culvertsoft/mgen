@@ -287,7 +287,7 @@ class Controller(
         for ((e, _) <- keepableClassViews) {
           e match {
             case e: CustomType =>
-              model.foreachReferencedClass(e) { x =>
+              model.foreachReferencedUserType(e) { x =>
                 toMarkDirty.put(x.getId(), x)
               }
             case _ =>
