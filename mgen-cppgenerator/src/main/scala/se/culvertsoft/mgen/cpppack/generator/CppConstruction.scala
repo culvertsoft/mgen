@@ -32,6 +32,7 @@ object CppConstruction {
         case TypeEnum.LIST => s"${getTypeName(typ, isPolymorphicField)}()"
         case TypeEnum.ARRAY => s"${getTypeName(typ, isPolymorphicField)}()"
         case TypeEnum.CUSTOM => s"${getTypeName(typ, isPolymorphicField)}()"
+        case TypeEnum.ENUM => s"${typ.shortName()}_UNKNOWN"
         case x => throw new GenerationException(s"Don't know how to handle type $x")
       }
     })
@@ -48,6 +49,7 @@ object CppConstruction {
         case TypeEnum.LIST => s"${getTypeName(typ, isPolymorphicField)}()"
         case TypeEnum.ARRAY => s"${getTypeName(typ, isPolymorphicField)}()"
         case TypeEnum.CUSTOM => if (isPolymorphicField) "0" else defaultConstruct(typ, false)
+        case TypeEnum.ENUM => s"${typ.shortName()}_UNKNOWN"
         case _ => s"${defaultConstruct(typ, isPolymorphicField)}"
       }
     })

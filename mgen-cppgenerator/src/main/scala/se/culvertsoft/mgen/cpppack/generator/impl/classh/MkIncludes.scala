@@ -17,10 +17,17 @@ object MkIncludes {
     implicit val currentModule = module
 
     val types = t.referencedClasses() - t
+    val enums = t.referencedEnums()
+    
     if (!t.hasSuperType())
       CppGenUtils.include("mgen/classes/MGenBase.h")
+      
     for (tRef <- types)
       CppGenUtils.include(tRef)
+      
+    for (tRef <- enums)
+      CppGenUtils.include(tRef)
+      
     txtBuffer.endl()
 
   }

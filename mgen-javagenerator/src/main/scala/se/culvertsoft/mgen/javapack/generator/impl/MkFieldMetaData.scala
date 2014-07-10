@@ -82,7 +82,7 @@ object MkFieldMetaData {
       case TypeEnum.CUSTOM =>
         val tc = t.asInstanceOf[CustomType]
         s"new ${modelPkg}.impl.UnlinkedCustomType(${quote(tc.fullName())}, ${tc.typeId()}L)"
-      case TypeEnum.ENUM => s"${t.shortName}._TYPE"
+      case TypeEnum.ENUM => s"${t.fullName}._TYPE"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }
   }

@@ -1,14 +1,20 @@
 package se.culvertsoft.mgen.cpppack.generator
 
+import java.io.File
+
 import scala.collection.JavaConversions.seqAsJavaList
+
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.api.model.EnumType
+import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEnumCpp
+import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEnumHeader
 
 object CppGenerator {
 
@@ -70,7 +76,14 @@ class CppGenerator extends BuiltInStaticLangGenerator {
   }
 
   override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    Nil
+    val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, generatorSettings)
+    val hFileName = t.shortName + ".h"
+    val hSourceCode = MkEnumHeader(module, t, generatorSettings)
+    val cppFileName = t.shortName + ".cpp"
+    val cppSourceCode = MkEnumCpp(module, t, generatorSettings)
+    List(
+      new GeneratedSourceFile(folder + File.separator + hFileName, hSourceCode),
+      new GeneratedSourceFile(folder + File.separator + cppFileName, cppSourceCode))
   }
 
 }

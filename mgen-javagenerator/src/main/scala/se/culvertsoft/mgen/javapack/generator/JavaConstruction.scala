@@ -33,7 +33,7 @@ object JavaConstruction {
         case TypeEnum.ARRAY =>
           val t = typ.asInstanceOf[ArrayType]
           s"new ${getTypeName(t.elementType(), false, true)}[0]"          
-        case TypeEnum.ENUM => s"${typ.shortName()}.UNKNOWN"
+        case TypeEnum.ENUM => s"${getTypeName(typ)}.UNKNOWN"
         case TypeEnum.CUSTOM => s"new ${getTypeName(typ, isGenericArg)}()"
         case x => throw new GenerationException(s"Don't know how to handle type $x")
       }

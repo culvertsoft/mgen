@@ -18,8 +18,11 @@ object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFil
 
     if (mkUnityBuild) {
       val ts = param.modules.flatMap(_.types)
+      val es = param.modules.flatMap(_.enums)
       for (t <- ts)
         CppGenUtils.include(t, ".cpp")
+      for (e <- es)
+        CppGenUtils.include(e, ".cpp")
       CppGenUtils.include(CppDispatchGenerator.includeStringCpp(param.nameSpaceString))
       CppGenUtils.include(CppHandlerGenerator.includeStringCpp(param.nameSpaceString))
     }

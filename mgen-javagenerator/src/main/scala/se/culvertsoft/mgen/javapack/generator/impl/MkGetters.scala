@@ -31,7 +31,7 @@ object MkGetters {
     }
 
     for (field <- t.fieldsInclSuper()) {
-      txtBuffer.tabs(1).textln(s"public ${t.shortName()} unset${upFirst(field.name())}() {")
+      txtBuffer.tabs(1).textln(s"public ${getTypeName(t)} unset${upFirst(field.name())}() {")
       txtBuffer.tabs(2).textln(s"_set${upFirst(field.name())}Set(false, ${fieldSetDepthClsString}.SHALLOW);")
       txtBuffer.tabs(2).textln(s"return this;")
       txtBuffer.tabs(1).textln(s"}").endl()

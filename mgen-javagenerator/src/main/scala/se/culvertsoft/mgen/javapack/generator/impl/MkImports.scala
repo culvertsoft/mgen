@@ -23,16 +23,7 @@ object MkImports {
 
   def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
-    val extClasses = t.referencedClasses().filter(_.module != module)
-    val extEnums = t.referencedEnums().filter(_.module != module)
-
     ln(s"import ${fieldClsStringQ};")
-
-    for (e <- extClasses)
-      ln(s"import ${e.module.path}.${e.shortName};")
-
-    for (e <- extEnums)
-      ln(s"import ${e.module.path}.${e.shortName};")
 
     ln(s"import ${fieldSetDepthClsStringQ};")
     ln(s"import ${fieldVisitorClsStringQ};")
