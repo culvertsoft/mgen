@@ -42,6 +42,11 @@ object ParseModule {
         absoluteFilePath,
         settings)
 
+      // Parse enumerations
+      val enumsXml = moduleXml.getAllNodeContents("Enums")
+      val enums = enumsXml.map { ParseEnum(_, module) }
+      module.setEnums(enums)
+
       // Parse types
       val typesXml = moduleXml.getAllNodeContents("Types")
       val types = typesXml.map { ParseType(_, module) }

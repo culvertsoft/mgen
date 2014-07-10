@@ -1,5 +1,6 @@
 package se.culvertsoft.mgen.api.model.impl;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -11,17 +12,19 @@ import se.culvertsoft.mgen.api.model.EnumType;
 import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 
-public class EnumTypeImpl extends TypeImpl implements EnumType {
+public class EnumTypeImpl extends SimpleTypeImpl implements EnumType {
 
 	private final String m_name;
 	private final String m_fullName;
 	private final Module m_module;
+	private final List<EnumEntryImpl> m_entries;
 
 	public EnumTypeImpl(final String shortName, final String fullName, final Module module) {
 		super(TypeEnum.ENUM);
 		m_name = shortName;
 		m_fullName = fullName;
 		m_module = module;
+		m_entries = new ArrayList<EnumEntryImpl>();
 	}
 
 	public EnumTypeImpl(final String shortName, final String fullName) {
@@ -52,10 +55,16 @@ public class EnumTypeImpl extends TypeImpl implements EnumType {
 	public Set<CustomType> referencedTypes() {
 		return Collections.emptySet();
 	}
+	
+	public void setEntries(final List<EnumEntryImpl> entries) {
+		m_entries.clear();
+		m_entries.addAll(entries);
+	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public List<EnumEntry> entries() {
-		return Collections.emptyList();
+		return (List)m_entries;
 	}
 
 	@Override

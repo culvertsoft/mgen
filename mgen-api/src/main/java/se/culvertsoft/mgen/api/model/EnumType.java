@@ -8,7 +8,7 @@ import java.util.List;
  * @author GiGurra
  * 
  */
-public interface EnumType extends Type {
+public interface EnumType extends SimpleType {
 
 	/**
 	 * The entries of this enumeration.
