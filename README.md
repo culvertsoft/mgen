@@ -390,9 +390,7 @@ If you want to include the runtime libries by source instead or build them yours
 
 ### Installing the C++ runtime libraries
 
-The C++ runtime libraries and dependencies are header-only libraries, so there is no installation required. All external dependencies are included (currently just [rapipdjson](https://code.google.com/p/rapidjson/)). Right now we're not packaging them, so the easiest way to try them out at this point is to clone this git repository and browse to the cpplib/src/main/ folder where you will find it. Just add this folder to your build's include paths.
-
-Another way is clicking the Download Zip button on the right side of this page, which will [download a copy of this repository](https://github.com/culvertsoft/mgen/archive/master.zip) - then look in the folder _mgen-cpplib/src/main/cpp/_.
+The C++ runtime libraries are header-only, so there is no installation required. All dependencies are included (currently just [rapipdjson](https://code.google.com/p/rapidjson/)). Just download the nightly or snapshot package and look in the mgen-cpplib/ folder.
 
 
 ### Installing the JavaScript runtime libraries

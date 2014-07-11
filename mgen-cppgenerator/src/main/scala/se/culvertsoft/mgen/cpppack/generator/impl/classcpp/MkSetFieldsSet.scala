@@ -24,7 +24,7 @@ object MkSetFieldsSet {
     implicit val currentModule = module
 
     val fields = t.fields()
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     for (field <- fields) {
       ln(s"${t.shortName()}& ${t.shortName()}::${setFieldSet(field, "const bool state, const mgen::FieldSetDepth depth")} {")
@@ -38,7 +38,7 @@ object MkSetFieldsSet {
         def setGeneric() {
           ln(1, "if (!state)")
           ln(2, s"m_${field.name}.clear();")
-          if (t.containsMgenCreatedType()) {
+          if (t.containsCustomType()) {
             ln(1, s"else if (depth == mgen::DEEP)")
             ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
           }

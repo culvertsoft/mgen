@@ -12,7 +12,7 @@ import se.culvertsoft.mgen.api.model.impl.ListTypeImpl
 import se.culvertsoft.mgen.api.model.impl.MapTypeImpl
 import se.culvertsoft.mgen.api.model.impl.StringTypeImpl
 import se.culvertsoft.mgen.api.model.impl.TypeImpl
-import se.culvertsoft.mgen.api.model.impl.UnknownCustomTypeImpl
+import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 
 object ParseFieldType {
 
@@ -60,7 +60,7 @@ object ParseFieldType {
           new MapTypeImpl(ParseFieldType(keyTypeString), ParseFieldType(valueTypeString))
 
         } else {
-          new UnknownCustomTypeImpl(typeString, -1)
+          new UnlinkedCustomType(typeString, -1)
         }
 
     }

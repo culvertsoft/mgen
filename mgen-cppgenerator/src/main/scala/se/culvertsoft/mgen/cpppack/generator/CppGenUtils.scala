@@ -4,6 +4,7 @@ import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.api.model.UserDefinedType
 
 object CppGenUtils {
 
@@ -16,12 +17,16 @@ object CppGenUtils {
   def include(path: String)(implicit txtBuffer: SuperStringBuffer) {
     txtBuffer.textln("#include \"" + path + "\"")
   }
+  
+  def includeT(path: String)(implicit txtBuffer: SuperStringBuffer) {
+    txtBuffer.textln("#include <" + path + ">")
+  }
 
   def getSuperTypeString(t: CustomType): String = {
-    if (t.superType().typeEnum() == TypeEnum.MGEN_BASE)
+    if (!t.hasSuperType())
       "mgen::MGenBase"
     else {
-      val superModule = t.superType().asInstanceOf[CustomType].module()
+      val superModule = t.superType().module()
       if (superModule == t.module())
         t.superType().shortName()
       else
@@ -29,7 +34,7 @@ object CppGenUtils {
     }
   }
 
-  def include(t: CustomType, fileEnding: String = ".h")(implicit txtBuffer: SuperStringBuffer) {
+  def include(t: UserDefinedType, fileEnding: String = ".h")(implicit txtBuffer: SuperStringBuffer) {
     include(t.fullName().replaceAllLiterally(".", "/") + fileEnding)
   }
 

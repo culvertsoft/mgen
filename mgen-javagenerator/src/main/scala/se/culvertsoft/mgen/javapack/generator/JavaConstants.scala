@@ -25,12 +25,16 @@ object JavaConstants {
   val fieldHasherClsStringQ = s"${utilPkg}.${fieldHasherClsString}"
 
   val mgenBaseClsString = s"${javapackPkg}.classes.MGenBase"
+  val mgenEnumClsString = s"${javapackPkg}.classes.MGenEnum"
   val clsRegistryClsString = s"${javapackPkg}.classes.ClassRegistry"
   val clsRegistryEntryClsString = s"ClassRegistryEntry"
   val clsRegistryEntryClsStringQ = s"$javapackPkg.classes.$clsRegistryEntryClsString"
   val eqTesterClsString = s"EqualityTester"
   val eqTesterClsStringQ = s"${javapackPkg}.util.${eqTesterClsString}"
 
+  val enumImplClsString = "EnumTypeImpl"
+  val enumImplClsStringQ = s"se.culvertsoft.mgen.api.model.impl.${enumImplClsString}"
+  
   val fieldClsString = s"Field"
   val readerClsString = s"Reader"
   val fieldVisitorClsString = s"FieldVisitor"

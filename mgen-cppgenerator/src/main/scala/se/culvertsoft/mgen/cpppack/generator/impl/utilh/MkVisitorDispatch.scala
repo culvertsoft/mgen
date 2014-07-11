@@ -18,8 +18,8 @@ object MkVisitorDispatch {
     generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
     val nTabs = 1
-    val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+    val allTypes = referencedModules.flatMap(_.types)
+    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
 
     for (constString <- List("", "const ")) {
 
@@ -38,7 +38,7 @@ object MkVisitorDispatch {
         "return;",
         topLevelTypes,
         t => s"${MkLongTypeName.cpp(t)}::_type_id_16bit",
-        t => s"reinterpret_cast<${constString}${fullName(t)}&>(o)._accept<VisitorType>(visitor);")
+        t => s"static_cast<${constString}${fullName(t)}&>(o)._accept<VisitorType>(visitor);")
 
       ln(nTabs + 1, "return;")
 

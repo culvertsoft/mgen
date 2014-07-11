@@ -58,6 +58,7 @@ public class Validator {
 		if (a == null)
 			return true;
 		switch (type.typeEnum()) {
+		case ENUM:
 		case BOOL:
 		case INT8:
 		case INT16:
@@ -74,7 +75,6 @@ public class Validator {
 		case MAP:
 			return validateMap((Map<?, ?>) a, (MapType) type);
 		case CUSTOM:
-		case MGEN_BASE:
 		case UNKNOWN:
 			return validateFieldDeep((MGenBase) a, null);
 		}

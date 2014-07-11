@@ -9,7 +9,7 @@ object MkModuleHashRegistry {
 
   def apply(modules: Seq[Module])(implicit txtBuffer: SuperStringBuffer) {
 
-    val allTypes = modules.flatMap(_.types.values).distinct
+    val allTypes = modules.flatMap(_.types).distinct
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
     txtBuffer {
       scope("registry.lookup = function( typeId ) ") {

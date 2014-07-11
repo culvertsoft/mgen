@@ -1,13 +1,13 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
-
 import Alias.fieldId
 import Alias.fieldMetadata
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsString
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 
 object MkFieldById {
 
@@ -15,17 +15,32 @@ object MkFieldById {
 
     implicit val m = module
 
-    val allFields = t.getAllFieldsInclSuper()
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln(s"public $fieldClsString _fieldById(final short fieldId) {")
-    txtBuffer.tabs(2).textln(s"switch(fieldId) {")
+    val allFields = t.fieldsInclSuper()
+
+    ln(1, "@Override")
+    ln(1, s"public $fieldClsString _fieldById(final short fieldId) {")
+    ln(2, s"switch(fieldId) {")
     for (field <- allFields) {
-      txtBuffer.tabs(3).textln(s"case (${fieldId(field)}):")
-      txtBuffer.tabs(4).textln(s"return ${fieldMetadata(field)};")
+      ln(3, s"case (${fieldId(field)}):")
+      ln(4, s"return ${fieldMetadata(field)};")
     }
-    txtBuffer.tabs(3).textln(s"default:")
-    txtBuffer.tabs(4).textln(s"return null;")
-    txtBuffer.tabs(2).textln(s"}")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(3, s"default:")
+    ln(4, s"return null;")
+    ln(2, s"}")
+    ln(1, "}").endl()
+
+    ln(1, "@Override")
+    ln(1, s"public $fieldClsString _fieldByName(final String fieldName) {")
+    ln(2, s"switch(fieldName) {")
+    for (field <- allFields) {
+      ln(3, s"case (${quote(field.name)}):")
+      ln(4, s"return ${fieldMetadata(field)};")
+    }
+    ln(3, s"default:")
+    ln(4, s"return null;")
+    ln(2, s"}")
+    ln(1, "}").endl()
+
   }
+
 }

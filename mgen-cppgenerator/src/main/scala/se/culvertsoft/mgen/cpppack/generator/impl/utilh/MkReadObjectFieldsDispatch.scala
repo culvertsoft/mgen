@@ -18,7 +18,7 @@ object MkReadObjectFieldsDispatch {
     generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
     val nTabs = 1
-    val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
+    val allTypes = referencedModules.flatMap(_.types)
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     txtBuffer.tabs(1).textln(s"template<typename ContextType, typename ReaderType>")
@@ -36,7 +36,7 @@ object MkReadObjectFieldsDispatch {
       "return;",
       topLevelTypes,
       t => s"${MkLongTypeName.cpp(t)}::_type_id_16bit",
-      t => s"reader.readFields(reinterpret_cast<${fullName(t)}&>(o), context);")
+      t => s"reader.readFields(static_cast<${fullName(t)}&>(o), context);")
 
     ln(nTabs + 1, "return;")
     /*

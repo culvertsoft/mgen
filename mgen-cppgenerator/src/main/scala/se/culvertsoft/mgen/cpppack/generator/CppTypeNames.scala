@@ -1,17 +1,16 @@
 package se.culvertsoft.mgen.cpppack.generator
 
 import scala.collection.mutable.HashMap
-
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListType
-import se.culvertsoft.mgen.api.model.MGenBaseType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
+import se.culvertsoft.mgen.api.model.EnumType
 
 object CppTypeNames {
 
@@ -51,7 +50,14 @@ object CppTypeNames {
             s"Polymorphic<$name> "
           else
             name
-        case TypeEnum.MGEN_BASE => MGenBaseType.INSTANCE.fullName()
+        case TypeEnum.ENUM =>
+          val t = typ.asInstanceOf[EnumType]
+          if (t.module == currentModule) {
+            s"${typ.shortName}"
+          } else {
+            s"${t.fullName.replaceAllLiterally(".", "::")}"
+          }
+
         case x => throw new GenerationException(s"Don't know how to handle type $x")
       }
     })

@@ -19,7 +19,7 @@ object CppDispatchSrcFileGenerator extends CppDispatchGenerator(SrcFile) {
 
   override def mkDispatch(param: UtilClassGenParam) {
 
-    val allTypes = param.modules.flatMap(_.types()).map(_._2).distinct
+    val allTypes = param.modules.flatMap(_.types())
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     ln(s"void dispatch(mgen::MGenBase& object, ${param.nameSpaceString}::Handler& handler) {")
@@ -33,7 +33,7 @@ object CppDispatchSrcFileGenerator extends CppDispatchGenerator(SrcFile) {
       "handler.handleUnknown(object);",
       topLevelTypes,
       t => s"${MkLongTypeName.cpp(t)}::_type_id_16bit",
-      t => s"handler.handle(reinterpret_cast<${MkLongTypeName.cpp(t)}&>(object));")
+      t => s"handler.handle(static_cast<${MkLongTypeName.cpp(t)}&>(object));")
 
     ln("}").endl()
 

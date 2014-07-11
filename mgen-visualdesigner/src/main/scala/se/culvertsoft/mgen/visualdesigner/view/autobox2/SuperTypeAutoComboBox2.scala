@@ -2,10 +2,10 @@ package se.culvertsoft.mgen.visualdesigner.view.autobox2
 
 import se.culvertsoft.mgen.visualdesigner.control.Controller
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.NoType
 import se.culvertsoft.mgen.visualdesigner.model.EntityId
 import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
 
 class SuperTypeAutoComboBox2(t: CustomType, controller: Controller)
   extends AutoBox[FieldTypeAutoBoxItem](
@@ -20,7 +20,7 @@ class SuperTypeAutoComboBox2(t: CustomType, controller: Controller)
 
   def reallyAddItem(item: FieldTypeAutoBoxItem): Boolean = {
     item match {
-      case FieldTypeAutoBoxItem(e: CustomTypeRef, _) => controller.model.isInheritanceAllowed(t.getId(), e.getId())
+      case FieldTypeAutoBoxItem(e: UserTypeRef, _) => controller.model.isInheritanceAllowed(t.getId(), e.getId())
       case _ => true
     }
   }
@@ -35,7 +35,7 @@ class SuperTypeAutoComboBox2(t: CustomType, controller: Controller)
     cmpModel.addElement(noTypeItem)
     controller.model.foreach(_.child match {
       case e: CustomType =>
-        val t = FieldTypeAutoBoxItem(new CustomTypeRef(e.getId()), controller)
+        val t = FieldTypeAutoBoxItem(new UserTypeRef(e.getId()), controller)
         if (reallyAddItem(t)) {
           if (cmpModel.getIndexOf(t) == -1) {
             cmpModel.addElement(t)
@@ -52,7 +52,7 @@ class SuperTypeAutoComboBox2(t: CustomType, controller: Controller)
 
   def onNewSuperType(id: EntityIdBase) {
     id match { // it may be null
-      case id: EntityIdBase  => super.select(FieldTypeAutoBoxItem(new CustomTypeRef(id), controller))
+      case id: EntityIdBase  => super.select(FieldTypeAutoBoxItem(new UserTypeRef(id), controller))
       case _ => super.select(FieldTypeAutoBoxItem(new NoType, controller))
     }
 

@@ -1,11 +1,8 @@
 package se.culvertsoft.mgen.api.model.impl;
 
 import java.lang.reflect.Array;
-import java.util.Set;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
-import se.culvertsoft.mgen.api.model.CustomType;
-import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 
@@ -20,7 +17,7 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 
 	public ArrayTypeImpl(final String writtenElemType) {
 		super(TypeEnum.ARRAY);
-		m_elementType = new UnknownCustomTypeImpl(writtenElemType, -1);
+		m_elementType = new UnlinkedCustomType(writtenElemType, -1);
 	}
 
 	public Type elementType() {
@@ -29,7 +26,6 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 
 	protected void setElemType(final Type elemType) {
 		m_elementType = elemType;
-		resetHashCaches();
 	}
 
 	@Override
@@ -43,18 +39,8 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 	}
 
 	@Override
-	public boolean isTypeKnown() {
-		return m_elementType.isTypeKnown();
-	}
-
-	@Override
-	public Set<Module> getAllReferencedModulesInclSuper() {
-		return m_elementType.getAllReferencedModulesInclSuper();
-	}
-
-	@Override
-	public Set<CustomType> getAllReferencedTypesInclSuper() {
-		return m_elementType.getAllReferencedTypesInclSuper();
+	public boolean isLinked() {
+		return m_elementType.isLinked();
 	}
 
 	@Override
@@ -78,8 +64,7 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 			case STRING:
 				return String[].class;
 			default:
-				return Class.forName("[L" + m_elementType.classOf().getName()
-						+ ";");
+				return Class.forName("[L" + m_elementType.classOf().getName() + ";");
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
@@ -110,8 +95,8 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 	}
 
 	@Override
-	public boolean containsMgenCreatedType() {
-		return elementType().containsMgenCreatedType();
+	public boolean containsCustomType() {
+		return elementType().containsCustomType();
 	}
 
 }

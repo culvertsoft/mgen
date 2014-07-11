@@ -16,6 +16,8 @@ import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter
 import gameworld.types.basemodule1.Car
 import gameworld.types.basemodule1.Vehicle
 import gameworld.types.basemodule1.Item
+import gameworld.types.basemodule1.VectorR3
+import gameworld.types.basemodule1.kind
 
 class ObjectSerialization {
 
@@ -147,4 +149,37 @@ class ObjectSerialization {
     }
 
   }
+
+  @Test
+  def testEnums() {
+    implicit val state = new TestState()
+
+    val v1 = new VectorR3
+    val v2 = new VectorR3
+    v1._setAllFieldsSet(true, FieldSetDepth.DEEP)
+    v2._setAllFieldsSet(true, FieldSetDepth.DEEP)
+
+    assert(v1 == v2)
+    v1.setKind(kind.ugly)
+    assert(v1 != v2)
+
+    for (o <- List(v1, v2)) {
+
+      for (writer <- state.writers) {
+
+        state.reset()
+
+        {
+          writer.writeObject(o)
+          val reader = getReader(writer)
+          val oBack = reader.readObject(classOf[VectorR3])
+          assert(oBack == o)
+          state.reset()
+        }
+
+      }
+    }
+
+  }
+
 }

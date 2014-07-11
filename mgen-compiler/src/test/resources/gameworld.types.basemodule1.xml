@@ -2,25 +2,46 @@
 
 <Module>
 
+    <Enums>
+        <priority>
+            <low/>
+            <medium>15</medium>
+            <high/>
+        </priority>
+        
+        <transport>
+            <udp/>
+            <tcp/>
+            <file_io/>
+            <database/>
+        </transport>
+        
+        <kind>
+            <pretty/>
+            <ugly/>
+        </kind>
+    </Enums>
+
 	<Types>
 
-		<VectorR3>
-			<x type="int" />
+		<VectorR3 id="0x01">
+			<x type="int" id="123"/>
 			<y type="float" />
 			<z type="double" />
+            <kind type="kind" />
 		</VectorR3>
 
-		<Matrix4x4d>
+		<Matrix4x4d id="0x02">
 			<values type="array[array[double]]" />
 		</Matrix4x4d>
 
-		<Positioning>
+		<Positioning id="0x03">
 			<position type="VectorR3" flags="required" />
 			<velocity type="VectorR3" />
 			<acceleration type="VectorR3" flags="polymorphic" />
 		</Positioning>
 
-		<Entity>
+		<Entity id="0x04">
 			<id type="int64" />
 			<positioning type="Positioning" />
 		</Entity>

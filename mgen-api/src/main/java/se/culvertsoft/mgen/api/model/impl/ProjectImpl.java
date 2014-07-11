@@ -49,7 +49,7 @@ public class ProjectImpl implements Project {
 	public String absoluteFilePath() {
 		return m_absoluteFilePath;
 	}
-	
+
 	@Override
 	public Map<String, String> settings() {
 		return m_settings;

@@ -1,89 +1,125 @@
 <Module>
+    <Enums>
+        <priority>
+            <low></low>
+            <medium></medium>
+            <high></high>
+        </priority>
+    </Enums>
     <Types>
-        <EntityIdBase> </EntityIdBase>
+        <EntityIdBase>
+        </EntityIdBase>
         <EntityId extends="EntityIdBase">
-            <lsb type="int64" flags="required"/>
-            <msb type="int64" flags="required"/>
+            <lsb type="int64" flags="required" />
+            <msb type="int64" flags="required" />
         </EntityId>
         <ClassPathEntityId extends="EntityIdBase">
-            <path type="string" flags="required"/>
+            <path type="string" flags="required" />
         </ClassPathEntityId>
         <Placement>
-            <x type="int32"/>
-            <y type="int32"/>
-            <width type="int32"/>
-            <height type="int32"/>
+            <x type="int32" />
+            <y type="int32" />
+            <width type="int32" />
+            <height type="int32" />
         </Placement>
         <Generator>
-            <name type="string" flags="required"/>
-            <generatorClassName type="string" flags="required"/>
-            <generatorJarFileFolder type="string" flags="required"/>
-            <classRegistryPath type="string" flags="required"/>
-            <outputFolder type="string" flags="required"/>
-            <settings type="map[string, string]"/>
+            <name type="string" flags="required" />
+            <generatorClassName type="string" flags="required" />
+            <generatorJarFileFolder type="string"
+                flags="required" />
+            <classRegistryPath type="string" flags="required" />
+            <outputFolder type="string" flags="required" />
+            <settings type="map[string, string]" />
         </Generator>
         <Entity>
-            <id type="EntityIdBase"/>
-            <name type="string"/>
-            <parent type="EntityIdBase"/>
+            <id type="EntityIdBase" />
+            <name type="string" />
+            <parent type="EntityIdBase" />
         </Entity>
         <PlacedEntity extends="Entity">
-            <placement type="Placement" flags="required"/>
+            <placement type="Placement" flags="required" />
         </PlacedEntity>
         <FilePath>
-            <written type="string"/>
-            <absolute type="string"/>
+            <written type="string" />
+            <absolute type="string" />
         </FilePath>
-        <CustomType extends="PlacedEntity">
-            <superType type="EntityIdBase"/>
-            <subTypes type="list[EntityIdBase]"/>
-            <fields type="list[CustomTypeField]"/>
+        <UserDefinedType extends="PlacedEntity">
+        </UserDefinedType>
+        <CustomType extends="UserDefinedType">
+            <superType type="EntityIdBase" />
+            <subTypes type="list[EntityIdBase]" />
+            <fields type="list[CustomTypeField]" />
+            <id16Bit type="int16" />
         </CustomType>
+        <EnumEntry extends="Entity">
+            <constant type="String" />
+        </EnumEntry>
+        <EnumType extends="UserDefinedType">
+            <entries type="list[EnumEntry]" />
+        </EnumType>
         <Module extends="PlacedEntity">
-            <settings type="map[string, string]"/>
-            <submodules type="list[Module]"/>
-            <types type="list[CustomType]"/>
-            <saveDir type="FilePath"/>
+            <settings type="map[string, string]" />
+            <submodules type="list[Module]" />
+            <enums type="list[EnumType]" />
+            <types type="list[CustomType]" />
+            <saveDir type="FilePath" />
         </Module>
         <Project extends="Entity">
-            <generators type="list[Generator]" flags="required"/>
-            <settings type="map[string, string]"/>
-            <dependencies type="list[Project]"/>
-            <modules type="list[Module]"/>
-            <filePath type="FilePath"/>
+            <generators type="list[Generator]" flags="required" />
+            <settings type="map[string, string]" />
+            <dependencies type="list[Project]" />
+            <modules type="list[Module]" />
+            <filePath type="FilePath" />
         </Project>
         <CustomTypeField extends="Entity">
-            <type type="FieldType" flags="required"/>
-            <flags type="list[string]"/>
+            <type type="FieldType" flags="required" />
+            <flags type="list[string]" />
+            <id16Bit type="int16" />
         </CustomTypeField>
-        <FieldType> </FieldType>
-        <BuiltInType extends="FieldType"> </BuiltInType>
-        <SimpleType extends="BuiltInType"> </SimpleType>
-        <StringType extends="SimpleType"> </StringType>
-        <PrimitiveType extends="SimpleType"> </PrimitiveType>
-        <BoolType extends="PrimitiveType"> </BoolType>
-        <Int8Type extends="PrimitiveType"> </Int8Type>
-        <Int16Type extends="PrimitiveType"> </Int16Type>
-        <Int32Type extends="PrimitiveType"> </Int32Type>
-        <Int64Type extends="PrimitiveType"> </Int64Type>
-        <Float32Type extends="PrimitiveType"> </Float32Type>
-        <Float64Type extends="PrimitiveType"> </Float64Type>
-        <GenericType extends="BuiltInType"> </GenericType>
+        <FieldType>
+        </FieldType>
+        <BuiltInType extends="FieldType">
+        </BuiltInType>
+        <SimpleType extends="BuiltInType">
+        </SimpleType>
+        <StringType extends="SimpleType">
+        </StringType>
+        <PrimitiveType extends="SimpleType">
+        </PrimitiveType>
+        <BoolType extends="PrimitiveType">
+        </BoolType>
+        <Int8Type extends="PrimitiveType">
+        </Int8Type>
+        <Int16Type extends="PrimitiveType">
+        </Int16Type>
+        <Int32Type extends="PrimitiveType">
+        </Int32Type>
+        <Int64Type extends="PrimitiveType">
+        </Int64Type>
+        <Float32Type extends="PrimitiveType">
+        </Float32Type>
+        <Float64Type extends="PrimitiveType">
+        </Float64Type>
+        <GenericType extends="BuiltInType">
+        </GenericType>
         <MapType extends="GenericType">
-            <keyType type="SimpleType" flags="polymorphic"/>
-            <valueType type="FieldType" flags="polymorphic"/>
+            <keyType type="SimpleType" flags="polymorphic" />
+            <valueType type="FieldType" flags="polymorphic" />
         </MapType>
         <ListOrArrayType extends="GenericType">
-            <elementType type="FieldType" flags="polymorphic"/>
+            <elementType type="FieldType" flags="polymorphic" />
         </ListOrArrayType>
-        <ListType extends="ListOrArrayType"> </ListType>
-        <ArrayType extends="ListOrArrayType"> </ArrayType>
-        <CustomTypeRef extends="FieldType">
-            <id type="EntityIdBase"/>
-        </CustomTypeRef>
-        <NoType extends="BuiltInType"> </NoType>
+        <ListType extends="ListOrArrayType">
+        </ListType>
+        <ArrayType extends="ListOrArrayType">
+        </ArrayType>
+        <UserTypeRef extends="FieldType">
+            <id type="EntityIdBase" />
+        </UserTypeRef>
+        <NoType extends="BuiltInType">
+        </NoType>
         <ClipboardContents>
-            <items type="list[Entity]" flags="required"/>
+            <items type="list[Entity]" flags="required" />
         </ClipboardContents>
     </Types>
 </Module>

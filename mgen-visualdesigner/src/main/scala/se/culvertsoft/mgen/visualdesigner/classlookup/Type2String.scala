@@ -2,7 +2,6 @@ package se.culvertsoft.mgen.visualdesigner.classlookup
 
 import se.culvertsoft.mgen.visualdesigner.model.ArrayType
 import se.culvertsoft.mgen.visualdesigner.model.BoolType
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.Entity
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
 import se.culvertsoft.mgen.visualdesigner.model.Float32Type
@@ -17,10 +16,12 @@ import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.NoType
 import se.culvertsoft.mgen.visualdesigner.model.StringType
 import se.culvertsoft.mgen.visualdesigner.model.Project
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
 
 object Type2String {
 
-  def defaltGetCustomTypeName(t: CustomTypeRef)(implicit model: Model): String = {
+  def defaltGetCustomTypeName(t: UserTypeRef)(implicit model: Model): String = {
     model.getEntity(t.getId()) match {
       case Some(t) => t.getName()
       case None => "<unknown_type_reference>"
@@ -36,14 +37,14 @@ object Type2String {
     parentPrefix + e.getName()
   }
 
-  def getCustomTypeNameLong(t: CustomTypeRef)(implicit model: Model): String = {
+  def getCustomTypeNameLong(t: UserTypeRef)(implicit model: Model): String = {
     model.getEntity(t.getId()) match {
       case Some(e) => s"${getClassPath(e)}"
       case None => "<unknown_pgk>.<unknown_type_reference>"
     }
   }
 
-  def apply(t: FieldType, fGetCustomTypeRefName: CustomTypeRef => String)(implicit model: Model): String = {
+  def apply(t: FieldType, fGetCustomTypeRefName: UserTypeRef => String)(implicit model: Model): String = {
     t match {
       case t: BoolType => "bool"
       case t: Int8Type => "int8"
@@ -57,7 +58,7 @@ object Type2String {
       case t: ListType => s"list[${apply(t.getElementType(), fGetCustomTypeRefName)}]"
       case t: ArrayType => s"array[${apply(t.getElementType(), fGetCustomTypeRefName)}]"
       case t: MapType => s"map[${apply(t.getKeyType(), fGetCustomTypeRefName)}, ${apply(t.getValueType(), fGetCustomTypeRefName)}]"
-      case t: CustomTypeRef => fGetCustomTypeRefName(t)
+      case t: UserTypeRef => fGetCustomTypeRefName(t)
       case _ => ""
     }
   }

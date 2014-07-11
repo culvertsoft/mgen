@@ -3,32 +3,102 @@ package se.culvertsoft.mgen.api.model;
 import java.util.List;
 import java.util.Set;
 
-public interface CustomType extends Type {
+/**
+ * A class definition
+ * 
+ * @author GiGurra
+ * 
+ */
+public interface CustomType extends UserDefinedType {
 
+	/**
+	 * 64 bit id hashed from the qualified type name of this class
+	 */
+	public long typeId();
+
+	/**
+	 * 16 bit id hashed from the qualified type name of this class. Verified by
+	 * the compiler to be unique among classes with the same super type.
+	 */
+	public short typeId16Bit();
+
+	/**
+	 * The base64 representation of typeId16Bit()
+	 */
+	public String typeId16BitBase64();
+
+	/**
+	 * The written name of this type
+	 */
 	public String name();
 
-	public Module module();
+	/**
+	 * The super type of this class, or null if it has none
+	 * 
+	 * @throws RuntimeException
+	 *             If called outside the compiler
+	 */
+	public CustomType superType();
 
-	public Type superType();
-
+	/**
+	 * True if this type has a super type
+	 * 
+	 * @throws RuntimeException
+	 *             If called outside the compiler
+	 */
 	public boolean hasSuperType();
 
+	/**
+	 * True if this type has sub types
+	 * 
+	 * @throws RuntimeException
+	 *             If called outside the compiler
+	 */
 	public boolean hasSubTypes();
 
+	/**
+	 * Returns the sub types of this class
+	 * 
+	 * @throws RuntimeException
+	 *             If called outside the compiler
+	 */
 	public List<CustomType> subTypes();
 
-	public List<Type> superTypeHierarchy();
+	/**
+	 * Returns all (recursive) super types of this class
+	 * 
+	 * @throws RuntimeException
+	 *             If called outside the compiler
+	 */
+	public List<CustomType> superTypeHierarchy();
 
+	/**
+	 * Returns all fields of this class, excluding those of its super type(s)
+	 * 
+	 * @throws RuntimeException
+	 *             If called outside the compiler
+	 */
 	public List<Field> fields();
 
-	public List<Field> getAllFieldsInclSuper();
+	/**
+	 * Returns all fields of this class, including those of its super type(s)
+	 * 
+	 * @throws RuntimeException
+	 *             If called outside the compiler
+	 */
+	public List<Field> fieldsInclSuper();
 
-	public Set<CustomType> getAllReferencedTypesExclSuper();
+	/**
+	 * Returns the set of types referenced from this type.
+	 * 
+	 * @throws RuntimeException
+	 *             If called outside the compiler
+	 */
+	public Set<CustomType> referencedClasses();
 
-	public Set<Module> getAllReferencedExtModulesInclSuper();
-
-	public Set<CustomType> getAllReferencedExtTypesInclSuper();
-
-	public Set<CustomType> getDirectDependencies();
+	/**
+	 * Returns the set of types referenced from this type.
+	 */
+	public Set<EnumType> referencedEnums();
 
 }

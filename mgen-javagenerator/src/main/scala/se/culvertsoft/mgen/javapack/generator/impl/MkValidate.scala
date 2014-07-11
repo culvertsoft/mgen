@@ -17,15 +17,15 @@ object MkValidate {
     txtBuffer.tabs(1).textln(s"public boolean _validate(final ${fieldSetDepthClsString} fieldSetDepth) { ")
     txtBuffer.tabs(2).textln(s"if (fieldSetDepth == ${fieldSetDepthClsString}.SHALLOW) {")
     txtBuffer.tabs(3).text(s"return true")
-    for (field <- t.getAllFieldsInclSuper().filter(_.isRequired()))
+    for (field <- t.fieldsInclSuper().filter(_.isRequired()))
       txtBuffer.endl().tabs(4).text(s"&& ${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")}")
     txtBuffer.textln(s";")
     txtBuffer.tabs(2).textln(s"} else {")
     txtBuffer.tabs(3).text(s"return true")
-    for (field <- t.getAllFieldsInclSuper()) {
+    for (field <- t.fieldsInclSuper()) {
       if (field.isRequired())
         txtBuffer.endl().tabs(4).text(s"&& ${isFieldSet(field, s"${fieldSetDepthClsString}.DEEP")}")
-      else if (field.typ().containsMgenCreatedType())
+      else if (field.typ().containsCustomType())
         txtBuffer.endl().tabs(4).text(s"&& (!${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")} || ${isFieldSet(field, s"${fieldSetDepthClsString}.DEEP")})")
     }
     txtBuffer.textln(s";")

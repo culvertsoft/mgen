@@ -3,12 +3,10 @@ package se.culvertsoft.mgen.visualdesigner.view;
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Container
-
 import scala.Array.canBuildFrom
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
-
 import javax.swing.InputMap
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -33,6 +31,8 @@ import se.culvertsoft.mgen.visualdesigner.model.ModelOps.toRichCustomType
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.util.OperationStatus
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
 
 class PackageExplorer(
 
@@ -64,6 +64,12 @@ class PackageExplorer(
               ""
 
           s"$nameStr: $typeStr  $flagsStr"
+        case entity: EnumEntry =>
+          val nameStr = entity.getName()
+          if (entity.hasConstant)
+            s"$nameStr = ${entity.getConstant}"
+          else
+            s"$nameStr"
         case _ => entity.getName()
       }
     }
@@ -303,6 +309,12 @@ class PackageExplorer(
           case module: Module =>
             setToolTipText(Type2String.getClassPath(module))
             setIcon(Icons.TreeView.Dash.MODULE_ICON)
+          case enumEntry: EnumEntry =>
+            setToolTipText(Type2String.getClassPath(enumEntry))
+            setIcon(Icons.TreeView.Dash.FIELD_ICON)
+          case enumType: EnumType =>
+            setToolTipText(Type2String.getClassPath(enumType))
+            setIcon(Icons.TreeView.Dash.CLASS_ICON)
           case cls: CustomType =>
             setToolTipText(Type2String.getClassPath(cls))
             setIcon(Icons.TreeView.Dash.CLASS_ICON)

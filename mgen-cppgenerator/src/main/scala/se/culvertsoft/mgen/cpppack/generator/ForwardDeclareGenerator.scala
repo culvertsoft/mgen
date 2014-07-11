@@ -22,7 +22,7 @@ object ForwardDeclareGenerator extends UtilityClassGenerator("ForwardDeclare", N
     for (m <- param.modules) {
       val namespaces = m.path.split("\\.")
       CppGenUtils.mkNameSpaces(namespaces)
-      for (t <- m.types.values)
+      for (t <- m.types)
         ln(s"class ${t.shortName};")
       endl()
       CppGenUtils.mkNameSpacesEnd(namespaces)

@@ -9,6 +9,9 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
 
 public interface Reader {
 
+	public Enum<?> readEnumField(final Field field, final Object context)
+			throws IOException;
+	
 	public boolean readBooleanField(final Field field, final Object context)
 			throws IOException;
 

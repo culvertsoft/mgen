@@ -22,7 +22,7 @@ object MkIsFieldSet {
 
     for (field <- t.fields()) {
       txtBuffer.tabs(1).textln(s"public boolean ${isFieldSet(field, s"final ${fieldSetDepthClsString} fieldSetDepth")} {")
-      if (field.typ().containsMgenCreatedType()) {
+      if (field.typ().containsCustomType()) {
         txtBuffer.tabs(2).textln(s"if (fieldSetDepth == ${fieldSetDepthClsString}.SHALLOW) {")
         txtBuffer.tabs(3).textln(s"return ${isSetName(field)};")
         txtBuffer.tabs(2).textln(s"} else {")
@@ -36,7 +36,7 @@ object MkIsFieldSet {
 
     txtBuffer.tabs(1).textln(s"public boolean _isFieldSet(final $fieldClsString field, final ${fieldSetDepthClsString} depth) {")
     txtBuffer.tabs(2).textln(s"switch(field.id()) {")
-    for (field <- t.getAllFieldsInclSuper()) {
+    for (field <- t.fieldsInclSuper()) {
       txtBuffer.tabs(3).textln(s"case (${fieldId(field)}):")
       txtBuffer.tabs(4).textln(s"return ${isFieldSet(field, "depth")};")
     }

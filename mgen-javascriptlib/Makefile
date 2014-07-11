@@ -10,21 +10,20 @@ all: generate-test-model
 
 clean: 	
 	#########################################
-	#     CLEANING MGEN-JAVALIB             #
+	#     CLEANING MGEN-JAVASCRIPTLIB       #
 	#########################################
 	sbt clean
 	rm -rf target
 	rm -rf src_generated
 
 generate-test-model:
-	############################################
-	#  GENERATING TEST-MODEL FOR MGEN-JAVALIB  #
-	############################################
+	################################################
+	# GENERATING TEST-MODEL FOR MGEN-JAVASCRIPTLIB #
+	################################################
 	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/project.xml" -plugin_paths="../mgen-javascriptgenerator/target/"
 	
-run-tests: generate-test-model
+run-tests: all generate-test-model
 	###################################
-	#     TESTING MGEN-JAVALIB        #
+	#   TESTING MGEN-JAVASCRIPTLIB    #
 	###################################
-	sbt jasmine-gen-runner
 	sbt test

@@ -397,6 +397,8 @@ function mGenGenerate(registry, settings) {
                 checkInt(value, 8, type, options);
                 ret = value || 0;
                 return ret;
+            case "enum":
+                throw "IM NOT IMPLEMENTED";
             case "int16":
                 checkInt(value, 16, type, options);
                 ret = value || 0;

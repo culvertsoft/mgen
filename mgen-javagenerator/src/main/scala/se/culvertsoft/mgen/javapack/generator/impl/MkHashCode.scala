@@ -17,7 +17,7 @@ object MkHashCode {
 
     implicit val m = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
     val hashBase = t.fullName().hashCode()
 
     txtBuffer.tabs(1).textln("@Override")

@@ -7,6 +7,10 @@
 
 #include "TestBase.h"
 
+#include "gameworld/types/ClassRegistry.h"
+
+#include "mgen/classes/EmptyClassRegistry.h"
+
 #include "mgen/serialization/BinaryWriter.h"
 #include "mgen/serialization/BinaryReader.h"
 #include "mgen/serialization/VectorInputStream.h"
@@ -15,9 +19,6 @@
 #include "mgen/serialization/JsonWriter.h"
 #include "mgen/serialization/JsonReader.h"
 
-#include "gameworld/types/ClassRegistry.h"
-
-#include "mgen/classes/EmptyClassRegistry.h"
 
 /////////////////////////////////////////////////////////////////////
 
@@ -34,9 +35,9 @@ struct PerfTestData {
         entity.setId(123);
         entity.setBrand("Skoda");
         entity.setTopSpeed(1337);
-        entity.getPositioningMutable().setPosition(gameworld::types::basemodule1::VectorR3(3, 2, 1)).setVelocity(
-                gameworld::types::basemodule1::VectorR3(3, 2, 1)).setAcceleration(
-                gameworld::types::basemodule1::VectorR3(1, 2, 3));
+        entity.getPositioningMutable().setPosition(gameworld::types::basemodule1::VectorR3(3, 2, 1, gameworld::types::basemodule1::kind_UNKNOWN)).setVelocity(
+                gameworld::types::basemodule1::VectorR3(3, 2, 1, gameworld::types::basemodule1::kind_UNKNOWN)).setAcceleration(
+                gameworld::types::basemodule1::VectorR3(1, 2, 3, gameworld::types::basemodule1::kind_UNKNOWN));
     }
 };
 

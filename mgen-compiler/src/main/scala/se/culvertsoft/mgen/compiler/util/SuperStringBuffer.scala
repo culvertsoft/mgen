@@ -1,5 +1,7 @@
 package se.culvertsoft.mgen.compiler.util
 
+import scala.language.implicitConversions
+
 object SuperStringBuffer {
   implicit def SuperStringBuffer2String(s: SuperStringBuffer) = s.toString
 }

@@ -1,9 +1,8 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
-import scala.collection.JavaConversions.mapAsScalaMap
+import scala.collection.JavaConversions.asScalaBuffer
 
 import Alias.typeIdStr16bit
-import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
@@ -13,11 +12,11 @@ object MkDispatcher {
 
   def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
 
-    val allTypes = referencedModules.flatMap(_.types).map(_._2).distinct
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+    val allTypes = referencedModules.flatMap(_.types)
+    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
 
     txtBuffer.clear()
-    
+
     MkFancyHeader.apply(null)
 
     MkPackage(packagePath)

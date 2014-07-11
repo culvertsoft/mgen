@@ -17,18 +17,16 @@ public class GeneratedSourceFile {
 
 	@Override
 	public String toString() {
-		return "GeneratedSourceFile [m_filePath=" + m_filePath
-				+ ", m_sourceCode=" + m_sourceCode + "]";
+		return "GeneratedSourceFile [m_filePath=" + m_filePath + ", m_sourceCode=" + m_sourceCode
+				+ "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((m_filePath == null) ? 0 : m_filePath.hashCode());
-		result = prime * result
-				+ ((m_sourceCode == null) ? 0 : m_sourceCode.hashCode());
+		result = prime * result + ((m_filePath == null) ? 0 : m_filePath.hashCode());
+		result = prime * result + ((m_sourceCode == null) ? 0 : m_sourceCode.hashCode());
 		return result;
 	}
 

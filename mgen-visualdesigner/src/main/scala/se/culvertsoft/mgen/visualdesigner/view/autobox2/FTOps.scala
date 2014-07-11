@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.visualdesigner.view.autobox2
 
 import se.culvertsoft.mgen.visualdesigner.model.ArrayType
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
 import se.culvertsoft.mgen.visualdesigner.model.ListOrArrayType
 import se.culvertsoft.mgen.visualdesigner.model.ListType
@@ -9,6 +8,7 @@ import se.culvertsoft.mgen.visualdesigner.model.MapType
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.SimpleType
 import se.culvertsoft.mgen.visualdesigner.model.NoType
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
 
 object FTOps {
 
@@ -57,7 +57,7 @@ object FTOps {
          case t: SimpleType => true
          case t: MapType => t.hasKeyType() && isComplete(t.getKeyType()) && t.hasValueType() && isComplete(t.getValueType())
          case t: ListOrArrayType => t.hasElementType() && isComplete(t.getElementType())
-         case t: CustomTypeRef => true
+         case t: UserTypeRef => true
          case t: NoType => true
       }
    }

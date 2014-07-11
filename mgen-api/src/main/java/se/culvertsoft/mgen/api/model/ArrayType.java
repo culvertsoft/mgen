@@ -1,8 +1,9 @@
 package se.culvertsoft.mgen.api.model;
 
+/**
+ * Interface for array types
+ */
 public interface ArrayType extends ListOrArrayType {
-
-	public Type elementType();
 
 	public static final Object EMPTY_BOOL_ARRAY = new boolean[0];
 	public static final Object EMPTY_INT8_ARRAY = new byte[0];
@@ -13,6 +14,10 @@ public interface ArrayType extends ListOrArrayType {
 	public static final Object EMPTY_FLOAT64_ARRAY = new double[0];
 	public static final Object EMPTY_STRING_ARRAY = new String[0];
 
+	/**
+	 * Creates a new array instance of this class. Intended for use outside the
+	 * compiler.
+	 */
 	public Object newInstance(final int n);
 
 }

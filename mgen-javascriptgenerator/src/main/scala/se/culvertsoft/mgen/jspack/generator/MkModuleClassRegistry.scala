@@ -10,20 +10,20 @@ object MkModuleClassRegistry {
 
   def apply(modules: Seq[Module])(implicit txtBuffer: SuperStringBuffer) = {
 
-    val allTypes = modules.flatMap(_.types.values).distinct
+    val allTypes = modules.flatMap(_.types).distinct
     txtBuffer {
       ln("registry.classRegistry = {};")
       allTypes.foreach({ t =>
         scope("registry.classRegistry[\"" + t.fullName + "\"] = ") {
           ln("\"__t\": \"" + t.superTypeHierarchy().map(x => x.typeId16BitBase64()).mkString("") + "\",")
-          for(field <-  t.getAllFieldsInclSuper){
+          for(field <-  t.fieldsInclSuper){
            ln("\"" + field.name + "\": {")
            txtBuffer {
               ln("\"flags\": [" + field.flags().map(x => "\"" + x + "\"").mkString(",") + "],")
               ln("\"type\": \"" + getTypeName(field.typ()) + "\",")
               ln("\"hash\": \"" + field.idBase64() + "\"")
             }
-            if (field == t.getAllFieldsInclSuper.last) ln("}") else ln("},")
+            if (field == t.fieldsInclSuper.last) ln("}") else ln("},")
           }
         }
       })
@@ -32,6 +32,7 @@ object MkModuleClassRegistry {
 
   def getTypeName(typ: Type): String = {
     typ.typeEnum() match {
+      case TypeEnum.ENUM => "enum"
       case TypeEnum.BOOL => "boolean"
       case TypeEnum.INT8 => "int8"
       case TypeEnum.INT16 => "int16"
@@ -49,7 +50,6 @@ object MkModuleClassRegistry {
       case TypeEnum.CUSTOM =>
         val t = typ.asInstanceOf[CustomType]
         t.fullName()
-      case TypeEnum.MGEN_BASE => MGenBaseType.INSTANCE.fullName()
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }
   }

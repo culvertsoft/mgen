@@ -7,6 +7,8 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkLongTypeName
 
+import scala.collection.JavaConversions._
+
 object CppHandlerSrcFileGenerator extends CppHandlerGenerator(SrcFile) {
 
   override def mkIncludes(param: UtilClassGenParam) {
@@ -17,7 +19,7 @@ object CppHandlerSrcFileGenerator extends CppHandlerGenerator(SrcFile) {
   override def mkClassContents(param: UtilClassGenParam) {
     super.mkClassContents(param)
 
-    val allTypes = param.modules.flatMap(_.types).map(_._2).distinct
+    val allTypes = param.modules.flatMap(_.types)
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
     ln("Handler::Handler() {}").endl()
@@ -32,7 +34,7 @@ object CppHandlerSrcFileGenerator extends CppHandlerGenerator(SrcFile) {
     }
 
     def mkHandler(t: CustomType) {
-      val passCall = (if (t.hasSuperType()) s"handle(reinterpret_cast<${MkLongTypeName.cpp(t.superType.asInstanceOf[CustomType])}&>(o))" else "handleDiscard(o)")
+      val passCall = (if (t.hasSuperType()) s"handle(static_cast<${MkLongTypeName.cpp(t.superType)}&>(o))" else "handleDiscard(o)")
       ln(s"void Handler::handle(${MkLongTypeName.cpp(t)}& o) {")
       ln(1, s"$passCall;")
       ln("}")
