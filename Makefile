@@ -12,6 +12,7 @@ all: check
 	cd mgen-cppgenerator && make all
 	cd mgen-javagenerator && make all
 	cd mgen-javascriptgenerator && make all
+	cd mgen-javascriptlib && make all
 	cd mgen-cpplib && make all
 	cd mgen-javalib && make all
 	cd mgen-visualdesigner && make all
@@ -37,6 +38,7 @@ clean:
 	cd mgen-cppgenerator && make clean
 	cd mgen-javagenerator && make clean
 	cd mgen-javascriptgenerator && make clean
+	cd mgen-javascriptlib && make clean
 	cd mgen-cpplib && make clean
 	cd mgen-javalib && make clean
 	cd mgen-visualdesigner && make clean
@@ -72,37 +74,17 @@ run-tests:
 	#       RUNNING ALL TESTS                               #
 	#                                                       #
 	#########################################################
-	cd mgen-api && make run-tests
-	cd mgen-compiler && make run-tests
-	cd mgen-cppgenerator && make run-tests
-	cd mgen-javagenerator && make run-tests
-	#cd mgen-javascriptgenerator && make run-tests
-	cd mgen-cpplib && make run-tests
-	cd mgen-javalib && make run-tests
-	cd mgen-visualdesigner && make run-tests
+	#cd mgen-api && make run-tests
+	#cd mgen-compiler && make run-tests
+	# cd mgen-cppgenerator && make run-tests
+	# cd mgen-javagenerator && make run-tests
+	# cd mgen-javascriptgenerator && make run-tests
+	 cd mgen-javascriptlib && make run-tests
+	# cd mgen-cpplib && make run-tests
+	# cd mgen-javalib && make run-tests
+	# cd mgen-visualdesigner && make run-tests
 	#########################################################
 	#                                                       #
 	#        DONE RUNNING ALL TEST                          #
-	#                                                       #
-	#########################################################
-
-
-doc:
-	#########################################################
-	#                                                       #
-	#       MAKING DOCUMENTATION                            #
-	#                                                       #
-	#########################################################
-	cd mgen-api && make doc
-	cd mgen-compiler && make doc
-	cd mgen-cppgenerator && make doc
-	cd mgen-javagenerator && make doc
-	#cd mgen-javascriptgenerator && make doc
-	cd mgen-cpplib && make doc
-	cd mgen-javalib && make doc
-	cd mgen-visualdesigner && make doc
-	#########################################################
-	#                                                       #
-	#        DONE MAKING DOCUMENTATION                      #
 	#                                                       #
 	#########################################################
