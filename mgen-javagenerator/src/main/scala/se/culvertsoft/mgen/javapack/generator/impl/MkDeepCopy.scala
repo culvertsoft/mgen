@@ -19,7 +19,7 @@ object MkDeepCopy {
 
     implicit val m = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     txtBuffer.tabs(1).textln("@Override")
     txtBuffer.tabs(1).textln(s"public ${t.shortName()} deepCopy() {")

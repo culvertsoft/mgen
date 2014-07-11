@@ -13,6 +13,8 @@ import se.culvertsoft.mgen.visualdesigner.model.Placement
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 import se.culvertsoft.mgen.visualdesigner.model.FilePath
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
 
 object EntityFactory {
 
@@ -36,6 +38,7 @@ object EntityFactory {
       .setSettings(new java.util.HashMap)
       .setSubmodules(new java.util.ArrayList)
       .setTypes(new java.util.ArrayList)
+      .setEnums(new ArrayList)
   }
 
   def mkField(name: String): CustomTypeField = {
@@ -49,6 +52,16 @@ object EntityFactory {
     f
   }
 
+  def mkEnumEntry(name: String, constant: String): EnumEntry = {
+
+    val f = new EnumEntry
+    f.setName(name)
+    f.setConstant(constant)
+    f.setId(EntityFactory.nextId())
+
+    f
+  }
+  
   def mkModule(name: String, saveDir: FilePath): Module = {
     mkModule(
       name,
@@ -77,6 +90,19 @@ object EntityFactory {
       .setSubTypes(new ArrayList)
   }
 
+  def mkEnum(
+    name: String,
+    left: Int,
+    top: Int,
+    width: Int,
+    height: Int): EnumType = {
+    new EnumType()
+      .setId(nextId())
+      .setName(name)
+      .setPlacement(new Placement(left, top, width, height))
+      .setEntries(new ArrayList)
+  }
+
   def mkClass(name: String): CustomType = {
     mkClass(
       name,
@@ -86,6 +112,15 @@ object EntityFactory {
       LayOutEntities.DEFAULT_CLASS_HEIGHT)
   }
 
+  def mkEnum(name: String): EnumType = {
+    mkEnum(
+      name,
+      LayOutEntities.DEFAULT_WALL_OFFSET_X,
+      LayOutEntities.DEFAULT_WALL_OFFSET_Y,
+      LayOutEntities.DEFAULT_CLASS_WIDTH,
+      LayOutEntities.DEFAULT_CLASS_HEIGHT)
+  }
+  
   def mkProject(name: String, filePath: FilePath): Project = {
     new Project()
       .setId(nextId())

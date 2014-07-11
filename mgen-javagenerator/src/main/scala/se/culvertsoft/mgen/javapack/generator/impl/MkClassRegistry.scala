@@ -1,15 +1,18 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
-import scala.collection.JavaConversions._
-import Alias.instantiate
-import Alias.typeIdStr
+import scala.collection.JavaConversions.asScalaBuffer
+
 import Alias.typeIdStr16BitBase64
 import Alias.typeIdStr16bit
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants._
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.clsRegistryClsString
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.clsRegistryEntryClsString
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.clsRegistryEntryClsStringQ
 
 object MkClassRegistry {
 
@@ -27,8 +30,8 @@ object MkClassRegistry {
 
   def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
 
-    val allTypes = referencedModules.flatMap(_.types()).map(_._2).distinct
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+    val allTypes = referencedModules.flatMap(_.types)
+    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
 
     txtBuffer.clear()
 

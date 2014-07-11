@@ -19,7 +19,7 @@ object MkReadField {
 
     implicit val m = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
     val needsSupress = allFields.map(_.typ().typeEnum()).find(e => e == TypeEnum.LIST || e == TypeEnum.MAP).isDefined
 
     if (needsSupress)

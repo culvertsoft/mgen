@@ -12,10 +12,8 @@ public:
 
     static const bool default_compact = false;
 
-    JsonWriterBase(
-            MGenStreamType& outputStream,
-            const ClassRegistryType& classRegistry,
-            const bool compact = default_compact) :
+    JsonWriterBase(MGenStreamType& outputStream, const ClassRegistryType& classRegistry, const bool compact =
+            default_compact) :
                     m_compact(compact),
                     m_expectType(-1),
                     m_outputStream(outputStream),
@@ -62,9 +60,19 @@ private:
     }
 
     template<typename MGenType>
-    void write(const MGenType& v) {
+    void write(const MGenType& v, const MGenBase&) {
         m_expectType = MGenType::_type_id;
         v._accept(*this);
+    }
+
+    template<typename EnumType>
+    void write(const EnumType v, const int) {
+        write(get_enum_name(v));
+    }
+
+    template<typename MGenTypeOrEnum>
+    void write(const MGenTypeOrEnum& v) {
+        write(v, v);
     }
 
     template<typename MGenType>

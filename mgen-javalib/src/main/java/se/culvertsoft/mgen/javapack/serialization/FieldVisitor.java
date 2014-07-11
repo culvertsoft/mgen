@@ -31,6 +31,9 @@ public interface FieldVisitor {
 	public void visit(final String s, final Field field, final boolean isSet)
 			throws IOException;
 
+	public void visit(final Enum<?> e, final Field field, final boolean isSet)
+			throws IOException;
+
 	public void visit(final Object o, final Field field, final boolean isSet)
 			throws IOException;
 

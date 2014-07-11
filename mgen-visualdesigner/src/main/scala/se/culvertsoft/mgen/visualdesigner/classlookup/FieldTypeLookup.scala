@@ -2,16 +2,15 @@ package se.culvertsoft.mgen.visualdesigner.classlookup
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.collectionAsScalaIterable
-
 import se.culvertsoft.mgen.visualdesigner.ClassRegistry
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.PrimitiveType
 import se.culvertsoft.mgen.visualdesigner.model.SimpleType
 import se.culvertsoft.mgen.visualdesigner.util.Util
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
 
 object FieldTypeLookup {
    
@@ -28,12 +27,12 @@ object FieldTypeLookup {
 
       val cr = new ClassRegistry()
 
-      val fieldTypes = model.findEach[CustomType]().map(x => new CustomTypeRef(x.getId()))
+      val fieldTypes = model.findEach[CustomType]().map(x => new UserTypeRef(x.getId()))
 
       val fieldTypesInOwnPackage = parentModule
          .map(_.getTypes().toSeq)
          .getOrElse(Nil)
-         .map(x => new CustomTypeRef(x.getId()))
+         .map(x => new UserTypeRef(x.getId()))
 
       val simpleTypes = cr.entries()
          .filter(e => classOf[SimpleType].isAssignableFrom(e.cls()))

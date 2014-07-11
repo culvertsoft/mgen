@@ -19,6 +19,10 @@ public class FieldHasher {
 	 * 
 	 * *************************************************************/
 
+	public static int calc(final Enum<?> e, final Type type) {
+		return e != null ? e.hashCode() : 0;
+	}
+
 	public static int calc(final boolean a, final Type type) {
 		return a ? 1231 : 1237;
 	}
@@ -167,6 +171,8 @@ public class FieldHasher {
 			return 0;
 
 		switch (type.typeEnum()) {
+		case ENUM:
+			a.hashCode();
 		case BOOL:
 			return calc(((Boolean) a), type);
 		case INT8:
@@ -190,7 +196,6 @@ public class FieldHasher {
 		case MAP:
 			return calcMap((Map<?, ?>) a, (MapType) type);
 		case CUSTOM:
-		case MGEN_BASE:
 		case UNKNOWN:
 			return calcMgenObject((MGenBase) a, type);
 		}

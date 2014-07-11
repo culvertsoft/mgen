@@ -14,9 +14,9 @@
 
 namespace mgen {
 
-#ifndef STRINGIFY
-#define STRINGIFY2(expr) #expr
-#define STRINGIFY(expr) STRINGIFY2(expr)
+#ifndef MGEN_STRINGIFY
+#define MGEN_STRINGIFY2(expr) #expr
+#define MGEN_STRINGIFY(expr) MGEN_STRINGIFY2(expr)
 #endif //STRINGIFY
 
 template<typename T>

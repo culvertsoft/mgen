@@ -16,7 +16,6 @@ import se.culvertsoft.mgen.visualdesigner.model.ChildParent
 import se.culvertsoft.mgen.visualdesigner.model.ClipboardContents
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.Entity
 import se.culvertsoft.mgen.visualdesigner.model.EntityId
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
@@ -27,6 +26,9 @@ import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
 
 class CopyPasteController(controller: Controller) extends SubController(controller) {
 
@@ -169,6 +171,15 @@ class CopyPasteController(controller: Controller) extends SubController(controll
         // Replace own id if needed
         if (idReplacements.contains(id)) {
           e.setId(idReplacements(id))
+          e match {
+            case e: CustomTypeField => e.unsetId16Bit()
+            case e: EnumEntry =>
+            case e: CustomType => e.unsetId16Bit()
+            case e: EnumType =>
+          }
+
+          // TODO Replace name if duplicate
+
         }
 
         // Replace parent id if needed
@@ -184,6 +195,17 @@ class CopyPasteController(controller: Controller) extends SubController(controll
           e match {
             case e: Project =>
             case e: Module =>
+            case e: CustomTypeField =>
+              def replace(t: FieldType): FieldType = {
+                t match {
+                  case t: UserTypeRef if (idReplacements.contains(t.getId())) => new UserTypeRef(idReplacements(t.getId()))
+                  case t: ListType => new ListType(replace(t.getElementType()))
+                  case t: ArrayType => new ArrayType(replace(t.getElementType()))
+                  case t: MapType => new MapType(t.getKeyType(), replace(t.getValueType()))
+                  case _ => t
+                }
+              }
+              e.setType(replace(e.getType()))
             case e: CustomType =>
 
               if (e.hasSuperType()) {
@@ -213,19 +235,9 @@ class CopyPasteController(controller: Controller) extends SubController(controll
                 }
                 e.setSubTypes(new ArrayList(newSubTypes))
               }
+            case e: EnumType =>
+            case e: EnumEntry =>
 
-            // Replace field type references as needed
-            case e: CustomTypeField =>
-              def replace(t: FieldType): FieldType = {
-                t match {
-                  case t: CustomTypeRef if (idReplacements.contains(t.getId())) => new CustomTypeRef(idReplacements(t.getId()))
-                  case t: ListType => new ListType(replace(t.getElementType()))
-                  case t: ArrayType => new ArrayType(replace(t.getElementType()))
-                  case t: MapType => new MapType(t.getKeyType(), replace(t.getValueType()))
-                  case _ => t
-                }
-              }
-              e.setType(replace(e.getType()))
           }
       }
 

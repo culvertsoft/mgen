@@ -16,7 +16,7 @@ object MkSetFieldsSet {
     implicit val currentModule = module
 
     val fields = t.fields()
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     for (field <- fields)
       txtBuffer.tabs(1).textln(s"${t.shortName()}& ${setFieldSet(field, "const bool state, const mgen::FieldSetDepth depth")};")

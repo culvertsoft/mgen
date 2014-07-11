@@ -5,11 +5,11 @@ import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListType
-import se.culvertsoft.mgen.api.model.MGenBaseType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
+import se.culvertsoft.mgen.api.model.EnumType
 
 object JavaTypeNames {
 
@@ -18,7 +18,17 @@ object JavaTypeNames {
     isGenericArg: Boolean = false,
     isArrayCtor: Boolean = false)(implicit currentModule: Module): String = {
 
+    if (typ == null)
+      return JavaConstants.mgenBaseClsString
+
     typ.typeEnum() match {
+      case TypeEnum.ENUM =>
+        val t = typ.asInstanceOf[EnumType]
+        if (t.module == currentModule) {
+          t.shortName()
+        } else {
+          t.fullName()
+        }
       case TypeEnum.BOOL => if (isGenericArg) "Boolean" else "boolean"
       case TypeEnum.INT8 => if (isGenericArg) "Byte" else "byte"
       case TypeEnum.INT16 => if (isGenericArg) "Short" else "short"
@@ -46,8 +56,8 @@ object JavaTypeNames {
         } else {
           t.fullName()
         }
-      case TypeEnum.MGEN_BASE => MGenBaseType.INSTANCE.fullName()
-      case x => throw new GenerationException(s"Don't know how to handle type $x (${typ.fullName})")
+      case TypeEnum.UNKNOWN =>
+        throw new GenerationException("Cannot call getTypeName on an UnlinkedCustomType: " + typ.fullName)
     }
 
   }

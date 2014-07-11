@@ -17,10 +17,10 @@ object MkAcceptVisitor {
 
     implicit val m = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
     txtBuffer.tabs(1).textln("@Override")
     txtBuffer.tabs(1).textln(s"public void _accept(final ${fieldVisitorClsString} visitor) throws java.io.IOException {")
-    txtBuffer.tabs(2).textln(s"visitor.beginVisit(this, _nFieldsSet(${fieldSetDepthClsString}.SHALLOW), ${t.getAllFieldsInclSuper().size()});")
+    txtBuffer.tabs(2).textln(s"visitor.beginVisit(this, _nFieldsSet(${fieldSetDepthClsString}.SHALLOW), ${t.fieldsInclSuper().size()});")
     for (field <- allFields) {
       txtBuffer.tabs(2).textln(s"visitor.visit(${get(field)}, ${fieldMetadata(field)}, ${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")});")
     }

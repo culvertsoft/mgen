@@ -4,10 +4,11 @@ import FieldTypes.genericTypeTemplates
 import FieldTypes.simpleTypes
 import se.culvertsoft.mgen.visualdesigner.control.Controller
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
 import se.culvertsoft.mgen.visualdesigner.model.Int8Type
 import se.culvertsoft.mgen.visualdesigner.model.MapType
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
+import se.culvertsoft.mgen.visualdesigner.model.UserDefinedType
 
 class ClassFieldTypeAutoComboBox2(t: FieldType, controller: Controller)
   extends AutoBox[FieldTypeAutoBoxItem](
@@ -49,8 +50,8 @@ class ClassFieldTypeAutoComboBox2(t: FieldType, controller: Controller)
 
     if (allowCustom) {
       controller.model.foreach(_.child match {
-        case e: CustomType =>
-          val t = FieldTypeAutoBoxItem(new CustomTypeRef(e.getId()), controller)
+        case e: UserDefinedType =>
+          val t = FieldTypeAutoBoxItem(new UserTypeRef(e.getId()), controller)
           cmpModel.addElement(t)
         case _ =>
       })

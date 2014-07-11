@@ -14,7 +14,7 @@ object MkNFieldsSet {
 
     implicit val m = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
     txtBuffer.tabs(1).textln("@Override")
     txtBuffer.tabs(1).textln(s"public int _nFieldsSet(final ${fieldSetDepthClsString} fieldSetDepth) {")
     txtBuffer.tabs(2).textln(s"int out = 0;")

@@ -5,11 +5,9 @@ import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Point
 import java.awt.Rectangle
-
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.reflect.ClassTag
-
 import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
@@ -33,6 +31,8 @@ import se.culvertsoft.mgen.visualdesigner.util.AwtMath.RichDimension
 import se.culvertsoft.mgen.visualdesigner.util.AwtMath.RichPoint
 import se.culvertsoft.mgen.visualdesigner.util.OperationStatus
 import se.culvertsoft.mgen.visualdesigner.view.searchdialog.SearchDialog
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
 
 class ViewManager(
   private val controller: Controller,
@@ -258,6 +258,10 @@ class ViewManager(
         new ProjectView(entity, controller)
       case entity: Module =>
         new ModuleView(entity, controller)
+      case entity: EnumEntry =>
+        new EnumEntryView(entity, controller)
+      case entity: EnumType =>
+        new EnumView(entity, controller)
       case entity: CustomType =>
         new ClassView(entity, controller)
       case entity: CustomTypeField =>

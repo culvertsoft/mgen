@@ -10,6 +10,7 @@ import java.util.Map;
 import org.json.simple.JSONValue;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
+import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
@@ -61,7 +62,7 @@ public class JsonWriter extends DynamicWriter {
 	public void writeMGenObjectField(MGenBase o, Field field)
 			throws IOException {
 		beginWritePair(field.name());
-		writeMGenObject(o, field.typ());
+		writeMGenObject(o, (CustomType) field.typ());
 	}
 
 	@Override
@@ -146,6 +147,11 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
+	public void writeEnumField(Enum<?> e, Field field) throws IOException {
+		writeStringField(e != null ? e.toString() : null, field);
+	}
+
+	@Override
 	public void writeArrayField(Object array, Field f) throws IOException {
 		beginWritePair(f.name());
 		writeArray(array, (ArrayType) f.typ());
@@ -175,7 +181,7 @@ public class JsonWriter extends DynamicWriter {
 		write(endString);
 	}
 
-	private void writeMGenObject(MGenBase o, Type expectType)
+	private void writeMGenObject(MGenBase o, CustomType expectType)
 			throws IOException {
 		if (o == null) {
 			write("null");
@@ -197,6 +203,9 @@ public class JsonWriter extends DynamicWriter {
 		}
 
 		switch (typ.typeEnum()) {
+		case ENUM:
+			write(o != null ? o.toString() : null);
+			break;
 		case BOOL:
 			write((Boolean) o);
 			break;
@@ -230,10 +239,9 @@ public class JsonWriter extends DynamicWriter {
 		case MAP:
 			writeMap((Map<Object, Object>) o, (MapType) typ);
 			break;
-		case MGEN_BASE:
 		case UNKNOWN:
 		case CUSTOM:
-			writeMGenObject((MGenBase) o, typ);
+			writeMGenObject((MGenBase) o, (CustomType) typ);
 			break;
 		default:
 			throw new SerializationException("Unknown type for writeObject");
@@ -301,7 +309,6 @@ public class JsonWriter extends DynamicWriter {
 			case ARRAY:
 			case LIST:
 			case MAP:
-			case MGEN_BASE:
 			case UNKNOWN:
 			case CUSTOM:
 				writeObjectArray((Object[]) o, typ);
@@ -422,7 +429,9 @@ public class JsonWriter extends DynamicWriter {
 		m_iEntry[m_depth] = 0;
 	}
 
-	private boolean needWriteTypeId(final MGenBase o, final Type expectType) {
+	private boolean needWriteTypeId(
+			final MGenBase o,
+			final CustomType expectType) {
 		if (expectType == null || !m_compact)
 			return true;
 		return o._typeId() != expectType.typeId();

@@ -10,7 +10,6 @@
 
 #include "mgen/metadata/Field.h"
 #include "mgen/metadata/FieldSetDepth.h"
-#include "mgen/util/hash.h"
 
 namespace mgen {
 
@@ -59,9 +58,7 @@ public:
 
     virtual const mgen::Field * _fieldById(const short fieldId) const = 0;
 
-    virtual const mgen::Field * _fieldByName(const std::string& name) const {
-        return _fieldById(mgen::hash::calc16bit(name));
-    }
+    virtual const mgen::Field * _fieldByName(const std::string& name) const = 0;
 
     virtual int _numFieldsSet(const FieldSetDepth depth) const = 0;
 

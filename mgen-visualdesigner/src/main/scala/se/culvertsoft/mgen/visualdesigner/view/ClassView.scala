@@ -3,6 +3,8 @@ package se.culvertsoft.mgen.visualdesigner.view
 import java.awt.Color
 import java.awt.Dimension
 import java.awt.Graphics2D
+
+import scala.collection.JavaConversions.asScalaBuffer
 import scala.language.reflectiveCalls
 
 import javax.swing.JCheckBox
@@ -12,9 +14,9 @@ import javax.swing.SwingConstants
 import net.miginfocom.swing.MigLayout
 import se.culvertsoft.mgen.visualdesigner.control.Controller
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.Entity
 import se.culvertsoft.mgen.visualdesigner.model.NoType
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
 import se.culvertsoft.mgen.visualdesigner.view.autobox2.AutoBoxListener
 import se.culvertsoft.mgen.visualdesigner.view.autobox2.FieldTypeAutoBoxItem
 import se.culvertsoft.mgen.visualdesigner.view.autobox2.SuperTypeAutoComboBox2
@@ -89,7 +91,7 @@ class ClassView(override val entity: CustomType, controller: Controller)
       override def finishedItem(item: FieldTypeAutoBoxItem) {
         println("Finished super")
         item.fieldType match {
-          case fieldType: CustomTypeRef =>
+          case fieldType: UserTypeRef =>
             val t = controller.model.getEntity(fieldType.getId()).get.asInstanceOf[CustomType]
             controller.changeSuperType(entity, t)
           case fieldType: NoType =>
@@ -126,7 +128,7 @@ class ClassView(override val entity: CustomType, controller: Controller)
 
   scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER)
 
-  val layout = new ClassViewLayout(this, entity, controller)
+  val layout = new ClassOrEnumViewLayout(this, () => entity.getFields(), controller)
   innerPanel().setLayout(layout)
 
   resetViewComplexity()

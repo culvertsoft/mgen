@@ -1,6 +1,10 @@
 package se.culvertsoft.mgen.api.util;
 
+import java.nio.charset.Charset;
+
 public class CRC64 {
+
+	private final static Charset charset = Charset.forName("UTF8");
 
 	/*
 	 * ECMA specifies 0x42F0E1EBA9EA3693 0xC96C5795D7870F42 0xA17870F5D4F51B49
@@ -34,6 +38,10 @@ public class CRC64 {
 			out = (out >>> 8) ^ CACHE[lookupidx];
 		}
 		return out;
+	}
+
+	public static long calc(final String buffer) {
+		return calc(buffer.getBytes(charset));
 	}
 
 }

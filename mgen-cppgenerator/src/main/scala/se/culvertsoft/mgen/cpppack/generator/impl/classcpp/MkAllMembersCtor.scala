@@ -19,7 +19,7 @@ object MkAllMembersCtor {
     t: CustomType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
     implicit val currentModule = module
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     def mkArgumentList() {
       for (field <- allFields) {

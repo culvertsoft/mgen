@@ -1,8 +1,8 @@
 package se.culvertsoft.mgen.cpppack.generator.impl
 
-import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
 
 object Alias {
 

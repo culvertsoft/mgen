@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.javapack.classes;
 import java.util.Collection;
 import java.util.HashMap;
 
-public class ClassRegistry {
+public abstract class ClassRegistry {
 
 	private final HashMap<Long, ClassRegistryEntry> m_typeId2Entry;
 	private final HashMap<String, ClassRegistryEntry> m_name2Entry;
@@ -21,14 +21,6 @@ public class ClassRegistry {
 		m_cls2Entry.put(entry.cls(), entry);
 	}
 
-	public ClassRegistryEntry getByTypeIds16Bit(final short[] ids) {
-		return null;
-	}
-
-	public ClassRegistryEntry getByTypeIds16BitBase64(final String[] ids) {
-		return null;
-	}
-
 	public ClassRegistryEntry getByName(final String fullClassName) {
 		return m_name2Entry.get(fullClassName);
 	}
@@ -44,5 +36,9 @@ public class ClassRegistry {
 	public Collection<ClassRegistryEntry> entries() {
 		return m_name2Entry.values();
 	}
+
+	public abstract ClassRegistryEntry getByTypeIds16Bit(final short[] ids);
+
+	public abstract ClassRegistryEntry getByTypeIds16BitBase64(final String[] ids);
 
 }

@@ -1,13 +1,15 @@
 package se.culvertsoft.mgen.compiler
 
+import java.io.File
 import java.util.ArrayList
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.reflect.io.Path
+
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.Generator
-import java.io.File
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 
 object Output {
@@ -45,22 +47,27 @@ object Output {
 
   }
 
-  def write(outputs: Seq[GeneratedSourceFile]) {
+  def write(outputs: Seq[GeneratedSourceFile], outputPathPrepend: Option[String] = None) {
 
     println("Writing files to disk:")
 
     for (output <- outputs) {
 
-      val file = new File(output.filePath)
-      if (!file.exists || FileUtils.readToString(output.filePath) != output.sourceCode) {
-        println(s"  writing: ${output.filePath}")
+      val filePath = outputPathPrepend match {
+        case Some(prepend) => prepend + File.separator + output.filePath
+        case _ => output.filePath
+      }
+
+      val file = new File(filePath)
+      if (!file.exists || FileUtils.readToString(filePath) != output.sourceCode) {
+        println(s"  writing: ${filePath}")
         if (!file.exists) {
-          val dir = FileUtils.directoryOf(output.filePath)
+          val dir = FileUtils.directoryOf(filePath)
           Path(dir).createDirectory(true, false)
         }
-        Path(output.filePath()).toFile.writeAll(output.sourceCode())
+        Path(filePath).toFile.writeAll(output.sourceCode())
       } else {
-        println(s"  skipping (no change): ${output.filePath}")
+        println(s"  skipping (no change): ${filePath}")
       }
 
     }

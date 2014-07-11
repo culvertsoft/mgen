@@ -48,7 +48,7 @@ object CheckConflicts {
     val state = gatherModulesFromProject(project)
 
     val allModules = state.modulesFound.toSeq
-    val allTypes = allModules.flatMap(_.types.values)
+    val allTypes = allModules.flatMap(_.types)
 
     assertNoDuplicates(allModules, (m: Module) => m.path) { (m1, m2) =>
       throw new TypeConflictException(s"Module defined twice with same path: ${m1.path}, on file paths: [${m1.absoluteFilePath}, ${m2.absoluteFilePath}]")
@@ -62,8 +62,8 @@ object CheckConflicts {
       throw new TypeConflictException(s"Conflicting 64 bit type IDs (wow you're unlucky!) for types: ${t1.fullName} and ${t2.fullName()}. Change one of their names.")
     }
 
-    assertNoDuplicates(allTypes, (t: CustomType) => (t.superType.typeId, t.typeId16Bit)) { (t1, t2) =>
-      throw new TypeConflictException(s"Conflicting 16 bit type IDs with same super type. Types: ${t1.fullName} and ${t2.fullName()}, with super type ${t1.superType().fullName}.")
+    assertNoDuplicates(allTypes, (t: CustomType) => (if (t.hasSuperType) t.superType.typeId else null, t.typeId16Bit)) { (t1, t2) =>
+      throw new TypeConflictException(s"Conflicting 16 bit type IDs with same super type. Types: ${t1.fullName} and ${t2.fullName()}, with super type ${t1.superType()}.")
     }
 
     for (t <- allTypes) {

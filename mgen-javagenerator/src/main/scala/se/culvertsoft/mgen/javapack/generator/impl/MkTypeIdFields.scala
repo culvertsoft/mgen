@@ -18,7 +18,7 @@ object MkTypeIdFields {
 
     implicit val m = module
 
-    val allTypes = t.superTypeHierarchy().map(_.asInstanceOf[CustomType])
+    val allTypes = t.superTypeHierarchy()
 
     val allTypeIds = allTypes.map(typeIdStr)
     val allTypeIds16Bit = allTypes.map(typeIdStr16bit)

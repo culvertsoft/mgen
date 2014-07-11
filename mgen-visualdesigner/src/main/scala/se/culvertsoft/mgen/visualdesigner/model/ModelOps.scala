@@ -19,11 +19,15 @@ class RichEntity(base: Entity) {
 
   def add(e: Project) { throw new RuntimeException(s"Cannot add $e to $this") }
   def add(e: Module) { throw new RuntimeException(s"Cannot add $e to $this") }
+  def add(e: EnumEntry) { throw new RuntimeException(s"Cannot add $e to $this") }
+  def add(e: EnumType) { throw new RuntimeException(s"Cannot add $e to $this") }
   def add(e: CustomType) { throw new RuntimeException(s"Cannot add $e to $this") }
   def add(e: CustomTypeField) { throw new RuntimeException(s"Cannot add $e to $this") }
 
   def remove(e: Project) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
   def remove(e: Module) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
+  def remove(e: EnumEntry) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
+  def remove(e: EnumType) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
   def remove(e: CustomType) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
   def remove(e: CustomTypeField) { throw new RuntimeException(s"Cannot transferAway $e from $this") }
 
@@ -70,6 +74,8 @@ class RichEntity(base: Entity) {
     e match {
       case e: Project => add(e)
       case e: Module => add(e)
+      case e: EnumEntry => add(e)
+      case e: EnumType => add(e)
       case e: CustomType => add(e)
       case e: CustomTypeField => add(e)
     }
@@ -79,6 +85,8 @@ class RichEntity(base: Entity) {
     e match {
       case e: Project => remove(e)
       case e: Module => remove(e)
+      case e: EnumEntry => remove(e)
+      case e: EnumType => remove(e)
       case e: CustomType => remove(e)
       case e: CustomTypeField => remove(e)
     }
@@ -113,7 +121,7 @@ class RichProject(base: Project) extends RichEntity(base) {
 
   override def add(e: Project) { base.getDependencies().add(e) }
   override def add(e: Module) { base.getModules().add(e) }
-    
+
   override def remove(e: Project) { base.getDependencies().remove(e) }
   override def remove(e: Module) { base.getModules().remove(e) }
 
@@ -146,6 +154,7 @@ class RichModule(base: Module) extends RichEntity(base) {
 
   override def clear() {
     base.getSubmodules().clear()
+    base.getEnums().clear()
     base.getTypes().clear()
   }
 
@@ -153,6 +162,9 @@ class RichModule(base: Module) extends RichEntity(base) {
     if (f(ChildParent(base, parent))) {
       for (m <- base.getSubmodules()) {
         m.traverse(base, f)
+      }
+      for (t <- base.getEnums()) {
+        t.traverse(base, f)
       }
       for (t <- base.getTypes()) {
         t.traverse(base, f)
@@ -162,14 +174,18 @@ class RichModule(base: Module) extends RichEntity(base) {
 
   override def canBeParentOf(e: Entity): Boolean = {
     e match {
-      case e: Project => false
-      case _ => true
+      case e: Module => true
+      case e: CustomType => true
+      case e: EnumType => true
+      case _ => false
     }
   }
 
   override def add(e: Module) { base.getSubmodules().add(e) }
+  override def add(e: EnumType) { base.getEnums().add(e) }
   override def add(e: CustomType) { base.getTypes().add(e) }
   override def remove(e: Module) { base.getSubmodules().remove(e) }
+  override def remove(e: EnumType) { base.getEnums().remove(e) }
   override def remove(e: CustomType) { base.getTypes().remove(e) }
 
   override def moveChildUp(child: Entity) {
@@ -179,6 +195,12 @@ class RichModule(base: Module) extends RichEntity(base) {
         if (iprev >= 1) {
           base.getSubmodules().remove(iprev)
           base.getSubmodules().insert(iprev - 1, module)
+        }
+      case typ: EnumType =>
+        val iprev = base.getEnums().indexWhere(_ eq typ)
+        if (iprev >= 1) {
+          base.getEnums().remove(iprev)
+          base.getEnums().insert(iprev - 1, typ)
         }
       case typ: CustomType =>
         val iprev = base.getTypes().indexWhere(_ eq typ)
@@ -197,6 +219,12 @@ class RichModule(base: Module) extends RichEntity(base) {
           base.getSubmodules().remove(iprev)
           base.getSubmodules().insert(iprev + 1, module)
         }
+      case typ: EnumType =>
+        val iprev = base.getEnums().indexWhere(_ eq typ)
+        if (iprev < (base.getEnums().size() - 1)) {
+          base.getEnums().remove(iprev)
+          base.getEnums().insert(iprev + 1, typ)
+        }
       case typ: CustomType =>
         val iprev = base.getTypes().indexWhere(_ eq typ)
         if (iprev < (base.getTypes().size() - 1)) {
@@ -207,6 +235,83 @@ class RichModule(base: Module) extends RichEntity(base) {
   }
 
 }
+
+class RichEnumEntry(base: EnumEntry) extends RichEntity(base) {
+
+  override def clear() {
+  }
+
+  override def traverse(parent: Entity, f: ChildParent => Boolean) {
+    if (f(ChildParent(base, parent))) {
+    }
+  }
+
+  override def canBeParentOf(e: Entity): Boolean = {
+    false
+  }
+
+  override def moveChildUp(child: Entity) {
+  }
+
+  override def moveChildDown(child: Entity) {
+  }
+
+}
+
+class RichEnumType(base: EnumType) extends RichEntity(base) {
+  import ModelOps._
+
+  override def clear() {
+    base.getEntries().clear()
+  }
+
+  override def traverse(parent: Entity, f: ChildParent => Boolean) {
+    if (f(ChildParent(base, parent))) {
+      for (field <- base.getEntries()) {
+        field.traverse(base, f)
+      }
+    }
+  }
+
+  override def add(e: EnumEntry) {
+    base.getEntries().add(e)
+  }
+
+  override def remove(e: EnumEntry) {
+    base.getEntries().remove(e)
+  }
+
+  override def canBeParentOf(e: Entity): Boolean = {
+    e match {
+      case field: EnumEntry => true
+      case _ => false
+    }
+  }
+
+  override def moveChildUp(child: Entity) {
+    child match {
+      case field: EnumEntry =>
+        val iprev = base.getEntries().indexWhere(_ eq field)
+        if (iprev >= 1) {
+          base.getEntries().remove(iprev)
+          base.getEntries().insert(iprev - 1, field)
+        }
+    }
+  }
+
+  override def moveChildDown(child: Entity) {
+    child match {
+      case field: EnumEntry =>
+        val iprev = base.getEntries().indexWhere(_ eq field)
+        if (iprev < (base.getEntries().size() - 1)) {
+          base.getEntries().remove(iprev)
+          base.getEntries().insert(iprev + 1, field)
+        }
+    }
+  }
+
+}
+
 
 class RichCustomType(base: CustomType) extends RichEntity(base) {
   import ModelOps._
@@ -290,6 +395,8 @@ object ModelOps {
     base match {
       case base: Project => new RichProject(base)
       case base: Module => new RichModule(base)
+      case base: EnumEntry => new RichEnumEntry(base)
+      case base: EnumType => new RichEnumType(base)
       case base: CustomType => new RichCustomType(base)
       case base: CustomTypeField => new RichCustomTypeField(base)
     }

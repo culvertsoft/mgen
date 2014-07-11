@@ -42,6 +42,8 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkValidate
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.PrimitiveType
 import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.EnumType
+import se.culvertsoft.mgen.javapack.generator.impl.MkEnum
 
 object JavaGenerator {
   def canBeNull(f: Field): Boolean = {
@@ -104,12 +106,23 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
   }
 
+  override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+    val folder = getModuleFolderPath(module, generatorSettings)
+    val fileName = t.shortName() + ".java"
+    val sourceCode = generateEnumSourceCode(t)
+    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
+  }
+
   def generateClassSourceCode(t: CustomType): String = {
     txtBuffer.clear()
     mkPublicSection(t)
     mkMetadataMethodsSection(t)
     mkMetadataFieldsSection(t)
     txtBuffer.toString()
+  }
+
+  def generateEnumSourceCode(t: EnumType): String = {
+    MkEnum(t, t.module.path)
   }
 
   def mkPublicSection(t: CustomType) {

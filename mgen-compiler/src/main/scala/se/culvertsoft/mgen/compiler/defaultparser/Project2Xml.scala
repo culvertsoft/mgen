@@ -1,13 +1,14 @@
 package se.culvertsoft.mgen.compiler.defaultparser
 
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 import scala.xml.PrettyPrinter
 
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.BoolType
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.EnumEntry
+import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Float32Type
 import se.culvertsoft.mgen.api.model.Float64Type
@@ -23,6 +24,7 @@ import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.GeneratorDescriptor
+import se.culvertsoft.mgen.api.util.CRC16
 
 object Project2Xml {
 
@@ -36,11 +38,11 @@ object Project2Xml {
       <Project>
         { project.generators map generator2xml }
         { project.dependencies map dependency2xmlReference }
-        { project.modules.filter(_.types.values.nonEmpty) map { x => <Module>{ x.filePath() }</Module> } }
+        { project.modules.filter(_.types.nonEmpty) map { x => <Module>{ x.filePath() }</Module> } }
       </Project>
 
     sources += XmlSourceFile(project.absoluteFilePath, projectXml)
-    sources ++= project.modules.filter(_.types.values.nonEmpty) map module2xmlSource
+    sources ++= project.modules.filter(_.types.nonEmpty) map module2xmlSource
 
     convert(sources)
 
@@ -77,21 +79,35 @@ object Project2Xml {
 
     val xml =
       <Module>
+        <Enums>
+          { module.enums map enum2xml }
+        </Enums>
         <Types>
-          { module.types.values map type2xml }
+          { module.types map type2xml }
         </Types>
       </Module>
 
     XmlSourceFile(module.absoluteFilePath(), xml)
   }
 
+  def enum2xml(typ: EnumType)(implicit currentModule: Module): scala.xml.Node = {
+    <EnumType>{ typ.entries map enumentry2xml }</EnumType>.copy(label = typ.shortName)
+  }
+
+  def enumentry2xml(entry: EnumEntry)(implicit currentModule: Module): scala.xml.Node = {
+    <entry>{ entry.constant } </entry>.copy(label = entry.name)
+  }
+
   def type2xml(typ: CustomType)(implicit currentModule: Module): scala.xml.Node = {
+
+    val autoId = CRC16.calc(typ.fullName)
+    val idString = if (typ.typeId16Bit != autoId) typ.typeId16Bit.toString else null
 
     val xml =
       (if (typ.hasSuperType())
-        <CustomType extends={ type2string(typ.superType()) }>{ typ.fields map field2xml } </CustomType>
+        <CustomType extends={ type2string(typ.superType()) } id={ idString }>{ typ.fields map field2xml } </CustomType>
       else
-        <CustomType>{ typ.fields map field2xml } </CustomType>)
+        <CustomType id={ idString }>{ typ.fields map field2xml } </CustomType>)
         .copy(label = typ.name)
 
     xml
@@ -120,12 +136,13 @@ object Project2Xml {
     val flags = field.flags().map(_.trim).filter(_.nonEmpty)
     val typeString = type2string(field.typ)
     val flagsString = s"${flags.mkString(", ")}"
+    val idString = if (field.hasIdOverride()) field.id().toString else null
 
     val xml =
       (if (flags.nonEmpty)
-        <fieldname type={ typeString } flags={ flagsString }/>
+        <fieldname type={ typeString } flags={ flagsString } id={ idString }/>
       else
-        <fieldname type={ typeString }/>)
+        <fieldname type={ typeString } id={ idString }/>)
         .copy(label = field.name)
 
     xml

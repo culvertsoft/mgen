@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
-
 import Alias.fieldId
 import Alias.fieldMetadata
 import se.culvertsoft.mgen.api.exceptions.GenerationException
@@ -16,7 +15,8 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsString
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.modelPkg
+import se.culvertsoft.mgen.javapack.generator.JavaConstants._
+import se.culvertsoft.mgen.api.model.EnumType
 
 object MkFieldMetaData {
 
@@ -24,7 +24,7 @@ object MkFieldMetaData {
 
     implicit val m = module
 
-    val fields = t.getAllFieldsInclSuper()
+    val fields = t.fieldsInclSuper()
 
     if (fields.nonEmpty) {
       for (field <- fields) {
@@ -40,7 +40,8 @@ object MkFieldMetaData {
           .text(quote(t.fullName())).commaSpace()
           .text(quote(field.name())).commaSpace()
           .text(mkMetaData(field.typ())).commaSpace()
-          .text(s"$flagsString);")
+          .text(s"$flagsString").commaSpace()
+          .text(s"(short)${field.id()});")
           .endl()
       }
       txtBuffer.endl()
@@ -80,7 +81,8 @@ object MkFieldMetaData {
         s"new ${modelPkg}.impl.ArrayTypeImpl(${mkMetaData(ta.elementType())})"
       case TypeEnum.CUSTOM =>
         val tc = t.asInstanceOf[CustomType]
-        s"new ${modelPkg}.impl.UnknownCustomTypeImpl(${quote(tc.fullName())}, ${tc.typeId()}L)"
+        s"new ${modelPkg}.impl.UnlinkedCustomType(${quote(tc.fullName())}, ${tc.typeId()}L)"
+      case TypeEnum.ENUM => s"${t.fullName}._TYPE"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }
   }

@@ -1,11 +1,10 @@
 package se.culvertsoft.mgen.visualdesigner.classlookup
 
 import scala.collection.JavaConversions.asScalaBuffer
-
-import se.culvertsoft.mgen.visualdesigner.model.CustomTypeRef
 import se.culvertsoft.mgen.visualdesigner.model.FieldType
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.Module
+import se.culvertsoft.mgen.visualdesigner.model.UserTypeRef
 
 /** returns the best hit of current availible tyoes **/
 object String2Type {
@@ -14,7 +13,7 @@ object String2Type {
          //look for exact hit in parent module.
          for (parentModule <- parentModule) {
             for (found <- parentModule.getTypes().find(_.getName() == searchString)) {
-               return Option(new CustomTypeRef(found.getId()))
+               return Option(new UserTypeRef(found.getId()))
             }
          }
       }

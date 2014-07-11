@@ -30,7 +30,7 @@ object MkHasers {
       ln("}").endl()
     }
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     for (field <- allFields) {
       val fcnCall = s"unset${upFirst(field.name)}"

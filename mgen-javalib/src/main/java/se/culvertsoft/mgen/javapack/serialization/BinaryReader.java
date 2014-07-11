@@ -1,6 +1,5 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
-import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_ARRAY;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_BOOL;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_CUSTOM;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_FLOAT32;
@@ -23,12 +22,14 @@ import java.util.HashMap;
 import java.util.List;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
+import se.culvertsoft.mgen.api.model.CustomType;
+import se.culvertsoft.mgen.api.model.EnumType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListOrArrayType;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.api.model.UnknownCustomType;
+import se.culvertsoft.mgen.api.model.TypeEnum;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
@@ -38,11 +39,9 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
 
-	public BinaryReader(
-			final InputStream stream,
-			final ClassRegistry classRegistry) {
-		super(stream instanceof DataInputStream ? (DataInputStream) stream
-				: new DataInputStream(stream), classRegistry);
+	public BinaryReader(final InputStream stream, final ClassRegistry classRegistry) {
+		super(stream instanceof DataInputStream ? (DataInputStream) stream : new DataInputStream(
+				stream), classRegistry);
 	}
 
 	@Override
@@ -52,108 +51,101 @@ public class BinaryReader extends BuiltInReader {
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public <T extends MGenBase> T readObject(final Class<T> typ)
-			throws IOException {
+	public <T extends MGenBase> T readObject(final Class<T> typ) throws IOException {
 
 		final MGenBase out = readMGenObject(true, getRegEntry(typ).typ());
 
 		if (out != null && !typ.isAssignableFrom(out.getClass())) {
-			throw new UnexpectedTypeException("Unexpected type. Expected "
-					+ typ.getName() + " but got " + out.getClass().getName());
+			throw new UnexpectedTypeException("Unexpected type. Expected " + typ.getName()
+					+ " but got " + out.getClass().getName());
 		}
 
 		return (T) out;
 	}
 
 	@Override
-	public boolean readBooleanField(final Field field, final Object context)
-			throws IOException {
+	public boolean readBooleanField(final Field field, final Object context) throws IOException {
 		ensureTypeTag(field, TAG_BOOL, readTypeTag());
 		return readBoolean(false);
 	}
 
 	@Override
-	public byte readInt8Field(final Field field, final Object context)
-			throws IOException {
+	public byte readInt8Field(final Field field, final Object context) throws IOException {
 		ensureTypeTag(field, TAG_INT8, readTypeTag());
 		return readInt8(false);
 	}
 
 	@Override
-	public short readInt16Field(final Field field, final Object context)
-			throws IOException {
+	public short readInt16Field(final Field field, final Object context) throws IOException {
 		ensureTypeTag(field, TAG_INT16, readTypeTag());
 		return readInt16(false);
 	}
 
 	@Override
-	public int readInt32Field(final Field field, final Object context)
-			throws IOException {
+	public int readInt32Field(final Field field, final Object context) throws IOException {
 		ensureTypeTag(field, TAG_INT32, readTypeTag());
 		return readInt32(false);
 	}
 
 	@Override
-	public long readInt64Field(final Field field, final Object context)
-			throws IOException {
+	public long readInt64Field(final Field field, final Object context) throws IOException {
 		ensureTypeTag(field, TAG_INT64, readTypeTag());
 		return readInt64(false);
 	}
 
 	@Override
-	public float readFloat32Field(final Field field, final Object context)
-			throws IOException {
+	public float readFloat32Field(final Field field, final Object context) throws IOException {
 		ensureTypeTag(field, TAG_FLOAT32, readTypeTag());
 		return readFloat32(false);
 	}
 
 	@Override
-	public double readFloat64Field(final Field field, final Object context)
-			throws IOException {
+	public double readFloat64Field(final Field field, final Object context) throws IOException {
 		ensureTypeTag(field, TAG_FLOAT64, readTypeTag());
 		return readFloat64(false);
 	}
 
 	@Override
-	public String readStringField(final Field field, final Object context)
-			throws IOException {
+	public String readStringField(final Field field, final Object context) throws IOException {
 		ensureTypeTag(field, TAG_STRING, readTypeTag());
 		return readString(false);
 	}
 
 	@Override
-	public Object readArrayField(final Field field, final Object context)
-			throws IOException {
-		ensureTypeTag(field, TAG_ARRAY, readTypeTag());
+	public Object readArrayField(final Field field, final Object context) throws IOException {
+		ensureTypeTag(field, TAG_LIST, readTypeTag());
 		return readArray(false, (ArrayType) field.typ());
 	}
 
 	@Override
-	public ArrayList<Object> readListField(
-			final Field field,
-			final Object context) throws IOException {
+	public ArrayList<Object> readListField(final Field field, final Object context)
+			throws IOException {
 		ensureTypeTag(field, TAG_LIST, readTypeTag());
 		return readList(false, (ListType) field.typ());
 	}
 
 	@Override
-	public HashMap<Object, Object> readMapField(
-			final Field field,
-			final Object context) throws IOException {
+	public HashMap<Object, Object> readMapField(final Field field, final Object context)
+			throws IOException {
 		ensureTypeTag(field, TAG_MAP, readTypeTag());
 		return readMap(false, (MapType) field.typ());
 	}
 
 	@Override
-	public MGenBase readMgenObjectField(final Field f, final Object context)
-			throws IOException {
+	public MGenBase readMgenObjectField(final Field f, final Object context) throws IOException {
 		ensureTypeTag(f, TAG_CUSTOM, readTypeTag());
-		return readMGenObject(false, (UnknownCustomType) f.typ());
+		return readMGenObject(false, (CustomType) f.typ());
 	}
 
 	@Override
-	public void handleUnknownField(final Field field, final Object context)
-			throws IOException {
+	public Enum<?> readEnumField(final Field f, final Object context) throws IOException {
+		final byte tag = readTypeTag();
+		ensureTypeTag(f, TAG_STRING, tag);
+		return readEnum(false, (EnumType) f.typ());
+	}
+
+	@Override
+	public void handleUnknownField(final Field field, final Object context) throws IOException {
 		skip(readTypeTag());
 	}
 
@@ -195,7 +187,10 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private String readString(final boolean b) throws IOException {
+	private String readString(final boolean readTag) throws IOException {
+
+		if (readTag)
+			ensureTypeTag(null, TAG_STRING, readTypeTag());
 
 		final int nBytes = readSize();
 
@@ -208,8 +203,7 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private void readFields(final MGenBase object, final int nFields)
-			throws IOException {
+	private void readFields(final MGenBase object, final int nFields) throws IOException {
 
 		for (int i = 0; i < nFields; i++)
 			object._readField(readFieldId(), null, this);
@@ -224,9 +218,8 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private MGenBase readMGenObject(
-			final boolean readTypeTag,
-			final UnknownCustomType expectType) throws IOException {
+	private MGenBase readMGenObject(final boolean readTypeTag, final CustomType expectType)
+			throws IOException {
 
 		if (readTypeTag)
 			ensureTypeTag(null, TAG_CUSTOM, readTypeTag());
@@ -337,19 +330,15 @@ public class BinaryReader extends BuiltInReader {
 		return readInt16(false);
 	}
 
-	private void ensureTypeTag(
-			final Field field,
-			final byte expTag,
-			final byte readTag) throws IOException {
+	private void ensureTypeTag(final Field field, final byte expTag, final byte readTag)
+			throws IOException {
 		if (expTag != readTag) {
 			throwUnexpectTag("(for field " + field + ")", expTag, readTag);
 		}
 	}
 
-	private Object readArray2(
-			final int n,
-			final byte elemTypeTag,
-			final ArrayType arrayType) throws IOException {
+	private Object readArray2(final int n, final byte elemTypeTag, final ArrayType arrayType)
+			throws IOException {
 
 		switch (elemTypeTag) {
 		case TAG_BOOL:
@@ -372,79 +361,68 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_CUSTOM:
 			return readObjectArray(n, elemTypeTag, arrayType);
 		default:
-			throw new StreamCorruptedException("Unknown elemTypeTag: "
-					+ elemTypeTag);
+			throw new StreamCorruptedException("Unknown elemTypeTag: " + elemTypeTag);
 		}
 	}
 
-	private Object readBooleanArray(final int n, final boolean b)
-			throws IOException {
+	private Object readBooleanArray(final int n, final boolean b) throws IOException {
 		final boolean[] array = new boolean[n];
 		for (int i = 0; i < array.length; i++)
 			array[i] = readBoolean(false);
 		return array;
 	}
 
-	private Object readInt8Array(final int n, final boolean b)
-			throws IOException {
+	private Object readInt8Array(final int n, final boolean b) throws IOException {
 		final byte[] array = new byte[n];
 		m_stream.readFully(array);
 		return array;
 	}
 
-	private Object readInt16Array(final int n, final boolean b)
-			throws IOException {
+	private Object readInt16Array(final int n, final boolean b) throws IOException {
 		final short[] array = new short[n];
 		for (int i = 0; i < array.length; i++)
 			array[i] = readInt16(false);
 		return array;
 	}
 
-	private Object readInt32Array(final int n, final boolean b)
-			throws IOException {
+	private Object readInt32Array(final int n, final boolean b) throws IOException {
 		final int[] array = new int[n];
 		for (int i = 0; i < array.length; i++)
 			array[i] = readInt32(false);
 		return array;
 	}
 
-	private Object readInt64Array(final int n, final boolean b)
-			throws IOException {
+	private Object readInt64Array(final int n, final boolean b) throws IOException {
 		final long[] array = new long[n];
 		for (int i = 0; i < array.length; i++)
 			array[i] = readInt64(false);
 		return array;
 	}
 
-	private Object readFloat32Array(final int n, final boolean b)
-			throws IOException {
+	private Object readFloat32Array(final int n, final boolean b) throws IOException {
 		final float[] array = new float[n];
 		for (int i = 0; i < array.length; i++)
 			array[i] = readFloat32(false);
 		return array;
 	}
 
-	private Object readFloat64Array(final int n, final boolean b)
-			throws IOException {
+	private Object readFloat64Array(final int n, final boolean b) throws IOException {
 		final double[] array = new double[n];
 		for (int i = 0; i < array.length; i++)
 			array[i] = readFloat64(false);
 		return array;
 	}
 
-	private Object readObjectArray(
-			final int n,
-			final byte elemTypeTag,
-			final ArrayType arrayType) throws IOException {
-		final Object[] array = arrayType != null ? (Object[]) arrayType
-				.newInstance(n) : new Object[n];
+	private Object readObjectArray(final int n, final byte elemTypeTag, final ArrayType arrayType)
+			throws IOException {
+		final Object[] array = arrayType != null ? (Object[]) arrayType.newInstance(n)
+				: new Object[n];
 		for (int i = 0; i < array.length; i++)
 			array[i] = readObject(elemTypeTag, arrayType.elementType());
 		return array;
 	}
 
-	private Object readObject(final byte typeTag, final Type expectType)
-			throws IOException {
+	private Object readObject(final byte typeTag, final Type expectType) throws IOException {
 		switch (typeTag) {
 		case TAG_BOOL:
 			return readBoolean(false);
@@ -461,22 +439,25 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_FLOAT64:
 			return readFloat64(false);
 		case TAG_STRING:
-			return readString(false);
+			if (expectType.typeEnum() == TypeEnum.ENUM) {
+				return readEnum(false, (EnumType) expectType);
+			} else {
+				return readString(false);
+			}
 		case TAG_LIST: // array and list have the same write tag
 			return readList(false, (ListOrArrayType) expectType);
 		case TAG_MAP:
 			return readMap(false, (MapType) expectType);
 		case TAG_CUSTOM:
-			return readMGenObject(false, (UnknownCustomType) expectType);
+			return readMGenObject(false, (CustomType) expectType);
 		default:
 			throw new StreamCorruptedException("Unknown type tag: " + typeTag);
 		}
 	}
 
-	private Object readArray(final boolean readTag, final ArrayType expectType)
-			throws IOException {
+	private Object readArray(final boolean readTag, final ArrayType expectType) throws IOException {
 		if (readTag)
-			ensureTypeTag(null, TAG_ARRAY, readTypeTag());
+			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
 		final int nElements = readSize();
 
@@ -484,7 +465,7 @@ public class BinaryReader extends BuiltInReader {
 
 			final byte rcvdTag = readTypeTag();
 			if (expectType != null) {
-				final byte expTag = expectType.elementType().binaryTypeTag();
+				final byte expTag = expectType.elementType().typeTag();
 				ensureTypeTag(null, expTag, rcvdTag);
 			}
 			return readArray2(nElements, rcvdTag, expectType);
@@ -494,35 +475,31 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private ArrayList<Object> readList(
-			final boolean readTag,
-			final ListOrArrayType listOrArrayType) throws IOException {
+	private
+			ArrayList<Object>
+			readList(final boolean readTag, final ListOrArrayType listOrArrayType)
+					throws IOException {
 
 		if (readTag)
 			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
-		return readElements(listOrArrayType != null ? listOrArrayType
-				.elementType() : null);
+		return readElements(listOrArrayType != null ? listOrArrayType.elementType() : null);
 
 	}
 
-	private HashMap<Object, Object> readMap(
-			final boolean readTag,
-			final MapType mapType) throws IOException {
+	private HashMap<Object, Object> readMap(final boolean readTag, final MapType mapType)
+			throws IOException {
 
 		if (readTag)
 			ensureTypeTag(null, TAG_MAP, readTypeTag());
 
 		final int nElements = readSize();
-		final HashMap<Object, Object> out = new HashMap<Object, Object>(
-				nElements);
+		final HashMap<Object, Object> out = new HashMap<Object, Object>(nElements);
 
 		if (nElements > 0) {
 
-			final List<Object> keys = readElements(mapType != null ? mapType
-					.keyType() : null);
-			final List<Object> values = readElements(mapType != null ? mapType
-					.valueType() : null);
+			final List<Object> keys = readElements(mapType != null ? mapType.keyType() : null);
+			final List<Object> values = readElements(mapType != null ? mapType.valueType() : null);
 
 			if (keys.size() != values.size() || keys.size() != nElements)
 				throw new StreamCorruptedException("nKeys != nValues in map");
@@ -535,15 +512,14 @@ public class BinaryReader extends BuiltInReader {
 		return out;
 	}
 
-	private ArrayList<Object> readElements(final Type constraint)
-			throws IOException {
+	private ArrayList<Object> readElements(final Type constraint) throws IOException {
 
 		final int nElements = readSize();
 
 		final byte readElemTag = readTypeTag();
 
-		if (constraint != null && constraint.binaryTypeTag() != readElemTag)
-			throwUnexpectTag("", constraint.binaryTypeTag(), readElemTag);
+		if (constraint != null && constraint.typeTag() != readElemTag)
+			throwUnexpectTag("", constraint.typeTag(), readElemTag);
 
 		final ArrayList<Object> out = new ArrayList<Object>(nElements);
 
@@ -551,6 +527,11 @@ public class BinaryReader extends BuiltInReader {
 			out.add(readObject(readTypeTag(), constraint));
 
 		return out;
+	}
+
+	private Enum<?> readEnum(final boolean readTag, final EnumType typ) throws IOException {
+		final String writtenName = readString(readTag);
+		return typ.get(writtenName);
 	}
 
 }

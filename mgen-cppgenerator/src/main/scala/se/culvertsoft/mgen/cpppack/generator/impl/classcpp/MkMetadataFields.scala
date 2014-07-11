@@ -19,7 +19,7 @@ object MkMetadataFields {
 
     implicit val currentModule = module
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     // Own type data
     ln(s"const std::string& ${t.shortName()}::_type_name() {")
@@ -76,12 +76,17 @@ object MkMetadataFields {
 
     // Fields metadata implementation
     for (field <- t.fields()) {
+      
       val enumString = field.typ().typeEnum().toString()
+      val tagString = enumString match {
+        case "ENUM" => "STRING"
+        case _ => enumString
+      }
 
       ln(s"const mgen::Field& ${t.shortName()}::${fieldMetaString(field)} {")
       ln(1, s"static const std::vector<std::string>& flags = ${fieldMetaString(field, false)}_flags_make();")
       ln(1, 
-        s"static const mgen::Field out(${field.id()}, ${quote(field.name())}, mgen::Type(mgen::Type::ENUM_$enumString, mgen::Type::TAG_$enumString, flags), flags);")
+        s"static const mgen::Field out(${field.id()}, ${quote(field.name())}, mgen::Type(mgen::Type::ENUM_$enumString, mgen::Type::TAG_$tagString, flags), flags);")
       ln(1, s"return out;")
       ln(s"}")
       endl()

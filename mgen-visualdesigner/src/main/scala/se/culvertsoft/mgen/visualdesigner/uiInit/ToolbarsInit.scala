@@ -64,9 +64,6 @@ object ToolbarsInit {
     toolbar.addSeparator()
     toolbar.addSeparator()
 
-    // To me implemented later
-    // toolbar.add(Actions.DashBoard.Top.GENERATE)
-
     toolbar
 
   }
@@ -92,18 +89,19 @@ object ToolbarsInit {
     toolbar.setOrientation(SwingConstants.VERTICAL)
     toolbar.setFloatable(false)
 
+    toolbar.add(Actions.DashBoard.Left.RESET_VIEW_ROOT)
     toolbar.add(Actions.DashBoard.Left.GO_UP)
     toolbar.add(Actions.DashBoard.Left.GO_BACK)
     toolbar.add(Actions.DashBoard.Left.GO_FORWARD)
     toolbar.add(Actions.DashBoard.Left.SET_VIEW_ROOT)
     toolbar.add(Actions.DashBoard.Left.MAXIMIZE)
-    toolbar.add(Actions.DashBoard.Left.RESET_VIEW_ROOT)
 
     toolbar.addSeparator()
     toolbar.addSeparator()
 
     toolbar.add(Actions.DashBoard.Left.NEW_MODULE)
     toolbar.add(Actions.DashBoard.Left.NEW_TYPE)
+    toolbar.add(Actions.DashBoard.Left.NEW_ENUM)
     toolbar.add(Actions.DashBoard.Left.NEW_FIELD)
     toolbar.addSeparator()
 

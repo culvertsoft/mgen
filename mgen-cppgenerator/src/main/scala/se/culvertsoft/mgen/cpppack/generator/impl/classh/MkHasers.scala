@@ -25,7 +25,7 @@ object MkHasers {
     if (t.fields().nonEmpty)
       ln("")
 
-    val allFields = t.getAllFieldsInclSuper()
+    val allFields = t.fieldsInclSuper()
 
     for (field <- allFields)
       ln(1, s"${t.shortName}& unset${upFirst(field.name)}();")

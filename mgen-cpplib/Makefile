@@ -6,7 +6,7 @@ all: generate-test-model
 	#   NO BUILD REQUIRED FOR MGEN-CPPLIB (.h-only)  #
 	##################################################
 
-eclipse:
+eclipse: generate-test-model
 	#################################################
 	# CREATING ECLIPSE PROJECT FOR MGEN-CPPLIB-TEST #
 	#################################################

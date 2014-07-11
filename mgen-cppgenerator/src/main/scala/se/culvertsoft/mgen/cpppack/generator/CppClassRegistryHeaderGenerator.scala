@@ -14,7 +14,7 @@ object CppClassRegistryHeaderGenerator extends CppClassRegistryGenerator(Header)
     ln("#include \"mgen/classes/ClassRegistryBase.h\"")
 
     for (referencedModule <- param.modules)
-      for (t <- referencedModule.types().values())
+      for (t <- referencedModule.types)
         CppGenUtils.include(t)
 
     endl()

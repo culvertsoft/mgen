@@ -27,25 +27,18 @@ public class GeneratorDescriptor {
 
 	@Override
 	public String toString() {
-		return "SelectedGenerator [generatorName=" + generatorName
-				+ ", generatorClassName=" + generatorClassName
-				+ ", generatorSettings=" + generatorSettings + "]";
+		return "SelectedGenerator [generatorName=" + generatorName + ", generatorClassName="
+				+ generatorClassName + ", generatorSettings=" + generatorSettings + "]";
 	}
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((generatorClassName == null) ? 0 : generatorClassName
-						.hashCode());
 		result = prime * result
-				+ ((generatorName == null) ? 0 : generatorName.hashCode());
-		result = prime
-				* result
-				+ ((generatorSettings == null) ? 0 : generatorSettings
-						.hashCode());
+				+ ((generatorClassName == null) ? 0 : generatorClassName.hashCode());
+		result = prime * result + ((generatorName == null) ? 0 : generatorName.hashCode());
+		result = prime * result + ((generatorSettings == null) ? 0 : generatorSettings.hashCode());
 		return result;
 	}
 

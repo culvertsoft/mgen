@@ -56,6 +56,7 @@ public class Marker {
 		if (a == null)
 			return;
 		switch (type.typeEnum()) {
+		case ENUM:
 		case BOOL:
 		case INT8:
 		case INT16:
@@ -72,7 +73,6 @@ public class Marker {
 		case MAP:
 			setMap((Map<?, ?>) a, (MapType) type);
 		case CUSTOM:
-		case MGEN_BASE:
 		case UNKNOWN:
 			setFieldSetDeep((MGenBase) a, null);
 		}

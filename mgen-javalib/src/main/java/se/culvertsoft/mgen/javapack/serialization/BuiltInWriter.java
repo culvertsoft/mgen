@@ -26,9 +26,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	protected final ClassRegistry m_classRegistry;
 	protected final DataOutput m_stream;
 
-	public BuiltInWriter(
-			final DataOutput stream,
-			final ClassRegistry classRegistry) {
+	public BuiltInWriter(final DataOutput stream, final ClassRegistry classRegistry) {
 		m_classRegistry = classRegistry;
 		m_stream = stream;
 		stringEncoder = charset
@@ -37,8 +35,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 	}
 
-	public abstract void writeObject(final MGenBase object)
-			throws IOException;
+	public abstract void writeObject(final MGenBase object) throws IOException;
 
 	public abstract void beginWrite(
 			final MGenBase object,
@@ -47,97 +44,85 @@ public abstract class BuiltInWriter implements FieldVisitor {
 
 	public abstract void finishWrite() throws IOException;
 
-	public abstract void writeBooleanField(final boolean b, final Field field)
+	public abstract void writeBooleanField(final boolean b, final Field field) throws IOException;
+
+	public abstract void writeInt8Field(final byte b, final Field field) throws IOException;
+
+	public abstract void writeInt16Field(final short s, final Field field) throws IOException;
+
+	public abstract void writeInt32Field(final int i, final Field field) throws IOException;
+
+	public abstract void writeInt64Field(final long l, final Field field) throws IOException;
+
+	public abstract void writeFloat32Field(final float f, final Field field) throws IOException;
+
+	public abstract void writeFloat64Field(final double d, final Field field) throws IOException;
+
+	public abstract void writeStringField(final String s, final Field field) throws IOException;
+
+	public abstract void writeEnumField(final Enum<?> e, final Field field) throws IOException;
+
+	public abstract void writeListField(final ArrayList<Object> list, final Field field)
 			throws IOException;
 
-	public abstract void writeInt8Field(final byte b, final Field field)
+	public abstract void writeMapField(final HashMap<Object, Object> map, final Field field)
 			throws IOException;
 
-	public abstract void writeInt16Field(final short s, final Field field)
+	public abstract void writeArrayField(final Object array, final Field field) throws IOException;
+
+	public abstract void writeMGenObjectField(final MGenBase o, final Field field)
 			throws IOException;
-
-	public abstract void writeInt32Field(final int i, final Field field)
-			throws IOException;
-
-	public abstract void writeInt64Field(final long l, final Field field)
-			throws IOException;
-
-	public abstract void writeFloat32Field(final float f, final Field field)
-			throws IOException;
-
-	public abstract void writeFloat64Field(final double d, final Field field)
-			throws IOException;
-
-	public abstract void writeStringField(final String s, final Field field)
-			throws IOException;
-
-	public abstract void writeListField(
-			final ArrayList<Object> list,
-			final Field field) throws IOException;
-
-	public abstract void writeMapField(
-			final HashMap<Object, Object> map,
-			final Field field) throws IOException;
-
-	public abstract void writeArrayField(final Object array, final Field field)
-			throws IOException;
-
-	public abstract void writeMGenObjectField(
-			final MGenBase o,
-			final Field field) throws IOException;
 
 	@Override
-	public void visit(final byte o, final Field field, final boolean isSet)
-			throws IOException {
+	public void visit(final byte o, final Field field, final boolean isSet) throws IOException {
 		if (isSet)
 			writeInt8Field(o, field);
 	}
 
 	@Override
-	public void visit(final short o, final Field field, final boolean isSet)
-			throws IOException {
+	public void visit(final short o, final Field field, final boolean isSet) throws IOException {
 		if (isSet)
 			writeInt16Field(o, field);
 	}
 
 	@Override
-	public void visit(final int o, final Field field, final boolean isSet)
-			throws IOException {
+	public void visit(final int o, final Field field, final boolean isSet) throws IOException {
 		if (isSet)
 			writeInt32Field(o, field);
 	}
 
 	@Override
-	public void visit(final long o, final Field field, final boolean isSet)
-			throws IOException {
+	public void visit(final long o, final Field field, final boolean isSet) throws IOException {
 		writeInt64Field(o, field);
 	}
 
 	@Override
-	public void visit(final float o, final Field field, final boolean isSet)
-			throws IOException {
+	public void visit(final float o, final Field field, final boolean isSet) throws IOException {
 		if (isSet)
 			writeFloat32Field(o, field);
 	}
 
 	@Override
-	public void visit(final double o, final Field field, final boolean isSet)
-			throws IOException {
+	public void visit(final double o, final Field field, final boolean isSet) throws IOException {
 		if (isSet)
 			writeFloat64Field(o, field);
 	}
 
 	@Override
-	public void visit(final String o, final Field field, final boolean isSet)
-			throws IOException {
+	public void visit(final String o, final Field field, final boolean isSet) throws IOException {
 		if (isSet)
 			writeStringField(o, field);
 	}
 
+	@Override
+	public void visit(final Enum<?> e, final Field field, final boolean isSet) throws IOException {
+		if (isSet)
+			writeEnumField(e, field);
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
-	public void visit(final Object o, final Field field, final boolean isSet)
-			throws IOException {
+	public void visit(final Object o, final Field field, final boolean isSet) throws IOException {
 		if (isSet) {
 			switch (field.typ().typeEnum()) {
 			case ARRAY:
@@ -154,17 +139,15 @@ public abstract class BuiltInWriter implements FieldVisitor {
 				writeMGenObjectField((MGenBase) o, field);
 				break;
 			default:
-				throw new UnknownTypeException("Don't know how to write " + o
-						+ "(" + field.typ().typeEnum() + ") of field " + field);
+				throw new UnknownTypeException("Don't know how to write " + o + "("
+						+ field.typ().typeEnum() + ") of field " + field);
 			}
 		}
 	}
 
 	@Override
-	public void beginVisit(
-			final MGenBase object,
-			final int nFieldsSet,
-			final int nFieldsTotal) throws IOException {
+	public void beginVisit(final MGenBase object, final int nFieldsSet, final int nFieldsTotal)
+			throws IOException {
 		ensureNoMissingReqFields(object);
 		beginWrite(object, nFieldsSet, nFieldsTotal);
 	}
@@ -181,5 +164,5 @@ public abstract class BuiltInWriter implements FieldVisitor {
 			throw new Error(x); // Can't happen
 		}
 	}
-		
+
 }

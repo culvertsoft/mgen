@@ -66,10 +66,10 @@ object LayOutEntities {
 
   }
 
-  private def classes(xOffset: Double, module: Module, model: Model, allowResize: Boolean) {
+  private def userTypes(xOffset: Double, module: Module, model: Model, allowResize: Boolean) {
 
     if (allowResize) {
-      for (c <- module.getTypes()) {
+      for (c <- (module.getEnums() ++ module.getTypes())) {
         c.getPlacement()
           .setWidth(DEFAULT_CLASS_WIDTH)
           .setHeight(DEFAULT_CLASS_HEIGHT)
@@ -81,7 +81,7 @@ object LayOutEntities {
 
   private def module(module: Module, model: Model, allowResize: Boolean) {
     val sizeOccupiedBySubModules = modules(module, model, allowResize)
-    classes(sizeOccupiedBySubModules.x, module, model, allowResize)
+    userTypes(sizeOccupiedBySubModules.x, module, model, allowResize)
   }
 
   private def model(model: Model, allowResize: Boolean) {

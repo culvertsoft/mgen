@@ -15,8 +15,8 @@ object MkRequiredMembersCtor {
 
     implicit val currentModule = module
 
-    val reqAndOptFields = t.getAllFieldsInclSuper().toBuffer
-    val reqFields = t.getAllFieldsInclSuper().filter(_.isRequired())
+    val reqAndOptFields = t.fieldsInclSuper().toBuffer
+    val reqFields = t.fieldsInclSuper().filter(_.isRequired())
 
     if (reqFields.nonEmpty && reqAndOptFields != reqFields) {
       txtBuffer.tabs(1).text(s"${t.name()}(")
