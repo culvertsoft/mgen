@@ -137,6 +137,8 @@ function mGenGenerate(registry, settings) {
     }
     obj = undefined;
 
+    return Builder;
+
     /* CREATION HELPER FUNCTIONS */
 
     function setParent(obj) {
@@ -498,6 +500,4 @@ function mGenGenerate(registry, settings) {
             options[field] = (typeof options[field] === "undefined") ? settings[field] : options[field];
         }
     }
-
-    return Builder;
 }

@@ -1,1 +1,2 @@
-/* SBT jasmine requires this file but mgen-javascript library does not need any dependepcies */
+EnvJasmine.loadGlobal(EnvJasmine.libDir + "/require-2.0.6.js");
+EnvJasmine.loadGlobal(EnvJasmine.libDir + "/require.conf.js");
