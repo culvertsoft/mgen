@@ -396,7 +396,7 @@ If you want to include the runtime libries by source instead or build them yours
 
 ### Installing the C++ runtime libraries
 
-The C++ runtime libraries are header-only, so there is no installation required. All dependencies are included (currently just [rapipdjson](https://code.google.com/p/rapidjson/)). Just download the nightly or snapshot package and look in the mgen-cpplib/ folder.
+The C++ runtime libraries are header-only (and should work with any c++98 compiler) - there is no installation required. Just download and add to your include path. All dependencies are included (currently just [rapipdjson](https://code.google.com/p/rapidjson/)). Just download the nightly or snapshot package and look in the mgen-cpplib/ folder.
 
 
 ### Installing the JavaScript runtime libraries
