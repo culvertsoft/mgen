@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.api.model.impl;
 import se.culvertsoft.mgen.api.model.StringType;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 
-public class StringTypeImpl extends SimpleTypeImpl implements StringType {
+public class StringTypeImpl extends TypeImpl implements StringType {
 
 	private StringTypeImpl() {
 		super(TypeEnum.STRING);
@@ -29,6 +29,16 @@ public class StringTypeImpl extends SimpleTypeImpl implements StringType {
 	@Override
 	public Class<?> doClassOf() {
 		return String.class;
+	}
+
+	@Override
+	public boolean isLinked() {
+		return true;
+	}
+
+	@Override
+	public boolean containsCustomType() {
+		return false;
 	}
 
 }
