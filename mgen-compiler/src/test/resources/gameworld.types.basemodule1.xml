@@ -62,12 +62,10 @@
         <Item extends="Entity" />
 
         <EntityHolder>
-            <!-- Polymorphic field -->
             <entity type="Entity" />
         </EntityHolder>
 
         <GarageViewer>
-            <!-- Nonpolymorphic field -->
             <vehicles type="array[Vehicle]" />
         </GarageViewer>
 
