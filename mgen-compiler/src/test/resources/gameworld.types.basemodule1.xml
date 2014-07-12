@@ -4,79 +4,79 @@
 
     <Enums>
         <priority>
-            <low/>
+            <low />
             <medium>15</medium>
-            <high/>
+            <high />
         </priority>
-        
+
         <transport>
-            <udp/>
-            <tcp/>
-            <file_io/>
-            <database/>
+            <udp />
+            <tcp />
+            <file_io />
+            <database />
         </transport>
-        
+
         <kind>
-            <pretty/>
-            <ugly/>
+            <pretty />
+            <ugly />
         </kind>
     </Enums>
 
-	<Types>
+    <Types>
 
-		<VectorR3 id="0x01">
-			<x type="int" id="123"/>
-			<y type="float" />
-			<z type="double" />
+        <VectorR3 id="0x01">
+            <x type="int" id="123" />
+            <y type="float" />
+            <z type="double" />
             <kind type="kind" />
-		</VectorR3>
+        </VectorR3>
 
-		<Matrix4x4d id="0x02">
-			<values type="array[array[double]]" />
-		</Matrix4x4d>
+        <Matrix4x4d id="0x02">
+            <values type="array[array[double]]" />
+        </Matrix4x4d>
 
-		<Positioning id="0x03">
-			<position type="VectorR3" flags="required" />
-			<velocity type="VectorR3" />
-			<acceleration type="VectorR3" flags="polymorphic" />
-		</Positioning>
+        <Positioning id="0x03">
+            <position type="VectorR3" flags="required" />
+            <velocity type="VectorR3" />
+            <acceleration type="VectorR3" flags="polymorphic" />
+        </Positioning>
 
-		<Entity id="0x04">
-			<id type="int64" />
-			<positioning type="Positioning" />
-		</Entity>
+        <Entity id="0x04">
+            <id type="int64" />
+            <positioning type="Positioning" />
+        </Entity>
 
-		<Creature extends="Entity">
-			<hp type="int16" />
-		</Creature>
+        <Creature extends="Entity">
+            <hp type="int16" />
+        </Creature>
 
-		<Vehicle extends="Entity">
-			<topSpeed type="int32" flags="required" />
-		</Vehicle>
+        <Vehicle extends="Entity">
+            <topSpeed type="int32" flags="required" />
+        </Vehicle>
 
-		<Car extends="Vehicle">
-			<brand type="String" flags="required" />
-			<nWheels type="int8" />
-		</Car>
+        <Car extends="Vehicle">
+            <brand type="String" flags="required" />
+            <nWheels type="int8" />
+        </Car>
 
-		<Item extends="Entity" />
+        <Item extends="Entity" />
 
-		<EntityHolder>
-			<!-- Polymorphic field -->
-			<entity type="Entity" />
-		</EntityHolder>
+        <EntityHolder>
+            <!-- Polymorphic field -->
+            <entity type="Entity" />
+        </EntityHolder>
 
-		<GarageViewer>
-			<!-- Nonpolymorphic field -->
-			<vehicles type="array[Vehicle]" />
-		</GarageViewer>
+        <GarageViewer>
+            <!-- Nonpolymorphic field -->
+            <vehicles type="array[Vehicle]" />
+        </GarageViewer>
 
-		<World>
-			<name type="String" />
-			<entities type="map[int64, Entity]" />
-			<loadedFromDataBase type="String" flags="polymorphic" />
-		</World>
+        <World>
+            <name type="String" />
+            <entities type="map[int64, Entity]" />
+            <loadedFromDataBase type="String" flags="polymorphic" />
+        </World>
 
-	</Types>
+    </Types>
 
 </Module>
