@@ -244,15 +244,15 @@ To access the generated types we include the headers of the types we need, or th
 
     #include "mgen/serialization/VectorInputStream.h"
     #include "mgen/serialization/VectorOutputStream.h"
-    #include "mgen/serialization/JSONWriter.h"
-    #include "mgen/serialization/JSONReader.h"
+    #include "mgen/serialization/JsonWriter.h"
+    #include "mgen/serialization/JsonReader.h"
     
     #include "gameworld/types/ClassRegistry.h"
     
     using mgen::VectorOutputStream;
     using mgen::VectorInputStream;
-    using mgen::JSONWriter;
-    using mgen::JSONReader;
+    using mgen::JsonWriter;
+    using mgen::JsonReader;
     using mgen::VectorOutputStream;
     using gameworld::types::ClassRegistry;
     using namespace gameworld::types::basemodule1;
@@ -276,7 +276,7 @@ Now let us try to serialize these cars to JSON. This is how we do it:
       VectorOutputStream out(buffer);
       
       // Now create our serializer
-      JSONWriter<VectorOutputStream, ClassRegistry> writer(out, classRegistry);
+      JsonWriter<VectorOutputStream, ClassRegistry> writer(out, classRegistry);
       
       // Write the objects
       writer.writeObject(car1);
@@ -289,7 +289,7 @@ Now we can read these objects back from the buffer in the following manner:
       VectorInputStream in(buffer);
       
       // Create our deserializer
-      JSONReader<VectorInputStream, ClassRegistry> reader(in, classRegistry);
+      JsonReader<VectorInputStream, ClassRegistry> reader(in, classRegistry);
      
       // Read back the objects. 
       // Note that here the root objects read back are placed on the free store, 
