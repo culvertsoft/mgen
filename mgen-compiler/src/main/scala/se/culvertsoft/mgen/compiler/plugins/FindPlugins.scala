@@ -4,16 +4,15 @@ import java.io.File
 import java.lang.reflect.Modifier
 import java.net.URL
 import java.net.URLClassLoader
-
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaSet
 import scala.collection.mutable.HashMap
-
 import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.api.plugins.Parser
 import se.culvertsoft.mgen.api.util.internal.ListClasses
 import se.culvertsoft.mgen.api.util.internal.ListFiles
 import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
+import scala.collection.mutable.ArrayBuffer
 
 object FindPlugins {
 
@@ -42,7 +41,7 @@ class FindPlugins(pluginPaths_in: Seq[String]) {
 
   lazy val (parserClasses, generatorClasses) = findPluginClasses()
 
-  private def findPluginClasses(): (HashMap[String, Class[_ <: Parser]], HashMap[String, Class[_ <: Generator]]) = {
+  private def findPluginClasses(): (Seq[Class[_ <: Parser]], Seq[Class[_ <: Generator]]) = {
 
     val fileNames = pluginPaths.flatMap(path => ListFiles.recursively(path, ".jar"))
     val classNames = fileNames.flatMap(file => ListClasses.namesInJar(file)).toSet
@@ -50,18 +49,18 @@ class FindPlugins(pluginPaths_in: Seq[String]) {
 
     val classLoader = URLClassLoader.newInstance(jarUrls)
 
-    val parss = new HashMap[String, Class[_ <: Parser]]
-    val gens = new HashMap[String, Class[_ <: Generator]]
+    val parss = new ArrayBuffer[Class[_ <: Parser]]
+    val gens = new ArrayBuffer[Class[_ <: Generator]]
 
-    parss.put(classOf[DefaultParser].getName(), classOf[DefaultParser])
+    parss += classOf[DefaultParser]
 
     classNames.foreach { className =>
       val cls = Class.forName(className, false, classLoader)
       if (!Modifier.isAbstract(cls.getModifiers()))
         if (classOf[Parser].isAssignableFrom(cls)) {
-          parss.put(cls.asInstanceOf[Class[Parser]].getName(), cls.asInstanceOf[Class[Parser]])
+          parss += cls.asInstanceOf[Class[Parser]]
         } else if (classOf[Generator].isAssignableFrom(cls)) {
-          gens.put(cls.asInstanceOf[Class[Generator]].getName(), cls.asInstanceOf[Class[Generator]])
+          gens += cls.asInstanceOf[Class[Generator]]
         }
     }
 

@@ -10,6 +10,8 @@ import scala.util.Try
 
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.plugins.Generator
+import se.culvertsoft.mgen.api.plugins.Parser
+import se.culvertsoft.mgen.compiler.plugins.FindClasses
 import se.culvertsoft.mgen.compiler.plugins.FindPlugins
 
 object MGen {
@@ -35,19 +37,6 @@ object MGen {
       // Parse cmd line args      
       val settings = parseKeyValuePairs(params)
 
-      // Detect available plugins
-      println("Detecting available plugins")
-      val findPlugins = new FindPlugins(split(settings.getOrElse("plugin_paths", "")))
-      val availableParsers = findPlugins.parserClasses
-      val availableGenerators = findPlugins.generatorClasses
-      println(s"  --> detected available parsers: ${availableParsers.keys.mkString(", ")}")
-      println(s"  --> detected available generators: ${availableGenerators.keys.mkString(", ")}")
-      println("")
-      if (availableParsers.isEmpty)
-        throw new AnalysisException(s"Could not find any parsers")
-      if (availableGenerators.isEmpty)
-        throw new AnalysisException(s"Could not find any generators")
-
       // Ensure parsers are specified
       val parserPath =
         settings.get("parser") match {
@@ -61,10 +50,19 @@ object MGen {
             DEFAULT_PARSER
         }
 
+      // Detect available plugins
+      println("Detecting available parsers")
+      val plugins = new FindPlugins(split(settings.getOrElse("plugin_paths", "")))
+      val availableParsers = (plugins.parserClasses ++ FindClasses[Parser](parserPath)).distinct
+      println(s"  --> detected available parsers: ${availableParsers.mkString(", ")}")
+      println("")
+      if (availableParsers.isEmpty)
+        throw new AnalysisException(s"Could not find any parsers")
+
       // Instantiate the parser
       print("Instantiating parser...")
       val parser =
-        availableParsers.get(parserPath) match {
+        availableParsers.find(_.getName == parserPath) match {
           case Some(parserClass) => parserClass.newInstance()
           case _ => throw new AnalysisException(s"Aborting: Specified parser class '${parserPath}' not found")
         }
@@ -75,6 +73,13 @@ object MGen {
       val project = parser.parse(settings)
       println("ok\n")
 
+      // Detect available generators
+      println("Detecting available generators")
+      val availableGenerators = (plugins.generatorClasses ++ FindClasses[Generator](project.generators.map(_.getGeneratorClassPath))).distinct
+      println(s"  --> detected available generators: ${availableGenerators.mkString(", ")}")
+      if (availableGenerators.isEmpty)
+        throw new AnalysisException(s"Could not find any generators")
+
       // Find our selected generators
       val selectedGenerators = project.generators()
       if (selectedGenerators.isEmpty)
@@ -84,7 +89,7 @@ object MGen {
       val generators = new HashMap[String, Generator]
       selectedGenerators.foreach({ selected =>
         val clsName = selected.getGeneratorClassPath()
-        availableGenerators.get(clsName) match {
+        availableGenerators.find(_.getName == clsName) match {
           case Some(cls) =>
             generators.put(clsName, cls.newInstance())
             println(s"Created generator: ${clsName}")
