@@ -50,7 +50,7 @@ object MGen {
             DEFAULT_PARSER
         }
 
-      // Detect available plugins
+      // Detect available parsers
       println("Detecting available parsers")
       val plugins = new FindPlugins(split(settings.getOrElse("plugin_paths", "")))
       val availableParsers = (plugins.parserClasses ++ FindClasses[Parser](parserPath)).distinct
