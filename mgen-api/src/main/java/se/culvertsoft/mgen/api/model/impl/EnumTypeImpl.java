@@ -9,7 +9,7 @@ import se.culvertsoft.mgen.api.model.EnumType;
 import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 
-public class EnumTypeImpl extends SimpleTypeImpl implements EnumType {
+public class EnumTypeImpl extends TypeImpl implements EnumType {
 
 	private final String m_name;
 	private final String m_fullName;

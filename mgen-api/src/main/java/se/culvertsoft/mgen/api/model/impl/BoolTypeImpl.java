@@ -26,4 +26,14 @@ public class BoolTypeImpl extends PrimitiveTypeImpl implements BoolType {
 		return boolean.class;
 	}
 
+	@Override
+	public boolean isLinked() {
+		return true;
+	}
+
+	@Override
+	public boolean containsCustomType() {
+		return false;
+	}
+
 }

@@ -5,7 +5,7 @@ import se.culvertsoft.mgen.api.model.impl.StringTypeImpl;
 /**
  * Represents a string type
  */
-public interface StringType extends SimpleType {
+public interface StringType extends Type {
 
 	public final static StringType INSTANCE = StringTypeImpl.INSTANCE;
 

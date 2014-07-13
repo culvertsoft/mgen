@@ -240,19 +240,25 @@ Example: Here is how we generate [one of the data models for testing MGen](https
 
 ### Using generated code
 
+Read on below, or check our tests at:
+ - C++: https://github.com/culvertsoft/mgen/tree/master/mgen-cpplib/src/test/cpp/src/tests
+ - Scala: https://github.com/culvertsoft/mgen/tree/master/mgen-javalib/src/test/scala/se/culvertsoft/mgen/javapack/test
+ - Java: See scala examples (the generated code is pure java, we just wrote our tests in scala as it was easier)
+ - Javascript: tbd
+
 To access the generated types we include the headers of the types we need, or the generated ClassRegistry.h header file which will let us access all the types that were just generated. We will also include some mgen headers for serialization.
 
     #include "mgen/serialization/VectorInputStream.h"
     #include "mgen/serialization/VectorOutputStream.h"
-    #include "mgen/serialization/JSONWriter.h"
-    #include "mgen/serialization/JSONReader.h"
+    #include "mgen/serialization/JsonWriter.h"
+    #include "mgen/serialization/JsonReader.h"
     
     #include "gameworld/types/ClassRegistry.h"
     
     using mgen::VectorOutputStream;
     using mgen::VectorInputStream;
-    using mgen::JSONWriter;
-    using mgen::JSONReader;
+    using mgen::JsonWriter;
+    using mgen::JsonReader;
     using mgen::VectorOutputStream;
     using gameworld::types::ClassRegistry;
     using namespace gameworld::types::basemodule1;
@@ -276,7 +282,7 @@ Now let us try to serialize these cars to JSON. This is how we do it:
       VectorOutputStream out(buffer);
       
       // Now create our serializer
-      JSONWriter<VectorOutputStream, ClassRegistry> writer(out, classRegistry);
+      JsonWriter<VectorOutputStream, ClassRegistry> writer(out, classRegistry);
       
       // Write the objects
       writer.writeObject(car1);
@@ -289,7 +295,7 @@ Now we can read these objects back from the buffer in the following manner:
       VectorInputStream in(buffer);
       
       // Create our deserializer
-      JSONReader<VectorInputStream, ClassRegistry> reader(in, classRegistry);
+      JsonReader<VectorInputStream, ClassRegistry> reader(in, classRegistry);
      
       // Read back the objects. 
       // Note that here the root objects read back are placed on the free store, 
@@ -383,14 +389,12 @@ See [Generating source code](#generating-source-code) for how to use it.
 
 The [java runtime libraries](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/) are compiled to a java jar file. This file depends on [the mgen API](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/) (also a jar file). Both can be downloaded from the [downloads section](#download-links). You will also need [json-simple](https://code.google.com/p/json-simple/).
 
-Add the jar files to your build and you should be good to go.
-
-If you want to include the runtime libries by source instead or build them yourself, see [Building MGen](#building-mgen).
+Add the jar files to your build and you should be good to go. If you want to include the runtime libries by source instead or build them yourself, see [Building MGen](#building-mgen).
 
 
 ### Installing the C++ runtime libraries
 
-The C++ runtime libraries are header-only, so there is no installation required. All dependencies are included (currently just [rapipdjson](https://code.google.com/p/rapidjson/)). Just download the nightly or snapshot package and look in the mgen-cpplib/ folder.
+The C++ runtime libraries are header-only (and should work with any c++98 compiler) - there is no installation required. Just download and add to your include path. All dependencies are included (currently just [rapipdjson](https://code.google.com/p/rapidjson/)). Just download the nightly or snapshot package and look in the mgen-cpplib/ folder.
 
 
 ### Installing the JavaScript runtime libraries

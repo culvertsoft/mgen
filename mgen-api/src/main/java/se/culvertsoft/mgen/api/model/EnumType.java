@@ -10,7 +10,7 @@ import se.culvertsoft.mgen.api.model.impl.EnumTypeImpl;
  * @author GiGurra
  * 
  */
-public interface EnumType extends SimpleType, UserDefinedType {
+public interface EnumType extends UserDefinedType {
 
 	/**
 	 * The entries of this enumeration.

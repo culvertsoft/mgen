@@ -1,7 +1,5 @@
 package se.culvertsoft.mgen.visualdesigner.view.searchdialog
 
-import java.awt.KeyEventDispatcher
-import java.awt.KeyboardFocusManager
 import java.awt.event.KeyEvent
 import java.util.regex.Pattern
 
@@ -22,10 +20,11 @@ import se.culvertsoft.mgen.visualdesigner.control.Controller
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
 import se.culvertsoft.mgen.visualdesigner.model.Entity
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.util.MkActionListener
-import se.culvertsoft.mgen.visualdesigner.util.ZwingUtils
 import se.culvertsoft.mgen.visualdesigner.view.MkAction
 import se.culvertsoft.mgen.visualdesigner.view.Selectable
 import se.culvertsoft.mgen.visualdesigner.view.autobox2.AutoBoxListener
@@ -41,10 +40,12 @@ class FilterPanel extends JPanel {
   setLayout(new MigLayout)
   val projectsCheckbox = new JCheckBox("project", false) { setToolTipText("Include projects in the search") }
   val moduleCheckbox = new JCheckBox("module", true) { setToolTipText("Include modules in the search") }
+  val enumCheckbox = new JCheckBox("enum", true) { setToolTipText("Include enums in the search") }
   val classCheckbox = new JCheckBox("class", true) { setToolTipText("Include classes in the search") }
   val fieldCheckbox = new JCheckBox("field", false) { setToolTipText("Include fields in the search") }
   add(projectsCheckbox)
   add(moduleCheckbox)
+  add(enumCheckbox)
   add(classCheckbox)
   add(fieldCheckbox)
 }
@@ -82,6 +83,8 @@ class ByNamePanel(controller: Controller) extends JPanel with FocusFordwardingTa
   def isAllowed(e: Entity): Boolean = {
     e match {
       case e: CustomTypeField => filterPanel.fieldCheckbox.isSelected()
+      case e: EnumEntry => filterPanel.fieldCheckbox.isSelected()
+      case e: EnumType => filterPanel.enumCheckbox.isSelected()
       case e: CustomType => filterPanel.classCheckbox.isSelected()
       case e: Module => filterPanel.moduleCheckbox.isSelected()
       case e: Project => filterPanel.projectsCheckbox.isSelected()
@@ -251,24 +254,7 @@ class FromListPanel(controller: Controller) extends JPanel with FocusFordwarding
 }
 
 class SearchDialog(controller: Controller) extends JDialog {
-/*
-  val keybFocusMgr = KeyboardFocusManager.getCurrentKeyboardFocusManager()
-  keybFocusMgr.addKeyEventDispatcher(new KeyEventDispatcher() {
-    override def dispatchKeyEvent(e: KeyEvent): Boolean = {
 
-      if (!ZwingUtils.originatesFromChild(e, SearchDialog.this))
-        return false
-
-      if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-        exit()
-        return true
-      }
-
-      return false
-
-    }
-  })
-*/
   // From list panel
   val tabbedPane = new JTabbedPane
   val searchByNameTab = new ByNamePanel(controller)
