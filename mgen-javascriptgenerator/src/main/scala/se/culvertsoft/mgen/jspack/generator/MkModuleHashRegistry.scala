@@ -13,7 +13,7 @@ object MkModuleHashRegistry {
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
     txtBuffer {
       scope("registry.lookup = function( typeId ) ") {
-        ln("t = a.match(/(.{1,3})/g); // Split typeId into array for easier reading of inheritance (every 3 char is a type).")
+        ln("var t = typeId.match(/(.{1,3})/g); // Split typeId into array for easier reading of inheritance (every 3 char is a type).")
         MkHashSwitch(topLevelTypes)
       }
     }

@@ -74,15 +74,15 @@ run-tests:
 	#       RUNNING ALL TESTS                               #
 	#                                                       #
 	#########################################################
-	#cd mgen-api && make run-tests
-	#cd mgen-compiler && make run-tests
-	# cd mgen-cppgenerator && make run-tests
-	# cd mgen-javagenerator && make run-tests
-	# cd mgen-javascriptgenerator && make run-tests
-	 cd mgen-javascriptlib && make run-tests
-	# cd mgen-cpplib && make run-tests
-	# cd mgen-javalib && make run-tests
-	# cd mgen-visualdesigner && make run-tests
+	cd mgen-api && make run-tests
+	cd mgen-compiler && make run-tests
+	cd mgen-cppgenerator && make run-tests
+	cd mgen-javagenerator && make run-tests
+	cd mgen-javascriptgenerator && make run-tests
+	cd mgen-javascriptlib && make run-tests
+	cd mgen-cpplib && make run-tests
+	cd mgen-javalib && make run-tests
+	cd mgen-visualdesigner && make run-tests
 	#########################################################
 	#                                                       #
 	#        DONE RUNNING ALL TEST                          #

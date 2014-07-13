@@ -5,6 +5,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 import se.culvertsoft.mgen.api.model._
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import scala.collection.JavaConversions._
+import scala.collection.mutable.ArrayBuffer
 
 object MkModuleClassRegistry {
 
@@ -16,11 +17,14 @@ object MkModuleClassRegistry {
       allTypes.foreach({ t =>
         scope("registry.classRegistry[\"" + t.fullName + "\"] = ") {
           ln("\"__t\": \"" + t.superTypeHierarchy().map(x => x.typeId16BitBase64()).mkString("") + "\",")
-          for(field <-  t.fieldsInclSuper){
-           ln("\"" + field.name + "\": {")
-           txtBuffer {
+          for (field <- t.fieldsInclSuper) {
+            ln("\"" + field.name + "\": {")
+            txtBuffer {
               ln("\"flags\": [" + field.flags().map(x => "\"" + x + "\"").mkString(",") + "],")
-              ln("\"type\": \"" + getTypeName(field.typ()) + "\",")
+              field.typ() match {
+                case e: EnumType => ln("\"type\": \"enum:" + e.entries().map(x => x.name() ).mkString(", ") + "\",")
+                case _ => ln("\"type\": \"" + getTypeName(field.typ()) + "\",")
+              }
               ln("\"hash\": \"" + field.idBase64() + "\"")
             }
             if (field == t.fieldsInclSuper.last) ln("}") else ln("},")

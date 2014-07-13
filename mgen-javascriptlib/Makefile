@@ -26,4 +26,4 @@ run-tests: all generate-test-model
 	###################################
 	#   TESTING MGEN-JAVASCRIPTLIB    #
 	###################################
-	sbt test
+	sbt jasmine

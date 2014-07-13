@@ -22,7 +22,7 @@ seq(jsSettings : _*)
 
 seq(jasmineSettings : _*)
 
-appJsDir <+= baseDirectory { x => x / "target" / "javascript" }
+appJsDir <+= baseDirectory { x => x }
 
 appJsLibDir <+= sourceDirectory { x => x / "test" / "javascript" }
 
