@@ -14,7 +14,7 @@ seq(jsSettings : _*)
 
 (JsKeys.strictMode in (Compile)) := false
 
-(JsKeys.prettyPrint in (Compile)) := true
+(JsKeys.prettyPrint in (Compile)) := false
 
 (resourceManaged in (Compile, JsKeys.js)) <<= (baseDirectory in Compile)(_ / "target")
 

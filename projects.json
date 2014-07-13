@@ -22,6 +22,16 @@
 				"target": "%PROJECT-%VERSION-sources.jar"
 			}
 		],
+		"javascript": [
+			{
+				"source": "src/main/javascript/mgen-lib.js",
+				"target": "mgen.%VERSION.js"
+			},
+			{
+				"source": "target/javascript/mgen-lib.js",
+				"target": "mgen.%VERSION.min.js"
+			}
+		],
 		"cpp": [
 			{
 				"source": "/src/main/cpp/mgen",
@@ -44,6 +54,12 @@
 		},
 		"mgen-cpplib": {
 			"def_files": "cpp"
+		},
+		"mgen-javascriptgenerator": {
+			"def_files": "java"
+		},
+		"mgen-javascriptlib": {
+			"def_files": "javascript"
 		},
 		"mgen-javagenerator": {
 			"def_files": "java"
