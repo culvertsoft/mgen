@@ -244,7 +244,7 @@ Read on below, or check our tests at:
  - C++: https://github.com/culvertsoft/mgen/tree/master/mgen-cpplib/src/test/cpp/src/tests
  - Scala: https://github.com/culvertsoft/mgen/tree/master/mgen-javalib/src/test/scala/se/culvertsoft/mgen/javapack/test
  - Java: See scala examples (the generated code is pure java, but we wrote our tests in scala as it was easier)
- - Javascript: tbd
+ - Javascript: coming soon!
 
 To access the generated types we include the headers of the types we need, or the generated ClassRegistry.h header file which will let us access all the types that were just generated. We will also include some mgen headers for serialization.
 
@@ -315,7 +315,7 @@ Now we can read these objects back from the buffer in the following manner:
       for (MGenBase obj * : objects) {
         switch(obj->_typeId()) {
           case Car::_type_id:
-            Car * car = reinterpret_cast<Car*>(obj);
+            Car * car = static_cast<Car*>(obj);
             std::cout << "Yay we got a car!" << std::endl;
             break;
           default:
