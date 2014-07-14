@@ -72,7 +72,7 @@ run-visualdesigner:
 prepare-testresources:
 	cd mgen-testresources && make generate
 
-run-tests:
+run-tests: prepare-testresources
 	#########################################################
 	#                                                       #
 	#       RUNNING ALL TESTS                               #

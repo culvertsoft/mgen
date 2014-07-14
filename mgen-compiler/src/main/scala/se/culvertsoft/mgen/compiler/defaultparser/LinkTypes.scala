@@ -3,6 +3,7 @@ package se.culvertsoft.mgen.compiler.defaultparser
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 
+import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.ListType
@@ -58,11 +59,12 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
             case Some(replacement) =>
               replacement
             case _ =>
-              println(s"Ambigously referenced type ${written} in parent ${parent}")
+              if (matches.size > 1)
+            	  throw new AnalysisException(s"Ambigously referenced type ${written} in type ${parent}")
               matches.head
           }
         } else {
-          ThrowRTE(s"Could not find any matching types for type ${written} referenced in parent ${parent}")
+          throw new AnalysisException(s"Could not find any matching types for type ${written} referenced in parent ${parent}")
         }
 
       case _ => t

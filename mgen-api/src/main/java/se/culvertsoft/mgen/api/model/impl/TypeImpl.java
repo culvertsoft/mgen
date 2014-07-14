@@ -13,6 +13,12 @@ public abstract class TypeImpl implements Type {
 		m_class = null;
 	}
 
+	@Override
+	public int hashCode() {
+		return fullName().hashCode();
+	}
+
+	@Override
 	public TypeEnum typeEnum() {
 		return m_enum;
 	}

@@ -4,16 +4,10 @@ MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_
 all: generate
 
 generate:
-	#####################################################
-	# GENERATING MODELS AND DATA FOR MGEN-TESTRESOURCES #
-	#####################################################
 	cd depends && make generate
 	cd writeread && make generate
 
 clean:
-	#########################################
-	#   CLEANING MGEN-CPPLIB-TEST           #
-	#########################################
-	#cd build && make clean
-	#cd generated && make clean
+	cd depends && make clean
+	cd writeread && make clean
 

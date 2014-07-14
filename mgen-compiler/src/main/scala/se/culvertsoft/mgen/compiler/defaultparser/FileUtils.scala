@@ -1,9 +1,14 @@
 package se.culvertsoft.mgen.compiler.defaultparser
 
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.nio.charset.Charset
 
 object FileUtils {
 
+  val charset = Charset.forName("UTF8");
+  
   def exists(filePath: String): Boolean = {
     new File(filePath).exists()
   }
@@ -66,8 +71,9 @@ object FileUtils {
     file
   }
 
-  def readToString(filePath: String): String = {
-    scala.io.Source.fromFile(filePath).mkString
+  def readToString(filePath: String, chrset: Charset = charset): String = {
+    val encoded = Files.readAllBytes(Paths.get(filePath));
+    return new String(encoded, chrset);
   }
 
 }
