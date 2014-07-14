@@ -109,7 +109,9 @@
             <oldField type="int"/>
         </OldSubType>
         <NewTypeContainer>
-            <contents type="BaseType" flags="polymorphic"/>
+            <f type="BaseType" flags="polymorphic"/>
+            <a type="array[BaseType]" flags="polymorphic"/>
+            <m type="map[string, BaseType]" flags="polymorphic"/>
         </NewTypeContainer>
         
         <FieldTypesA>
