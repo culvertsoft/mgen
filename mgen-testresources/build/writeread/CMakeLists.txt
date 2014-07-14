@@ -1,2 +1,2 @@
-add_subdirectory(old)
-add_subdirectory(new)
+add_subdirectory(write)
+add_subdirectory(read)
