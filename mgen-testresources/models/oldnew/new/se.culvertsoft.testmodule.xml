@@ -3,23 +3,20 @@
 <Module>
 
     <Enums>
-        <priority>
-            <low />
+        <EnumValueChange>
+            <low >3</low>
+            <medium>4</medium>
+            <high>16</high>
+            <uber>123</uber>
+        </EnumValueChange>
+        
+        <EnumOrderChange>
             <medium>15</medium>
+            <low />
+            <uber>9999</uber>
             <high />
-        </priority>
-
-        <transport>
-            <udp />
-            <tcp />
-            <file_io />
-            <database />
-        </transport>
-
-        <kind>
-            <pretty />
-            <ugly />
-        </kind>
+        </EnumOrderChange>
+        
     </Enums>
 
     <Types>
@@ -72,8 +69,72 @@
         <World>
             <name type="String" />
             <entities type="map[int64, Entity]" />
-            <loadedFromDataBase type="String" flags="polymorphic" />
+            <db type="String" flags="polymorphic" />
         </World>
+        
+        
+        <!-- For versioning tests -->
+                        
+        <NewRequiredFields>
+            <ar type="bool" flags="required"/>
+            <b type="int8"/>
+            <c type="byte"/>
+            <d type="int16"/>
+            <e type="int32"/>
+            <fr type="int" flags="required"/>
+            <g type="int64"/>
+            <h type="float32"/>
+            <i type="float"/>
+            <j type="float64"/>
+            <k type="double"/>
+            <l type="EnumValueChange"/>
+            <m type="string"/>
+            <nr type="array[array[int]]" flags="required"/>
+            <or type="array[VectorR3]" flags="required"/>
+            <p type="array[VectorR3]" flags="polymorphic"/>
+            <q type="list[list[int]]"/>
+            <r type="list[VectorR3]"/>
+            <s type="list[VectorR3]" flags="polymorphic"/>
+            <tr type="map[string, array[int]]" flags="required"/>
+            <u type="map[int, VectorR3]"/>
+            <v type="map[float, list[VectorR3]]" flags="polymorphic"/>
+            <w type="VectorR3"/>
+            <xr type="VectorR3" flags="polymorphic, required"/>
+        </NewRequiredFields>
+                         
+        <BaseType>
+            <someField type="int"/>
+        </BaseType>                
+        <OldSubType extends="BaseType">
+            <oldField type="int"/>
+        </OldSubType>          
+        <NewSubType extends="BaseType">
+            <newField type="float"/>
+        </NewSubType>
+        <NewTypeContainer>
+            <contents type="BaseType" flags="polymorphic"/>
+        </NewTypeContainer>
+        
+        <FieldTypesA>
+            <f type="float"/>
+        </FieldTypesA>
+        <FieldTypesB>
+            <f type="string"/>
+        </FieldTypesB>
+        <FieldTypesC>
+            <f type="array[array[int]"/>
+        </FieldTypesC>
+        <FieldTypesD>
+            <f type="map[int, array[array[int]]"/>
+        </FieldTypesD>
+        
+        <FieldIdChange>
+            <f type="int" id="0x04">
+        </FieldIdChange>
+
+        <FieldNameChange>
+            <f2 type="int" id="0x12">
+        </FieldNameChange>
 
     </Types>
 

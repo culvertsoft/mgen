@@ -63,7 +63,34 @@
             <y type="ExternalType"/>
             <z type="ExternalType" flags="polymorphic"/>
         </AllFieldTypes>
-
+ 
+        <AllFieldTypesRequired>
+            <a type="bool" flags="required"/>
+            <b type="int8" flags="required"/>
+            <c type="byte" flags="required"/>
+            <d type="int16" flags="required"/>
+            <e type="int32" flags="required"/>
+            <f type="int" flags="required"/>
+            <g type="int64" flags="required"/>
+            <h type="float32" flags="required"/>
+            <i type="float" flags="required"/>
+            <j type="float64" flags="required"/>
+            <k type="double" flags="required"/>
+            <l type="EnumValueChange" flags="required"/>
+            <m type="string" flags="required"/>
+            <n type="array[array[int]]" flags="required"/>
+            <o type="array[VectorR3]" flags="required"/>
+            <p type="array[VectorR3]" flags="polymorphic, required"/>
+            <q type="list[list[int]]" flags="required"/>
+            <r type="list[VectorR3]" flags="required"/>
+            <s type="list[VectorR3]" flags="polymorphic, required"/>
+            <t type="map[string, array[int]]" flags="required"/>
+            <u type="map[int, VectorR3]" flags="required"/>
+            <v type="map[float, list[VectorR3]]" flags="polymorphic, required"/>
+            <w type="VectorR3" flags="required"/>
+            <x type="VectorR3" flags="polymorphic, required"/>
+        </AllFieldTypesRequired>
+        
     </Types>
 
 </Module>
