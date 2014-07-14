@@ -33,6 +33,7 @@ clean:
 	#           CLEANING MGEN                               #
 	#                                                       #
 	#########################################################
+	cd mgen-testresources && make clean
 	cd mgen-api && make clean
 	cd mgen-compiler && make clean
 	cd mgen-cppgenerator && make clean
@@ -67,6 +68,9 @@ run-compiler:
 
 run-visualdesigner:
 	cd mgen-visualdesigner && make run
+
+prepare-testresources:
+	cd mgen-testresources && make generate
 
 run-tests:
 	#########################################################

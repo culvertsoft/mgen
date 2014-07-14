@@ -7,7 +7,8 @@ generate:
 	#####################################################
 	# GENERATING MODELS AND DATA FOR MGEN-TESTRESOURCES #
 	#####################################################
-	cd generated && make generate
+	cd depends && make generate
+	cd writeread && make generate
 
 clean:
 	#########################################
