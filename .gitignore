@@ -17,6 +17,7 @@ project/plugins/project/
 
 #generated code
 src_generated/
+data_generated/
 
 # Scala-IDE specific
 .scala_dependencies
