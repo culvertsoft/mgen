@@ -2,6 +2,7 @@ package se.culvertsoft.mgen.api.model.impl;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -201,8 +202,8 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 
 	private void findReferences() {
 
-		final Set<EnumType> enums = new HashSet<EnumType>();
-		final Set<CustomType> classes = new HashSet<CustomType>();
+		final Set<EnumType> enums = new LinkedHashSet<EnumType>();
+		final Set<CustomType> classes = new LinkedHashSet<CustomType>();
 
 		if (hasSuperType())
 			classes.add(superType());

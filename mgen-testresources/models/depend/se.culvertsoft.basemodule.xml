@@ -50,20 +50,20 @@
             <l type="InternalEnum"/>
             <m type="string"/>
             <n type="array[array[int]]"/>
-            <o type="array[InternType]"/>
-            <p type="array[InternType]" flags="polymorphic"/>
+            <o type="array[InternalType]"/>
+            <p type="array[InternalType]" flags="polymorphic"/>
             <q type="list[list[int]]"/>
-            <r type="list[InternType]"/>
-            <s type="list[InternType]" flags="polymorphic"/>
+            <r type="list[InternalType]"/>
+            <s type="list[InternalType]" flags="polymorphic"/>
             <t type="map[string, array[int]]"/>
-            <u type="map[int, InternType]"/>
-            <v type="map[float, list[InternType]]" flags="polymorphic"/>
+            <u type="map[int, InternalType]"/>
+            <v type="map[float, list[InternalType]]" flags="polymorphic"/>
             <w type="InternalType"/>
             <x type="InternalType" flags="polymorphic"/>
             <y type="ExternalType"/>
             <z type="ExternalType" flags="polymorphic"/>
         </AllFieldTypes>
- 
+
         <AllFieldTypesRequired>
             <a type="bool" flags="required"/>
             <b type="int8" flags="required"/>
@@ -76,19 +76,21 @@
             <i type="float" flags="required"/>
             <j type="float64" flags="required"/>
             <k type="double" flags="required"/>
-            <l type="EnumValueChange" flags="required"/>
+            <l type="InternalEnum" flags="required"/>
             <m type="string" flags="required"/>
             <n type="array[array[int]]" flags="required"/>
-            <o type="array[VectorR3]" flags="required"/>
-            <p type="array[VectorR3]" flags="polymorphic, required"/>
+            <o type="array[InternalType]" flags="required"/>
+            <p type="array[InternalType]" flags="polymorphic, required"/>
             <q type="list[list[int]]" flags="required"/>
-            <r type="list[VectorR3]" flags="required"/>
-            <s type="list[VectorR3]" flags="polymorphic, required"/>
+            <r type="list[InternalType]" flags="required"/>
+            <s type="list[InternalType]" flags="polymorphic, required"/>
             <t type="map[string, array[int]]" flags="required"/>
-            <u type="map[int, VectorR3]" flags="required"/>
-            <v type="map[float, list[VectorR3]]" flags="polymorphic, required"/>
-            <w type="VectorR3" flags="required"/>
-            <x type="VectorR3" flags="polymorphic, required"/>
+            <u type="map[int, InternalType]" flags="required"/>
+            <v type="map[float, list[InternalType]]" flags="polymorphic, required"/>
+            <w type="InternalType" flags="required"/>
+            <x type="InternalType" flags="polymorphic, required"/>
+            <y type="ExternalType" flags="required"/>
+            <z type="ExternalType" flags="polymorphic, required"/>
         </AllFieldTypesRequired>
         
     </Types>

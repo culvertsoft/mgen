@@ -13,6 +13,6 @@ clean:
 	#########################################
 	#   CLEANING MGEN-CPPLIB-TEST           #
 	#########################################
-	#cd build && make clean
-	#cd generated && make clean
+	cd build && make clean
+	cd generated && make clean
 
