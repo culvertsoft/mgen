@@ -489,7 +489,7 @@ var mGen = {
         }
     },
 
-    jsonHandlerFactory: function(Registry) {
+    jsonHandler: function(Registry) {
 
         var JsonHandler = function(Registry) {
             "use strict";
