@@ -21,11 +21,15 @@
 
     <Types>
 
+	<EnumHolder>
+		<e1 type="EnumValueChange"/>
+		<e2 type="EnumOrderChange"/>
+	</EnumHolder>
+
         <VectorR3 id="0x01">
             <x type="int" id="123" />
             <y type="float" />
             <z type="double" />
-            <kind type="kind" />
         </VectorR3>
 
         <Matrix4x4d id="0x02">
@@ -128,11 +132,11 @@
         </FieldTypesD>
         
         <FieldIdChange>
-            <f type="int" id="0x05">
+            <f type="int" id="0x05"/>
         </FieldIdChange>
 
         <FieldNameChange>
-            <f1 type="int" id="0x12">
+            <f1 type="int" id="0x12"/>
         </FieldNameChange>
 
     </Types>
