@@ -7,12 +7,12 @@ import scala.collection.mutable.HashMap
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.api.plugins.Parser
 import se.culvertsoft.mgen.compiler.plugins.FindClasses
 import se.culvertsoft.mgen.compiler.plugins.FindPlugins
+import se.culvertsoft.mgen.api.exceptions.GenerationException
 
 object MGen {
 
@@ -36,6 +36,7 @@ object MGen {
 
       // Parse cmd line args      
       val settings = parseKeyValuePairs(params)
+      val failOnMissingGenerator = settings.getOrElse("fail_on_missing_generator", "false").toBoolean
 
       // Ensure parsers are specified
       val parserPath =
@@ -94,6 +95,8 @@ object MGen {
             generators.put(clsName, cls.newInstance())
             println(s"Created generator: ${clsName}")
           case None =>
+            if (failOnMissingGenerator)
+              throw new GenerationException(s"Could not find specified generator '${clsName}'")
             println(s"WARNING: Could not find specified generator '${clsName}', skipping")
         }
       })
@@ -153,6 +156,7 @@ object MGen {
     println("  -parser=\"se.culvertsoft.Dummyparser,se.coocoo.MyParser\": specify IDL parser (Optional) ")
     println("  -plugin_paths=\"my/external/path1, my/external/path2\": specify additional plugin paths (Optional) ")
     println("  -output_path=\"specify output path (Optional) ")
+    println("  -fail_on_missing_generator=true/false: Default false (Optional)")
   }
 
   def trimKeyVal(in: String): String = {
