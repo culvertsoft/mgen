@@ -167,7 +167,7 @@
 				brand: "IAmRolling"
 			});
 
-			var jsonHandler = mGen.jsonHandlerFactory(registry);
+			var jsonHandler = mGen.jsonHandler(registry);
 
 			expect( jsonHandler.objectToString(a) ).toBe( car_as_string );
 
@@ -202,7 +202,7 @@
 				brand: "IAmRolling"
 			});
 
-			var jsonHandler = mGen.jsonHandlerFactory(registry);
+			var jsonHandler = mGen.jsonHandler(registry);
 			var b = jsonHandler.stringToObject(jsonHandler.objectToString(a))
 
 			expect( jsonHandler.objectToString(a) ).toBe( jsonHandler.objectToString(b) );

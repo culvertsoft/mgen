@@ -13,9 +13,9 @@ object MkModuleClassRegistry {
 
     val allTypes = modules.flatMap(_.types).distinct
     txtBuffer {
-      ln("registry.classRegistry = {};")
+      ln("classBlueprint.classes = {};")
       allTypes.foreach({ t =>
-        scope("registry.classRegistry[\"" + t.fullName + "\"] = ") {
+        scope("classBlueprint.classes[\"" + t.fullName + "\"] = ") {
           ln("\"__t\": \"" + t.superTypeHierarchy().map(x => x.typeId16BitBase64()).mkString("") + "\",")
           for (field <- t.fieldsInclSuper) {
             ln("\"" + field.name + "\": {")

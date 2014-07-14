@@ -16,7 +16,7 @@ object MkIntro {
     ln("")
     ln("var " + classregistryName + " = {}; // this variable name can be changed with the setting: classregistry_name")
     ln("")
-    ln("(function(registry){")
+    ln("(function(classBlueprint){")
     ln(1, "\"use strict\";")
   }
 }
