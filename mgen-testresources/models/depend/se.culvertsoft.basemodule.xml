@@ -25,6 +25,7 @@
             <e type="InternalEnum"/>
             <e2 type="TestEnum"/>
             <e3 type="se.culvertsoft.depmodule.TestEnum"/>
+            <e4 type="ExternalEnum"/>
         </InternalType>
 
         <UsingType>

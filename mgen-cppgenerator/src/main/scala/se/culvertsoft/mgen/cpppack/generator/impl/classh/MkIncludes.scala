@@ -4,7 +4,6 @@ import scala.collection.JavaConversions.asScalaSet
 
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 
@@ -16,18 +15,15 @@ object MkIncludes {
 
     implicit val currentModule = module
 
-    val types = t.referencedClasses() - t
-    val enums = t.referencedEnums()
-    
+    val unsorted = ((t.referencedClasses() - t) ++ t.referencedEnums())
+    val referenced = unsorted.toSeq.sortBy(_.fullName)
+
     if (!t.hasSuperType())
       CppGenUtils.include("mgen/classes/MGenBase.h")
-      
-    for (tRef <- types)
+
+    for (tRef <- referenced)
       CppGenUtils.include(tRef)
-      
-    for (tRef <- enums)
-      CppGenUtils.include(tRef)
-      
+
     txtBuffer.endl()
 
   }

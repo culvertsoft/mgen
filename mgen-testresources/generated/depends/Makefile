@@ -12,7 +12,7 @@ all: generate
 
 generate:
 	mkdir -p src_generated
-	java -jar ${MGEN_COMPILER_JAR} -project=${MODEL_PATH} -plugin_paths=${PLUGIN_PATHS}
+	java -jar ${MGEN_COMPILER_JAR} -project=${MODEL_PATH} -plugin_paths=${PLUGIN_PATHS} -fail_on_missing_generator=true
 
 clean:
 	rm -rf src_generated

@@ -44,7 +44,7 @@ object CppTypeNames {
             if (t.module() == currentModule) {
               t.name()
             } else {
-              t.fullName()
+              t.fullName().replaceAllLiterally(".", "::")
             }
           if (isPolymorphicField)
             s"Polymorphic<$name> "
