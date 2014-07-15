@@ -32,9 +32,9 @@ generate-sources:
 	mkdir -p ${DEPENDS_DATA_GENERATOR_BUILD_DIR}
 	mkdir -p ${WRITE_DATA_GENERATOR_BUILD_DIR}
 	mkdir -p ${READ_DATA_GENERATOR_BUILD_DIR}
-	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && cmake ../../../${DEPENDS_DATA_GENERATOR_SRC_DIR} -G "Unix Makefiles"
-	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && cmake ../../../../${WRITE_DATA_GENERATOR_SRC_DIR} -G "Unix Makefiles"
-	cd ${READ_DATA_GENERATOR_BUILD_DIR} && cmake ../../../../${READ_DATA_GENERATOR_SRC_DIR} -G "Unix Makefiles"
+	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../../../${DEPENDS_DATA_GENERATOR_SRC_DIR}
+	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../../../../${WRITE_DATA_GENERATOR_SRC_DIR}
+	cd ${READ_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../../../../${READ_DATA_GENERATOR_SRC_DIR}
 
 generate: generate-sources
 	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && make && ./generate_depends_testdata
@@ -42,9 +42,12 @@ generate: generate-sources
 	cd ${READ_DATA_GENERATOR_BUILD_DIR} && make && ./generate_read_testdata
 
 eclipse: generate-sources
-	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && cmake ../../../${DEPENDS_DATA_GENERATOR_SRC_DIR} -G "Eclipse CDT4 - Unix Makefiles"
-	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && cmake ../../../../${WRITE_DATA_GENERATOR_SRC_DIR} -G "Eclipse CDT4 - Unix Makefiles"
-	cd ${READ_DATA_GENERATOR_BUILD_DIR} && cmake ../../../../${READ_DATA_GENERATOR_SRC_DIR} -G "Eclipse CDT4 - Unix Makefiles"
+	mkdir -p ${DEPENDS_DATA_GENERATOR_BUILD_DIR}/eclipse
+	mkdir -p ${WRITE_DATA_GENERATOR_BUILD_DIR}/eclipse
+	mkdir -p ${READ_DATA_GENERATOR_BUILD_DIR}/eclipse
+	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../../../../${DEPENDS_DATA_GENERATOR_SRC_DIR}
+	cd ${WRITE_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../../../../../${WRITE_DATA_GENERATOR_SRC_DIR}
+	cd ${READ_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=Debug ../../../../../${READ_DATA_GENERATOR_SRC_DIR}
 
 clean:
 	rm -rf generated
