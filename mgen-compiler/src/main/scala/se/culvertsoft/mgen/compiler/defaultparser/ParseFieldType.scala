@@ -56,8 +56,8 @@ object ParseFieldType {
             val pairTypeString = withinBraces(typeString)
 
             val items = pairTypeString.split(',')
-            val keyTypeString = items(0).trim()
-            val valueTypeString = items(1).trim()
+            val keyTypeString = items.head
+            val valueTypeString = items.tail.mkString(", ")
 
             new MapTypeImpl(ParseFieldType(keyTypeString), ParseFieldType(valueTypeString))
 
