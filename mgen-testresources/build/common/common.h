@@ -13,6 +13,8 @@
 #include "mgen/serialization/JsonWriter.h"
 #include "mgen/serialization/JsonReader.h"
 
+#include "MGenObjectRandomizer.h"
+
 inline void writeToFile(const std::string& fileName, const std::vector<char>& data) {
     std::ofstream file(fileName.c_str(), std::ios::binary);
     file.write(data.data(), data.size());
@@ -45,5 +47,60 @@ inline void writeToFile(const std::string& fileName, const std::vector<char>& da
     f(classRegistry, buffer, outputstream, inputstream, "jsonPrettyCompact", jsonPrettyCompactWriter, jsonReader, true); \
     f(classRegistry, buffer, outputstream, inputstream, "binary", binaryWriter, binaryReader, false); \
     f(classRegistry, buffer, outputstream, inputstream, "binaryCompact", binaryCompactWriter, binaryReader, true);
+
+template<typename ClassRegType, typename OutStreamType, typename InStreamType, typename WriterType, typename ReaderType>
+inline void mkEmptyObjects(
+        const ClassRegType& classRegistry,
+        std::vector<char>& buffer,
+        OutStreamType& outputStream,
+        InStreamType& inputStream,
+        const std::string& serializerName,
+        WriterType& writer,
+        ReaderType& reader,
+        const bool isCompact) {
+
+    const typename ClassRegType::EntryMap& entries = classRegistry.entries();
+
+    for (typename ClassRegType::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
+        mgen::MGenBase * instance = it->second.newInstance();
+        instance->_setAllFieldsSet(true, mgen::DEEP);
+        writer.writeObject(*instance);
+        delete instance;
+    }
+
+    writeToFile(std::string("../data_generated/emptyObjects_").append(serializerName).append(".data"), buffer);
+
+    buffer.clear();
+
+}
+
+template<typename ClassRegType, typename OutStreamType, typename InStreamType, typename WriterType, typename ReaderType>
+inline void mkRandomObjects(
+        const ClassRegType& classRegistry,
+        std::vector<char>& buffer,
+        OutStreamType& outputStream,
+        InStreamType& inputStream,
+        const std::string& serializerName,
+        WriterType& writer,
+        ReaderType& reader,
+        const bool isCompact) {
+
+    mgen::ObjectRandomizer<ClassRegType> randomizer(classRegistry);
+
+    const typename ClassRegType::EntryMap& entries = classRegistry.entries();
+
+    for (typename ClassRegType::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
+        mgen::MGenBase * instance = it->second.newInstance();
+        instance->_setAllFieldsSet(true, mgen::DEEP);
+        randomizer.randomizeObject(*instance);
+        writer.writeObject(*instance);
+        delete instance;
+    }
+
+    writeToFile(std::string("../data_generated/randomizedObjects_").append(serializerName).append(".data"), buffer);
+
+    buffer.clear();
+
+}
 
 #endif

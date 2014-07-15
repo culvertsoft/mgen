@@ -3,8 +3,6 @@
 
 #include "mgen/classes/MGenBase.h"
 
-#include <iostream>
-
 namespace mgen {
 
 template<typename ClassRegType>
@@ -40,7 +38,6 @@ public:
     void visit(T& v, const Field& field, const bool isSet) {
         if (m_depth < m_maxDepth) {
             m_depth++;
-            // TODO implementation
             randomize(v);
             m_depth--;
         }
@@ -142,7 +139,11 @@ private:
     }
 
     void randomize(std::string& v) {
-        v.append("v");
+        const int sz = rand(m_maxStringSize) + 1;
+        v.resize(sz);
+        for (int i = 0; i < sz; i++) {
+            v[i] = rand(128) + 32;
+        }
     }
 
     ClassRegType m_classReg;
