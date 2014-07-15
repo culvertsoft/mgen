@@ -20,6 +20,8 @@ object MkFieldById {
 
     val allFields = t.fieldsInclSuper()
 
+    val pfx = s"_${t.shortName}"
+    
     ln(0, s"const mgen::Field * ${t.shortName()}::_fieldById(const short id) const {")
     ln(1, s"switch (id) {")
     for (field <- allFields) {
@@ -33,7 +35,7 @@ object MkFieldById {
     endl()
 
     ln(0, s"const mgen::Field * ${t.shortName()}::_fieldByName(const std::string& name) const {")
-    ln(1, s"static const std::map<std::string, const mgen::Field*> name2meta = _field_names2metadata_make();")
+    ln(1, s"static const std::map<std::string, const mgen::Field*> name2meta = ${pfx}_field_names2metadata_make();")
     ln(1, s"const std::map<std::string, const mgen::Field*>::const_iterator it = name2meta.find(name);")
     ln(1, s"return it != name2meta.end() ? it->second : 0;")
     ln(0, s"}")

@@ -66,8 +66,8 @@ public:
         TAG_ZERO_BIT = TAG_BIT8
     };
 
-    Type(const ENUM enm, const TAG tag, const std::vector<std::string>& flags) :
-            m_enum(enm), m_tag(tag), m_flags(flags) {
+    Type(const ENUM enm, const TAG tag) :
+            m_enum(enm), m_tag(tag) {
     }
 
     ENUM enm() const {
@@ -76,10 +76,6 @@ public:
 
     TAG tag() const {
         return m_tag;
-    }
-
-    const std::vector<std::string>& flags() const {
-        return m_flags;
     }
 
     static inline TAG TAG_OF(const bool) {
@@ -125,7 +121,6 @@ public:
 private:
     ENUM m_enum;
     TAG m_tag;
-    std::vector<std::string> m_flags;
 
 };
 

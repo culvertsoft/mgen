@@ -18,8 +18,10 @@ object MkMetadataFieldMakers {
 
     implicit val currentModule = module
     
+    val pfx = s"_${t.shortName}"
+    
     for (field <- t.fieldsInclSuper()) {
-      ln(s"std::vector<std::string> ${t.shortName()}::${fieldMetaString(field, false)}_flags_make() {")
+      ln(s"static std::vector<std::string> ${pfx}${fieldMetaString(field, false)}_flags_make() {")
       ln(1, s"std::vector<std::string> out;")
       for (tag <- field.flags())
         ln(1, s"out.push_back(${quote(tag)});")
@@ -28,7 +30,7 @@ object MkMetadataFieldMakers {
       endl()
     }
 
-    ln(s"std::vector<long long> ${t.shortName()}::_type_ids_make() {");
+    ln(s"static std::vector<long long> ${pfx}_type_ids_make() {");
     ln(1, s"std::vector<long long> out;")
     for (t <- t.superTypeHierarchy())
       ln(1, s"out.push_back(${t.typeId()}LL);")
@@ -36,7 +38,7 @@ object MkMetadataFieldMakers {
     ln(s"}")
     endl()
     
-    ln(s"std::vector<short> ${t.shortName()}::_type_ids_16bit_make() {");
+    ln(s"static std::vector<short> ${pfx}_type_ids_16bit_make() {");
     ln(1, s"std::vector<short> out;")
     for (t <- t.superTypeHierarchy())
       ln(1, s"out.push_back(${t.typeId16Bit});")
@@ -44,7 +46,7 @@ object MkMetadataFieldMakers {
     ln(s"}")
     endl()
 
-    ln(s"std::vector<std::string> ${t.shortName()}::_type_names_make() {");
+    ln(s"static std::vector<std::string> ${pfx}_type_names_make() {");
     ln(1, s"std::vector<std::string> out;")
     for (t <- t.superTypeHierarchy())
       ln(1, s"out.push_back(${quote(t.fullName())});")
@@ -52,7 +54,7 @@ object MkMetadataFieldMakers {
     ln(s"}")
     endl()
 
-    ln(s"std::vector<std::string> ${t.shortName()}::_type_ids_16bit_base64_make() {");
+    ln(s"static std::vector<std::string> ${pfx}_type_ids_16bit_base64_make() {");
     ln(1, s"std::vector<std::string> out;")
     for (t <- t.superTypeHierarchy())
       ln(1, s"out.push_back(${quote(t.typeId16BitBase64())});")
@@ -60,18 +62,18 @@ object MkMetadataFieldMakers {
     ln(s"}")
     endl()
 
-    ln(s"std::vector<mgen::Field> ${t.shortName()}::_field_metadatas_make() {");
+    ln(s"static std::vector<mgen::Field> ${pfx}_field_metadatas_make() {");
     ln(1, s"std::vector<mgen::Field> out;")
     for (field <- t.fieldsInclSuper())
-      ln(1, s"out.push_back(${fieldMetaString(field)});")
+      ln(1, s"out.push_back(${t.shortName}::${fieldMetaString(field)});")
     ln(1, s"return out;")
     ln(s"}")
     endl()
 
-    ln(s"std::map<std::string, const mgen::Field*> ${t.shortName()}::_field_names2metadata_make() {");
+    ln(s"static std::map<std::string, const mgen::Field*> ${pfx}_field_names2metadata_make() {");
     ln(1, s"std::map<std::string, const mgen::Field*> out;")
     for (field <- t.fieldsInclSuper())
-      ln(1, s"out[${quote(field.name)}] = &${fieldMetaString(field)};")
+      ln(1, s"out[${quote(field.name)}] = &${t.shortName}::${fieldMetaString(field)};")
     ln(1, s"return out;")
     ln(s"}")
     endl()

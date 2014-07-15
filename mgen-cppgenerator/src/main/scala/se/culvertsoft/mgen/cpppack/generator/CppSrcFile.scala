@@ -84,8 +84,12 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
     MkMetadataFields(t, currentModule)
   }
 
-  override def mkMetaDataFieldMakers(t: CustomType) {
+  override def mkStaticHelperFcns(t: CustomType) {
     MkMetadataFieldMakers(t, currentModule)
+  }
+  
+  override def mkMetaDataFieldMakers(t: CustomType) {
+    //MkMetadataFieldMakers(t, currentModule)
   }
 
   override def mkSetFieldsSet(t: CustomType) {

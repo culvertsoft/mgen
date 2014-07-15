@@ -122,7 +122,7 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
   }
 
   override def mkMetaDataFieldMakers(t: CustomType) {
-    MkMetadataFieldMakers(t, currentModule)
+    //MkMetadataFieldMakers(t, currentModule)
   }
 
   override def mkSetFieldsSet(t: CustomType) {

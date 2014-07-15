@@ -39,6 +39,9 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     mkIncludes(t)
     CppGenUtils.mkNameSpaces(namespaces)
     mkUsingStatements(t)
+    
+    
+    // Class Begin
     mkClassStart(t)
 
     // Normal class api section
@@ -58,6 +61,10 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
     // Metadata methods section
     mkMetadataMethodsComment(t)
+    
+    // Static helper fcns
+    mkStaticHelperFcns(t)
+    
     mkPublic()
     mkReadField(t)
     mkAcceptVisitor(t)
@@ -74,7 +81,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     // Metadata data section
     mkMetadataComment(t)
     mkMetaDataFields(t)
-    mkPrivate()
+    //mkPrivate()
     mkMetaDataFieldMakers(t)
 
     // Footer
@@ -103,6 +110,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
   def mkNumFieldsSet(t: CustomType) {}
 
+  def mkStaticHelperFcns(t: CustomType) {}
   def mkClassStart(t: CustomType) {}
   def mkPrivate() {}
   def mkMembers(t: CustomType) {}
