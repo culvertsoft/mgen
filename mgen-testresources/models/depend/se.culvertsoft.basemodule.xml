@@ -29,8 +29,8 @@
         </InternalType>
 
         <UsingType>
-            <intern type="InternalType"/>
-            <extern type="ExternalType"/>
+            <internType type="InternalType"/>
+            <externType type="ExternalType"/>
             <internImplic type="ExplicitType"/>
             <internExplic type="se.culvertsoft.basemodule.ExplicitType"/>
             <externExplic type="se.culvertsoft.depmodule.ExplicitType"/>
