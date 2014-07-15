@@ -3,16 +3,16 @@ package se.culvertsoft.mgen.compiler
 import scala.Array.canBuildFrom
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsJavaMap
-import scala.collection.mutable.HashMap
+import scala.collection.mutable.ArrayBuffer
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
+
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
+import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.api.plugins.Parser
-import se.culvertsoft.mgen.compiler.plugins.FindClasses
-import se.culvertsoft.mgen.compiler.plugins.FindPlugins
-import se.culvertsoft.mgen.api.exceptions.GenerationException
+import se.culvertsoft.mgen.compiler.plugins.PluginFinder
 
 object MGen {
 
@@ -51,22 +51,16 @@ object MGen {
             DEFAULT_PARSER
         }
 
-      // Detect available parsers
-      println("Detecting available parsers")
-      val plugins = new FindPlugins(split(settings.getOrElse("plugin_paths", "")))
-      val availableParsers = (plugins.parserClasses ++ FindClasses[Parser](parserPath)).distinct
-      println(s"  --> detected available parsers: ${availableParsers.mkString(", ")}")
-      println("")
-      if (availableParsers.isEmpty)
-        throw new AnalysisException(s"Could not find any parsers")
+      // Load plugins
+      val pluginPaths = split(settings.getOrElse("plugin_paths", ""))
+      val pluginFinder = new PluginFinder(pluginPaths)
 
       // Instantiate the parser
       print("Instantiating parser...")
-      val parser =
-        availableParsers.find(_.getName == parserPath) match {
-          case Some(parserClass) => parserClass.newInstance()
-          case _ => throw new AnalysisException(s"Aborting: Specified parser class '${parserPath}' not found")
-        }
+      val parser = pluginFinder.find[Parser](parserPath) match {
+        case Some(parserClass) => parserClass.newInstance()
+        case _ => throw new AnalysisException(s"Aborting: Specified parser class '${parserPath}' not found")
+      }
       println("ok\n")
 
       // Run the parsers
@@ -74,32 +68,26 @@ object MGen {
       val project = parser.parse(settings)
       println("ok\n")
 
-      // Detect available generators
-      println("Detecting available generators")
-      val availableGenerators = (plugins.generatorClasses ++ FindClasses[Generator](project.generators.map(_.getGeneratorClassPath))).distinct
-      println(s"  --> detected available generators: ${availableGenerators.mkString(", ")}")
-      if (availableGenerators.isEmpty)
-        throw new AnalysisException(s"Could not find any generators")
-
       // Find our selected generators
       val selectedGenerators = project.generators()
       if (selectedGenerators.isEmpty)
         throw new AnalysisException(s"No generator specified, check your project file")
 
-      // Instantiate the generators
-      val generators = new HashMap[String, Generator]
-      selectedGenerators.foreach({ selected =>
+      // Instantiate generators
+      println("Instantiating generators...")
+      val generators = new ArrayBuffer[Generator]
+      selectedGenerators.foreach { selected =>
         val clsName = selected.getGeneratorClassPath()
-        availableGenerators.find(_.getName == clsName) match {
+        pluginFinder.find[Generator](clsName) match {
           case Some(cls) =>
-            generators.put(clsName, cls.newInstance())
+            generators += cls.newInstance()
             println(s"Created generator: ${clsName}")
           case None =>
             if (failOnMissingGenerator)
               throw new GenerationException(s"Could not find specified generator '${clsName}'")
             println(s"WARNING: Could not find specified generator '${clsName}', skipping")
         }
-      })
+      }
       println()
 
       // Verify we were able to create some generators
@@ -107,7 +95,7 @@ object MGen {
         throw new AnalysisException(s"Failed to instantiate any of the specified generators (${selectedGenerators})")
 
       // Run the generators
-      val generatedSources = Output.assemble(project, generators.toMap)
+      val generatedSources = Output.assemble(project, generators)
 
       // Check that we actually generated some code
       if (generatedSources.isEmpty)
