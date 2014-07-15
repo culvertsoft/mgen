@@ -18,15 +18,32 @@ inline void writeToFile(const std::string& fileName, const std::vector<char>& da
     file.write(data.data(), data.size());
 }
 
-#define MK_MGEN_OUTPUT(ClassRegType, WriterType, compact) \
-    const ClassRegType classRegistry_out; \
+#define MK_MGEN_OUTPUT(name, ClassRegType, WriterType, compact) \
+    WriterType<mgen::VectorOutputStream, ClassRegType> name##Writer(outputstream, classRegistry, compact);
+
+#define MK_MGEN_INPUT(name, ClassRegType, ReaderType) \
+    ReaderType<mgen::VectorInputStream, ClassRegType> name##Reader(inputstream, classRegistry);
+
+#define SETUP_WRITERS_AND_READERS(ClassRegType) \
+    const ClassRegType classRegistry; \
     std::vector<char> buffer; \
     mgen::VectorOutputStream outputstream(buffer); \
-    WriterType<mgen::VectorOutputStream, ClassRegType> writer(outputstream, classRegistry_out, compact);
-
-#define MK_MGEN_INPUT(ClassRegType, ReaderType) \
-    const ClassRegType classRegistry_in; \
     mgen::VectorInputStream inputstream(buffer); \
-    ReaderType<mgen::VectorInputStream, ClassRegType> reader(inputstream, classRegistry_in);
+    MK_MGEN_OUTPUT(json, ClassRegType, mgen::JsonWriter, false) \
+    MK_MGEN_OUTPUT(jsonCompact, ClassRegType, mgen::JsonWriter, true) \
+    MK_MGEN_OUTPUT(jsonPretty, ClassRegType, mgen::JsonPrettyWriter, false) \
+    MK_MGEN_OUTPUT(jsonPrettyCompact, ClassRegType, mgen::JsonPrettyWriter, true) \
+    MK_MGEN_OUTPUT(binary, ClassRegType, mgen::BinaryWriter, false) \
+    MK_MGEN_OUTPUT(binaryCompact, ClassRegType, mgen::BinaryWriter, true) \
+    MK_MGEN_INPUT(json, ClassRegType, mgen::JsonReader) \
+    MK_MGEN_INPUT(binary, ClassRegType, mgen::BinaryReader)
+
+#define FOR_EACH_SERIALIZER(f) \
+    f(classRegistry, buffer, outputstream, inputstream, "json", jsonWriter, jsonReader, false); \
+    f(classRegistry, buffer, outputstream, inputstream, "jsonCompact", jsonCompactWriter, jsonReader, true); \
+    f(classRegistry, buffer, outputstream, inputstream, "jsonPretty", jsonPrettyWriter, jsonReader, false); \
+    f(classRegistry, buffer, outputstream, inputstream, "jsonPrettyCompact", jsonPrettyCompactWriter, jsonReader, true); \
+    f(classRegistry, buffer, outputstream, inputstream, "binary", binaryWriter, binaryReader, false); \
+    f(classRegistry, buffer, outputstream, inputstream, "binaryCompact", binaryCompactWriter, binaryReader, true);
 
 #endif

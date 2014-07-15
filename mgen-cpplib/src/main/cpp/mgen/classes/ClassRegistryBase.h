@@ -44,7 +44,7 @@ public:
         return it != m_typeId16BitBase642TypeId16Bit.end() ? it->second : INVALID_16BIT_ID;
     }
 
-    const EntryMap& entries() {
+    const EntryMap& entries() const {
         return m_typeId2Entry;
     }
 
