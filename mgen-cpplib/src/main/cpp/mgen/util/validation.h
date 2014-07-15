@@ -78,6 +78,7 @@ inline void setFieldSetDeep(long long v);
 inline void setFieldSetDeep(float v);
 inline void setFieldSetDeep(double v);
 inline void setFieldSetDeep(std::string& v);
+inline void setFieldSetDeep(const std::string& v);
 inline void setFieldSetDeep(MGenBase& v);
 template<typename T>
 inline void setFieldSetDeep(Polymorphic<T>& v);
@@ -173,6 +174,9 @@ inline void setFieldSetDeep(double v) {
 }
 
 inline void setFieldSetDeep(std::string& v) {
+}
+
+inline void setFieldSetDeep(const std::string& v) {
 }
 
 inline void setFieldSetDeep(MGenBase& v) {

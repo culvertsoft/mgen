@@ -13,9 +13,15 @@
 #include "mgen/serialization/JsonWriter.h"
 #include "mgen/serialization/JsonReader.h"
 
-void writeToFile(const std::string& fileName, const std::vector<char>& data) {
+inline void writeToFile(const std::string& fileName, const std::vector<char>& data) {
     std::ofstream file(fileName.c_str(), std::ios::binary);
     file.write(data.data(), data.size());
 }
+
+#define MK_MGEN_OUTPUT(ClassRegType, WriterType, compact) \
+    const ClassRegType classRegistry; \
+    std::vector<char> buffer; \
+    mgen::VectorOutputStream stream(buffer); \
+    WriterType<mgen::VectorOutputStream, ClassRegType> writer(stream, classRegistry, compact);
 
 #endif
