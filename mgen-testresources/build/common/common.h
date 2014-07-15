@@ -19,9 +19,14 @@ inline void writeToFile(const std::string& fileName, const std::vector<char>& da
 }
 
 #define MK_MGEN_OUTPUT(ClassRegType, WriterType, compact) \
-    const ClassRegType classRegistry; \
+    const ClassRegType classRegistry_out; \
     std::vector<char> buffer; \
-    mgen::VectorOutputStream stream(buffer); \
-    WriterType<mgen::VectorOutputStream, ClassRegType> writer(stream, classRegistry, compact);
+    mgen::VectorOutputStream outputstream(buffer); \
+    WriterType<mgen::VectorOutputStream, ClassRegType> writer(outputstream, classRegistry_out, compact);
+
+#define MK_MGEN_INPUT(ClassRegType, ReaderType) \
+    const ClassRegType classRegistry_in; \
+    mgen::VectorInputStream inputstream(buffer); \
+    ReaderType<mgen::VectorInputStream, ClassRegType> reader(inputstream, classRegistry_in);
 
 #endif

@@ -80,12 +80,12 @@
         <!-- For versioning tests -->
                         
         <NewRequiredFields>
-            <ar type="bool" flags="required"/>
+            <aReq type="bool" flags="required"/>
             <b type="int8"/>
             <c type="byte"/>
             <d type="int16"/>
             <e type="int32"/>
-            <fr type="int" flags="required"/>
+            <fReq type="int" flags="required"/>
             <g type="int64"/>
             <h type="float32"/>
             <i type="float"/>
@@ -93,17 +93,17 @@
             <k type="double"/>
             <l type="EnumValueChange"/>
             <m type="string"/>
-            <nr type="array[array[int]]" flags="required"/>
-            <or type="array[VectorR3]" flags="required"/>
+            <nReq type="array[array[int]]" flags="required"/>
+            <oReq type="array[VectorR3]" flags="required"/>
             <p type="array[VectorR3]" flags="polymorphic"/>
             <q type="list[list[int]]"/>
             <r type="list[VectorR3]"/>
             <s type="list[VectorR3]" flags="polymorphic"/>
-            <tr type="map[string, array[int]]" flags="required"/>
+            <tReq type="map[string, array[int]]" flags="required"/>
             <u type="map[int, VectorR3]"/>
             <v type="map[float, list[VectorR3]]" flags="polymorphic"/>
             <w type="VectorR3"/>
-            <xr type="VectorR3" flags="polymorphic, required"/>
+            <xReq type="VectorR3" flags="polymorphic, required"/>
         </NewRequiredFields>
                          
         <BaseType>
