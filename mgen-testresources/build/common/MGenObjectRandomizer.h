@@ -114,31 +114,31 @@ private:
     }
 
     void randomize(bool& v) {
-        v = 0;
+        v = rand(1000) % 2 == 0;
     }
 
     void randomize(char& v) {
-        v = 0;
+        v = rand(1000) - 500;
     }
 
     void randomize(short& v) {
-        v = 0;
+        v = rand(100000) - 50000;
     }
 
     void randomize(int& v) {
-        v = 0;
+        v = rand();
     }
 
     void randomize(long long& v) {
-        v = 0;
+        v = rand();
     }
 
     void randomize(float& v) {
-        v = 0;
+        v = float(rand()) * 0.135;
     }
 
     void randomize(double& v) {
-        v = 0;
+        v = double(rand()) * 0.135;
     }
 
     void randomize(std::string& v) {

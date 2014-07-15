@@ -58,7 +58,7 @@
             <s type="list[InternalType]" flags="polymorphic"/>
             <t type="map[string, array[int]]"/>
             <u type="map[int, InternalType]"/>
-            <v type="map[int, list[InternalType]]" flags="polymorphic"/>
+            <v type="map[float, list[InternalType]]" flags="polymorphic"/>
             <w type="InternalType"/>
             <x type="InternalType" flags="polymorphic"/>
             <y type="ExternalType"/>
@@ -87,7 +87,7 @@
             <s type="list[InternalType]" flags="polymorphic, required"/>
             <t type="map[string, array[int]]" flags="required"/>
             <u type="map[int, InternalType]" flags="required"/>
-            <v type="map[int, list[InternalType]]" flags="polymorphic, required"/>
+            <v type="map[float, list[InternalType]]" flags="polymorphic, required"/>
             <w type="InternalType" flags="required"/>
             <x type="InternalType" flags="polymorphic, required"/>
             <y type="ExternalType" flags="required"/>
