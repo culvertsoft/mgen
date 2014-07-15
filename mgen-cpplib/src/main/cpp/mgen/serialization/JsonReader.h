@@ -132,12 +132,19 @@ private:
         }
     }
 
+    template<typename K>
+    void readMapKey(K& out, const Node& node) {
+        std::string keyString;
+        read(keyString, node);
+        out = fromString<K>(keyString);
+    }
+
     template<typename K, typename V>
     void read(std::map<K, V>& v, const Node& node) {
         if (node.IsObject()) {
             for (MemberIterator it = node.MemberBegin(); it != node.MemberEnd(); it++) {
                 K key;
-                read(key, it->name);
+                readMapKey(key, it->name);
                 read(v[key], it->value);
             }
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?

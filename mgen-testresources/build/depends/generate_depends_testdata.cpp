@@ -48,7 +48,7 @@ static void mkRandomObjects(
     for (typename ClassRegType::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
         mgen::MGenBase * instance = it->second.newInstance();
         instance->_setAllFieldsSet(true, mgen::DEEP);
-        randomizer.randomize(*instance);
+        randomizer.randomizeObject(*instance);
         writer.writeObject(*instance);
         delete instance;
     }

@@ -3,6 +3,7 @@
 
 #include "JsonOutputStream.h"
 #include "mgen/util/missingfields.h"
+#include "mgen/util/stringutil.h"
 
 namespace mgen {
 
@@ -97,7 +98,7 @@ private:
     void write(const std::map<K, V>& v) {
         m_rapidJsonWriter.StartObject();
         for (typename std::map<K, V>::const_iterator it = v.begin(); it != v.end(); it++) {
-            write(it->first);
+            write(toString(it->first));
             write(it->second);
         }
         m_rapidJsonWriter.EndObject();

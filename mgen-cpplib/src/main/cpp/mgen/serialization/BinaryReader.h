@@ -273,8 +273,8 @@ private:
             const Type::TAG tag = readTag();
             if (tag != expTag) {
                 throw UnexpectedTypeException(
-                        S("BinaryReader::verifyReadTagIf: Unexpected tag ").append(S(expTag)).append(" but got ").append(
-                                S(tag)));
+                        S("BinaryReader::verifyReadTagIf: Unexpected tag ").append(S((int)expTag)).append(" but got ").append(
+                                S((int)tag)));
             }
         }
     }
