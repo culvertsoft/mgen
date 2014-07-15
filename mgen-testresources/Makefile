@@ -24,7 +24,7 @@ READ_DATA_GENERATOR_BUILD_DIR = ${TEST_RESOURCES_ROOT}/generated/writeread/read/
 
 all: generate
 
-generate:
+generate-sources:
 	mkdir -p generated
 	java -jar ${MGEN_COMPILER_JAR} -plugin_paths=${PLUGIN_PATHS} -project=${DEPENDS_MODEL} -output_path=${DEPENDS_OUT} -fail_on_missing_generator=true
 	java -jar ${MGEN_COMPILER_JAR} -plugin_paths=${PLUGIN_PATHS} -project=${WRITE_MODEL} -output_path=${WRITE_OUT} -fail_on_missing_generator=true
@@ -33,12 +33,18 @@ generate:
 	mkdir -p ${WRITE_DATA_GENERATOR_BUILD_DIR}
 	mkdir -p ${READ_DATA_GENERATOR_BUILD_DIR}
 	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && cmake ../../../${DEPENDS_DATA_GENERATOR_SRC_DIR} -G "Unix Makefiles"
-	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && make && ./generate_testdata
 	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && cmake ../../../../${WRITE_DATA_GENERATOR_SRC_DIR} -G "Unix Makefiles"
-	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && make && ./generate_testdata
 	cd ${READ_DATA_GENERATOR_BUILD_DIR} && cmake ../../../../${READ_DATA_GENERATOR_SRC_DIR} -G "Unix Makefiles"
-	cd ${READ_DATA_GENERATOR_BUILD_DIR} && make && ./generate_testdata
-	
+
+generate: generate-sources
+	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && make && ./generate_depends_testdata
+	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && make && ./generate_write_testdata
+	cd ${READ_DATA_GENERATOR_BUILD_DIR} && make && ./generate_read_testdata
+
+eclipse: generate-sources
+	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && cmake ../../../${DEPENDS_DATA_GENERATOR_SRC_DIR} -G "Eclipse CDT4 - Unix Makefiles"
+	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && cmake ../../../../${WRITE_DATA_GENERATOR_SRC_DIR} -G "Eclipse CDT4 - Unix Makefiles"
+	cd ${READ_DATA_GENERATOR_BUILD_DIR} && cmake ../../../../${READ_DATA_GENERATOR_SRC_DIR} -G "Eclipse CDT4 - Unix Makefiles"
 
 clean:
 	rm -rf generated

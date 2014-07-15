@@ -57,6 +57,7 @@ eclipse:
 	#########################################################
 	sbt eclipse
 	cd mgen-cpplib && make eclipse
+	cd mgen-testresources && make eclipse
 	#########################################################
 	#                                                       #
 	#        DONE CREATING ECLIPSE PROJECTS                 #

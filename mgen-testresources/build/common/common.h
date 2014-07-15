@@ -1,0 +1,9 @@
+#ifndef MGEN_TESTRESOURCES_COMMON_H_
+#define MGEN_TESTRESOURCES_COMMON_H_
+
+
+
+
+
+
+#endif
