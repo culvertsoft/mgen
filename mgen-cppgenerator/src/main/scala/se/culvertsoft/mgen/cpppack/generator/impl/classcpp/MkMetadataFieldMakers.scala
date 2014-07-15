@@ -17,17 +17,19 @@ object MkMetadataFieldMakers {
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module
-    
+
     val pfx = s"_${t.shortName}"
-    
+
     for (field <- t.fieldsInclSuper()) {
-      ln(s"static std::vector<std::string> ${pfx}${fieldMetaString(field, false)}_flags_make() {")
-      ln(1, s"std::vector<std::string> out;")
-      for (tag <- field.flags())
-        ln(1, s"out.push_back(${quote(tag)});")
-      ln(1, s"return out;")
-      ln(s"}")
-      endl()
+      if (field.flags.nonEmpty) {
+        ln(s"static std::vector<std::string> ${pfx}${fieldMetaString(field, false)}_flags_make() {")
+        ln(1, s"std::vector<std::string> out;")
+        for (tag <- field.flags())
+          ln(1, s"out.push_back(${quote(tag)});")
+        ln(1, s"return out;")
+        ln(s"}")
+        endl()
+      }
     }
 
     ln(s"static std::vector<long long> ${pfx}_type_ids_make() {");
@@ -37,7 +39,7 @@ object MkMetadataFieldMakers {
     ln(1, s"return out;")
     ln(s"}")
     endl()
-    
+
     ln(s"static std::vector<short> ${pfx}_type_ids_16bit_make() {");
     ln(1, s"std::vector<short> out;")
     for (t <- t.superTypeHierarchy())
@@ -77,7 +79,7 @@ object MkMetadataFieldMakers {
     ln(1, s"return out;")
     ln(s"}")
     endl()
-    
+
   }
 
 }

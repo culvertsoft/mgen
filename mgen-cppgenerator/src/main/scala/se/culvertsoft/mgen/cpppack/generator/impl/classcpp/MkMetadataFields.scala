@@ -86,7 +86,7 @@ object MkMetadataFields {
       }
 
       ln(s"const mgen::Field& ${t.shortName()}::${fieldMetaString(field)} {")
-      val flagsString = s"${pfx}${fieldMetaString(field, false)}_flags_make()"
+      val flagsString = if (field.flags.nonEmpty) s"${pfx}${fieldMetaString(field, false)}_flags_make()" else "std::vector<std::string>()"
       ln(1,
         s"static const mgen::Field out(${field.id()}, ${quote(field.name())}, mgen::Type(mgen::Type::ENUM_$enumString, mgen::Type::TAG_$tagString), $flagsString);")
       ln(1, s"return out;")
