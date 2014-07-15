@@ -125,7 +125,7 @@ class ObjectManipulation {
       assert(!(a eq b))
 
       a._setAllFieldsSet(true, FieldSetDepth.SHALLOW)
-      
+
       assert(a != b)
 
     }

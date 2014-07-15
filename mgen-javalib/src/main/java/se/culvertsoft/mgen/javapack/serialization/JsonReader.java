@@ -194,16 +194,44 @@ public class JsonReader extends BuiltInReader {
 		if (node == null)
 			return null;
 
-		final HashMap<Object, Object> out = new HashMap<Object, Object>();
+		final HashMap<Object, Object> out = new HashMap<Object, Object>(node.size());
 
 		for (final Object keyNode : node.keySet()) {
-			final Object valueNode = node.get(keyNode);
-			final Object key = readObject(keyNode, typ.keyType());
-			final Object value = readObject(valueNode, typ.valueType());
+			final Object key = cvtString((String) keyNode, typ.keyType());
+			final Object value = readObject(node.get(keyNode), typ.valueType());
 			out.put(key, value);
 		}
 
 		return out;
+	}
+
+	private Object cvtString(String keyString, Type keyType) {
+
+		if (keyString == null)
+			return null;
+
+		switch (keyType.typeEnum()) {
+		case ENUM:
+			return ((EnumType) keyType).get(keyString);
+		case BOOL:
+			return java.lang.Boolean.valueOf(keyString);
+		case INT8:
+			return java.lang.Byte.valueOf(keyString);
+		case INT16:
+			return java.lang.Short.valueOf(keyString);
+		case INT32:
+			return java.lang.Integer.valueOf(keyString);
+		case INT64:
+			return java.lang.Long.valueOf(keyString);
+		case FLOAT32:
+			return java.lang.Float.valueOf(keyString);
+		case FLOAT64:
+			return java.lang.Double.valueOf(keyString);
+		case STRING:
+			return keyString;
+		default:
+			throw new UnknownTypeException("Unknown map key type: " + keyType);
+		}
 	}
 
 	private Object readArray(final ArrayType typ, final JSONArray node) throws IOException {
