@@ -28,14 +28,6 @@ public:
         writePoly(object);
     }
 
-    template<typename T>
-    void visit(const T& v, const Field& field, const bool isSet) {
-        if (isSet) {
-            m_rapidJsonWriter.String(field.name().c_str());
-            write(v);
-        }
-    }
-
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
         static const std::string& idsString = MGenType::_type_ids_16bit_base64_string();
@@ -47,6 +39,14 @@ public:
         if (!shouldOmitIds(MGenType::_type_id)) {
             m_rapidJsonWriter.String("__t");
             m_rapidJsonWriter.String(idsString.c_str());
+        }
+    }
+    
+    template<typename T>
+    void visit(const T& v, const Field& field, const bool isSet) {
+        if (isSet) {
+            m_rapidJsonWriter.String(field.name().c_str());
+            write(v);
         }
     }
 
