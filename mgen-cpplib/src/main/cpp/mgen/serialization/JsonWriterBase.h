@@ -1,5 +1,5 @@
-#ifndef JSON_WRITER_BASE_H_
-#define JSON_WRITER_BASE_H_
+#ifndef MGEN_JSON_WRITER_BASE_H_
+#define MGEN_JSON_WRITER_BASE_H_
 
 #include "JsonOutputStream.h"
 #include "mgen/util/missingfields.h"
@@ -146,4 +146,4 @@ protected:
 
 } /* namespace mgen */
 
-#endif /* JSON_WRITER_BASE_H_ */
+#endif /* MGEN_JSON_WRITER_BASE_H_ */

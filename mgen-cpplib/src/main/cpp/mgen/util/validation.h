@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef MARKER_H_
-#define MARKER_H_
+#ifndef MGEN_MARKER_H_
+#define MGEN_MARKER_H_
 
 #include "mgen/classes/MGenBase.h"
 
@@ -186,4 +186,4 @@ inline void setFieldSetDeep(MGenBase& v) {
 } /* namespace validation */
 } /* namespace mgen */
 
-#endif /* MARKER_H_ */
+#endif /* MGEN_MARKER_H_ */

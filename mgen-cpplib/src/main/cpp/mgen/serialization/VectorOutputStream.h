@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef VECTOROUTPUTSTREAM_H_
-#define VECTOROUTPUTSTREAM_H_
+#ifndef MGEN_VECTOROUTPUTSTREAM_H_
+#define MGEN_VECTOROUTPUTSTREAM_H_
 
 #include <vector>
 #include "mgen/exceptions/IOException.h"
@@ -38,4 +38,4 @@ private:
 
 } /* namespace mgen */
 
-#endif /* VECTOROUTPUTSTREAM_H_ */
+#endif /* MGEN_VECTOROUTPUTSTREAM_H_ */

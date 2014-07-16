@@ -5,8 +5,8 @@
  *      Author: johan
  */
 
-#ifndef CLASSREGISTRYENTRY_H_
-#define CLASSREGISTRYENTRY_H_
+#ifndef MGEN_CLASSREGISTRYENTRY_H_
+#define MGEN_CLASSREGISTRYENTRY_H_
 
 #include "mgen/classes/MGenBase.h"
 
@@ -51,4 +51,4 @@ private:
 
 } /* namespace mgen */
 
-#endif /* CLASSREGISTRYENTRY_H_ */
+#endif /* MGEN_CLASSREGISTRYENTRY_H_ */

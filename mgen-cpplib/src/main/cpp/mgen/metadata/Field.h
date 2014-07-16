@@ -5,10 +5,13 @@
  *      Author: GiGurra
  */
 
-#ifndef FIELD_H_
-#define FIELD_H_
+#ifndef MGEN_FIELD_H_
+#define MGEN_FIELD_H_
 
-#include "mgen/metadata/Type.h"
+#include <string>
+#include <vector>
+#include <map>
+#include "mgen/classes/Polymorphic.h"
 
 namespace mgen {
 
@@ -18,11 +21,9 @@ public:
     Field(
             const short id,
             const std::string& name,
-            const Type type,
-            const std::vector<std::string>& flags) :
+            const std::vector<std::string>& flags = std::vector<std::string>()) :
                     m_id(id),
                     m_name(name),
-                    m_type(type),
                     m_flags(flags),
                     m_required(false) {
         for (std::size_t i = 0; i < flags.size(); i++) {
@@ -41,10 +42,6 @@ public:
         return m_name;
     }
 
-    const Type& type() const {
-        return m_type;
-    }
-
     const std::vector<std::string>& flags() const {
         return m_flags;
     }
@@ -56,12 +53,16 @@ public:
 private:
     short m_id;
     std::string m_name;
-    Type m_type;
     std::vector<std::string> m_flags;
     bool m_required;
 
 };
 
+enum FieldSetDepth {
+    SHALLOW,
+    DEEP
+};
+
 } /* namespace mgen */
 
-#endif /* FIELD_H_ */
+#endif /* MGEN_FIELD_H_ */

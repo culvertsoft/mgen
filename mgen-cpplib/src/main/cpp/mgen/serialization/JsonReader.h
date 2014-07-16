@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef JsonREADER_H_
-#define JsonREADER_H_
+#ifndef MGEN_JsonREADER_H_
+#define MGEN_JsonREADER_H_
 
 #include "mgen/ext/rapidjson/document.h"
 #include "mgen/classes/ClassRegistryBase.h"
@@ -278,4 +278,4 @@ private:
 
 } /* namespace mgen */
 
-#endif /* JsonREADER_H_ */
+#endif /* MGEN_JsonREADER_H_ */

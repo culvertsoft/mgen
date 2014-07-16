@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef STREAMCORRUPTEDEXCEPTION_H_
-#define STREAMCORRUPTEDEXCEPTION_H_
+#ifndef MGEN_STREAMCORRUPTEDEXCEPTION_H_
+#define MGEN_STREAMCORRUPTEDEXCEPTION_H_
 
 #include "mgen/exceptions/SerializationException.h"
 
@@ -21,4 +21,4 @@ public:
 
 } /* namespace mgen */
 
-#endif /* STREAMCORRUPTEDEXCEPTION_H_ */
+#endif /* MGEN_STREAMCORRUPTEDEXCEPTION_H_ */

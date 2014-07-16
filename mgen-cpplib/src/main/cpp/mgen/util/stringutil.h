@@ -5,8 +5,8 @@
  *      Author: johan
  */
 
-#ifndef STRINGUTIL_H_
-#define STRINGUTIL_H_
+#ifndef MGEN_STRINGUTIL_H_
+#define MGEN_STRINGUTIL_H_
 
 #include <string>
 #include <sstream>
@@ -152,4 +152,4 @@ T fromString(const char * s) {
 
 } /* namespace mgen */
 
-#endif /* STRINGUTIL_H_ */
+#endif /* MGEN_STRINGUTIL_H_ */

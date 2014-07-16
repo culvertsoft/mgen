@@ -5,8 +5,8 @@
  *      Author: johan
  */
 
-#ifndef CLASSREGISTRYBASE_H_
-#define CLASSREGISTRYBASE_H_
+#ifndef MGEN_CLASSREGISTRYBASE_H_
+#define MGEN_CLASSREGISTRYBASE_H_
 
 #include "mgen/classes/ClassRegistryEntry.h"
 #include "mgen/exceptions/Exception.h"
@@ -57,4 +57,4 @@ private:
 
 } /* namespace mgen */
 
-#endif /* CLASSREGISTRYBASE_H_ */
+#endif /* MGEN_CLASSREGISTRYBASE_H_ */

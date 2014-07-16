@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef MGENBINARYWRITER_H_
-#define MGENBINARYWRITER_H_
+#ifndef MGEN_MGENBINARYWRITER_H_
+#define MGEN_MGENBINARYWRITER_H_
 
 #include "mgen/util/missingfields.h"
 #include "mgen/serialization/VarInt.h"
@@ -36,7 +36,7 @@ public:
     template<typename T>
     void visit(const T& v, const Field& field, const bool isSet) {
         if (isSet) {
-            writeFieldStart(field.id(), field.type().tag());
+            writeFieldStart(field.id(), BINARY_TAG_OF(&v));
             write(v, false);
         }
     }
@@ -64,14 +64,14 @@ public:
 private:
 
     void writePoly(const MGenBase& v, const bool doTag) {
-        writeTagIf(Type::TAG_CUSTOM, doTag);
+        writeTagIf(BINARY_TAG_CUSTOM, doTag);
         m_classRegistry.visitObject(v, *this);
     }
 
     template<typename MGenType>
     void write(const MGenType& v, const MGenBase&, const bool doTag) {
         m_expectType = MGenType::_type_id;
-        writeTagIf(Type::TAG_CUSTOM, doTag);
+        writeTagIf(BINARY_TAG_CUSTOM, doTag);
         v._accept(*this);
     }
 
@@ -91,17 +91,17 @@ private:
             m_expectType = MGenType::_type_id;
             writePoly(*v, doTag);
         } else {
-            writeTagIf(Type::TAG_CUSTOM, doTag);
+            writeTagIf(BINARY_TAG_CUSTOM, doTag);
             writeSize(0);
         }
     }
 
     template<typename T>
     void write(const std::vector<T>& v, const bool verifyTag) {
-        writeTagIf(Type::TAG_LIST, verifyTag);
+        writeTagIf(BINARY_TAG_LIST, verifyTag);
         writeSize(v.size());
         if (!v.empty()) {
-            writeTagIf(TAG_OF((T*) 0), true);
+            writeTagIf(BINARY_TAG_OF((T*) 0), true);
             for (std::size_t i = 0; i < v.size(); i++)
                 write(v[i], false);
         }
@@ -109,7 +109,7 @@ private:
 
     template<typename K, typename V>
     void write(const std::map<K, V>& v, const bool verifyTag) {
-        writeTagIf(Type::TAG_MAP, verifyTag);
+        writeTagIf(BINARY_TAG_MAP, verifyTag);
         writeSize(v.size());
         if (!v.empty()) {
             std::vector<K> keys(v.size());
@@ -126,42 +126,42 @@ private:
     }
 
     void write(const bool v, const bool doTag) {
-        writeTagIf(Type::TAG_BOOL, doTag);
+        writeTagIf(BINARY_TAG_BOOL, doTag);
         write(v ? 0x01 : 0x00, false);
     }
 
     void write(const char v, const bool doTag) {
-        writeTagIf(Type::TAG_INT8, doTag);
+        writeTagIf(BINARY_TAG_INT8, doTag);
         writeRaw(endian::hton(v));
     }
 
     void write(const short v, const bool doTag) {
-        writeTagIf(Type::TAG_INT16, doTag);
+        writeTagIf(BINARY_TAG_INT16, doTag);
         writeRaw(endian::hton(v));
     }
 
     void write(const int v, const bool doTag) {
-        writeTagIf(Type::TAG_INT32, doTag);
+        writeTagIf(BINARY_TAG_INT32, doTag);
         writeSignedVarint32(v);
     }
 
     void write(const long long v, const bool doTag) {
-        writeTagIf(Type::TAG_INT64, doTag);
+        writeTagIf(BINARY_TAG_INT64, doTag);
         writeSignedVarint64(v);
     }
 
     void write(const float v, const bool doTag) {
-        writeTagIf(Type::TAG_FLOAT32, doTag);
+        writeTagIf(BINARY_TAG_FLOAT32, doTag);
         writeRaw(endian::hton(v));
     }
 
     void write(const double v, const bool doTag) {
-        writeTagIf(Type::TAG_FLOAT64, doTag);
+        writeTagIf(BINARY_TAG_FLOAT64, doTag);
         writeRaw(endian::hton(v));
     }
 
     void write(const std::string& v, const bool doTag) {
-        writeTagIf(Type::TAG_STRING, doTag);
+        writeTagIf(BINARY_TAG_STRING, doTag);
         writeSize(v.size());
         if (!v.empty())
             m_outputStream.write(v.data(), v.size());
@@ -172,7 +172,7 @@ private:
         writeTypeTag(tag);
     }
 
-    void writeTagIf(const Type::TAG tagValue, const bool doTag) {
+    void writeTagIf(const BINARY_TAG tagValue, const bool doTag) {
         if (doTag)
             writeTypeTag(tagValue);
     }
@@ -218,4 +218,4 @@ private:
 
 } /* namespace mgen */
 
-#endif /* MGENBINARYWRITER_H_ */
+#endif /* MGEN_MGENBINARYWRITER_H_ */

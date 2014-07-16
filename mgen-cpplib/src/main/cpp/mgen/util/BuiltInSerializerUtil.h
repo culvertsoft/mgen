@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef BUILTINSERIALIZERUTIL_H_
-#define BUILTINSERIALIZERUTIL_H_
+#ifndef MGEN_BUILTINSERIALIZERUTIL_H_
+#define MGEN_BUILTINSERIALIZERUTIL_H_
 
 #include "mgen/classes/MGenBase.h"
 #include "mgen/util/stringutil.h"
@@ -146,4 +146,4 @@ void checkExpType(
 /* namespace serialutil */
 } /* namespace mgen */
 
-#endif /* BUILTINSERIALIZERUTIL_H_ */
+#endif /* MGEN_BUILTINSERIALIZERUTIL_H_ */

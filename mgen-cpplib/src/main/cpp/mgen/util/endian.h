@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef ENDIAN_H_
-#define ENDIAN_H_
+#ifndef MGEN_ENDIAN_H_
+#define MGEN_ENDIAN_H_
 
 namespace mgen {
 namespace endian {
@@ -195,4 +195,4 @@ inline unsigned short ntohs(const unsigned short v) {
 }
 }
 
-#endif /* ENDIAN_H_ */
+#endif /* MGEN_ENDIAN_H_ */

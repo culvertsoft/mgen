@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef VECTORINPUTSTREAM_H_
-#define VECTORINPUTSTREAM_H_
+#ifndef MGEN_VECTORINPUTSTREAM_H_
+#define MGEN_VECTORINPUTSTREAM_H_
 
 #include <vector>
 #include <cstring>
@@ -52,4 +52,4 @@ private:
 
 } /* namespace mgen */
 
-#endif /* VECTORINPUTSTREAM_H_ */
+#endif /* MGEN_VECTORINPUTSTREAM_H_ */

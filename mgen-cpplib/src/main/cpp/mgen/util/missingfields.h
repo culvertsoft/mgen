@@ -5,11 +5,12 @@
  *      Author: GiGurra
  */
 
-#ifndef MISSINGFIELDS_H_
-#define MISSINGFIELDS_H_
+#ifndef MGEN_MISSINGFIELDS_H_
+#define MGEN_MISSINGFIELDS_H_
 
 #include "mgen/classes/MGenBase.h"
 #include "mgen/exceptions/SerializationException.h"
+#include "mgen/serialization/BinaryTags.h"
 
 namespace mgen {
 namespace missingfields {
@@ -62,4 +63,4 @@ inline void ensureNoMissingFields(const MGenType& object) {
 } /* namespace missingfields */
 } /* namespace mgen */
 
-#endif /* MISSINGFIELDS_H_ */
+#endif /* MGEN_MISSINGFIELDS_H_ */

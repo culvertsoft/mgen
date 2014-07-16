@@ -1,5 +1,5 @@
-#ifndef JSON_INPUT_STREAM
-#define JSON_INPUT_STREAM
+#ifndef MGEN_JSON_INPUT_STREAM
+#define MGEN_JSON_INPUT_STREAM
 
 namespace mgen {
 namespace internal {
@@ -67,4 +67,4 @@ private:
 } /* namespace internal */
 } /* namespace mgen */
 
-#endif /* JSON_INPUT_STREAM */
+#endif /* MGEN_JSON_INPUT_STREAM */

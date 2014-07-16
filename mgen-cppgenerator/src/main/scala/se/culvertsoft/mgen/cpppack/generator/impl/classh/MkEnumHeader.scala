@@ -67,9 +67,9 @@ object MkEnumHeader {
     ln(s"const std::vector<std::string>& get_enum_names(const $fullname /* type_evidence */);")
     ln(s"const std::string& get_enum_name(const $fullname enumValue);");
     ln()
-
+/*
     ln(s"inline Type::TAG TAG_OF(const $fullname * /* type_evidence */) { return Type::TAG_STRING; }")
-    ln()
+    ln()*/
 
     CppGenUtils.mkNameSpacesEnd(List("mgen"))
     CppGenUtils.mkIncludeGuardEnd()

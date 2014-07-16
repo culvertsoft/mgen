@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef UNEXPECTED_TYPE_EXCEPTION_H_
-#define UNEXPECTED_TYPE_EXCEPTION_H_
+#ifndef MGEN_UNEXPECTED_TYPE_EXCEPTION_H_
+#define MGEN_UNEXPECTED_TYPE_EXCEPTION_H_
 
 #include "mgen/exceptions/SerializationException.h"
 
@@ -21,4 +21,4 @@ public:
 
 } /* namespace mgen */
 
-#endif /* UNEXPECTED_TYPE_EXCEPTION_H_ */
+#endif /* MGEN_UNEXPECTED_TYPE_EXCEPTION_H_ */
