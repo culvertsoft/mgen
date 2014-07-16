@@ -2,6 +2,7 @@
 #define MGEN_BINARY_TAGS_H_
 
 #include "mgen/classes/MGenBase.h"
+#include "mgen/util/stringutil.h"
 
 namespace mgen {
 
@@ -67,10 +68,30 @@ inline BINARY_TAG BINARY_TAG_OF(const Polymorphic<T> *) {
     return BINARY_TAG_CUSTOM;
 }
 
-template <typename UserDefinedType>
+template<typename UserDefinedType>
 inline BINARY_TAG BINARY_TAG_OF(const UserDefinedType * v) {
     return __is_enum(UserDefinedType) ? BINARY_TAG_STRING : BINARY_TAG_CUSTOM;
 }
+
+#define MGEN_CASE_ENUM_STR(name) case name: return MGEN_STRINGIFY(name);
+inline std::string get_enum_name(const BINARY_TAG e) {
+    switch (e) {
+    MGEN_CASE_ENUM_STR(BINARY_TAG_BOOL)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_INT8)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_INT16)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_INT32)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_INT64)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_FLOAT32)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_FLOAT64)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_STRING)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_LIST)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_MAP)
+    MGEN_CASE_ENUM_STR(BINARY_TAG_CUSTOM)
+    default:
+        return std::string("BINARY_TAG_UNKNOWN: ").append(toString(int(e)));
+    }
+}
+#undef MGEN_CASE_ENUM_STR
 
 } /* namespace mgen */
 
