@@ -65,51 +65,62 @@ public:
         return m_tag;
     }
 
-    static inline TAG TAG_OF(const bool) {
-        return TAG_BOOL;
-    }
-    static inline TAG TAG_OF(const char) {
-        return TAG_INT8;
-    }
-    static inline TAG TAG_OF(const short) {
-        return TAG_INT16;
-    }
-    static inline TAG TAG_OF(const int) {
-        return TAG_INT32;
-    }
-    static inline TAG TAG_OF(const long long) {
-        return TAG_INT64;
-    }
-    static inline TAG TAG_OF(const float) {
-        return TAG_FLOAT32;
-    }
-    static inline TAG TAG_OF(const double) {
-        return TAG_FLOAT64;
-    }
-    static inline TAG TAG_OF(const std::string&) {
-        return TAG_STRING;
-    }
-    template<typename T>
-    static inline TAG TAG_OF(const std::vector<T>&) {
-        return TAG_LIST;
-    }
-    template<typename K, typename V>
-    static inline TAG TAG_OF(const std::map<K, V>&) {
-        return TAG_MAP;
-    }
-    template<typename T>
-    static inline TAG TAG_OF(const Polymorphic<T>&) {
-        return TAG_CUSTOM;
-    }
-    static inline TAG TAG_OF(const MGenBase&) {
-        return TAG_CUSTOM;
-    }
-
 private:
     ENUM m_enum;
     TAG m_tag;
 
 };
+
+inline Type::TAG TAG_OF(const bool *) {
+    return Type::TAG_BOOL;
+}
+
+inline Type::TAG TAG_OF(const char *) {
+    return Type::TAG_INT8;
+}
+
+inline Type::TAG TAG_OF(const short *) {
+    return Type::TAG_INT16;
+}
+
+inline Type::TAG TAG_OF(const int *) {
+    return Type::TAG_INT32;
+}
+
+inline Type::TAG TAG_OF(const long long *) {
+    return Type::TAG_INT64;
+}
+
+inline Type::TAG TAG_OF(const float *) {
+    return Type::TAG_FLOAT32;
+}
+
+inline Type::TAG TAG_OF(const double *) {
+    return Type::TAG_FLOAT64;
+}
+
+inline Type::TAG TAG_OF(const std::string *) {
+    return Type::TAG_STRING;
+}
+
+template<typename T>
+inline Type::TAG TAG_OF(const std::vector<T> *) {
+    return Type::TAG_LIST;
+}
+
+template<typename K, typename V>
+inline Type::TAG TAG_OF(const std::map<K, V> *) {
+    return Type::TAG_MAP;
+}
+
+template<typename T>
+inline Type::TAG TAG_OF(const Polymorphic<T> *) {
+    return Type::TAG_CUSTOM;
+}
+
+inline Type::TAG TAG_OF(const MGenBase *) {
+    return Type::TAG_CUSTOM;
+}
 
 } /* namespace mgen */
 

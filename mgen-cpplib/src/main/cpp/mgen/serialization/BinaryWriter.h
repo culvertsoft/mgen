@@ -20,10 +20,8 @@ public:
 
     static const bool default_compact = false;
 
-    BinaryWriter(
-            MGenStreamType& outputStream,
-            const ClassRegistryType& classRegistry,
-            const bool compact = default_compact) :
+    BinaryWriter(MGenStreamType& outputStream, const ClassRegistryType& classRegistry, const bool compact =
+            default_compact) :
                     m_compact(compact),
                     m_expectType(-1),
                     m_outputStream(outputStream),
@@ -81,12 +79,12 @@ private:
     void write(const EnumType v, const int, const bool doTag) {
         write(get_enum_name(v), doTag);
     }
-    
+
     template<typename MGenTypeOrEnum>
     void write(const MGenTypeOrEnum& v, const bool doTag) {
         write(v, v, doTag);
     }
-    
+
     template<typename MGenType>
     void write(const Polymorphic<MGenType>& v, const bool doTag) {
         if (v.get()) {
@@ -100,11 +98,10 @@ private:
 
     template<typename T>
     void write(const std::vector<T>& v, const bool verifyTag) {
-        static const Type::TAG elemTag = Type::TAG_OF(T());
         writeTagIf(Type::TAG_LIST, verifyTag);
         writeSize(v.size());
         if (!v.empty()) {
-            writeTagIf(elemTag, true);
+            writeTagIf(TAG_OF((T*) 0), true);
             for (std::size_t i = 0; i < v.size(); i++)
                 write(v[i], false);
         }

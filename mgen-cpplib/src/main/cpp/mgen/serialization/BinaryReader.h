@@ -160,11 +160,10 @@ private:
 
     template<typename T>
     void read(std::vector<T>& v, const bool verifyTag) {
-        static const Type::TAG elemTag = Type::TAG_OF(T());
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_LIST, verifyTag);
         const int sz = readSize();
         if (sz > 0) {
-            verifyReadTagIf(elemTag, true);
+            verifyReadTagIf(TAG_OF((T*) 0), true);
             v.resize(sz);
             for (int i = 0; i < sz; i++)
                 read(v[i], false);
@@ -173,7 +172,7 @@ private:
 
     template<typename K, typename V>
     void read(std::map<K, V>& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_MAP, verifyTag);
         const int sz = readSize();
         if (sz > 0) {
             std::vector<K> keys(sz);
@@ -187,7 +186,7 @@ private:
 
     template<typename T>
     void read(Polymorphic<T>& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_CUSTOM, verifyTag);
         v.set((T*) readPoly(false, true, T::_type_id));
     }
 
@@ -200,9 +199,10 @@ private:
 
     template<typename MGenType>
     void read(MGenType& object, const MGenBase& /* type_evidence */, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(object), verifyTag);
-        READ_OBJ_HEADER({
-            mgen::missingfields::ensureNoMissingFields(object);
+        verifyReadTagIf(Type::TAG_CUSTOM, verifyTag);
+        READ_OBJ_HEADER( {
+            mgen::missingfields::ensureNoMissingFields(object)
+            ;
             return;
         });
         if (m_excessiveTypeChecking)
@@ -216,42 +216,42 @@ private:
     }
 
     void read(bool& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_BOOL, verifyTag);
         v = readRaw<char>() != 0;
     }
 
     void read(char & v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_INT8, verifyTag);
         v = endian::ntoh(readRaw<char>());
     }
 
     void read(short & v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_INT16, verifyTag);
         v = endian::ntoh(readRaw<short>());
     }
 
     void read(int& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_INT32, verifyTag);
         v = readSignedVarInt32();
     }
 
     void read(long long& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_INT64, verifyTag);
         v = readSignedVarInt64();
     }
 
     void read(float & v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_FLOAT32, verifyTag);
         v = endian::ntoh(readRaw<float>());
     }
 
     void read(double & v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_FLOAT64, verifyTag);
         v = endian::ntoh(readRaw<double>());
     }
 
     void read(std::string& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(Type::TAG_STRING, verifyTag);
         const int sz = readSize();
         if (sz == 0) {
             v = "";
@@ -273,8 +273,8 @@ private:
             const Type::TAG tag = readTag();
             if (tag != expTag) {
                 throw UnexpectedTypeException(
-                        S("BinaryReader::verifyReadTagIf: Unexpected tag ").append(S((int)expTag)).append(" but got ").append(
-                                S((int)tag)));
+                        S("BinaryReader::verifyReadTagIf: Unexpected tag ").append(S((int )expTag)).append(
+                                " but got ").append(S((int )tag)));
             }
         }
     }
