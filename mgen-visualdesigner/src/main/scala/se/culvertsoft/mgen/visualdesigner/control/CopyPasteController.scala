@@ -172,6 +172,7 @@ class CopyPasteController(controller: Controller) extends SubController(controll
         if (idReplacements.contains(id)) {
           e.setId(idReplacements(id))
           e match {
+            case e: Module =>
             case e: CustomTypeField => e.unsetId16Bit()
             case e: EnumEntry =>
             case e: CustomType => e.unsetId16Bit()
