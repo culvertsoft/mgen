@@ -8,7 +8,7 @@ The goal of MGen is to simplify type-safe sharing of state between applications,
 
 MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), [Flat Buffers](http://google.github.io/flatbuffers/), [Cap'n Proto](http://kentonv.github.io/capnproto/), [Simple Binary Encoding](https://github.com/real-logic/simple-binary-encoding). 
 
-Additionally, MGen supports reading and writing data types from external non-MGen sources, such as json APIs to existing services, and can easily be further extended to custom binary and text formats by implementing new or extending existing Reader and Writer classes - Entirely independent of generated source code.
+Additionally, MGen supports reading and writing data types from external non-MGen sources, such as json APIs to existing services, and can easily be further extended to custom binary and text formats by implementing new or extending existing Reader and Writer classes - Entirely separate of generated source code (for example, see our [C++ JsonWriter](https://github.com/culvertsoft/mgen/blob/master/mgen-cpplib/src/main/cpp/mgen/serialization/JsonWriterBase.h)).
 
 Check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
