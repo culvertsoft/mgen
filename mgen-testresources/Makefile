@@ -13,17 +13,17 @@ DEPENDS_DATA_GENERATOR_SRC_DIR = ${TEST_RESOURCES_ROOT}/build/depends
 DEPENDS_DATA_GENERATOR_BUILD_DIR = ${TEST_RESOURCES_ROOT}/generated/depends/data_generator
 DEPENDS_DATA_DIR = ${TEST_RESOURCES_ROOT}/generated/depends/data_generated
 
-WRITE_MODEL = ${TEST_RESOURCES_ROOT}/models/writeread/write/project.xml
-WRITE_OUT = ${TEST_RESOURCES_ROOT}/generated/writeread/write
-WRITE_DATA_GENERATOR_SRC_DIR = ${TEST_RESOURCES_ROOT}/build/writeread/write
-WRITE_DATA_GENERATOR_BUILD_DIR = ${TEST_RESOURCES_ROOT}/generated/writeread/write/data_generator
-WRITE_DATA_DIR = ${TEST_RESOURCES_ROOT}/generated/writeread/write/data_generated
+WRITE_MODEL = ${TEST_RESOURCES_ROOT}/models/write/project.xml
+WRITE_OUT = ${TEST_RESOURCES_ROOT}/generated/write
+WRITE_DATA_GENERATOR_SRC_DIR = ${TEST_RESOURCES_ROOT}/build/write
+WRITE_DATA_GENERATOR_BUILD_DIR = ${TEST_RESOURCES_ROOT}/generated/write/data_generator
+WRITE_DATA_DIR = ${TEST_RESOURCES_ROOT}/generated/write/data_generated
 
-READ_MODEL = ${TEST_RESOURCES_ROOT}/models/writeread/read/project.xml
-READ_OUT = ${TEST_RESOURCES_ROOT}/generated/writeread/read
-READ_DATA_GENERATOR_SRC_DIR = ${TEST_RESOURCES_ROOT}/build/writeread/read
-READ_DATA_GENERATOR_BUILD_DIR = ${TEST_RESOURCES_ROOT}/generated/writeread/read/data_generator
-READ_DATA_DIR = ${TEST_RESOURCES_ROOT}/generated/writeread/read/data_generated
+READ_MODEL = ${TEST_RESOURCES_ROOT}/models/read/project.xml
+READ_OUT = ${TEST_RESOURCES_ROOT}/generated/read
+READ_DATA_GENERATOR_SRC_DIR = ${TEST_RESOURCES_ROOT}/build/read
+READ_DATA_GENERATOR_BUILD_DIR = ${TEST_RESOURCES_ROOT}/generated/read/data_generator
+READ_DATA_DIR = ${TEST_RESOURCES_ROOT}/generated/read/data_generated
 
 DBGRLS = RelWithDebInfo
 
@@ -38,8 +38,8 @@ generate-sources:
 	mkdir -p ${WRITE_DATA_GENERATOR_BUILD_DIR}
 	mkdir -p ${READ_DATA_GENERATOR_BUILD_DIR}
 	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../${DEPENDS_DATA_GENERATOR_SRC_DIR}
-	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../${WRITE_DATA_GENERATOR_SRC_DIR}
-	cd ${READ_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../${READ_DATA_GENERATOR_SRC_DIR}
+	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../${WRITE_DATA_GENERATOR_SRC_DIR}
+	cd ${READ_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../${READ_DATA_GENERATOR_SRC_DIR}
 
 generate: generate-sources
 	mkdir -p ${DEPENDS_DATA_DIR}
@@ -54,8 +54,8 @@ eclipse: generate-sources
 	mkdir -p ${WRITE_DATA_GENERATOR_BUILD_DIR}/eclipse
 	mkdir -p ${READ_DATA_GENERATOR_BUILD_DIR}/eclipse
 	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../${DEPENDS_DATA_GENERATOR_SRC_DIR}
-	cd ${WRITE_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../../${WRITE_DATA_GENERATOR_SRC_DIR}
-	cd ${READ_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../../${READ_DATA_GENERATOR_SRC_DIR}
+	cd ${WRITE_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../${WRITE_DATA_GENERATOR_SRC_DIR}
+	cd ${READ_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../${READ_DATA_GENERATOR_SRC_DIR}
 
 clean:
 	rm -rf generated
