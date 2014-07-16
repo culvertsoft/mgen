@@ -361,8 +361,8 @@ We plan on making the MGen tools and libraries available on Maven Central or a s
 Currently we haven't had time to produce any dedicated sample projects. But some models of interest might be:
  * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources)
  * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/depend)
- * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/writeread/read)
- * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/writeread/write)
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/read)
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/write)
  * [The data model of the MGen Visual Designer](https://github.com/culvertsoft/mgen/tree/master/mgen-visualdesigner/model)
 
 
