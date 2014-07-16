@@ -50,20 +50,7 @@ public:
         TAG_ARRAY = 8,
         TAG_LIST = 8,
         TAG_MAP = 9,
-        TAG_CUSTOM = 10,
-        TAG_UNKNOWN = 10,
-        TAG_MGENBASE = 10,
-
-        TAG_BIT8 = 0x80,
-        TAG_BIT7 = (0x80 >> 1),
-
-        TAG_NULL_BIT = TAG_BIT8,
-        TAG_EMPTY_BIT = TAG_BIT7,
-
-        TAG_FALSE_BIT = TAG_BIT8,
-        TAG_TRUE_BIT = TAG_BIT7,
-
-        TAG_ZERO_BIT = TAG_BIT8
+        TAG_CUSTOM = 10
     };
 
     Type(const ENUM enm, const TAG tag) :

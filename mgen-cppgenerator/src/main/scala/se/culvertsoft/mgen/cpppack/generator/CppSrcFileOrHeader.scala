@@ -61,10 +61,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
     // Metadata methods section
     mkMetadataMethodsComment(t)
-    
-    // Static helper fcns
-    mkStaticHelperFcns(t)
-    
+        
     mkPublic()
     mkReadField(t)
     mkAcceptVisitor(t)
@@ -81,8 +78,6 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     // Metadata data section
     mkMetadataComment(t)
     mkMetaDataFields(t)
-    //mkPrivate()
-    mkMetaDataFieldMakers(t)
 
     // Footer
     mkClassEnd(t)
@@ -110,7 +105,6 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
   def mkNumFieldsSet(t: CustomType) {}
 
-  def mkStaticHelperFcns(t: CustomType) {}
   def mkClassStart(t: CustomType) {}
   def mkPrivate() {}
   def mkMembers(t: CustomType) {}
@@ -145,7 +139,6 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     txtBuffer.textln(FancyHeaders.metadataSectionHeader);
   }
   def mkMetaDataFields(t: CustomType) {}
-  def mkMetaDataFieldMakers(t: CustomType) {}
   def mkClassEnd(t: CustomType) {}
 
   def mkUsingStatements(t: CustomType) {

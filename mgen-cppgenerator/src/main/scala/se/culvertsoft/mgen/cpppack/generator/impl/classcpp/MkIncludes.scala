@@ -20,6 +20,7 @@ object MkIncludes {
 
     CppGenUtils.include(t)
     CppGenUtils.include("mgen/util/validation.h")
+    CppGenUtils.include("mgen/util/stlLiteral.h")
     txtBuffer.endl()
 
   }
