@@ -4,6 +4,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <iostream>
 
 #include "mgen/serialization/BinaryWriter.h"
 #include "mgen/serialization/BinaryReader.h"
@@ -14,6 +15,9 @@
 #include "mgen/serialization/JsonReader.h"
 
 #include "MGenObjectRandomizer.h"
+
+#undef NDEBUG
+#include <cassert>
 
 inline void writeToFile(const std::string& fileName, const std::vector<char>& data) {
     std::ofstream file(fileName.c_str(), std::ios::binary);
@@ -61,15 +65,22 @@ inline void mkEmptyObjects(
 
     const typename ClassRegType::EntryMap& entries = classRegistry.entries();
 
+    std::cout << "Running mkEmptyObjects for " << serializerName << " serializer" << std::endl;
     for (typename ClassRegType::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
         mgen::MGenBase * instance = it->second.newInstance();
         instance->_setAllFieldsSet(true, mgen::DEEP);
         writer.writeObject(*instance);
+        std::cout << "  " << instance->_typeName() << std::endl;
+        mgen::MGenBase * instanceBack = reader.readObject();
+        assert(instance->_equals(*instanceBack));
+        delete instanceBack;
         delete instance;
     }
 
     writeToFile(std::string("../data_generated/emptyObjects_").append(serializerName).append(".data"), buffer);
 
+    outputStream.reset();
+    inputStream.reset();
     buffer.clear();
 
 }
@@ -89,16 +100,23 @@ inline void mkRandomObjects(
 
     const typename ClassRegType::EntryMap& entries = classRegistry.entries();
 
+    std::cout << "Running mkRandomObjects for " << serializerName << " serializer" << std::endl;
     for (typename ClassRegType::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
         mgen::MGenBase * instance = it->second.newInstance();
         instance->_setAllFieldsSet(true, mgen::DEEP);
         randomizer.randomizeObject(*instance);
         writer.writeObject(*instance);
+        std::cout << "  " << instance->_typeName() << std::endl;
+        mgen::MGenBase * instanceBack = reader.readObject();
+        assert(instance->_equals(*instanceBack));
+        delete instanceBack;
         delete instance;
     }
 
     writeToFile(std::string("../data_generated/randomizedObjects_").append(serializerName).append(".data"), buffer);
 
+    outputStream.reset();
+    inputStream.reset();
     buffer.clear();
 
 }

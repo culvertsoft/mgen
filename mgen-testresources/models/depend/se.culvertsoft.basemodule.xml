@@ -105,8 +105,8 @@
 		
         <AllMapTypes>
 			<a type="map[byte, InternalEnum]"/>
-			<b type="map[int8, ExternalEnum]"/>
-			<c type="map[int16, byte]"/>
+			<b type="map[int8, ExternalEnum]"/>		
+			<c type="map[int16, byte]"/>	
 			<d type="map[int32, int8]"/>
 			<e type="map[int, int16]"/>
 			<f type="map[int64, int32]"/>

@@ -38,7 +38,7 @@ inline std::string toString(const bool b) {
 
 inline std::string toString(const char s) {
     std::stringstream trg;
-    trg << s;
+    trg << int(s);
     return trg.str();
 }
 

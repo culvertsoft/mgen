@@ -131,11 +131,11 @@ private:
     }
 
     void randomize(float& v) {
-        v = float(rand()) * 0.135;
+        v = 0.0f; // float(rand()) * 0.135;
     }
 
     void randomize(double& v) {
-        v = double(rand()) * 0.135;
+        v = 0.0f; // = double(rand()) * 0.135;
     }
 
     void randomize(std::string& v) {
