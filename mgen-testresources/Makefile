@@ -25,7 +25,7 @@ READ_DATA_GENERATOR_SRC_DIR = ${TEST_RESOURCES_ROOT}/build/writeread/read
 READ_DATA_GENERATOR_BUILD_DIR = ${TEST_RESOURCES_ROOT}/generated/writeread/read/data_generator
 READ_DATA_DIR = ${TEST_RESOURCES_ROOT}/generated/writeread/read/data_generated
 
-DBGRLS = Debug
+DBGRLS = RelWithDebInfo
 
 all: generate
 
