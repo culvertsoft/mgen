@@ -1,9 +1,9 @@
 package se.culvertsoft.mgen.compiler
 
 import scala.Array.canBuildFrom
+import scala.Option.option2Iterable
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsJavaMap
-import scala.collection.mutable.ArrayBuffer
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -75,17 +75,17 @@ object MGen {
 
       // Instantiate generators
       println("Instantiating generators...")
-      val generators = new ArrayBuffer[Generator]
-      selectedGenerators.foreach { selected =>
-        val clsName = selected.getGeneratorClassPath()
+      val generators = selectedGenerators.flatMap { selected =>
+        val clsName = selected.getGeneratorClassPath
         pluginFinder.find[Generator](clsName) match {
           case Some(cls) =>
-            generators += cls.newInstance()
             println(s"Created generator: ${clsName}")
+            Some(cls.newInstance())
           case None =>
             if (failOnMissingGenerator)
               throw new GenerationException(s"Could not find specified generator '${clsName}'")
             println(s"WARNING: Could not find specified generator '${clsName}', skipping")
+            None
         }
       }
       println()
