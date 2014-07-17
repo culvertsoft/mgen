@@ -32,7 +32,6 @@ import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
-import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
 import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
 import se.culvertsoft.mgen.javapack.util.Varint;
@@ -238,10 +237,6 @@ public class BinaryReader extends BuiltInReader {
 		} else { // type ids omitted
 			ids = null;
 			nFields = nIdsOrFields >> 1;
-		}
-
-		if (ids == null && constraint == null) {
-			throw new MissingRequiredFieldsException("Missing type information");
 		}
 
 		final MGenBase object = instantiate(ids, constraint);

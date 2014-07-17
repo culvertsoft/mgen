@@ -9,6 +9,8 @@ import scala.collection.mutable.ArrayBuffer
 
 import org.junit.Test
 
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase
+import se.culvertsoft.mgen.javapack.classes.EmptyClassRegistry
 import se.culvertsoft.mgen.javapack.classes.MGenBase
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth
 import se.culvertsoft.mgen.javapack.serialization.BinaryReader
@@ -22,9 +24,7 @@ import se.culvertsoft.testmodule.ClassRegistry
 
 class BasicReadWrite {
 
-  val registry = new ClassRegistry
-
-  def getReader(writer: BuiltInWriter, bytes: Array[Byte]): BuiltInReader = {
+  def getReader(writer: BuiltInWriter, registry: ClassRegistryBase, bytes: Array[Byte]): BuiltInReader = {
     writer match {
       case writer: JsonWriter =>
         new JsonReader(new ByteArrayInputStream(bytes), registry)
@@ -33,7 +33,7 @@ class BasicReadWrite {
     }
   }
 
-  def getWriters(stream: OutputStream) = {
+  def getWriters(stream: OutputStream, registry: ClassRegistryBase) = {
     Seq(
       new JsonWriter(stream, registry, false),
       new JsonWriter(stream, registry, true),
@@ -45,6 +45,8 @@ class BasicReadWrite {
 
   @Test
   def canCreateAllTypes() {
+    val registry = new ClassRegistry
+
     assert(registry.entries.nonEmpty)
     for (e <- registry.entries) {
       val instance = e.construct()
@@ -55,6 +57,8 @@ class BasicReadWrite {
 
   @Test
   def canCopyAllTypes() {
+    val registry = new ClassRegistry
+
     for (e <- registry.entries) {
       val instance = e.construct()
       val instance2 = instance.deepCopy()
@@ -64,8 +68,10 @@ class BasicReadWrite {
 
   @Test
   def canWriteReadAllTypes() {
+    val registry = new ClassRegistry
+
     val stream = new ByteArrayOutputStream
-    val writers = getWriters(stream)
+    val writers = getWriters(stream, registry)
 
     for (writer <- writers) {
 
@@ -81,7 +87,7 @@ class BasicReadWrite {
         written += instance
       }
 
-      val reader = getReader(writer, stream.toByteArray())
+      val reader = getReader(writer, registry, stream.toByteArray())
       for (e <- registry.entries) {
         readBack += reader.readObject()
       }
@@ -90,6 +96,33 @@ class BasicReadWrite {
 
     }
 
+  }
+
+  @Test
+  def canSkipAllTypes() {
+
+    val registryWithTypes = new ClassRegistry
+    val registry = new EmptyClassRegistry
+
+    val stream = new ByteArrayOutputStream
+    val writers = getWriters(stream, registry)
+
+    for (writer <- writers) {
+
+      for (e <- registryWithTypes.entries) {
+
+        val instance = e.construct()
+
+        instance._setAllFieldsSet(true, FieldSetDepth.DEEP)
+
+        writer.writeObject(instance)
+        val reader = getReader(writer, registry, stream.toByteArray())
+        reader.readObject()
+        AssertThrows(reader.readObject())
+        stream.reset()
+      }
+
+    }
   }
 
 }

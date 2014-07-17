@@ -1,6 +1,7 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
 import java.io.DataInputStream;
+import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
 
@@ -44,6 +45,9 @@ abstract public class BuiltInReader implements Reader {
 
 	protected MGenBase instantiate(short[] ids, CustomType expType) {
 
+		if (ids == null && expType == null)
+			return null;
+
 		final ClassRegistryEntry entry = ids != null ? m_clsReg.getByTypeIds16Bit(ids) : m_clsReg
 				.getById(expType.typeId());
 
@@ -70,6 +74,10 @@ abstract public class BuiltInReader implements Reader {
 
 		return entry;
 
+	}
+
+	public int avail() throws IOException {
+		return m_stream.available();
 	}
 
 }
