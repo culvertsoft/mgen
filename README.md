@@ -240,7 +240,7 @@ Example: Here is how we generate [one of the data models for testing MGen](https
 
 ### Using generated code
 
-Read on below, or check our tests at:
+Read on below, or check some of our tests at:
  - C++: https://github.com/culvertsoft/mgen/tree/master/mgen-cpplib/src/test/cpp/src/tests
  - Scala: https://github.com/culvertsoft/mgen/tree/master/mgen-javalib/src/test/scala/se/culvertsoft/mgen/javapack/test
  - Java: See scala examples (the generated code is pure java, but we wrote our tests in scala as it was easier)
