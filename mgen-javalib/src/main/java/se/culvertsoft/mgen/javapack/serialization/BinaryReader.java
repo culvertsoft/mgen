@@ -218,7 +218,7 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private MGenBase readMGenObject(final boolean readTypeTag, final CustomType expectType)
+	private MGenBase readMGenObject(final boolean readTypeTag, final CustomType constraint)
 			throws IOException {
 
 		if (readTypeTag)
@@ -240,11 +240,11 @@ public class BinaryReader extends BuiltInReader {
 			nFields = nIdsOrFields >> 1;
 		}
 
-		if (ids == null && expectType == null) {
+		if (ids == null && constraint == null) {
 			throw new MissingRequiredFieldsException("Missing type information");
 		}
 
-		final MGenBase object = instantiate(ids, expectType);
+		final MGenBase object = instantiate(ids, constraint);
 
 		if (object != null) {
 			readFields(object, nFields);
@@ -337,7 +337,7 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private Object readArray2(final int n, final byte elemTypeTag, final ArrayType arrayType)
+	private Object readArray2(final int n, final byte elemTypeTag, final ArrayType constraint)
 			throws IOException {
 
 		switch (elemTypeTag) {
@@ -356,10 +356,15 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_FLOAT64:
 			return readFloat64Array(n, false);
 		case TAG_STRING:
+			if (constraint != null && constraint.elementType().typeEnum() == TypeEnum.ENUM) {
+				return readEnumArray(n, constraint, false);
+			} else {
+				return readStringArray(n, false);
+			}
 		case TAG_LIST:
 		case TAG_MAP:
 		case TAG_CUSTOM:
-			return readObjectArray(n, elemTypeTag, arrayType);
+			return readObjectArray(n, elemTypeTag, constraint);
 		default:
 			throw new StreamCorruptedException("Unknown elemTypeTag: " + elemTypeTag);
 		}
@@ -413,16 +418,33 @@ public class BinaryReader extends BuiltInReader {
 		return array;
 	}
 
-	private Object readObjectArray(final int n, final byte elemTypeTag, final ArrayType arrayType)
+	private Object readEnumArray(final int n, final ArrayType constraint, final boolean b)
 			throws IOException {
-		final Object[] array = arrayType != null ? (Object[]) arrayType.newInstance(n)
-				: new Object[n];
+		final Enum<?>[] array = constraint != null ? (Enum<?>[]) constraint.newInstance(n)
+				: new Enum<?>[n];
 		for (int i = 0; i < array.length; i++)
-			array[i] = readObject(elemTypeTag, arrayType.elementType());
+			array[i] = readEnum(false, constraint != null ? (EnumType) constraint.elementType()
+					: null);
 		return array;
 	}
 
-	private Object readObject(final byte typeTag, final Type expectType) throws IOException {
+	private String[] readStringArray(final int n, final boolean b) throws IOException {
+		final String[] array = new String[n];
+		for (int i = 0; i < array.length; i++)
+			array[i] = readString(false);
+		return array;
+	}
+
+	private Object readObjectArray(final int n, final byte elemTypeTag, final ArrayType constraint)
+			throws IOException {
+		final Object[] array = constraint != null ? (Object[]) constraint.newInstance(n)
+				: new Object[n];
+		for (int i = 0; i < array.length; i++)
+			array[i] = readObject(elemTypeTag, constraint != null ? constraint.elementType() : null);
+		return array;
+	}
+
+	private Object readObject(final byte typeTag, final Type constraint) throws IOException {
 		switch (typeTag) {
 		case TAG_BOOL:
 			return readBoolean(false);
@@ -439,23 +461,23 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_FLOAT64:
 			return readFloat64(false);
 		case TAG_STRING:
-			if (expectType.typeEnum() == TypeEnum.ENUM) {
-				return readEnum(false, (EnumType) expectType);
+			if (constraint != null && constraint.typeEnum() == TypeEnum.ENUM) {
+				return readEnum(false, (EnumType) constraint);
 			} else {
 				return readString(false);
 			}
 		case TAG_LIST: // array and list have the same write tag
-			return readList(false, (ListOrArrayType) expectType);
+			return readList(false, (ListOrArrayType) constraint);
 		case TAG_MAP:
-			return readMap(false, (MapType) expectType);
+			return readMap(false, (MapType) constraint);
 		case TAG_CUSTOM:
-			return readMGenObject(false, (CustomType) expectType);
+			return readMGenObject(false, (CustomType) constraint);
 		default:
 			throw new StreamCorruptedException("Unknown type tag: " + typeTag);
 		}
 	}
 
-	private Object readArray(final boolean readTag, final ArrayType expectType) throws IOException {
+	private Object readArray(final boolean readTag, final ArrayType constraint) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
@@ -464,30 +486,28 @@ public class BinaryReader extends BuiltInReader {
 		if (nElements > 0) {
 
 			final byte rcvdTag = readTypeTag();
-			if (expectType != null) {
-				final byte expTag = expectType.elementType().typeTag();
+			if (constraint != null) {
+				final byte expTag = constraint.elementType().typeTag();
 				ensureTypeTag(null, expTag, rcvdTag);
 			}
-			return readArray2(nElements, rcvdTag, expectType);
+			return readArray2(nElements, rcvdTag, constraint);
 
 		} else {
-			return expectType.newInstance(0);
+			return constraint != null ? constraint.newInstance(0) : new Object[0];
 		}
 	}
 
-	private
-			ArrayList<Object>
-			readList(final boolean readTag, final ListOrArrayType listOrArrayType)
-					throws IOException {
+	private ArrayList<Object> readList(final boolean tag, final ListOrArrayType constraint)
+			throws IOException {
 
-		if (readTag)
+		if (tag)
 			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
-		return readElements(listOrArrayType != null ? listOrArrayType.elementType() : null);
+		return readElements(constraint != null ? constraint.elementType() : null);
 
 	}
 
-	private HashMap<Object, Object> readMap(final boolean readTag, final MapType mapType)
+	private HashMap<Object, Object> readMap(final boolean readTag, final MapType constraint)
 			throws IOException {
 
 		if (readTag)
@@ -498,8 +518,9 @@ public class BinaryReader extends BuiltInReader {
 
 		if (nElements > 0) {
 
-			final List<Object> keys = readElements(mapType != null ? mapType.keyType() : null);
-			final List<Object> values = readElements(mapType != null ? mapType.valueType() : null);
+			final List<Object> keys = readElements(constraint != null ? constraint.keyType() : null);
+			final List<Object> values = readElements(constraint != null ? constraint.valueType()
+					: null);
 
 			if (keys.size() != values.size() || keys.size() != nElements)
 				throw new StreamCorruptedException("nKeys != nValues in map");
@@ -519,23 +540,66 @@ public class BinaryReader extends BuiltInReader {
 		final ArrayList<Object> out = new ArrayList<Object>(nElements);
 
 		if (nElements > 0) {
-			
+
 			final byte readElemTag = readTypeTag();
 
 			if (constraint != null && constraint.typeTag() != readElemTag)
 				throwUnexpectTag("", constraint.typeTag(), readElemTag);
 
-			for (int i = 0; i < nElements; i++)
-				out.add(readObject(readTypeTag(), constraint));
+			switch (readElemTag) {
+			case TAG_BOOL:
+				for (int i = 0; i < nElements; i++)
+					out.add(readBoolean(false));
+				break;
+			case TAG_INT8:
+				for (int i = 0; i < nElements; i++)
+					out.add(readInt8(false));
+				break;
+			case TAG_INT16:
+				for (int i = 0; i < nElements; i++)
+					out.add(readInt16(false));
+				break;
+			case TAG_INT32:
+				for (int i = 0; i < nElements; i++)
+					out.add(readInt32(false));
+				break;
+			case TAG_INT64:
+				for (int i = 0; i < nElements; i++)
+					out.add(readInt64(false));
+				break;
+			case TAG_FLOAT32:
+				for (int i = 0; i < nElements; i++)
+					out.add(readFloat32(false));
+				break;
+			case TAG_FLOAT64:
+				for (int i = 0; i < nElements; i++)
+					out.add(readFloat64(false));
+				break;
+			case TAG_STRING:
+				if (constraint != null && constraint.typeEnum() == TypeEnum.ENUM) {
+					final EnumType t = (EnumType) constraint;
+					for (int i = 0; i < nElements; i++)
+						out.add(readEnum(false, t));
+				} else {
+					for (int i = 0; i < nElements; i++)
+						out.add(readFloat64(false));
+				}
+				break;
+			default:
+				for (int i = 0; i < nElements; i++)
+					out.add(readObject(readElemTag, constraint));
+				break;
+
+			}
 
 		}
 
 		return out;
 	}
 
-	private Enum<?> readEnum(final boolean readTag, final EnumType typ) throws IOException {
+	private Enum<?> readEnum(final boolean readTag, final EnumType constraint) throws IOException {
 		final String writtenName = readString(readTag);
-		return typ.get(writtenName);
+		return constraint != null ? constraint.get(writtenName) : null;
 	}
 
 }

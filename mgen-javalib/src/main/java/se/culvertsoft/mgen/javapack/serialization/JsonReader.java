@@ -129,13 +129,13 @@ public class JsonReader extends BuiltInReader {
 	public void handleUnknownField(final Field field, final Object context) throws IOException {
 	}
 
-	private MGenBase readMGenObject(final JSONObject node, final CustomType expType)
+	private MGenBase readMGenObject(final JSONObject node, final CustomType constraint)
 			throws IOException {
 
 		if (node == null)
 			return null;
 
-		final MGenBase object = instantiate(readIds(node, expType), expType);
+		final MGenBase object = instantiate(readIds(node, constraint), constraint);
 
 		if (object != null) {
 			readObjectFields(object, node);
@@ -147,14 +147,14 @@ public class JsonReader extends BuiltInReader {
 
 	}
 
-	private String[] readIds(final JSONObject node, final Type expType) {
+	private String[] readIds(final JSONObject node, final Type constraint) {
 
 		final Object tNode = node.get("__t");
 
 		// Try default type
 		if (tNode == null) {
 
-			if (expType != null)
+			if (constraint != null)
 				return null;
 
 			throw new MissingRequiredFieldsException(
@@ -205,14 +205,14 @@ public class JsonReader extends BuiltInReader {
 		return out;
 	}
 
-	private Object cvtString(String keyString, Type keyType) {
+	private Object cvtString(String keyString, Type constraint) {
 
 		if (keyString == null)
 			return null;
 
-		switch (keyType.typeEnum()) {
+		switch (constraint.typeEnum()) {
 		case ENUM:
-			return ((EnumType) keyType).get(keyString);
+			return ((EnumType) constraint).get(keyString);
 		case BOOL:
 			return java.lang.Boolean.valueOf(keyString);
 		case INT8:
@@ -230,18 +230,18 @@ public class JsonReader extends BuiltInReader {
 		case STRING:
 			return keyString;
 		default:
-			throw new UnknownTypeException("Unknown map key type: " + keyType);
+			throw new UnknownTypeException("Unknown map key type: " + constraint);
 		}
 	}
 
-	private Object readArray(final ArrayType typ, final JSONArray node) throws IOException {
+	private Object readArray(final ArrayType constraint, final JSONArray node) throws IOException {
 
 		if (node == null)
 			return null;
 
-		switch (typ.elementType().typeEnum()) {
+		switch (constraint.elementType().typeEnum()) {
 		case ENUM:
-			return readEnumArray(node, typ);
+			return readEnumArray(node, constraint);
 		case BOOL:
 			return readBoolArray(node);
 		case INT8:
@@ -263,20 +263,20 @@ public class JsonReader extends BuiltInReader {
 		case MAP:
 		case CUSTOM:
 		case UNKNOWN:
-			return readObjectArray(node, typ);
+			return readObjectArray(node, constraint);
 		default:
-			throw new UnknownTypeException("Unknown array elementType: " + typ.elementType());
+			throw new UnknownTypeException("Unknown array elementType: " + constraint.elementType());
 		}
 	}
 
-	private ArrayList<?> readList(final ListType typ, final JSONArray node) throws IOException {
+	private ArrayList<?> readList(final ListType constraint, final JSONArray node) throws IOException {
 
 		if (node == null)
 			return null;
 
-		switch (typ.elementType().typeEnum()) {
+		switch (constraint.elementType().typeEnum()) {
 		case ENUM:
-			return readEnumList(node, typ);
+			return readEnumList(node, constraint);
 		case BOOL:
 			return readBoolList(node);
 		case INT8:
@@ -298,15 +298,15 @@ public class JsonReader extends BuiltInReader {
 		case MAP:
 		case CUSTOM:
 		case UNKNOWN:
-			return readObjectList(node, typ);
+			return readObjectList(node, constraint);
 		default:
-			throw new UnknownTypeException("Unknown array element type: " + typ.elementType());
+			throw new UnknownTypeException("Unknown array element type: " + constraint.elementType());
 		}
 	}
 
-	private Object readEnumArray(final JSONArray node, final ArrayType arrayType) {
-		final EnumType elementType = (EnumType) arrayType.elementType();
-		final Enum<?>[] out = (Enum<?>[]) arrayType.newInstance(node.size());
+	private Object readEnumArray(final JSONArray node, final ArrayType constraint) {
+		final EnumType elementType = (EnumType) constraint.elementType();
+		final Enum<?>[] out = (Enum<?>[]) constraint.newInstance(node.size());
 		for (int i = 0; i < node.size(); i++)
 			out[i] = readEnum(elementType, (String) node.get(i));
 		return out;

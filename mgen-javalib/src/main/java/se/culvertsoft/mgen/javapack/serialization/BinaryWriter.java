@@ -256,6 +256,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void writeElements(final Collection<Object> list, final Type elementType)
 			throws IOException {
 
@@ -265,12 +266,65 @@ public class BinaryWriter extends BuiltInWriter {
 
 			writeTypeTag(elementType.typeTag());
 
-			for (final Object o : list)
-				writeObject(o, elementType, false);
+			switch (elementType.typeEnum()) {
+			case ENUM: {
+				final Collection<Enum<?>> l = (Collection) list;
+				for (final Enum<?> e : l)
+					writeEnum(e, false);
+				break;
+			}
+			case BOOL: {
+				final Collection<Boolean> l = (Collection) list;
+				for (final Boolean e : l)
+					writeBoolean(e != null ? e : false, false);
+				break;
+			}
+			case INT8: {
+				final Collection<Byte> l = (Collection) list;
+				for (final Byte e : l)
+					writeInt8(e != null ? e : (byte) 0, false);
+				break;
+			}
+			case INT16: {
+				final Collection<Short> l = (Collection) list;
+				for (final Short e : l)
+					writeInt16(e != null ? e : (short) 0, false);
+				break;
+			}
+			case INT32: {
+				final Collection<Integer> l = (Collection) list;
+				for (final Integer e : l)
+					writeInt32(e != null ? e : 0, false);
+				break;
+			}
+			case INT64: {
+				final Collection<Long> l = (Collection) list;
+				for (final Long e : l)
+					writeInt64(e != null ? e : 0, false);
+				break;
+			}
+			case FLOAT32: {
+				final Collection<Float> l = (Collection) list;
+				for (final Float e : l)
+					writeFloat32(e != null ? e : 0.0f, false);
+				break;
+			}
+			case FLOAT64: {
+				final Collection<Double> l = (Collection) list;
+				for (final Double e : l)
+					writeFloat64(e != null ? e : 0.0, false);
+				break;
+			}
+			default:
+				for (final Object o : list)
+					writeObject(o, elementType, false);
+				break;
+			}
 
 		} else {
 			writeSize(0);
 		}
+
 	}
 
 	private void writeMap(final HashMap<Object, Object> map, final MapType typ, final boolean tag)
@@ -533,6 +587,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	@SuppressWarnings("unchecked")
 	private void writeObject(final Object o, final Type typ, boolean tag) throws IOException {
+
 		switch (typ.typeEnum()) {
 		case ENUM:
 			writeEnum((Enum<?>) o, tag);
