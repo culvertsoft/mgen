@@ -80,7 +80,6 @@
 			<l type="array[float64]"/>
 			<m type="array[string]"/>
 			<n type="array[array[string]]"/>
-			<o type="array[map[string, int32]]"/>
 			<p type="array[AllFieldTypes]"/>
         </AllArrayTypes>
 		
