@@ -514,7 +514,7 @@ If you're not satisfied with downloading pre-built libraries (see [the downloads
 Build Requirements:
   * Java JDK >= 1.7
   * CMAKE >= 2.8
-  * g++/MinGW >= 4. (MGen C++ runtime libraries work with Visual Studio, but currently not building the C++ tests.)
+  * MSVC>=2005/g++,mingw>=4/Clang. (But building the tests is currently not possible on MSVC)
   * make (on windows: use gnuwin32 or cygwin)
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
