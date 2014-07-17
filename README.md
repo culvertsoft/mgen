@@ -68,7 +68,6 @@ Check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/Whit
 
 MGen's basic use case is defining a data model, generating source code and providing serializers and deserializers.
 
-Additionally, MGen supports reading and writing data types from external non-MGen sources, such as json APIs to existing services, and can easily be further extended to custom binary and text formats by implementing new or extending existing Reader and Writer classes - Entirely separate of generated source code through a simple visitor interface (for example, see our [C++ JsonWriter](https://github.com/culvertsoft/mgen/blob/master/mgen-cpplib/src/main/cpp/mgen/serialization/JsonWriterBase.h)).
 
 ### Defining a data model
 
@@ -335,6 +334,9 @@ Now we can read these objects back from the buffer in the following manner:
       // } catch (const mgen::Exception& exception) {
       // // do something. mgen::Exception extends std::runtime_error
       // }
+
+Additionally, MGen supports reading and writing data types from external non-MGen sources, such as json APIs to existing services, and can easily be further extended to custom binary and text formats by implementing new or extending existing Reader and Writer classes - Entirely separate of generated source code through a simple visitor interface (for example, see our [C++ JsonWriter](https://github.com/culvertsoft/mgen/blob/master/mgen-cpplib/src/main/cpp/mgen/serialization/JsonWriterBase.h)).
+
 
 ## Download links
 
