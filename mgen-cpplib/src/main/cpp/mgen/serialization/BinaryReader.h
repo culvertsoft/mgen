@@ -108,7 +108,9 @@ private:
 
     }
 
-    void skipList() {
+    void skipList(const bool tag) {
+        if (tag)
+            verifyReadTagIf(BINARY_TAG_LIST, tag);
         const int sz = readSize();
         if (sz > 0) {
             const BINARY_TAG tag = readTag();
@@ -117,11 +119,13 @@ private:
         }
     }
 
-    void skipMap() {
+    void skipMap(const bool tag) {
+        if (tag)
+            verifyReadTagIf(BINARY_TAG_MAP, tag);
         const int sz = readSize();
         if (sz > 0) {
-            skipList();
-            skipList();
+            skipList(true);
+            skipList(true);
         }
     }
 
@@ -148,8 +152,8 @@ private:
         SKIP_CASE_READ(BINARY_TAG_FLOAT32, read<float>(false))
         SKIP_CASE_READ(BINARY_TAG_FLOAT64, read<double>(false))
         SKIP_CASE_READ(BINARY_TAG_STRING, read<std::string>(false))
-        SKIP_CASE_READ(BINARY_TAG_LIST, skipList())
-        SKIP_CASE_READ(BINARY_TAG_MAP, skipMap())
+        SKIP_CASE_READ(BINARY_TAG_LIST, skipList(false))
+        SKIP_CASE_READ(BINARY_TAG_MAP, skipMap(false))
         SKIP_CASE_READ(BINARY_TAG_CUSTOM, skipCustom())
         default:
             throw UnexpectedTypeException("BinaryReader::skipField(..): Unexpected tag");
@@ -272,8 +276,8 @@ private:
             const BINARY_TAG tag = readTag();
             if (tag != expTag) {
                 throw UnexpectedTypeException(
-                        toString("BinaryReader::verifyReadTagIf: Unexpected tag ").append(toString(expTag)).append(" but got ").append(
-                                toString(tag)));
+                        toString("BinaryReader::verifyReadTagIf: Unexpected tag ").append(toString(expTag)).append(
+                                " but got ").append(toString(tag)));
             }
         }
     }

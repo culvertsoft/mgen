@@ -97,8 +97,8 @@ private:
     }
 
     template<typename T>
-    void write(const std::vector<T>& v, const bool verifyTag) {
-        writeTagIf(BINARY_TAG_LIST, verifyTag);
+    void write(const std::vector<T>& v, const bool doTag) {
+        writeTagIf(BINARY_TAG_LIST, doTag);
         writeSize(v.size());
         if (!v.empty()) {
             writeTagIf(BINARY_TAG_OF((T*) 0), true);
@@ -108,8 +108,8 @@ private:
     }
 
     template<typename K, typename V>
-    void write(const std::map<K, V>& v, const bool verifyTag) {
-        writeTagIf(BINARY_TAG_MAP, verifyTag);
+    void write(const std::map<K, V>& v, const bool doTag) {
+        writeTagIf(BINARY_TAG_MAP, doTag);
         writeSize(v.size());
         if (!v.empty()) {
             std::vector<K> keys(v.size());
