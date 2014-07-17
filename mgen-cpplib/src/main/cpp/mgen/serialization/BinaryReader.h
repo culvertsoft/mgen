@@ -21,8 +21,6 @@
  *
  ********************************************/
 
-#define S(x) toString(x)
-
 #define READ_OBJ_HEADER(retCall) \
     const int nIdsOrFields = readSize(); \
     if (nIdsOrFields == 0) retCall; \
@@ -274,8 +272,8 @@ private:
             const BINARY_TAG tag = readTag();
             if (tag != expTag) {
                 throw UnexpectedTypeException(
-                        S("BinaryReader::verifyReadTagIf: Unexpected tag ").append(S(expTag)).append(" but got ").append(
-                                S(tag)));
+                        toString("BinaryReader::verifyReadTagIf: Unexpected tag ").append(toString(expTag)).append(" but got ").append(
+                                toString(tag)));
             }
         }
     }
@@ -325,7 +323,6 @@ private:
 } /* namespace mgen */
 
 #undef READ_OBJ_HEADER
-#undef S
 
 #endif /* MGEN_MGENBINARYREADER_H_ */
 

@@ -5,7 +5,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 
 import se.culvertsoft.mgen.api.model.CustomType;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
@@ -17,9 +17,9 @@ abstract public class BuiltInReader implements Reader {
 	protected static final short[] NO_IDS = new short[0];
 
 	protected final DataInputStream m_stream;
-	protected final ClassRegistry m_clsReg;
+	protected final ClassRegistryBase m_clsReg;
 
-	protected BuiltInReader(DataInputStream stream, ClassRegistry classRegistry) {
+	protected BuiltInReader(DataInputStream stream, ClassRegistryBase classRegistry) {
 		m_stream = stream;
 		m_clsReg = classRegistry;
 	}

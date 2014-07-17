@@ -30,7 +30,7 @@ import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
@@ -39,7 +39,7 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
 
-	public BinaryReader(final InputStream stream, final ClassRegistry classRegistry) {
+	public BinaryReader(final InputStream stream, final ClassRegistryBase classRegistry) {
 		super(stream instanceof DataInputStream ? (DataInputStream) stream : new DataInputStream(
 				stream), classRegistry);
 	}
@@ -516,15 +516,19 @@ public class BinaryReader extends BuiltInReader {
 
 		final int nElements = readSize();
 
-		final byte readElemTag = readTypeTag();
-
-		if (constraint != null && constraint.typeTag() != readElemTag)
-			throwUnexpectTag("", constraint.typeTag(), readElemTag);
-
 		final ArrayList<Object> out = new ArrayList<Object>(nElements);
 
-		for (int i = 0; i < nElements; i++)
-			out.add(readObject(readTypeTag(), constraint));
+		if (nElements > 0) {
+			
+			final byte readElemTag = readTypeTag();
+
+			if (constraint != null && constraint.typeTag() != readElemTag)
+				throwUnexpectTag("", constraint.typeTag(), readElemTag);
+
+			for (int i = 0; i < nElements; i++)
+				out.add(readObject(readTypeTag(), constraint));
+
+		}
 
 		return out;
 	}

@@ -57,7 +57,7 @@ eclipse: generate-sources
 	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../${DEPENDS_DATA_GENERATOR_SRC_DIR}
 	cd ${WRITE_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../${WRITE_DATA_GENERATOR_SRC_DIR}
 	cd ${READ_DATA_GENERATOR_BUILD_DIR}/eclipse && cmake -G"Eclipse CDT4 - Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../../${READ_DATA_GENERATOR_SRC_DIR}
-	cd javacheck && make eclipse
+	#cd javacheck && make eclipse
 	
 clean:
 	rm -rf generated

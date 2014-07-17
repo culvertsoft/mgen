@@ -3,13 +3,13 @@ package se.culvertsoft.mgen.javapack.serialization;
 import java.io.IOException;
 import java.io.OutputStream;
 
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 
 public class JsonPrettyWriter extends JsonWriter {
 
 	public JsonPrettyWriter(
 			final OutputStream outputStream,
-			final ClassRegistry classRegistry,
+			final ClassRegistryBase classRegistry,
 			final boolean compact,
 			final int maxDepth) {
 		super(outputStream, classRegistry, compact, maxDepth);
@@ -17,14 +17,14 @@ public class JsonPrettyWriter extends JsonWriter {
 
 	public JsonPrettyWriter(
 			final OutputStream outputStream,
-			final ClassRegistry classRegistry,
+			final ClassRegistryBase classRegistry,
 			final boolean compact) {
 		this(outputStream, classRegistry, compact, DEFAULT_MAX_DEPTH);
 	}
 
 	public JsonPrettyWriter(
 			final OutputStream outputStream,
-			final ClassRegistry classRegistry) {
+			final ClassRegistryBase classRegistry) {
 		this(outputStream, classRegistry, DEFAULT_COMPACT);
 	}
 

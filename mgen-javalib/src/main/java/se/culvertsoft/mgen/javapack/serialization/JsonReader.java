@@ -21,7 +21,7 @@ import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
@@ -33,7 +33,7 @@ public class JsonReader extends BuiltInReader {
 
 	private final MGenJSONParser m_parser;
 
-	public JsonReader(final InputStream stream, final ClassRegistry classRegistry) {
+	public JsonReader(final InputStream stream, final ClassRegistryBase classRegistry) {
 		super(stream instanceof DataInputStream ? (DataInputStream) stream : new DataInputStream(
 				stream), classRegistry);
 		m_parser = new MGenJSONParser(new InputStreamReader(stream));
@@ -240,6 +240,8 @@ public class JsonReader extends BuiltInReader {
 			return null;
 
 		switch (typ.elementType().typeEnum()) {
+		case ENUM:
+			return readEnumArray(node, typ);
 		case BOOL:
 			return readBoolArray(node);
 		case INT8:
@@ -273,6 +275,8 @@ public class JsonReader extends BuiltInReader {
 			return null;
 
 		switch (typ.elementType().typeEnum()) {
+		case ENUM:
+			return readEnumList(node, typ);
 		case BOOL:
 			return readBoolList(node);
 		case INT8:
@@ -298,6 +302,14 @@ public class JsonReader extends BuiltInReader {
 		default:
 			throw new UnknownTypeException("Unknown array element type: " + typ.elementType());
 		}
+	}
+
+	private Object readEnumArray(final JSONArray node, final ArrayType arrayType) {
+		final EnumType elementType = (EnumType) arrayType.elementType();
+		final Enum<?>[] out = (Enum<?>[]) arrayType.newInstance(node.size());
+		for (int i = 0; i < node.size(); i++)
+			out[i] = readEnum(elementType, (String) node.get(i));
+		return out;
 	}
 
 	private boolean[] readBoolArray(JSONArray node) throws IOException {
@@ -360,6 +372,14 @@ public class JsonReader extends BuiltInReader {
 		final Object out = typ.newInstance(node.size());
 		for (int i = 0; i < node.size(); i++)
 			Array.set(out, i, readObject(node.get(i), typ.elementType()));
+		return out;
+	}
+
+	private ArrayList<Enum<?>> readEnumList(JSONArray node, ListType typ) {
+		final EnumType elementType = (EnumType) typ.elementType();
+		final ArrayList<Enum<?>> out = new ArrayList<Enum<?>>(node.size());
+		for (int i = 0; i < node.size(); i++)
+			out.add(readEnum(elementType, (String) node.get(i)));
 		return out;
 	}
 

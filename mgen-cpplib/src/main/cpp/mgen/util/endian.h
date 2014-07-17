@@ -16,9 +16,9 @@ enum MGenByteOrder {
     MGEN_BIG_ENDIAN
 };
 
-inline MGenByteOrder getSystemByteOrder();
-inline bool isSystemBigEndian();
-inline bool isSystemLittleEndian();
+inline MGenByteOrder mgen_getSystemByteOrder();
+inline bool mgen_isSystemBigEndian();
+inline bool mgen_isSystemLittleEndian();
 
 inline unsigned short mgen_htons(const unsigned short v);
 inline unsigned int mgen_htonl(const unsigned int v);

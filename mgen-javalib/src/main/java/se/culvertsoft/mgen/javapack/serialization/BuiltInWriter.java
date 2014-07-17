@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import se.culvertsoft.mgen.api.model.Field;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 
@@ -23,10 +23,10 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	static protected final Charset charset = Charset.forName("UTF8");
 	protected final CharsetEncoder stringEncoder;
 
-	protected final ClassRegistry m_classRegistry;
+	protected final ClassRegistryBase m_classRegistry;
 	protected final DataOutput m_stream;
 
-	public BuiltInWriter(final DataOutput stream, final ClassRegistry classRegistry) {
+	public BuiltInWriter(final DataOutput stream, final ClassRegistryBase classRegistry) {
 		m_classRegistry = classRegistry;
 		m_stream = stream;
 		stringEncoder = charset
@@ -74,6 +74,12 @@ public abstract class BuiltInWriter implements FieldVisitor {
 			throws IOException;
 
 	@Override
+	public void visit(final boolean b, final Field field, final boolean isSet) throws IOException {
+		if (isSet)
+			writeBooleanField(b, field);
+	}
+
+	@Override
 	public void visit(final byte o, final Field field, final boolean isSet) throws IOException {
 		if (isSet)
 			writeInt8Field(o, field);
@@ -93,7 +99,8 @@ public abstract class BuiltInWriter implements FieldVisitor {
 
 	@Override
 	public void visit(final long o, final Field field, final boolean isSet) throws IOException {
-		writeInt64Field(o, field);
+		if (isSet)
+			writeInt64Field(o, field);
 	}
 
 	@Override

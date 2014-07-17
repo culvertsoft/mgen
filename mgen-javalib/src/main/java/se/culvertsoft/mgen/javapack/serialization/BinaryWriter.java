@@ -27,7 +27,7 @@ import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
 import se.culvertsoft.mgen.javapack.util.Varint;
@@ -41,7 +41,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	public BinaryWriter(
 			final OutputStream stream,
-			final ClassRegistry classRegistry,
+			final ClassRegistryBase classRegistry,
 			final boolean compact) {
 		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
 				: new DataOutputStream(stream), classRegistry);
@@ -49,7 +49,7 @@ public class BinaryWriter extends BuiltInWriter {
 		m_expectType = -1;
 	}
 
-	public BinaryWriter(final OutputStream stream, final ClassRegistry classRegistry) {
+	public BinaryWriter(final OutputStream stream, final ClassRegistryBase classRegistry) {
 		this(stream, classRegistry, DEFAULT_COMPACT);
 	}
 
@@ -147,8 +147,9 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	@Override
-	public void writeEnumField(Enum<?> e, Field field) throws IOException {
-		writeStringField(e != null ? e.toString() : null, field);
+	public void writeEnumField(final Enum<?> e, final Field field) throws IOException {
+		writeFieldStart(field.id(), TAG_STRING);
+		writeEnum(e, false);
 	}
 
 	@Override
@@ -182,6 +183,12 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeFieldStart(final short id, final byte tag) throws IOException {
 		writeInt16(id, false);
 		writeTypeTag(tag);
+	}
+
+	private void writeEnum(final Enum<?> e, final boolean tag) throws IOException {
+		if (tag)
+			writeTypeTag(TAG_STRING);
+		writeString(String.valueOf(e), tag);
 	}
 
 	private void writeBoolean(final boolean b, final boolean tag) throws IOException {
@@ -296,6 +303,9 @@ public class BinaryWriter extends BuiltInWriter {
 			final Type elementType = typ.elementType();
 
 			switch (elementType.typeEnum()) {
+			case ENUM:
+				writeEnumArray((Enum<?>[]) arrayObj, false);
+				break;
 			case BOOL:
 				writeBooleanArray((boolean[]) arrayObj, false);
 				break;
@@ -326,6 +336,25 @@ public class BinaryWriter extends BuiltInWriter {
 			writeSize(0);
 		}
 
+	}
+
+	private void writeEnumArray(final Enum<?>[] array, final boolean tag) throws IOException {
+
+		if (tag)
+			writeTypeTag(TAG_LIST);
+
+		if (array != null && array.length != 0) {
+
+			writeSize(array.length);
+
+			writeTypeTag(TAG_STRING);
+
+			for (final Enum<?> e : array)
+				writeEnum(e, false);
+
+		} else {
+			writeSize(0);
+		}
 	}
 
 	private void writeBooleanArray(final boolean[] array, final boolean tag) throws IOException {
@@ -506,7 +535,7 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeObject(final Object o, final Type typ, boolean tag) throws IOException {
 		switch (typ.typeEnum()) {
 		case ENUM:
-			writeString(o != null ? o.toString() : null, tag);
+			writeEnum((Enum<?>) o, tag);
 			break;
 		case BOOL:
 			writeBoolean(o != null ? (Boolean) o : false, tag);

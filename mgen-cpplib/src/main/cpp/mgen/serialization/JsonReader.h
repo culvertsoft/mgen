@@ -16,10 +16,8 @@
 
 namespace mgen {
 
-#define S(x) toString(x)
-
 #define throw_unexpected_type(expect, actual) \
-    throw UnexpectedTypeException(S("Unexpected type! -> Expected type ").append(S(expect)).append(" but got type ").append(S(actual)))
+    throw UnexpectedTypeException(toString("Unexpected type! -> Expected type ").append(toString(expect)).append(" but got type ").append(toString(actual)))
 
 template<typename MGenStreamType, typename ClassRegistryType>
 class JsonReader {
@@ -273,8 +271,6 @@ private:
 };
 
 #undef throw_unexpected_type
-
-#undef S
 
 } /* namespace mgen */
 

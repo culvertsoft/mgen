@@ -5,9 +5,6 @@ get-generated-sources:
 	mkdir -p src_generated
 	mkdir -p src_generated/test
 	cp -rf ../../generated/write/src_generated/java src_generated/test/
-		
-eclipse: get-generated-sources
-	sbt eclipse
 
 clean: 	
 	sbt clean

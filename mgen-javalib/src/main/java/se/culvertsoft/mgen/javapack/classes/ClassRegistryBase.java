@@ -3,13 +3,13 @@ package se.culvertsoft.mgen.javapack.classes;
 import java.util.Collection;
 import java.util.HashMap;
 
-public abstract class ClassRegistry {
+public abstract class ClassRegistryBase {
 
 	private final HashMap<Long, ClassRegistryEntry> m_typeId2Entry;
 	private final HashMap<String, ClassRegistryEntry> m_name2Entry;
 	private final HashMap<Class<?>, ClassRegistryEntry> m_cls2Entry;
 
-	public ClassRegistry() {
+	public ClassRegistryBase() {
 		m_typeId2Entry = new HashMap<Long, ClassRegistryEntry>();
 		m_name2Entry = new HashMap<String, ClassRegistryEntry>();
 		m_cls2Entry = new HashMap<Class<?>, ClassRegistryEntry>();

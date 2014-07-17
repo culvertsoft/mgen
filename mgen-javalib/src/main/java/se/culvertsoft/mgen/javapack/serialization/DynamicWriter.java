@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
 
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 
 public abstract class DynamicWriter extends BuiltInWriter {
 
@@ -13,7 +13,7 @@ public abstract class DynamicWriter extends BuiltInWriter {
 
 	public DynamicWriter(
 			final OutputStream stream,
-			final ClassRegistry classRegistry) {
+			final ClassRegistryBase classRegistry) {
 		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
 				: new DataOutputStream(stream), classRegistry);
 	}
