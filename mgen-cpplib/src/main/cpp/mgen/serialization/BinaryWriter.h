@@ -43,13 +43,13 @@ public:
 
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
-        static const std::vector<short>& ids = MGenType::_type_ids_16bit();
 
         missingfields::ensureNoMissingFields(object);
 
         if (shouldOmitIds(MGenType::_type_id)) {
             writeSize(nFieldsSet << 1);
         } else {
+            const std::vector<short>& ids = MGenType::_type_ids_16bit();
             writeSize((int(ids.size()) << 1) | 0x01);
             for (std::size_t i = 0; i < ids.size(); i++)
                 write(ids[i], false);

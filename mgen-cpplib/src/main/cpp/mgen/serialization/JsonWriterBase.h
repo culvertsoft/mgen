@@ -30,7 +30,6 @@ public:
 
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
-        static const std::string& idsString = MGenType::_type_ids_16bit_base64_string();
 
         missingfields::ensureNoMissingFields(object);
 
@@ -38,7 +37,7 @@ public:
 
         if (!shouldOmitIds(MGenType::_type_id)) {
             m_rapidJsonWriter.String("__t");
-            m_rapidJsonWriter.String(idsString.c_str());
+            m_rapidJsonWriter.String(MGenType::_type_ids_16bit_base64_string().c_str());
         }
     }
     
