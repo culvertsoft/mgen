@@ -11,101 +11,101 @@
 namespace mgen {
 namespace endian {
 
-enum ByteOrder {
+enum MGenByteOrder {
     MGEN_LITTLE_ENDIAN,
     MGEN_BIG_ENDIAN
 };
 
-inline ByteOrder getSystemByteOrder();
+inline MGenByteOrder getSystemByteOrder();
 inline bool isSystemBigEndian();
 inline bool isSystemLittleEndian();
 
-inline unsigned short htons(const unsigned short v);
-inline unsigned int htonl(const unsigned int v);
-inline unsigned long long htonll(const unsigned long long v);
+inline unsigned short mgen_htons(const unsigned short v);
+inline unsigned int mgen_htonl(const unsigned int v);
+inline unsigned long long mgen_htonll(const unsigned long long v);
 
-inline unsigned short ntohs(const unsigned short v);
-inline unsigned int ntohl(const unsigned int v);
-inline unsigned long long ntohll(const unsigned long long v);
+inline unsigned short mgen_ntohs(const unsigned short v);
+inline unsigned int mgen_ntohl(const unsigned int v);
+inline unsigned long long mgen_ntohll(const unsigned long long v);
 
-inline char ntoh(const char v) {
+inline char mgen_ntoh(const char v) {
     return v;
 }
-inline char hton(const char v) {
-    return ntoh(v);
+inline char mgen_hton(const char v) {
+    return mgen_ntoh(v);
 }
-inline unsigned char ntoh(const unsigned char v) {
+inline unsigned char mgen_ntoh(const unsigned char v) {
     return v;
 }
-inline unsigned char hton(const unsigned char v) {
-    return ntoh(v);
+inline unsigned char mgen_hton(const unsigned char v) {
+    return mgen_ntoh(v);
 }
 
-inline unsigned short ntoh(const unsigned short v) {
-    return ntohs(v);
+inline unsigned short mgen_ntoh(const unsigned short v) {
+    return mgen_ntohs(v);
 }
-inline unsigned short hton(const unsigned short v) {
-    return ntoh(v);
+inline unsigned short mgen_hton(const unsigned short v) {
+    return mgen_ntoh(v);
 }
-inline short ntoh(const short v) {
-    return ntohs(v);
+inline short mgen_ntoh(const short v) {
+    return mgen_ntohs(v);
 }
-inline short hton(const short v) {
-    return ntoh(v);
-}
-
-inline unsigned int ntoh(const unsigned int v) {
-    return ntohl(v);
-}
-inline unsigned int hton(const unsigned int v) {
-    return ntoh(v);
-}
-inline int ntoh(const int v) {
-    return ntohl(v);
-}
-inline int hton(const int v) {
-    return ntoh(v);
+inline short mgen_hton(const short v) {
+    return mgen_ntoh(v);
 }
 
-inline unsigned long long ntoh(const unsigned long long v) {
-    return ntohll(v);
+inline unsigned int mgen_ntoh(const unsigned int v) {
+    return mgen_ntohl(v);
 }
-inline unsigned long long hton(const unsigned long long v) {
-    return ntoh(v);
+inline unsigned int mgen_hton(const unsigned int v) {
+    return mgen_ntoh(v);
 }
-inline long long ntoh(const long long v) {
-    return ntohll(v);
+inline int mgen_ntoh(const int v) {
+    return mgen_ntohl(v);
 }
-inline long long hton(const long long v) {
-    return ntoh(v);
+inline int mgen_hton(const int v) {
+    return mgen_ntoh(v);
 }
 
-inline float ntoh(const float v) {
+inline unsigned long long mgen_ntoh(const unsigned long long v) {
+    return mgen_ntohll(v);
+}
+inline unsigned long long mgen_hton(const unsigned long long v) {
+    return mgen_ntoh(v);
+}
+inline long long mgen_ntoh(const long long v) {
+    return mgen_ntohll(v);
+}
+inline long long mgen_hton(const long long v) {
+    return mgen_ntoh(v);
+}
+
+inline float mgen_ntoh(const float v) {
     union un {
         float floatVal;
         unsigned int intVal;
     } un;
     un.floatVal = v;
-    un.intVal = ntoh(un.intVal);
+    un.intVal = mgen_ntoh(un.intVal);
     return un.floatVal;
 }
 
-inline float hton(const float v) {
-    return ntoh(v);
+inline float mgen_hton(const float v) {
+    return mgen_ntoh(v);
 }
 
-inline double ntoh(const double v) {
+inline double mgen_ntoh(const double v) {
     union un {
         double doubleVal;
         unsigned long long longVal;
     } un;
     un.doubleVal = v;
-    un.longVal = ntoh(un.longVal);
+    un.longVal = mgen_ntoh(un.longVal);
     return un.doubleVal;
 }
 
-inline double hton(const double v) {
-    return ntoh(v);
+inline double mgen_hton(const double v) {
+    return mgen_ntoh(v);
 }
 
 /******************************************************************
@@ -115,82 +115,82 @@ inline double hton(const double v) {
  *
  *****************************************************************/
 
-#define BSWAP_16(x)     ((x << 8)  & 0xff00U) | \
-                        ((x >> 8)  & 0x00ffU)
+#define MGEN_BSWAP_16(x)     ((x << 8)  & 0xff00U) | \
+                             ((x >> 8)  & 0x00ffU)
 
-#define BSWAP_32(x)     ((x << 24) & 0xff000000U) | \
-                        ((x << 8)  & 0x00ff0000U) | \
-                        ((x >> 8)  & 0x0000ff00U) | \
-                        ((x >> 24) & 0x000000ffU)
+#define MGEN_BSWAP_32(x)     ((x << 24) & 0xff000000U) | \
+                             ((x << 8)  & 0x00ff0000U) | \
+                             ((x >> 8)  & 0x0000ff00U) | \
+                             ((x >> 24) & 0x000000ffU)
 
-#define BSWAP_64(x)     ((x << 56) | \
-                        ((x << 40) & 0xff000000000000ULL) | \
-                        ((x << 24) & 0x00ff0000000000ULL) | \
-                        ((x << 8)  & 0x0000ff00000000ULL) | \
-                        ((x >> 8)  & 0x000000ff000000ULL) | \
-                        ((x >> 24) & 0x00000000ff0000ULL) | \
-                        ((x >> 40) & 0x0000000000ff00ULL) | \
-                        ((x >> 56) & 0x00000000000ffULL))
+#define MGEN_BSWAP_64(x)     ((x << 56) | \
+                             ((x << 40) & 0xff000000000000ULL) | \
+                             ((x << 24) & 0x00ff0000000000ULL) | \
+                             ((x << 8)  & 0x0000ff00000000ULL) | \
+                             ((x >> 8)  & 0x000000ff000000ULL) | \
+                             ((x >> 24) & 0x00000000ff0000ULL) | \
+                             ((x >> 40) & 0x0000000000ff00ULL) | \
+                             ((x >> 56) & 0x00000000000ffULL))
 
-inline ByteOrder findSystemByteOrder() {
+inline MGenByteOrder mgen_findSystemByteOrder() {
     const int i = 1;
     return *reinterpret_cast<const char*>(&i) == 1 ? MGEN_LITTLE_ENDIAN : MGEN_BIG_ENDIAN;
 }
 
-inline ByteOrder getSystemByteOrder() {
-    static const ByteOrder order = findSystemByteOrder();
+inline MGenByteOrder mgen_getSystemByteOrder() {
+    static const MGenByteOrder order = mgen_findSystemByteOrder();
     return order;
 }
 
-inline bool isSystemBigEndian() {
-    static const bool b = getSystemByteOrder() == MGEN_BIG_ENDIAN;
+inline bool mgen_isSystemBigEndian() {
+    static const bool b = mgen_getSystemByteOrder() == MGEN_BIG_ENDIAN;
     return b;
 }
 
-inline bool isSystemLittleEndian() {
-    static const bool b = getSystemByteOrder() == MGEN_LITTLE_ENDIAN;
+inline bool mgen_isSystemLittleEndian() {
+    static const bool b = mgen_getSystemByteOrder() == MGEN_LITTLE_ENDIAN;
     return b;
 }
 
-inline unsigned long long htonll(const unsigned long long v) {
-    if (isSystemLittleEndian()) {
-        return BSWAP_64(v);
+inline unsigned long long mgen_htonll(const unsigned long long v) {
+    if (mgen_isSystemLittleEndian()) {
+        return MGEN_BSWAP_64(v);
     } else {
         return v;
     }
 }
 
-inline unsigned long long ntohll(const unsigned long long v) {
-    return htonll(v);
+inline unsigned long long mgen_ntohll(const unsigned long long v) {
+    return mgen_htonll(v);
 }
 
-inline unsigned int htonl(const unsigned int v) {
-    if (isSystemLittleEndian()) {
-        return BSWAP_32(v);
+inline unsigned int mgen_htonl(const unsigned int v) {
+    if (mgen_isSystemLittleEndian()) {
+        return MGEN_BSWAP_32(v);
     } else {
         return v;
     }
 }
 
-inline unsigned int ntohl(const unsigned int v) {
-    return htonl(v);
+inline unsigned int mgen_ntohl(const unsigned int v) {
+    return mgen_htonl(v);
 }
 
-inline unsigned short htons(const unsigned short v) {
-    if (isSystemLittleEndian()) {
-        return BSWAP_16(v);
+inline unsigned short mgen_htons(const unsigned short v) {
+    if (mgen_isSystemLittleEndian()) {
+        return MGEN_BSWAP_16(v);
     } else {
         return v;
     }
 }
 
-inline unsigned short ntohs(const unsigned short v) {
-    return htons(v);
+inline unsigned short mgen_ntohs(const unsigned short v) {
+    return mgen_htons(v);
 }
 
-#undef BSWAP_16
-#undef BSWAP_32
-#undef BSWAP_64
+#undef MGEN_BSWAP_16
+#undef MGEN_BSWAP_32
+#undef MGEN_BSWAP_64
 
 }
 }

@@ -223,12 +223,12 @@ private:
 
     void read(char & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_INT8, verifyTag);
-        v = endian::ntoh(readRaw<char>());
+        v = endian::mgen_ntoh(readRaw<char>());
     }
 
     void read(short & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_INT16, verifyTag);
-        v = endian::ntoh(readRaw<short>());
+        v = endian::mgen_ntoh(readRaw<short>());
     }
 
     void read(int& v, const bool verifyTag) {
@@ -243,12 +243,12 @@ private:
 
     void read(float & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_FLOAT32, verifyTag);
-        v = endian::ntoh(readRaw<float>());
+        v = endian::mgen_ntoh(readRaw<float>());
     }
 
     void read(double & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_FLOAT64, verifyTag);
-        v = endian::ntoh(readRaw<double>());
+        v = endian::mgen_ntoh(readRaw<double>());
     }
 
     void read(std::string& v, const bool verifyTag) {

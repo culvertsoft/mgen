@@ -132,12 +132,12 @@ private:
 
     void write(const char v, const bool doTag) {
         writeTagIf(BINARY_TAG_INT8, doTag);
-        writeRaw(endian::hton(v));
+        writeRaw(endian::mgen_hton(v));
     }
 
     void write(const short v, const bool doTag) {
         writeTagIf(BINARY_TAG_INT16, doTag);
-        writeRaw(endian::hton(v));
+        writeRaw(endian::mgen_hton(v));
     }
 
     void write(const int v, const bool doTag) {
@@ -152,12 +152,12 @@ private:
 
     void write(const float v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT32, doTag);
-        writeRaw(endian::hton(v));
+        writeRaw(endian::mgen_hton(v));
     }
 
     void write(const double v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT64, doTag);
-        writeRaw(endian::hton(v));
+        writeRaw(endian::mgen_hton(v));
     }
 
     void write(const std::string& v, const bool doTag) {
