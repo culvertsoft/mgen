@@ -462,7 +462,10 @@ public class BinaryReader extends BuiltInReader {
 				return readString(false);
 			}
 		case TAG_LIST: // array and list have the same write tag
-			return readList(false, (ListOrArrayType) constraint);
+			if (constraint != null && constraint.typeEnum() == TypeEnum.ARRAY)
+				return readArray(false, (ArrayType) constraint);
+			else
+				return readList(false, (ListType) constraint);
 		case TAG_MAP:
 			return readMap(false, (MapType) constraint);
 		case TAG_CUSTOM:
