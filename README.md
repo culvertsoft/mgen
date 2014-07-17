@@ -4,7 +4,7 @@
 
 MGen is a toolkit for designing cross-langauge data models to which functionality such as serialization and type introspection can easily be attached. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code (classes) in multiple programming languages may be generated using the MGen Compiler.
 
-The goal of MGen is to simplify type-safe sharing of state between applications, while also permitting significant data model changes without requiring all participants to rebuild their software. We also seek to be by having plug-in based architecture for extending the MGen toolkit without having to recompile the MGen tools and libraries.
+The goal of MGen is to simplify type-safe sharing of state between applications, while also permitting significant data model changes without requiring all participants to rebuild their software. We seek to be modular by having plug-in based architecture for extending the MGen toolkit without having to recompile the MGen tools and libraries.
 
 MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), [Flat Buffers](http://google.github.io/flatbuffers/), [Cap'n Proto](http://kentonv.github.io/capnproto/), [Simple Binary Encoding](https://github.com/real-logic/simple-binary-encoding). 
 
