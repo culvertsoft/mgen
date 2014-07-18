@@ -13,7 +13,9 @@ object CppDispatchSrcFileGenerator extends CppDispatchGenerator(SrcFile) {
 
   override def mkIncludes(param: UtilClassGenParam) {
     CppGenUtils.include("Dispatcher.h")
-    CppGenUtils.include("ClassRegistry.h")
+    val types = param.modules.flatMap(_.types).distinct.filterNot(_.hasSubTypes())
+    for (t <- types)
+      CppGenUtils.include(t)
     endl()
   }
 
