@@ -140,7 +140,6 @@ private:
 
     void randomize(std::string& v) {
         const int sz = rand(m_maxStringSize) + 1;
-        const int range = 122-97;
         v.resize(sz);
         for (int i = 0; i < sz; i++) {
             v[i] = rand(25) + 97;
