@@ -30,7 +30,7 @@ object MkVisitorDispatch {
 
       ln(nTabs + 1, "const std::vector<short>& ids = o._typeIds16Bit();").endl()
 
-      ln(nTabs + 1, "int i = 0;")
+      ln(nTabs + 1, "std::size_t i = 0;")
       MkTypeIdSwitch.apply(
         s => s,
         true,

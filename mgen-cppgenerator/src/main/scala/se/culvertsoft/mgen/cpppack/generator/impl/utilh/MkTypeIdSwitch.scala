@@ -17,7 +17,7 @@ object MkTypeIdSwitch {
     caser: CustomType => String,
     returner: CustomType => String)(implicit txtBuffer: SuperStringBuffer) {
 
-    ln(nTabs, s"switch(i < int(ids.size()) ? ${transform("ids[i++]")} : mgen::ClassRegistryBase::INVALID_16BIT_ID) {")
+    ln(nTabs, s"switch(i < ids.size() ? ${transform("ids[i++]")} : mgen::ClassRegistryBase::INVALID_16BIT_ID) {")
 
     for (t <- possibleTypes) {
 

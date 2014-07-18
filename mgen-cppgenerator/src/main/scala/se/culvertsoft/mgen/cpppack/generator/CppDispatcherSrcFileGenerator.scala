@@ -13,9 +13,7 @@ object CppDispatchSrcFileGenerator extends CppDispatchGenerator(SrcFile) {
 
   override def mkIncludes(param: UtilClassGenParam) {
     CppGenUtils.include("Dispatcher.h")
-    val types = param.modules.flatMap(_.types).distinct.filterNot(_.hasSubTypes())
-    for (t <- types)
-      CppGenUtils.include(t)
+    CppGenUtils.include("ClassRegistry.h")
     endl()
   }
 
@@ -27,7 +25,7 @@ object CppDispatchSrcFileGenerator extends CppDispatchGenerator(SrcFile) {
     ln(s"void dispatch(mgen::MGenBase& object, ${param.nameSpaceString}::Handler& handler) {")
 
     ln(1, "const std::vector<short>& ids = object._typeIds16Bit();")
-    ln(1, "int i = 0;")
+    ln(1, "std::size_t i = 0;")
     MkTypeIdSwitch.apply(
       s => s,
       true,
