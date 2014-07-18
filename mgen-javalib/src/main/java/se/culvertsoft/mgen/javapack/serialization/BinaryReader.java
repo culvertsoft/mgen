@@ -258,7 +258,7 @@ public class BinaryReader extends BuiltInReader {
 		if (nBytes > 0) {
 			final byte[] bytes = new byte[nBytes];
 			m_stream.readFully(bytes);
-			return new String(bytes, charset);
+			return decodeString(bytes);
 		} else {
 			return "";
 		}

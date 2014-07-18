@@ -2,7 +2,11 @@ package se.culvertsoft.mgen.javapack.serialization;
 
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.Arrays;
 
 import se.culvertsoft.mgen.api.model.CustomType;
@@ -17,12 +21,18 @@ abstract public class BuiltInReader implements Reader {
 	protected static final Charset charset = Charset.forName("UTF8");
 	protected static final short[] NO_IDS = new short[0];
 
+	protected final CharsetDecoder stringDecoder;
+
 	protected final DataInputStream m_stream;
 	protected final ClassRegistryBase m_clsReg;
 
 	protected BuiltInReader(DataInputStream stream, ClassRegistryBase classRegistry) {
 		m_stream = stream;
 		m_clsReg = classRegistry;
+		stringDecoder = charset
+				.newDecoder()
+				.onMalformedInput(CodingErrorAction.REPLACE)
+				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 	}
 
 	protected MGenBase instantiate(String[] ids, CustomType expType) {
@@ -74,6 +84,14 @@ abstract public class BuiltInReader implements Reader {
 
 		return entry;
 
+	}
+
+	protected String decodeString(final byte[] data) {
+		try {
+			return stringDecoder.decode(ByteBuffer.wrap(data)).toString();
+		} catch (CharacterCodingException x) {
+			throw new Error(x); // Can't happen
+		}
 	}
 
 	public int avail() throws IOException {
