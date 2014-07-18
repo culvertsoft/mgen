@@ -4,6 +4,8 @@ import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
+import scala.collection.JavaConversions._
+
 object MkUsingStatements {
 
   def apply(
@@ -12,8 +14,10 @@ object MkUsingStatements {
 
     implicit val currentModule = module
 
-    txtBuffer.tabs(0).textln(s"using mgen::Polymorphic;")
-    txtBuffer.endl()
+    if (t.fields.exists(_.isPolymorphic)) {
+      txtBuffer.tabs(0).textln(s"using mgen::Polymorphic;")
+      txtBuffer.endl()
+    }
 
   }
 
