@@ -20,11 +20,12 @@ import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 
 public abstract class BuiltInWriter implements FieldVisitor {
 
-	static protected final Charset charset = Charset.forName("UTF8");
+	static public final Charset charset = Charset.forName("UTF8");
 	protected final CharsetEncoder stringEncoder;
 
 	protected final ClassRegistryBase m_classRegistry;
 	protected final DataOutput m_stream;
+	private boolean m_shouldValidate;
 
 	public BuiltInWriter(final DataOutput stream, final ClassRegistryBase classRegistry) {
 		m_classRegistry = classRegistry;
@@ -33,6 +34,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 				.newEncoder()
 				.onMalformedInput(CodingErrorAction.REPLACE)
 				.onUnmappableCharacter(CodingErrorAction.REPLACE);
+		m_shouldValidate = true;
 	}
 
 	public abstract void writeObject(final MGenBase object) throws IOException;
@@ -155,7 +157,8 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	@Override
 	public void beginVisit(final MGenBase object, final int nFieldsSet, final int nFieldsTotal)
 			throws IOException {
-		ensureNoMissingReqFields(object);
+		if (m_shouldValidate)
+			ensureNoMissingReqFields(object);
 		beginWrite(object, nFieldsSet, nFieldsTotal);
 	}
 
@@ -170,6 +173,10 @@ public abstract class BuiltInWriter implements FieldVisitor {
 		} catch (CharacterCodingException x) {
 			throw new Error(x); // Can't happen
 		}
+	}
+	
+	public void setShouldValidate(final boolean shouldValidate) {
+		m_shouldValidate = shouldValidate;
 	}
 
 }

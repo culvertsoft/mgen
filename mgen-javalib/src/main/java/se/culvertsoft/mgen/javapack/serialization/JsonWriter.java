@@ -150,6 +150,20 @@ public class JsonWriter extends DynamicWriter {
 	 * 
 	 ******************************************************************/
 
+	protected void writeTypeId(final MGenBase o) throws IOException {
+		beginWritePair("__t");
+		write(quote(o._typeIds16BitBase64String()));
+	}
+
+	protected final String quote(final String in) {
+		return '"' + in + '"';
+	}
+
+	protected final void beginWritePair(final String name) throws IOException {
+		newEntry();
+		writeName(name);
+	}
+
 	protected void writeName(final String name) throws IOException {
 		write('"' + name + "\":");
 	}
@@ -304,98 +318,151 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(Enum<?>[] o, ArrayType typ) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(String.valueOf(o[i]));
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final boolean[] o) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(o[i]);
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final byte[] o) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(o[i]);
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final short[] o) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(o[i]);
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final int[] o) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(o[i]);
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final long[] o) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(o[i]);
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final float[] o) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(o[i]);
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final double[] o) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(o[i]);
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final String[] o) throws IOException {
+		
+		if (o == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
-			if (i > 0)
-				write(",");
+			newEntry();
 			write(quoteEscape(o[i]));
 		}
-		endBlock("]", false);
+		endBlock("]", o.length != 0);
 	}
 
 	private void writeObjectArray(final Object[] objects, final ArrayType typ) throws IOException {
+		
+		if (objects == null) {
+			write("null");
+			return;
+		}
+
 		beginBlock("[");
-		for (Object o : objects) {
+		for (int i = 0; i < objects.length; i++) {
+			final Object o = objects[i];
+			newEntry();
 			writeObject(o, typ.elementType());
 		}
 		endBlock("]", objects.length != 0);
@@ -403,15 +470,6 @@ public class JsonWriter extends DynamicWriter {
 
 	private String quoteEscape(final String text) {
 		return text != null ? quote(JSONValue.escape(text)) : "null";
-	}
-
-	private String quote(final String in) {
-		return '"' + in + '"';
-	}
-
-	private void writeTypeId(final MGenBase o) throws IOException {
-		beginWritePair("__t");
-		write(quote(o._typeIds16BitBase64String()));
 	}
 
 	private void beginBlock(final String beginString) throws IOException {
@@ -426,11 +484,6 @@ public class JsonWriter extends DynamicWriter {
 		if (expectType == null || !m_compact)
 			return true;
 		return o._typeId() != expectType.typeId();
-	}
-
-	private void beginWritePair(final String name) throws IOException {
-		newEntry();
-		writeName(name);
 	}
 
 }

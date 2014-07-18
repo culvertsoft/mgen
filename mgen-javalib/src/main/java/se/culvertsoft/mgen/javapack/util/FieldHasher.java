@@ -172,7 +172,7 @@ public class FieldHasher {
 
 		switch (type.typeEnum()) {
 		case ENUM:
-			a.hashCode();
+			return a.hashCode();
 		case BOOL:
 			return calc(((Boolean) a), type);
 		case INT8:

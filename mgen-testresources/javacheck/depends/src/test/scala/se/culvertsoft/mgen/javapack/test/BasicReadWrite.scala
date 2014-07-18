@@ -5,12 +5,9 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
-
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
-
 import org.junit.Test
-
 import se.culvertsoft.ClassRegistry
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase
 import se.culvertsoft.mgen.javapack.classes.EmptyClassRegistry
@@ -23,6 +20,7 @@ import se.culvertsoft.mgen.javapack.serialization.BuiltInWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonReader
 import se.culvertsoft.mgen.javapack.serialization.JsonWriter
+import java.nio.file.Path
 
 class BasicReadWrite {
 
@@ -164,7 +162,7 @@ class BasicReadWrite {
   }
 
   @Test
-  def canReadEmptyObjects() {
+  def testEmptyObjects() {
 
     val registry = new ClassRegistry
     val sNames = getSerializerNames()
@@ -174,12 +172,17 @@ class BasicReadWrite {
       val srcData = getEmptyObjectsData(sName)
       val reader = getReader(registry, sName, srcData)
 
-      // C++ should generate the same number of entries
       for (e <- registry.entries) {
         val o = reader.readObject()
+        val o2 = o.deepCopy()
+        assert(o._validate(FieldSetDepth.DEEP))
+        assert(o2._validate(FieldSetDepth.DEEP))
+        assert(o == o2)
+        assert(o.hashCode() == o2.hashCode())
+        // Not possible since map order might change
+        // assert(o.toString() == o2.toString())
       }
 
-      // There shouldnt be any more entries
       AssertThrows(reader.readObject())
 
     }
@@ -187,7 +190,7 @@ class BasicReadWrite {
   }
 
   @Test
-  def canReadRandomizedObjects() {
+  def testRandomizedObjects() {
 
     val registry = new ClassRegistry
     val sNames = getSerializerNames()
@@ -197,11 +200,17 @@ class BasicReadWrite {
       val srcData = getRandomizedObjectsData(sName)
       val reader = getReader(registry, sName, srcData)
 
-      // C++ should generate the same number of entries
-      for (e <- registry.entries)
-        reader.readObject()
+      for (e <- registry.entries) {
+        val o1 = reader.readObject()
+        val o2 = o1.deepCopy()
+        assert(o1._validate(FieldSetDepth.DEEP))
+        assert(o2._validate(FieldSetDepth.DEEP))
+        assert(o1 == o2)
+        assert(o1.hashCode() == o2.hashCode())
+        // Not possible since map order might change
+        // assert(o.toString() == o2.toString())
+      }
 
-      // There shouldnt be any more entries
       AssertThrows(reader.readObject())
 
     }
