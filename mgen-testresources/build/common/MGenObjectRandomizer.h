@@ -36,7 +36,7 @@ public:
 
     template<typename T>
     void visit(T& v, const Field& field, const bool isSet) {
-        if (m_depth < m_maxDepth) {
+        if (m_depth < m_maxDepth || field.isRequired()) {
             m_depth++;
             randomize(v);
             m_depth--;

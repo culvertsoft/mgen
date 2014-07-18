@@ -287,8 +287,11 @@ public class BinaryReader extends BuiltInReader {
 
 		final int nIdsOrFields = readSize();
 
-		if (nIdsOrFields == 0)
-			return null;
+		if (nIdsOrFields == 0) {
+			final MGenBase object = instantiate((short[]) null, constraint);
+			ensureNoMissingReqFields(object);
+			return object;
+		}
 
 		final short[] ids;
 		final int nFields;

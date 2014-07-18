@@ -170,7 +170,9 @@ private:
 
     template<typename MGenType>
     void read(MGenType& object, const MGenBase& /* type_evidence */, const Node& node) {
-        if (node.IsObject()) {
+        if (node.IsNull()) {
+            missingfields::ensureNoMissingFields(object);
+        } else if (node.IsObject()) {
             if (m_excessiveTypeChecking)
                 serialutil::checkExpType(m_clsReg, &object, readIds(node));
             readFields(object, node);

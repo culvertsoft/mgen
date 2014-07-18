@@ -3,12 +3,11 @@ package se.culvertsoft.mgen.javapack.test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
-
+import java.nio.file.Files
+import java.nio.file.Paths
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
-
 import org.junit.Test
-
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase
 import se.culvertsoft.mgen.javapack.classes.EmptyClassRegistry
 import se.culvertsoft.mgen.javapack.classes.MGenBase
@@ -23,6 +22,9 @@ import se.culvertsoft.mgen.javapack.serialization.JsonWriter
 import se.culvertsoft.testmodule.ClassRegistry
 
 class BasicReadWrite {
+
+  val modelName = "read"
+  val dataFolder = s"../../generated/${modelName}/data_generated"
 
   def getReader(writer: BuiltInWriter, registry: ClassRegistryBase, bytes: Array[Byte]): BuiltInReader = {
     writer match {
@@ -43,6 +45,39 @@ class BasicReadWrite {
       new BinaryWriter(stream, registry, true))
   }
 
+  def getSerializerNames() = {
+    Seq(
+      "json",
+      "jsonCompact",
+      "jsonPretty",
+      "jsonPrettyCompact",
+      "binary",
+      "binaryCompact")
+  }
+
+  def getReader(registry: ClassRegistryBase, serializerName: String, data: Array[Byte]): BuiltInReader = {
+    val stream = new ByteArrayInputStream(data)
+    if (serializerName.startsWith("json")) {
+      new JsonReader(stream, registry)
+    } else if (serializerName.startsWith("binary")) {
+      new BinaryReader(stream, registry)
+    } else {
+      null
+    }
+  }
+
+  def file2bytes(path: String): Array[Byte] = {
+    Files.readAllBytes(Paths.get(path))
+  }
+
+  def getEmptyObjectsData(serializerName: String): Array[Byte] = {
+    file2bytes(s"$dataFolder/emptyObjects_$serializerName.data")
+  }
+
+  def getRandomizedObjectsData(serializerName: String): Array[Byte] = {
+    file2bytes(s"$dataFolder/randomizedObjects_$serializerName.data")
+  }
+
   @Test
   def canCreateAllTypes() {
     val registry = new ClassRegistry
@@ -58,7 +93,6 @@ class BasicReadWrite {
   @Test
   def canCopyAllTypes() {
     val registry = new ClassRegistry
-
     for (e <- registry.entries) {
       val instance = e.construct()
       val instance2 = instance.deepCopy()
@@ -68,6 +102,7 @@ class BasicReadWrite {
 
   @Test
   def canWriteReadAllTypes() {
+
     val registry = new ClassRegistry
 
     val stream = new ByteArrayOutputStream
@@ -123,6 +158,121 @@ class BasicReadWrite {
       }
 
     }
+  }
+
+  @Test
+  def testEmptyObjects() {
+
+    val gatheredObjects = new ArrayBuffer[MGenBase]
+
+    {
+
+      val registry = new ClassRegistry
+      val sNames = getSerializerNames()
+
+      for (sName <- sNames) {
+
+        val srcData = getEmptyObjectsData(sName)
+        val reader = getReader(registry, sName, srcData)
+
+        for (e <- registry.entries) {
+          val o1 = reader.readObject()
+          val o2 = o1.deepCopy()
+          assert(o1._validate(FieldSetDepth.DEEP))
+          assert(o2._validate(FieldSetDepth.DEEP))
+          assert(o1 == o2)
+          assert(o1.hashCode() == o2.hashCode())
+          gatheredObjects += o1
+          // Not possible since map order might change
+          // assert(o.toString() == o2.toString())
+        }
+
+        AssertThrows(reader.readObject())
+
+      }
+
+    }
+
+    val registry = new ClassRegistry
+
+    val stream = new ByteArrayOutputStream
+    val writers = getWriters(stream, registry)
+
+    for (writer <- writers) {
+
+      for (o1 <- gatheredObjects) {
+        writer.writeObject(o1)
+        val reader = getReader(writer, registry, stream.toByteArray())
+        val o2 = reader.readObject()
+
+        assert(o1._validate(FieldSetDepth.DEEP))
+        assert(o2._validate(FieldSetDepth.DEEP))
+        assert(o1 == o2)
+        assert(o1.hashCode() == o2.hashCode())
+
+        AssertThrows(reader.readObject())
+        stream.reset()
+      }
+
+    }
+
+  }
+
+  @Test
+  def testRandomizedObjects() {
+
+    val gatheredObjects = new ArrayBuffer[MGenBase]
+
+    {
+      val registry = new ClassRegistry
+      val sNames = getSerializerNames()
+
+      for (sName <- sNames) {
+
+        val srcData = getRandomizedObjectsData(sName)
+        val reader = getReader(registry, sName, srcData)
+
+        for (e <- registry.entries) {
+          val o1 = reader.readObject()
+          val o2 = o1.deepCopy()
+          assert(o1._validate(FieldSetDepth.DEEP))
+          assert(o2._validate(FieldSetDepth.DEEP))
+          assert(o1 == o2)
+          assert(o1.hashCode() == o2.hashCode())
+          gatheredObjects += o1
+          // Not possible since map order might change
+          // assert(o.toString() == o2.toString())
+        }
+
+        AssertThrows(reader.readObject())
+
+      }
+    }
+
+    val registry = new ClassRegistry
+
+    val stream = new ByteArrayOutputStream
+    val writers = getWriters(stream, registry)
+
+    for (writer <- writers) {
+
+      for (o1 <- gatheredObjects) {
+
+        writer.writeObject(o1)
+        val reader = getReader(writer, registry, stream.toByteArray())
+        val o2 = reader.readObject()
+
+        assert(o1._validate(FieldSetDepth.DEEP))
+        assert(o2._validate(FieldSetDepth.DEEP))
+        assert(o1 == o2)
+        assert(o1.hashCode() == o2.hashCode())
+
+        AssertThrows(reader.readObject())
+        stream.reset()
+      }
+
+    }
+
   }
 
 }
