@@ -3,6 +3,8 @@ package se.culvertsoft.mgen.javapack.test
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.OutputStream
+import java.nio.file.Files
+import java.nio.file.Paths
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
@@ -24,6 +26,9 @@ import se.culvertsoft.mgen.javapack.serialization.JsonWriter
 
 class BasicReadWrite {
 
+  val modelName = "depends"
+  val dataFolder = s"../../generated/${modelName}/data_generated"
+
   def getReader(writer: BuiltInWriter, registry: ClassRegistryBase, bytes: Array[Byte]): BuiltInReader = {
     writer match {
       case writer: JsonWriter =>
@@ -42,9 +47,38 @@ class BasicReadWrite {
       new BinaryWriter(stream, registry, false),
       new BinaryWriter(stream, registry, true))
   }
-  
-  def getWriterNames() {
-    
+
+  def getSerializerNames() = {
+    Seq(
+      "json",
+      "jsonCompact",
+      "jsonPretty",
+      "jsonPrettyCompact",
+      "binary",
+      "binaryCompact")
+  }
+
+  def getReader(registry: ClassRegistryBase, serializerName: String, data: Array[Byte]): BuiltInReader = {
+    val stream = new ByteArrayInputStream(data)
+    if (serializerName.startsWith("json")) {
+      new JsonReader(stream, registry)
+    } else if (serializerName.startsWith("binary")) {
+      new BinaryReader(stream, registry)
+    } else {
+      null
+    }
+  }
+
+  def file2bytes(path: String): Array[Byte] = {
+    Files.readAllBytes(Paths.get(path))
+  }
+
+  def getEmptyObjectsData(serializerName: String): Array[Byte] = {
+    file2bytes(s"$dataFolder/emptyObjects_$serializerName.data")
+  }
+
+  def getRandomizedObjectsData(serializerName: String): Array[Byte] = {
+    file2bytes(s"$dataFolder/randomizedObjects_$serializerName.data")
   }
 
   @Test
@@ -127,6 +161,51 @@ class BasicReadWrite {
       }
 
     }
+  }
+
+  @Test
+  def canReadEmptyObjects() {
+
+    val registry = new ClassRegistry
+    val sNames = getSerializerNames()
+
+    for (sName <- sNames) {
+
+      val srcData = getEmptyObjectsData(sName)
+      val reader = getReader(registry, sName, srcData)
+
+      // C++ should generate the same number of entries
+      for (e <- registry.entries) {
+        val o = reader.readObject()
+      }
+
+      // There shouldnt be any more entries
+      AssertThrows(reader.readObject())
+
+    }
+
+  }
+
+  @Test
+  def canReadRandomizedObjects() {
+
+    val registry = new ClassRegistry
+    val sNames = getSerializerNames()
+
+    for (sName <- sNames) {
+
+      val srcData = getRandomizedObjectsData(sName)
+      val reader = getReader(registry, sName, srcData)
+
+      // C++ should generate the same number of entries
+      for (e <- registry.entries)
+        reader.readObject()
+
+      // There shouldnt be any more entries
+      AssertThrows(reader.readObject())
+
+    }
+
   }
 
 }

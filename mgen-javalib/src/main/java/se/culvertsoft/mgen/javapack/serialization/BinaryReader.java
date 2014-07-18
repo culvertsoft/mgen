@@ -563,14 +563,14 @@ public class BinaryReader extends BuiltInReader {
 		if (tag)
 			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
-		return readElements(constraint != null ? constraint.elementType() : null);
+		return readElements(false, constraint != null ? constraint.elementType() : null);
 
 	}
 
-	private HashMap<Object, Object> readMap(final boolean readTag, final MapType constraint)
+	private HashMap<Object, Object> readMap(final boolean doReadTag, final MapType constraint)
 			throws IOException {
 
-		if (readTag)
+		if (doReadTag)
 			ensureTypeTag(null, TAG_MAP, readTypeTag());
 
 		final int nElements = readSize();
@@ -578,9 +578,11 @@ public class BinaryReader extends BuiltInReader {
 
 		if (nElements > 0) {
 
-			final List<Object> keys = readElements(constraint != null ? constraint.keyType() : null);
-			final List<Object> values = readElements(constraint != null ? constraint.valueType()
+			final List<Object> keys = readElements(true, constraint != null ? constraint.keyType()
 					: null);
+			final List<Object> values = readElements(
+					true,
+					constraint != null ? constraint.valueType() : null);
 
 			if (keys.size() != values.size() || keys.size() != nElements)
 				throw new StreamCorruptedException("nKeys != nValues in map");
@@ -593,7 +595,11 @@ public class BinaryReader extends BuiltInReader {
 		return out;
 	}
 
-	private ArrayList<Object> readElements(final Type constraint) throws IOException {
+	private ArrayList<Object> readElements(final boolean doReadTag, final Type constraint)
+			throws IOException {
+
+		if (doReadTag)
+			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
 		final int nElements = readSize();
 
@@ -642,7 +648,7 @@ public class BinaryReader extends BuiltInReader {
 						out.add(readEnum(false, t));
 				} else {
 					for (int i = 0; i < nElements; i++)
-						out.add(readFloat64(false));
+						out.add(readString(false));
 				}
 				break;
 			default:
