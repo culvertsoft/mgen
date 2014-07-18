@@ -6,6 +6,8 @@ import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 
+import scala.annotation.elidable
+import scala.annotation.elidable.ASSERTION
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 
@@ -252,36 +254,26 @@ class BasicReadWrite {
       }
     }
 
-    val doAdvancedTests = false
+    val registry = new ClassRegistry
 
-    if (doAdvancedTests) {
+    val stream = new ByteArrayOutputStream
+    val writers = getWriters(stream, registry)
 
-      val registry = new ClassRegistry
+    for (writer <- writers) {
 
-      val stream = new ByteArrayOutputStream
-      val writers = getWriters(stream, registry)
+      for (o1 <- gatheredObjects) {
 
-      for (writer <- writers) {
+        writer.writeObject(o1)
+        val reader = getReader(writer, registry, stream.toByteArray())
+        val o2 = reader.readObject()
 
-        println()
-        println(s"Writer: $writer")
+        assert(o1._validate(FieldSetDepth.DEEP))
+        assert(o2._validate(FieldSetDepth.DEEP))
+        assert(o1 == o2)
+        assert(o1.hashCode() == o2.hashCode())
 
-        for (instance <- gatheredObjects) {
-          println("  " + instance._typeName)
-
-          writer.writeObject(instance)
-          val reader = getReader(writer, registry, stream.toByteArray())
-          try {
-            reader.readObject()
-          } catch {
-            case t: Exception =>
-              //println(new String(stream.toByteArray()))
-              throw t
-          }
-          AssertThrows(reader.readObject())
-          stream.reset()
-        }
-
+        AssertThrows(reader.readObject())
+        stream.reset()
       }
 
     }

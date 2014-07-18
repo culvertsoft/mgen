@@ -252,13 +252,16 @@ public class BinaryWriter extends BuiltInWriter {
 		if (tag)
 			writeTypeTag(TAG_LIST);
 
-		writeElements(list, typ.elementType());
+		writeElements(false, list, typ.elementType());
 
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void writeElements(final Collection<Object> list, final Type elementType)
+	private void writeElements(final boolean doWriteListTag, final Collection<Object> list, final Type elementType)
 			throws IOException {
+		
+		if (doWriteListTag)
+			writeTypeTag(TAG_LIST);
 
 		if (list != null && !list.isEmpty()) {
 
@@ -315,6 +318,12 @@ public class BinaryWriter extends BuiltInWriter {
 					writeFloat64(e != null ? e : 0.0, false);
 				break;
 			}
+			case STRING: {
+				final Collection<String> l = (Collection) list;
+				for (final String e : l)
+					writeString(e, false);
+				break;
+			}
 			default:
 				for (final Object o : list)
 					writeObject(o, elementType, false);
@@ -337,8 +346,8 @@ public class BinaryWriter extends BuiltInWriter {
 
 			writeSize(map.size());
 
-			writeElements(map.keySet(), typ.keyType());
-			writeElements(map.values(), typ.valueType());
+			writeElements(true, map.keySet(), typ.keyType());
+			writeElements(true, map.values(), typ.valueType());
 
 		} else {
 			writeSize(0);
