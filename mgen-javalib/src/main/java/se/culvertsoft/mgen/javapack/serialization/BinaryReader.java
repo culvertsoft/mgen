@@ -155,35 +155,97 @@ public class BinaryReader extends BuiltInReader {
 	 * 
 	 ******************************************************************/
 
-	private Object skip(final byte typeTag) throws IOException {
+	private void skip(final byte typeTag) throws IOException {
 		switch (typeTag) {
 		case TAG_BOOL:
-			return readBoolean(false);
+			readBoolean(false);
+			break;
 		case TAG_INT8:
-			return readInt8(false);
+			readInt8(false);
+			break;
 		case TAG_INT16:
-			return readInt16(false);
+			readInt16(false);
+			break;
 		case TAG_INT32:
-			return readInt32(false);
+			readInt32(false);
+			break;
 		case TAG_INT64:
-			return readInt64(false);
+			readInt64(false);
+			break;
 		case TAG_FLOAT32:
-			return readFloat32(false);
+			readFloat32(false);
+			break;
 		case TAG_FLOAT64:
-			return readFloat64(false);
+			readFloat64(false);
+			break;
 		case TAG_STRING:
-			return readString(false);
+			skipString(false);
+			break;
 		case TAG_LIST: // List and array have the same tags
-			return readList(false, null);
+			skipList(false);
+			break;
 		case TAG_MAP:
-			return readMap(false, null);
-			// case TAG_MGENBASE:
-			// case TAG_UNKNOWN:
+			skipMap(false);
+			break;
 		case TAG_CUSTOM:
-			return readMGenObject(false, null);
+			skipCustom();
+			break;
 		default:
-			throw new StreamCorruptedException("Unknown typeTag: " + typeTag);
+			throw new StreamCorruptedException("Cannot skip item of unknown typeTag: " + typeTag);
 		}
+	}
+
+	private void skipMap(final boolean doReadTag) throws IOException {
+		if (doReadTag)
+			ensureTypeTag(null, TAG_MAP, readTypeTag());
+		final int sz = readSize();
+		if (sz > 0) {
+			skipList(true);
+			skipList(true);
+		}
+	}
+
+	private void skipList(final boolean doReadTag) throws IOException {
+		if (doReadTag)
+			ensureTypeTag(null, TAG_LIST, readTypeTag());
+		final int sz = readSize();
+		if (sz > 0) {
+			final byte tag = readTypeTag();
+			for (int i = 0; i < sz; i++)
+				skip(tag);
+		}
+	}
+
+	private void skipString(final boolean doReadTag) throws IOException {
+		if (doReadTag)
+			ensureTypeTag(null, TAG_STRING, readTypeTag());
+		final int nBytes = readSize();
+		for (int i = 0; i < nBytes; i++)
+			m_stream.readByte();
+	}
+
+	private void skipCustom() throws IOException {
+
+		final int nIdsOrFields = readSize();
+
+		if (nIdsOrFields == 0)
+			return;
+
+		final int nFields;
+
+		if ((nIdsOrFields & 0x01) != 0) {
+			skipTypeIds(nIdsOrFields >> 1);
+			nFields = readSize();
+		} else { // type ids omitted
+			nFields = nIdsOrFields >> 1;
+		}
+
+		skipFields(nFields);
+	}
+
+	private void skipTypeIds(int n) throws IOException {
+		for (int i = 0; i < n; i++)
+			readMgenTypeId();
 	}
 
 	private String readString(final boolean readTag) throws IOException {

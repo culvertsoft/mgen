@@ -42,6 +42,10 @@ class BasicReadWrite {
       new BinaryWriter(stream, registry, false),
       new BinaryWriter(stream, registry, true))
   }
+  
+  def getWriterNames() {
+    
+  }
 
   @Test
   def canCreateAllTypes() {
