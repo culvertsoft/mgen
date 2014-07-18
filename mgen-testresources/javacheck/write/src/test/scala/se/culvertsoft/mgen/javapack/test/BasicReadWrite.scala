@@ -264,12 +264,6 @@ class BasicReadWrite {
 
         assert(o1._validate(FieldSetDepth.DEEP))
         assert(o2._validate(FieldSetDepth.DEEP))
-
-        if (o1 != o2) {
-          Files.write(Paths.get("o1.txt"), o1.toString().getBytes())
-          Files.write(Paths.get("o2.txt"), o2.toString().getBytes())
-        }
-
         assert(o1 == o2)
         assert(o1.hashCode() == o2.hashCode())
 
