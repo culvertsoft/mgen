@@ -273,7 +273,7 @@ Let us then create some objects from the generated classes and set some properti
       
 Now let us try to serialize these cars to JSON. This is how we do it:
 
-      // First we create a class registry. For the curious, it handles dynamic method dispatch to visitor methods with template arguments (the serializer being the template argument).
+      // First we create a class registry.
       ClassRegistry classRegistry;
       
       // We will serialize our objects to this std::vector of bytes
