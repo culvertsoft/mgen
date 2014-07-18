@@ -5,9 +5,12 @@ import java.io.ByteArrayOutputStream
 import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
+
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
+
 import org.junit.Test
+
 import se.culvertsoft.ClassRegistry
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase
 import se.culvertsoft.mgen.javapack.classes.EmptyClassRegistry
@@ -20,7 +23,6 @@ import se.culvertsoft.mgen.javapack.serialization.BuiltInWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonReader
 import se.culvertsoft.mgen.javapack.serialization.JsonWriter
-import java.nio.file.Path
 
 class BasicReadWrite {
 
@@ -164,26 +166,56 @@ class BasicReadWrite {
   @Test
   def testEmptyObjects() {
 
-    val registry = new ClassRegistry
-    val sNames = getSerializerNames()
+    val gatheredObjects = new ArrayBuffer[MGenBase]
 
-    for (sName <- sNames) {
+    {
 
-      val srcData = getEmptyObjectsData(sName)
-      val reader = getReader(registry, sName, srcData)
+      val registry = new ClassRegistry
+      val sNames = getSerializerNames()
 
-      for (e <- registry.entries) {
-        val o = reader.readObject()
-        val o2 = o.deepCopy()
-        assert(o._validate(FieldSetDepth.DEEP))
-        assert(o2._validate(FieldSetDepth.DEEP))
-        assert(o == o2)
-        assert(o.hashCode() == o2.hashCode())
-        // Not possible since map order might change
-        // assert(o.toString() == o2.toString())
+      for (sName <- sNames) {
+
+        val srcData = getEmptyObjectsData(sName)
+        val reader = getReader(registry, sName, srcData)
+
+        for (e <- registry.entries) {
+          val o1 = reader.readObject()
+          val o2 = o1.deepCopy()
+          assert(o1._validate(FieldSetDepth.DEEP))
+          assert(o2._validate(FieldSetDepth.DEEP))
+          assert(o1 == o2)
+          assert(o1.hashCode() == o2.hashCode())
+          gatheredObjects += o1
+          // Not possible since map order might change
+          // assert(o.toString() == o2.toString())
+        }
+
+        AssertThrows(reader.readObject())
+
       }
 
-      AssertThrows(reader.readObject())
+    }
+
+    val registry = new ClassRegistry
+
+    val stream = new ByteArrayOutputStream
+    val writers = getWriters(stream, registry)
+
+    for (writer <- writers) {
+
+      for (o1 <- gatheredObjects) {
+        writer.writeObject(o1)
+        val reader = getReader(writer, registry, stream.toByteArray())
+        val o2 = reader.readObject()
+
+        assert(o1._validate(FieldSetDepth.DEEP))
+        assert(o2._validate(FieldSetDepth.DEEP))
+        assert(o1 == o2)
+        assert(o1.hashCode() == o2.hashCode())
+
+        AssertThrows(reader.readObject())
+        stream.reset()
+      }
 
     }
 
@@ -192,26 +224,65 @@ class BasicReadWrite {
   @Test
   def testRandomizedObjects() {
 
-    val registry = new ClassRegistry
-    val sNames = getSerializerNames()
+    val gatheredObjects = new ArrayBuffer[MGenBase]
 
-    for (sName <- sNames) {
+    {
+      val registry = new ClassRegistry
+      val sNames = getSerializerNames()
 
-      val srcData = getRandomizedObjectsData(sName)
-      val reader = getReader(registry, sName, srcData)
+      for (sName <- sNames) {
 
-      for (e <- registry.entries) {
-        val o1 = reader.readObject()
-        val o2 = o1.deepCopy()
-        assert(o1._validate(FieldSetDepth.DEEP))
-        assert(o2._validate(FieldSetDepth.DEEP))
-        assert(o1 == o2)
-        assert(o1.hashCode() == o2.hashCode())
-        // Not possible since map order might change
-        // assert(o.toString() == o2.toString())
+        val srcData = getRandomizedObjectsData(sName)
+        val reader = getReader(registry, sName, srcData)
+
+        for (e <- registry.entries) {
+          val o1 = reader.readObject()
+          val o2 = o1.deepCopy()
+          assert(o1._validate(FieldSetDepth.DEEP))
+          assert(o2._validate(FieldSetDepth.DEEP))
+          assert(o1 == o2)
+          assert(o1.hashCode() == o2.hashCode())
+          gatheredObjects += o1
+          // Not possible since map order might change
+          // assert(o.toString() == o2.toString())
+        }
+
+        AssertThrows(reader.readObject())
+
       }
+    }
 
-      AssertThrows(reader.readObject())
+    val doAdvancedTests = false
+
+    if (doAdvancedTests) {
+
+      val registry = new ClassRegistry
+
+      val stream = new ByteArrayOutputStream
+      val writers = getWriters(stream, registry)
+
+      for (writer <- writers) {
+
+        println()
+        println(s"Writer: $writer")
+
+        for (instance <- gatheredObjects) {
+          println("  " + instance._typeName)
+
+          writer.writeObject(instance)
+          val reader = getReader(writer, registry, stream.toByteArray())
+          try {
+            reader.readObject()
+          } catch {
+            case t: Exception =>
+              //println(new String(stream.toByteArray()))
+              throw t
+          }
+          AssertThrows(reader.readObject())
+          stream.reset()
+        }
+
+      }
 
     }
 

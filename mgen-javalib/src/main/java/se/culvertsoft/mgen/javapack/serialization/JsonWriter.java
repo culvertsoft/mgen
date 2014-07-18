@@ -201,7 +201,7 @@ public class JsonWriter extends DynamicWriter {
 
 		switch (typ.typeEnum()) {
 		case ENUM:
-			write(o != null ? o.toString() : null);
+			write(quote(o.toString()));
 			break;
 		case BOOL:
 			write((Boolean) o);
@@ -327,7 +327,7 @@ public class JsonWriter extends DynamicWriter {
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
 			newEntry();
-			write(String.valueOf(o[i]));
+			write(o != null ? quote(o[i].toString()) : "null");
 		}
 		endBlock("]", o.length != 0);
 	}
