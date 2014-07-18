@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.compiler.defaultparser
 
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.mutable.ArrayBuffer
 import scala.xml.PrettyPrinter
 
 import se.culvertsoft.mgen.api.model.ArrayType
@@ -32,8 +31,6 @@ object Project2Xml {
 
   def apply(project: Project): Seq[GeneratedSourceFile] = {
 
-    val sources = new ArrayBuffer[XmlSourceFile]
-
     val projectXml =
       <Project>
         { project.generators map generator2xml }
@@ -41,8 +38,9 @@ object Project2Xml {
         { project.modules.filter(_.types.nonEmpty) map { x => <Module>{ x.filePath() }</Module> } }
       </Project>
 
-    sources += XmlSourceFile(project.absoluteFilePath, projectXml)
-    sources ++= project.modules.filter(_.types.nonEmpty) map module2xmlSource
+    val sources = Nil ++
+      Seq(XmlSourceFile(project.absoluteFilePath, projectXml)) ++
+      (project.modules.filter(_.types.nonEmpty) map module2xmlSource)
 
     convert(sources)
 

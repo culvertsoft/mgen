@@ -38,7 +38,7 @@ object CppGenerator {
 
 class CppGenerator extends BuiltInStaticLangGenerator {
 
-  override def generateTopLevelMetaSources(
+  override def generateMetaSources(
     folder: String,
     packagePath: String,
     referencedModules: Seq[Module],
@@ -64,10 +64,6 @@ class CppGenerator extends BuiltInStaticLangGenerator {
       handlerCpp,
       fwdDeclare)
 
-  }
-
-  override def generateModuleMetaSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    Nil
   }
 
   override def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
