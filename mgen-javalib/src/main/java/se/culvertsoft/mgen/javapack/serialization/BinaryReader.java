@@ -38,9 +38,12 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
 
+	private final DataInputStream m_stream;
+
 	public BinaryReader(final InputStream stream, final ClassRegistryBase classRegistry) {
-		super(stream instanceof DataInputStream ? (DataInputStream) stream : new DataInputStream(
-				stream), classRegistry);
+		super(classRegistry);
+		m_stream = stream instanceof DataInputStream ? (DataInputStream) stream
+				: new DataInputStream(stream);
 	}
 
 	@Override

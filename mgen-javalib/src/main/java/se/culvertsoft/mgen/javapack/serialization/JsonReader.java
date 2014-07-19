@@ -2,7 +2,6 @@ package se.culvertsoft.mgen.javapack.serialization;
 
 import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -34,9 +33,8 @@ public class JsonReader extends BuiltInReader {
 	private final MGenJSONParser m_parser;
 
 	public JsonReader(final InputStream stream, final ClassRegistryBase classRegistry) {
-		super(stream instanceof DataInputStream ? (DataInputStream) stream : new DataInputStream(
-				stream), classRegistry);
-		m_parser = new MGenJSONParser(new InputStreamReader(stream));
+		super(classRegistry);
+		m_parser = new MGenJSONParser(new InputStreamReader(stream, charset));
 	}
 
 	@Override
@@ -269,7 +267,8 @@ public class JsonReader extends BuiltInReader {
 		}
 	}
 
-	private ArrayList<?> readList(final ListType constraint, final JSONArray node) throws IOException {
+	private ArrayList<?> readList(final ListType constraint, final JSONArray node)
+			throws IOException {
 
 		if (node == null)
 			return null;
@@ -300,7 +299,8 @@ public class JsonReader extends BuiltInReader {
 		case UNKNOWN:
 			return readObjectList(node, constraint);
 		default:
-			throw new UnknownTypeException("Unknown array element type: " + constraint.elementType());
+			throw new UnknownTypeException("Unknown array element type: "
+					+ constraint.elementType());
 		}
 	}
 

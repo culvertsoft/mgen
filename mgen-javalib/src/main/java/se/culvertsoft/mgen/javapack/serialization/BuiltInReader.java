@@ -1,7 +1,5 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
-import java.io.DataInputStream;
-import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
@@ -23,11 +21,9 @@ abstract public class BuiltInReader implements Reader {
 
 	protected final CharsetDecoder stringDecoder;
 
-	protected final DataInputStream m_stream;
 	protected final ClassRegistryBase m_clsReg;
 
-	protected BuiltInReader(DataInputStream stream, ClassRegistryBase classRegistry) {
-		m_stream = stream;
+	protected BuiltInReader(ClassRegistryBase classRegistry) {
 		m_clsReg = classRegistry;
 		stringDecoder = charset
 				.newDecoder()
@@ -92,10 +88,6 @@ abstract public class BuiltInReader implements Reader {
 		} catch (CharacterCodingException x) {
 			throw new Error(x); // Can't happen
 		}
-	}
-
-	public int avail() throws IOException {
-		return m_stream.available();
 	}
 
 }
