@@ -15,7 +15,6 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,6 +35,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	public static final boolean DEFAULT_COMPACT = false;
 
+	private final DataOutputStream m_stream;
 	private final boolean m_compact;
 	private long m_expectType;
 
@@ -43,8 +43,9 @@ public class BinaryWriter extends BuiltInWriter {
 			final OutputStream stream,
 			final ClassRegistryBase classRegistry,
 			final boolean compact) {
-		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
-				: new DataOutputStream(stream), classRegistry);
+		super(classRegistry);
+		m_stream = stream instanceof DataOutputStream ? (DataOutputStream) stream
+				: new DataOutputStream(stream);
 		m_compact = compact;
 		m_expectType = -1;
 	}
@@ -238,9 +239,9 @@ public class BinaryWriter extends BuiltInWriter {
 		if (tag)
 			writeTypeTag(TAG_STRING);
 		if (s != null && !s.isEmpty()) {
-			final ByteBuffer bb = encodeString(s);
-			writeSize(bb.remaining());
-			m_stream.write(bb.array(), 0, bb.remaining());
+			m_stringEncoder.encode(s);
+			writeSize(m_stringEncoder.size());
+			m_stream.write(m_stringEncoder.data(), 0, m_stringEncoder.size());
 		} else {
 			writeSize(0);
 		}
@@ -257,9 +258,11 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void writeElements(final boolean doWriteListTag, final Collection<Object> list, final Type elementType)
-			throws IOException {
-		
+	private void writeElements(
+			final boolean doWriteListTag,
+			final Collection<Object> list,
+			final Type elementType) throws IOException {
+
 		if (doWriteListTag)
 			writeTypeTag(TAG_LIST);
 

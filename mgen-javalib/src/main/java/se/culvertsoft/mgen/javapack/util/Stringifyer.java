@@ -27,7 +27,7 @@ public class Stringifyer {
 
 		try {
 			writer.writeObject(object);
-			return new String(stream.getBackingBuffer(), 0, stream.size(), BuiltInWriter.charset);
+			return new String(stream.getBackingBuffer(), 0, stream.size(), BuiltInWriter.CHARSET);
 		} catch (final Exception e) {
 			throw new SerializationException(e);
 		}

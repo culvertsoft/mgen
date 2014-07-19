@@ -17,7 +17,7 @@ import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
 
-public class JsonWriter extends DynamicWriter {
+public class JsonWriter extends TextFormatWriter {
 
 	public static final int DEFAULT_MAX_DEPTH = 256;
 	public static final boolean DEFAULT_COMPACT = false;
