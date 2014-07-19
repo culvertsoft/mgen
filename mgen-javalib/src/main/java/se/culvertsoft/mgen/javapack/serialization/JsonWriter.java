@@ -7,8 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.json.simple.JSONValue;
-
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Field;
@@ -116,7 +114,7 @@ public class JsonWriter extends DynamicWriter {
 	@Override
 	public void writeStringField(final String s, final Field f) throws IOException {
 		beginWritePair(f.name());
-		write(quoteEscape(s));
+		writeQuoteEscaped(s);
 	}
 
 	@Override
@@ -132,8 +130,9 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	@Override
-	public void writeEnumField(Enum<?> e, Field field) throws IOException {
-		writeStringField(e != null ? e.toString() : null, field);
+	public void writeEnumField(Enum<?> e, Field f) throws IOException {
+		beginWritePair(f.name());
+		writeQuoteEscaped(String.valueOf(e));
 	}
 
 	@Override
@@ -152,11 +151,7 @@ public class JsonWriter extends DynamicWriter {
 
 	protected void writeTypeId(final MGenBase o) throws IOException {
 		beginWritePair("__t");
-		write(quote(o._typeIds16BitBase64String()));
-	}
-
-	protected final String quote(final String in) {
-		return '"' + in + '"';
+		writeQuoteEscaped(o._typeIds16BitBase64String());
 	}
 
 	protected final void beginWritePair(final String name) throws IOException {
@@ -165,7 +160,8 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	protected void writeName(final String name) throws IOException {
-		write('"' + name + "\":");
+		writeQuoteEscaped(name);
+		write(':');
 	}
 
 	protected void newEntry() throws IOException {
@@ -201,7 +197,7 @@ public class JsonWriter extends DynamicWriter {
 
 		switch (typ.typeEnum()) {
 		case ENUM:
-			write(quote(o.toString()));
+			writeQuoteEscaped(String.valueOf(o));
 			break;
 		case BOOL:
 			write((Boolean) o);
@@ -225,7 +221,7 @@ public class JsonWriter extends DynamicWriter {
 			write((Double) o);
 			break;
 		case STRING:
-			write(quoteEscape((String) o));
+			writeQuoteEscaped((String) o);
 			break;
 		case ARRAY:
 			writeArray(o, (ArrayType) typ);
@@ -318,7 +314,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(Enum<?>[] o, ArrayType typ) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -327,13 +323,13 @@ public class JsonWriter extends DynamicWriter {
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
 			newEntry();
-			write(o != null ? quote(o[i].toString()) : "null");
+			writeQuoteEscaped(String.valueOf(o[i]));
 		}
 		endBlock("]", o.length != 0);
 	}
 
 	private void writeArray(final boolean[] o) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -348,7 +344,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(final byte[] o) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -363,7 +359,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(final short[] o) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -378,7 +374,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(final int[] o) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -393,7 +389,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(final long[] o) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -408,7 +404,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(final float[] o) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -423,7 +419,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(final double[] o) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -438,7 +434,7 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	private void writeArray(final String[] o) throws IOException {
-		
+
 		if (o == null) {
 			write("null");
 			return;
@@ -447,13 +443,13 @@ public class JsonWriter extends DynamicWriter {
 		beginBlock("[");
 		for (int i = 0; i < o.length; i++) {
 			newEntry();
-			write(quoteEscape(o[i]));
+			writeQuoteEscaped(o[i]);
 		}
 		endBlock("]", o.length != 0);
 	}
 
 	private void writeObjectArray(final Object[] objects, final ArrayType typ) throws IOException {
-		
+
 		if (objects == null) {
 			write("null");
 			return;
@@ -468,10 +464,6 @@ public class JsonWriter extends DynamicWriter {
 		endBlock("]", objects.length != 0);
 	}
 
-	private String quoteEscape(final String text) {
-		return text != null ? quote(JSONValue.escape(text)) : "null";
-	}
-
 	private void beginBlock(final String beginString) throws IOException {
 		write(beginString);
 		m_depth++;
@@ -484,6 +476,68 @@ public class JsonWriter extends DynamicWriter {
 		if (expectType == null || !m_compact)
 			return true;
 		return o._typeId() != expectType.typeId();
+	}
+
+	/**
+	 * Copied and modified from jsom-simple. Unfortunately it's not accessible
+	 * publicly in jsom-simple.
+	 * 
+	 * @param s
+	 * @throws IOException
+	 */
+	private void writeQuoteEscaped(final String s) throws IOException {
+
+		if (s == null) {
+			write("null");
+			return;
+		}
+
+		write('"');
+
+		for (int i = 0; i < s.length(); i++) {
+			char ch = s.charAt(i);
+			switch (ch) {
+			case '"':
+				write("\\\"");
+				break;
+			case '\\':
+				write("\\\\");
+				break;
+			case '\b':
+				write("\\b");
+				break;
+			case '\f':
+				write("\\f");
+				break;
+			case '\n':
+				write("\\n");
+				break;
+			case '\r':
+				write("\\r");
+				break;
+			case '\t':
+				write("\\t");
+				break;
+			case '/':
+				write("\\/");
+				break;
+			default:
+				// Reference: http://www.unicode.org/versions/Unicode5.1.0/
+				if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F')
+						|| (ch >= '\u2000' && ch <= '\u20FF')) {
+					String ss = Integer.toHexString(ch);
+					write("\\u");
+					for (int k = 0; k < 4 - ss.length(); k++) {
+						write('0');
+					}
+					write(ss.toUpperCase());
+				} else {
+					write(ch);
+				}
+			}
+		}// for
+
+		write('"');
 	}
 
 }

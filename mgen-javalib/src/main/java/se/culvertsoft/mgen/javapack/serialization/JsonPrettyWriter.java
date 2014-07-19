@@ -31,24 +31,24 @@ public class JsonPrettyWriter extends JsonWriter {
 	@Override
 	protected void writeName(final String name) throws IOException {
 		super.writeName(name);
-		write(" ");
+		write(' ');
 	}
 
 	@Override
 	protected void newEntry() throws IOException {
 		super.newEntry();
-		write("\n");
+		write('\n');
 		for (int i = 0; i < m_depth; i++)
-			write("\t");
+			write('\t');
 	}
 
 	@Override
 	protected void endBlock(final String endString, final boolean hasContents)
 			throws IOException {
 		if (hasContents) {
-			write("\n");
+			write('\n');
 			for (int i = 0; i < m_depth - 1; i++)
-				write("\t");
+				write('\t');
 		}
 		super.endBlock(endString, hasContents);
 	}

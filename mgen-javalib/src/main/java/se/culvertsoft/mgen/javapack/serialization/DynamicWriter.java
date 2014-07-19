@@ -11,9 +11,7 @@ public abstract class DynamicWriter extends BuiltInWriter {
 
 	private final StringBuilder buffer = new StringBuilder();
 
-	public DynamicWriter(
-			final OutputStream stream,
-			final ClassRegistryBase classRegistry) {
+	public DynamicWriter(final OutputStream stream, final ClassRegistryBase classRegistry) {
 		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
 				: new DataOutputStream(stream), classRegistry);
 	}
@@ -24,6 +22,10 @@ public abstract class DynamicWriter extends BuiltInWriter {
 
 	protected void write(final byte b) throws IOException {
 		buffer.append(b);
+	}
+
+	protected void write(final char s) throws IOException {
+		buffer.append(s);
 	}
 
 	protected void write(final short s) throws IOException {
