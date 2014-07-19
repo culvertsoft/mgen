@@ -63,7 +63,6 @@ public class StringDecoder {
 			return m_buffer.toString();
 
 		} else {
-			System.out.println("failed");
 			final byte[] data = new byte[nBytes];
 			stream.readFully(data);
 			final ByteBuffer in = ByteBuffer.wrap(data);
