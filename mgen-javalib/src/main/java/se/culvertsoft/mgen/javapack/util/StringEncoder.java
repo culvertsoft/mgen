@@ -10,7 +10,7 @@ import java.nio.charset.CodingErrorAction;
 
 public class StringEncoder {
 
-	private final ByteBuffer m_buffer;
+	private ByteBuffer m_buffer;
 
 	private final CharsetEncoder m_stringEncoder;
 
@@ -43,23 +43,20 @@ public class StringEncoder {
 
 		final CharBuffer in = CharBuffer.wrap(s);
 
-		if (s.length() <= m_buffer.capacity()) {
+		if (s.length() > m_buffer.capacity())
+			m_buffer = ByteBuffer.allocate(s.length());
 
-			reset();
+		reset();
 
-			CoderResult cr = m_stringEncoder.encode(in, m_buffer, true);
+		CoderResult cr = m_stringEncoder.encode(in, m_buffer, true);
 
-			if (cr.isUnderflow())
-				cr = m_stringEncoder.flush(m_buffer);
+		if (cr.isUnderflow())
+			cr = m_stringEncoder.flush(m_buffer);
 
-			if (cr.isOverflow())
-				cr.throwException();
+		if (cr.isOverflow())
+			cr.throwException();
 
-			m_buffer.flip();
-
-		} else {
-			throw new IOException("encode buffer size too small");
-		}
+		m_buffer.flip();
 
 	}
 
