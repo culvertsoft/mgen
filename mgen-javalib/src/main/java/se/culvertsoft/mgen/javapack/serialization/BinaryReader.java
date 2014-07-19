@@ -17,7 +17,11 @@ import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,19 +35,26 @@ import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
 import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
+import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
 
 	private final DataInputStream m_stream;
+	private final CharsetDecoder stringDecoder;
 
 	public BinaryReader(final InputStream stream, final ClassRegistryBase classRegistry) {
 		super(classRegistry);
 		m_stream = stream instanceof DataInputStream ? (DataInputStream) stream
 				: new DataInputStream(stream);
+		stringDecoder = CHARSET
+				.newDecoder()
+				.onMalformedInput(CodingErrorAction.REPLACE)
+				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 	}
 
 	@Override
@@ -55,7 +66,13 @@ public class BinaryReader extends BuiltInReader {
 	@Override
 	public <T extends MGenBase> T readObject(final Class<T> typ) throws IOException {
 
-		final MGenBase out = readMGenObject(true, getRegEntry(typ).typ());
+		final ClassRegistryEntry entry = m_clsReg.getByClass(typ);
+
+		if (entry == null)
+			throw new UnknownTypeException("Could not read object of type " + typ
+					+ ", since it is know known by the class registry");
+
+		final MGenBase out = readMGenObject(true, entry.typ());
 
 		if (out != null && !typ.isAssignableFrom(out.getClass())) {
 			throw new UnexpectedTypeException("Unexpected type. Expected " + typ.getName()
@@ -158,6 +175,8 @@ public class BinaryReader extends BuiltInReader {
 	 * 
 	 ******************************************************************/
 
+	private static final short[] NO_IDS = new short[0];
+
 	private void skip(final byte typeTag) throws IOException {
 		switch (typeTag) {
 		case TAG_BOOL:
@@ -259,9 +278,9 @@ public class BinaryReader extends BuiltInReader {
 		final int nBytes = readSize();
 
 		if (nBytes > 0) {
-			final byte[] bytes = new byte[nBytes];
-			m_stream.readFully(bytes);
-			return decodeString(bytes);
+			final byte[] data = new byte[nBytes];
+			m_stream.readFully(data);
+			return stringDecoder.decode(ByteBuffer.wrap(data)).toString();
 		} else {
 			return "";
 		}
@@ -667,6 +686,27 @@ public class BinaryReader extends BuiltInReader {
 		}
 
 		return out;
+	}
+
+	protected MGenBase instantiate(final short[] ids, final CustomType constraint) {
+
+		if (ids == null && constraint == null)
+			return null;
+
+		final ClassRegistryEntry entry = ids != null ? m_clsReg.getByTypeIds16Bit(ids) : m_clsReg
+				.getById(constraint.typeId());
+
+		if (constraint != null) {
+			if (entry == null) {
+				throw new UnexpectedTypeException("Unknown type: " + Arrays.toString(ids));
+			} else if (!entry.isInstanceOfTypeId(constraint.typeId())) {
+				throw new UnexpectedTypeException("Unexpected type. Expected "
+						+ constraint.fullName() + " but got " + entry.clsName());
+			}
+		}
+
+		return entry != null ? entry.construct() : null;
+
 	}
 
 	private Enum<?> readEnum(final boolean readTag, final EnumType constraint) throws IOException {

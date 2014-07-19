@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.json.simple.JSONArray;
@@ -21,6 +22,7 @@ import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
@@ -34,7 +36,7 @@ public class JsonReader extends BuiltInReader {
 
 	public JsonReader(final InputStream stream, final ClassRegistryBase classRegistry) {
 		super(classRegistry);
-		m_parser = new MGenJSONParser(new InputStreamReader(stream, charset));
+		m_parser = new MGenJSONParser(new InputStreamReader(stream, CHARSET));
 	}
 
 	@Override
@@ -46,7 +48,13 @@ public class JsonReader extends BuiltInReader {
 	@Override
 	public <T extends MGenBase> T readObject(final Class<T> typ) throws IOException {
 
-		final MGenBase out = readMGenObject(parseRootObject(), getRegEntry(typ).typ());
+		final ClassRegistryEntry entry = m_clsReg.getByClass(typ);
+
+		if (entry == null)
+			throw new UnknownTypeException("Could not read object of type " + typ
+					+ ", since it is know known by the class registry");
+
+		final MGenBase out = readMGenObject(parseRootObject(), entry.typ());
 
 		if (out != null && !typ.isAssignableFrom(out.getClass())) {
 			throw new UnexpectedTypeException("Unexpected type. Expected " + typ.getName()
@@ -126,6 +134,13 @@ public class JsonReader extends BuiltInReader {
 	@Override
 	public void handleUnknownField(final Field field, final Object context) throws IOException {
 	}
+
+	/************************************************
+	 * 
+	 * 
+	 * PRIVATE METHODS
+	 * 
+	 ***********************************************/
 
 	private MGenBase readMGenObject(final JSONObject node, final CustomType constraint)
 			throws IOException {
@@ -505,6 +520,24 @@ public class JsonReader extends BuiltInReader {
 		default:
 			throw new UnknownTypeException("Unknown type: " + typ);
 		}
+	}
+
+	private MGenBase instantiate(final String[] ids, final CustomType constraint) {
+
+		final ClassRegistryEntry entry = ids != null ? m_clsReg.getByTypeIds16BitBase64(ids)
+				: m_clsReg.getById(constraint.typeId());
+
+		if (constraint != null) {
+			if (entry == null) {
+				throw new UnexpectedTypeException("Unknown type: " + Arrays.toString(ids));
+			} else if (!entry.isInstanceOfTypeId(constraint.typeId())) {
+				throw new UnexpectedTypeException("Unexpected type. Expected "
+						+ constraint.fullName() + " but got " + entry.clsName());
+			}
+		}
+
+		return entry != null ? entry.construct() : null;
+
 	}
 
 	private JSONObject parseRootObject() throws IOException {
