@@ -17,9 +17,6 @@ import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.ByteBuffer;
-import java.nio.charset.CharsetDecoder;
-import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,16 +42,11 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 public class BinaryReader extends BuiltInReader {
 
 	private final DataInputStream m_stream;
-	private final CharsetDecoder stringDecoder;
 
 	public BinaryReader(final InputStream stream, final ClassRegistryBase classRegistry) {
 		super(classRegistry);
 		m_stream = stream instanceof DataInputStream ? (DataInputStream) stream
 				: new DataInputStream(stream);
-		stringDecoder = CHARSET
-				.newDecoder()
-				.onMalformedInput(CodingErrorAction.REPLACE)
-				.onUnmappableCharacter(CodingErrorAction.REPLACE);
 	}
 
 	@Override
@@ -269,14 +261,12 @@ public class BinaryReader extends BuiltInReader {
 			ensureTypeTag(null, TAG_STRING, readTypeTag());
 
 		final int nBytes = readSize();
-
 		if (nBytes > 0) {
-			final byte[] data = new byte[nBytes];
-			m_stream.readFully(data);
-			return stringDecoder.decode(ByteBuffer.wrap(data)).toString();
+			return m_stringDecoder.decode(m_stream, nBytes);
 		} else {
 			return "";
 		}
+
 	}
 
 	private void readFields(final MGenBase object, final int nFields) throws IOException {
