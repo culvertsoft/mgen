@@ -481,9 +481,6 @@ public class JsonWriter extends TextFormatWriter {
 	/**
 	 * Copied and modified from json-simple. Unfortunately it's not accessible
 	 * publicly in json-simple.
-	 * 
-	 * @param s
-	 * @throws IOException
 	 */
 	private void writeQuoteEscaped(final String s) throws IOException {
 
@@ -498,28 +495,36 @@ public class JsonWriter extends TextFormatWriter {
 			char ch = s.charAt(i);
 			switch (ch) {
 			case '"':
-				write("\\\"");
+				write('\\');
+				write('"');
 				break;
 			case '\\':
-				write("\\\\");
+				write('\\');
+				write('\\');
 				break;
 			case '\b':
-				write("\\b");
+				write('\\');
+				write('b');
 				break;
 			case '\f':
-				write("\\f");
+				write('\\');
+				write('f');
 				break;
 			case '\n':
-				write("\\n");
+				write('\\');
+				write('n');
 				break;
 			case '\r':
-				write("\\r");
+				write('\\');
+				write('r');
 				break;
 			case '\t':
-				write("\\t");
+				write('\\');
+				write('t');
 				break;
 			case '/':
-				write("\\/");
+				write('\\');
+				write('/');
 				break;
 			default:
 				// Reference: http://www.unicode.org/versions/Unicode5.1.0/
@@ -535,9 +540,10 @@ public class JsonWriter extends TextFormatWriter {
 					write(ch);
 				}
 			}
-		}// for
+		}
 
 		write('"');
+
 	}
 
 }

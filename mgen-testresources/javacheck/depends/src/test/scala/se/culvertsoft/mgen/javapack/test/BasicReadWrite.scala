@@ -6,8 +6,6 @@ import java.io.OutputStream
 import java.nio.file.Files
 import java.nio.file.Paths
 
-import scala.annotation.elidable
-import scala.annotation.elidable.ASSERTION
 import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.ArrayBuffer
 
@@ -264,6 +262,7 @@ class BasicReadWrite {
       for (o1 <- gatheredObjects) {
 
         writer.writeObject(o1)
+
         val reader = getReader(writer, registry, stream.toByteArray())
         val o2 = reader.readObject()
 
@@ -273,6 +272,7 @@ class BasicReadWrite {
         assert(o1.hashCode() == o2.hashCode())
 
         AssertThrows(reader.readObject())
+
         stream.reset()
       }
 

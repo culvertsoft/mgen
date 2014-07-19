@@ -12,7 +12,6 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_LIST;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_MAP;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 	public static final boolean DEFAULT_COMPACT = false;
 
-	private final DataOutputStream m_stream;
+	private final OutputStream m_stream;
 	private final boolean m_compact;
 	private long m_expectType;
 
@@ -44,8 +43,7 @@ public class BinaryWriter extends BuiltInWriter {
 			final ClassRegistryBase classRegistry,
 			final boolean compact) {
 		super(classRegistry);
-		m_stream = stream instanceof DataOutputStream ? (DataOutputStream) stream
-				: new DataOutputStream(stream);
+		m_stream = stream;
 		m_compact = compact;
 		m_expectType = -1;
 	}
@@ -176,7 +174,7 @@ public class BinaryWriter extends BuiltInWriter {
 			m_expectType = typ != null ? typ.typeId() : 0;
 			o._accept(this);
 		} else {
-			m_stream.writeByte(0);
+			m_stream.write(0);
 		}
 
 	}
@@ -195,26 +193,25 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeBoolean(final boolean b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_BOOL);
-		m_stream.writeByte(b ? 1 : 0);
+		m_stream.write(b ? 1 : 0);
 	}
 
 	private void writeInt8(final int b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT8);
-		m_stream.writeByte(b);
+		m_stream.write(b);
 	}
 
 	private void writeInt16(final short s, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT16);
-		m_stream.writeShort(s);
+		writeRawInt16(s);
 	}
 
 	private void writeInt32(final int i, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT32);
 		writeSignedVarint32(i);
-
 	}
 
 	private void writeInt64(final long l, final boolean tag) throws IOException {
@@ -226,13 +223,13 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeFloat32(final float f, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT32);
-		m_stream.writeFloat(f);
+		writeRawInt32(Float.floatToIntBits(f));
 	}
 
 	private void writeFloat64(final double d, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT64);
-		m_stream.writeDouble(d);
+		writeRawInt64(Double.doubleToLongBits(d));
 	}
 
 	private void writeString(final String s, final boolean tag) throws IOException {
@@ -581,6 +578,29 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
+	private void writeRawInt16(short s) throws IOException {
+		m_stream.write((s >>> 8) & 0xFF);
+		m_stream.write((s >>> 0) & 0xFF);
+	}
+
+	private void writeRawInt32(int v) throws IOException {
+		m_stream.write(v >>> 24);
+		m_stream.write(v >>> 16);
+		m_stream.write(v >>> 8);
+		m_stream.write(v >>> 0);
+	}
+
+	private void writeRawInt64(long v) throws IOException {
+		m_stream.write((int) (v >>> 56));
+		m_stream.write((int) (v >>> 48));
+		m_stream.write((int) (v >>> 40));
+		m_stream.write((int) (v >>> 32));
+		m_stream.write((int) (v >>> 24));
+		m_stream.write((int) (v >>> 16));
+		m_stream.write((int) (v >>> 8));
+		m_stream.write((int) (v >>> 0));
+	}
+
 	private void writeSignedVarint32(final int i) throws IOException {
 		Varint.writeSignedVarInt(i, m_stream);
 	}
@@ -652,7 +672,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	private void writeTypeTag(byte tag) throws IOException {
-		m_stream.writeByte(tag);
+		m_stream.write(tag);
 	}
 
 }

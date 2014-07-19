@@ -1,8 +1,8 @@
 package se.culvertsoft.mgen.javapack.util;
 
+import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
 import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
@@ -36,31 +36,30 @@ public class StringEncoder {
 		m_stringEncoder.reset();
 	}
 
-	public void encode(final CharSequence s) throws CharacterCodingException {
+	public void encode(final CharSequence s) throws IOException {
 
 		if (s.length() <= 0)
 			return;
 
 		final CharBuffer in = CharBuffer.wrap(s);
 
-		reset();
+		if (s.length() <= m_buffer.capacity()) {
 
-		for (;;) {
+			reset();
 
-			CoderResult cr = in.hasRemaining() ? m_stringEncoder.encode(in, m_buffer, true)
-					: CoderResult.UNDERFLOW;
+			CoderResult cr = m_stringEncoder.encode(in, m_buffer, true);
 
 			if (cr.isUnderflow())
 				cr = m_stringEncoder.flush(m_buffer);
 
-			if (cr.isUnderflow())
-				break;
-
 			if (cr.isOverflow())
 				cr.throwException();
-		}
 
-		m_buffer.flip();
+			m_buffer.flip();
+
+		} else {
+			throw new IOException("encode buffer size too small");
+		}
 
 	}
 
