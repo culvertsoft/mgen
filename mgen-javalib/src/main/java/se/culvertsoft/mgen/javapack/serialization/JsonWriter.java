@@ -479,8 +479,8 @@ public class JsonWriter extends DynamicWriter {
 	}
 
 	/**
-	 * Copied and modified from jsom-simple. Unfortunately it's not accessible
-	 * publicly in jsom-simple.
+	 * Copied and modified from json-simple. Unfortunately it's not accessible
+	 * publicly in json-simple.
 	 * 
 	 * @param s
 	 * @throws IOException

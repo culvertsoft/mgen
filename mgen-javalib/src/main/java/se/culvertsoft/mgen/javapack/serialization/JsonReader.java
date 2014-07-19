@@ -54,14 +54,7 @@ public class JsonReader extends BuiltInReader {
 			throw new UnknownTypeException("Could not read object of type " + typ
 					+ ", since it is know known by the class registry");
 
-		final MGenBase out = readMGenObject(parseRootObject(), entry.typ());
-
-		if (out != null && !typ.isAssignableFrom(out.getClass())) {
-			throw new UnexpectedTypeException("Unexpected type. Expected " + typ.getName()
-					+ " but got " + out.getClass().getName());
-		}
-
-		return (T) out;
+		return (T) readMGenObject(parseRootObject(), entry.typ());
 	}
 
 	@Override
