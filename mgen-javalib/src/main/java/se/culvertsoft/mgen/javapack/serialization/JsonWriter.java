@@ -166,7 +166,7 @@ public class JsonWriter extends DynamicWriter {
 
 	protected void newEntry() throws IOException {
 		if (m_iEntry[m_depth] > 0)
-			write(",");
+			write(',');
 		m_iEntry[m_depth]++;
 	}
 
