@@ -43,8 +43,8 @@ public class StringEncoder {
 
 		final CharBuffer in = CharBuffer.wrap(s);
 
-		if (s.length() > m_buffer.capacity())
-			m_buffer = ByteBuffer.allocate(s.length());
+		if (s.length() * 4 > m_buffer.capacity())
+			m_buffer = ByteBuffer.allocate(s.length() * 4);
 
 		reset();
 
