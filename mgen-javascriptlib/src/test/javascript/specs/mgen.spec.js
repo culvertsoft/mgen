@@ -1,7 +1,7 @@
 /** JSLINT CONFIG */
-/*global mgen_classreg: false, mGenGenerate: false, it: false, describe: false, expect: false, xit: false, throws: false */
+/*global mgen_blueprint: false, mGenGenerate: false, it: false, describe: false, expect: false, xit: false, throws: false */
 
-requirejs(['mGen'], function (mGen) {
+requirejs(['mGen', 'mgen_blueprint'], function (mGen, mgen_blueprint) {
 	"use strict";
 
 	/* ***********************************************************\
@@ -14,297 +14,297 @@ requirejs(['mGen'], function (mGen) {
 	|*         SETUP -- MAKE SURE ALL FILES ARE IN PLACE           *|
 	 \*************************************************************/
 
-	if (!mgen_classreg) {
-		throw "mgen_classreg missing";
+	if (!mgen_blueprint) {
+		throw "mgen_blueprint missing";
 	}
-	console.log(mgen_classreg.lookup("AAE"));
+
 	if (!mGen.generate) {
-		throw "mGen missing";
+		throw "mgen_blueprint missing";
 	}
 
-	var registry = mGen.generate(mgen_classreg);
+	var registry = mGen.generate(mgen_blueprint);
 
-// 	/* ***********************************************************\
-// 	|*         CREATION -- MAKE SURE WE CAN CREATE SOM CLASSES     *|
-// 	 \*************************************************************/
+	/* ***********************************************************\
+	|*         CREATION -- MAKE SURE WE CAN CREATE SOM CLASSES     *|
+	 \*************************************************************/
 
-// 	describe("Simple Class Creation", function() {
+	describe("Simple Class Creation", function() {
 
-// 		it("Has mGen been created.", function() {
-// 			expect(registry).toBeDefined();
-// 		});
+		it("Has mGen been created.", function() {
+			expect(registry).toBeDefined();
+		});
 
-// 		it("Can create simple base Class.", function() {
-// 			var c = new registry.VectorR3();
-// 			expect(c instanceof registry).toBe(true);
-// 		});
+		it("Can create simple base Class.", function() {
+			var c = new registry.VectorR3();
+			expect(c instanceof registry).toBe(true);
+		});
 
-// 		it("Defult field.", function() {
-// 			var c = new registry.VectorR3("DEFAULT", {
-// 				strict_enums: false
-// 			});
-// 			expect(c.x).toBe(0);
-// 		});
+		it("Defult field.", function() {
+			var c = new registry.VectorR3("DEFAULT", {
+				strict_enums: false
+			});
+			expect(c.x).toBe(0);
+		});
 
-// 		it("Basic inheritance.", function() {
-// 			var c = new registry.VectorR3();
-// 			expect(c instanceof registry).toBe(true);
-// 		});
+		it("Basic inheritance.", function() {
+			var c = new registry.VectorR3();
+			expect(c instanceof registry).toBe(true);
+		});
 
-// 		it("Class with data.", function() {
-// 			var c = new registry.Positioning({
-// 				position: new registry.VectorR3({
-// 					x: 2,
-// 					y: 3,
-// 					z: -1
-// 				})
-// 			});
-// 			expect(c.position.x).toBe(2);
-// 		});
+		it("Class with data.", function() {
+			var c = new registry.Positioning({
+				position: new registry.VectorR3({
+					x: 2,
+					y: 3,
+					z: -1
+				})
+			});
+			expect(c.position.x).toBe(2);
+		});
 
-// 		it("Class with nested data.", function() {
-// 			var c = new registry.Car({
-// 				positioning: {
-// 					position: {
-// 						x: 1,
-// 						y: 2,
-// 						z: 3
-// 					}
-// 				},
-// 				topSpeed: 100,
-// 				brand: "IAmRolling"
-// 			});
+		it("Class with nested data.", function() {
+			var c = new registry.Car({
+				positioning: {
+					position: {
+						x: 1,
+						y: 2,
+						z: 3
+					}
+				},
+				topSpeed: 100,
+				brand: "IAmRolling"
+			});
 
-// 			expect(c.positioning.position.x).toBe(1);
-// 			expect(c.topSpeed).toBe(100);
-// 		});
+			expect(c.positioning.position.x).toBe(1);
+			expect(c.topSpeed).toBe(100);
+		});
 
-// 		it("Test default field.", function() {
+		it("Test default field.", function() {
 
-// 			var c = new registry.VectorR3({
-// 				x: 0,
-// 				y: 0,
-// 				z: 0
-// 			});
+			var c = new registry.VectorR3({
+				x: 0,
+				y: 0,
+				z: 0
+			});
 
-// 			expect(c.x).toBe(0);
-// 			expect(c.y).toBe(0);
-// 			expect(c.z).toBe(0);
-// 		});
+			expect(c.x).toBe(0);
+			expect(c.y).toBe(0);
+			expect(c.z).toBe(0);
+		});
 
-// 		it("Test required field.", function() {
-// 			expect(function() {
-// 				new registry.Positioning()
-// 			}).toThrow();
+		it("Test required field.", function() {
+			expect(function() {
+				new registry.Positioning()
+			}).toThrow();
 
-// 			var c = new registry.Positioning({
-// 				position: new registry.VectorR3({
-// 					x: 2,
-// 					y: 3,
-// 					z: -1
-// 				}),
-// 				velocity: new registry.VectorR3({
-// 					x: 0,
-// 					y: 0,
-// 					z: 0
-// 				})
-// 			});
+			var c = new registry.Positioning({
+				position: new registry.VectorR3({
+					x: 2,
+					y: 3,
+					z: -1
+				}),
+				velocity: new registry.VectorR3({
+					x: 0,
+					y: 0,
+					z: 0
+				})
+			});
 
-// 			expect(c.position.x).toBe(2);
-// 			expect(c.velocity.x).toBe(0);
-// 		});
+			expect(c.position.x).toBe(2);
+			expect(c.velocity.x).toBe(0);
+		});
 
-// 		it("Multiple levels of inheritance.", function() {
-// 			var data = {
-// 				positioning: new registry.Positioning({
-// 					position: new registry.VectorR3()
-// 				}),
-// 				topSpeed: 100,
-// 				brand: "Banana"
-// 			};
+		it("Multiple levels of inheritance.", function() {
+			var data = {
+				positioning: new registry.Positioning({
+					position: new registry.VectorR3()
+				}),
+				topSpeed: 100,
+				brand: "Banana"
+			};
 
-// 			var settings = {
-// 				never_catch_error: false,
-// 				validate: false,
-// 				warn: false
-// 			};
+			var settings = {
+				never_catch_error: false,
+				validate: false,
+				warn: false
+			};
 
-// 			var a = new registry.Car(data, settings);
-// 			var b = new registry.Vehicle(data, settings);
-// 			var c = new registry.Entity(data, settings);
+			var a = new registry.Car(data, settings);
+			var b = new registry.Vehicle(data, settings);
+			var c = new registry.Entity(data, settings);
 
-// 			expect(a instanceof registry.Car).toBe(true);
-// 			expect(a instanceof registry.Vehicle).toBe(true);
-// 			expect(a instanceof registry.Entity).toBe(true);
+			expect(a instanceof registry.Car).toBe(true);
+			expect(a instanceof registry.Vehicle).toBe(true);
+			expect(a instanceof registry.Entity).toBe(true);
 
-// 			expect(b instanceof registry.Car).toBe(false);
-// 			expect(b instanceof registry.Vehicle).toBe(true);
-// 			expect(b instanceof registry.Entity).toBe(true);
+			expect(b instanceof registry.Car).toBe(false);
+			expect(b instanceof registry.Vehicle).toBe(true);
+			expect(b instanceof registry.Entity).toBe(true);
 
-// 			expect(c instanceof registry.Car).toBe(false);
-// 			expect(c instanceof registry.Vehicle).toBe(false);
-// 			expect(c instanceof registry.Entity).toBe(true);
-// 		});
+			expect(c instanceof registry.Car).toBe(false);
+			expect(c instanceof registry.Vehicle).toBe(false);
+			expect(c instanceof registry.Entity).toBe(true);
+		});
 
-// 	});
+	});
 
-// 	/* ***********************************************************\
-// 	|*  SERIALIZATION -- MAKE SURE THAT WE CAN SERIALIZE OBJECTS   *|
-// 	 \*************************************************************/
+	/* ***********************************************************\
+	|*  SERIALIZATION -- MAKE SURE THAT WE CAN SERIALIZE OBJECTS   *|
+	 \*************************************************************/
 
-// 	describe("Serialization", function() {
+	describe("Serialization", function() {
 
-// 		it("Simple toJSONString serialization.", function() {
-// 			var a = new registry.Car({
-// 				positioning: new registry.Positioning({
-// 					position: new registry.VectorR3({
-// 						x: 0,
-// 						y: 0,
-// 						z: 0
-// 					})
-// 				}),
-// 				topSpeed: 100,
-// 				brand: "IAmRolling"
-// 			});
+		it("Simple toJSONString serialization.", function() {
+			var a = new registry.Car({
+				positioning: new registry.Positioning({
+					position: new registry.VectorR3({
+						x: 0,
+						y: 0,
+						z: 0
+					})
+				}),
+				topSpeed: 100,
+				brand: "IAmRolling"
+			});
 
-// 			var jsonHandler = mGen.jsonHandler(registry);
+			var jsonHandler = mGen.jsonHandler(registry);
 
-// 			expect( jsonHandler.objectToString(a) ).toBe( car_as_string );
+			expect( jsonHandler.objectToString(a) ).toBe( car_as_string );
 
-// 			var b = new registry.Car({
-// 				positioning: {
-// 					position: {
-// 						x: 0,
-// 						y: 0,
-// 						z: 0
-// 					}
-// 				},
-// 				topSpeed: 100,
-// 				brand: "IAmRolling"
-// 			});
-// 			expect( jsonHandler.objectToString(b) ).toBe(car_as_string);
-// 		});
+			var b = new registry.Car({
+				positioning: {
+					position: {
+						x: 0,
+						y: 0,
+						z: 0
+					}
+				},
+				topSpeed: 100,
+				brand: "IAmRolling"
+			});
+			expect( jsonHandler.objectToString(b) ).toBe(car_as_string);
+		});
 
-// 	});
+	});
 
-// 	/* ***********************************************************\
-// 	|*  DESERIALIZATION -- MAKE SURE THAT WE CAN DESERIALIZE       *|
-// 	 \*************************************************************/
+	/* ***********************************************************\
+	|*  DESERIALIZATION -- MAKE SURE THAT WE CAN DESERIALIZE       *|
+	 \*************************************************************/
 
-// 	describe("Deserialization", function() {
+	describe("Deserialization", function() {
 
-// 		it("Simple toJSONString serialization.", function() {
-// 			var a = new registry.gameworld.types.basemodule1.Car({
-// 				positioning: new registry.Positioning({
-// 					position: new registry.VectorR3()
-// 				}),
-// 				topSpeed: 100,
-// 				brand: "IAmRolling"
-// 			});
+		it("Simple toJSONString serialization.", function() {
+			var a = new registry.gameworld.types.basemodule1.Car({
+				positioning: new registry.Positioning({
+					position: new registry.VectorR3()
+				}),
+				topSpeed: 100,
+				brand: "IAmRolling"
+			});
 
-// 			var jsonHandler = mGen.jsonHandler(registry);
-// 			var b = jsonHandler.stringToObject(jsonHandler.objectToString(a))
+			var jsonHandler = mGen.jsonHandler(registry);
+			var b = jsonHandler.stringToObject(jsonHandler.objectToString(a))
 
-// 			expect( jsonHandler.objectToString(a) ).toBe( jsonHandler.objectToString(b) );
-// 		});
+			expect( jsonHandler.objectToString(a) ).toBe( jsonHandler.objectToString(b) );
+		});
 
-// 	});
+	});
 
-// 	/* ***********************************************************\
-// 	|*  ERRORS -- MAKE SURE WE THROW ERRORS AT THE CORRECT PLACE   *|
-// 	 \*************************************************************/
+	/* ***********************************************************\
+	|*  ERRORS -- MAKE SURE WE THROW ERRORS AT THE CORRECT PLACE   *|
+	 \*************************************************************/
 
-// 	describe("Error handling", function() {
+	describe("Error handling", function() {
 
-// 		it("Create object with missing critical field.", function() {
-// 			expect(function() {
-// 				new registry.Positioning({});
-// 			}).toThrow();
+		it("Create object with missing critical field.", function() {
+			expect(function() {
+				new registry.Positioning({});
+			}).toThrow();
 
-// 			expect(function() {
-// 				new registry.Car({});
-// 			}).toThrow();
-// 		});
+			expect(function() {
+				new registry.Car({});
+			}).toThrow();
+		});
 
-// 		it("Create object with wrong data.", function() {
-// 			expect(function() {
-// 				new registry.Positioning({
-// 					position: new registry.VectorR3(),
-// 					velocity: new registry.Car()
-// 				});
-// 			}).toThrow();
-// 		});
+		it("Create object with wrong data.", function() {
+			expect(function() {
+				new registry.Positioning({
+					position: new registry.VectorR3(),
+					velocity: new registry.Car()
+				});
+			}).toThrow();
+		});
 
-// 		it("Create object with wrong fields.", function() {
-// 			expect(function() {
-// 				new registry.Positioning({
-// 					position: new registry.VectorR3(),
-// 					this_field_does_not_exist: new registry.Car()
-// 				});
-// 			}).toThrow();
-// 		});
+		it("Create object with wrong fields.", function() {
+			expect(function() {
+				new registry.Positioning({
+					position: new registry.VectorR3(),
+					this_field_does_not_exist: new registry.Car()
+				});
+			}).toThrow();
+		});
 
-// 		it("Create object with wrong type data.", function() {
-// 			expect(function() {
-// 				new registry.Car({
-// 					positioning: new registry.Positioning({
-// 						position: new registry.VectorR3({
-// 							x: "string",
-// 							y: 0.43,
-// 							z: []
-// 						})
-// 					})
-// 				});
-// 			}).toThrow();
-// 		});
+		it("Create object with wrong type data.", function() {
+			expect(function() {
+				new registry.Car({
+					positioning: new registry.Positioning({
+						position: new registry.VectorR3({
+							x: "string",
+							y: 0.43,
+							z: []
+						})
+					})
+				});
+			}).toThrow();
+		});
 
-// 		it("Create object with wrong type data.", function() {
-// 			expect(function() {
-// 				new registry.Car({
-// 					positioning: new registry.Positioning({
-// 						position: new registry.VectorR3({
-// 							x: 0.32,
-// 							y: 0,
-// 							z: 0,
-// 						})
-// 					})
-// 				});
-// 			}).toThrow();
-// 		});
+		it("Create object with wrong type data.", function() {
+			expect(function() {
+				new registry.Car({
+					positioning: new registry.Positioning({
+						position: new registry.VectorR3({
+							x: 0.32,
+							y: 0,
+							z: 0,
+						})
+					})
+				});
+			}).toThrow();
+		});
 
-// 		it("Create new object With no validation and validate after.", function() {
-// 			var settings = {
-// 				validate: false,
-// 				never_catch_error: true
-// 			};
-// 			var c = new registry.Car({
-// 				positioning: new registry.Positioning({
-// 					position: new registry.VectorR3({
-// 						x: 0.32,
-// 						y: 0,
-// 						z: 0,
-// 					}, settings)
-// 				}, settings)
-// 			}, settings);
+		it("Create new object With no validation and validate after.", function() {
+			var settings = {
+				validate: false,
+				never_catch_error: true
+			};
+			var c = new registry.Car({
+				positioning: new registry.Positioning({
+					position: new registry.VectorR3({
+						x: 0.32,
+						y: 0,
+						z: 0,
+					}, settings)
+				}, settings)
+			}, settings);
 
-// 			 expect(registry.validate(c)).toBe(false);
+			 expect(registry.validate(c)).toBe(false);
 
-// 			var d = new registry.Car({
-// 				positioning: {
-// 					position: {
-// 						x: 13,
-// 						y: 0,
-// 						z: 0
-// 					}
-// 				},
-// 				topSpeed: 100,
-// 				brand: "IAmRolling"
-// 			}, settings);
+			var d = new registry.Car({
+				positioning: {
+					position: {
+						x: 13,
+						y: 0,
+						z: 0
+					}
+				},
+				topSpeed: 100,
+				brand: "IAmRolling"
+			}, settings);
 
-// 			 expect(registry.validate(d)).toBe(true);
-// 		});
+			 expect(registry.validate(d)).toBe(true);
+		});
 
-// 	});
+	});
 
 	/* ***********************************************************\
 	|*  HANDLER -- TEST THE SPECIALIZED HANDLER SYSTEM             *|

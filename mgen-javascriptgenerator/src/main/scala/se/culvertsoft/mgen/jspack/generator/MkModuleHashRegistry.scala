@@ -12,7 +12,7 @@ object MkModuleHashRegistry {
     val allTypes = modules.flatMap(_.types).distinct
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
     txtBuffer {
-      scope("classBlueprint.lookup = function( typeId ) ") {
+      scopeExt("blueprint.lookup = function( typeId ) ", ";") {
         ln("var t = typeId.match(/(.{1,3})/g); // Split typeId into array for easier reading of inheritance (every 3 char is a type).")
         MkHashSwitch(topLevelTypes)
       }
