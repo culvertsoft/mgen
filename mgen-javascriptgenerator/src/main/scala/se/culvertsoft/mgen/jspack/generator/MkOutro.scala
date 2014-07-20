@@ -8,7 +8,7 @@ import scala.collection.JavaConversions._
 object MkOutro {
 
   def apply(settings: java.util.Map[String, String])(implicit txtBuffer: SuperStringBuffer) = {
-    val classregistryName = settings.getOrElse("classregistry_name", "mgen_registry")
-    ln("})(" + classregistryName + ");")
+    val classregistryBlueprint = settings.getOrElse("classregistryblueprint", "mgen_registry")
+    ln("})(" + classregistryBlueprint + ");")
   }
 }

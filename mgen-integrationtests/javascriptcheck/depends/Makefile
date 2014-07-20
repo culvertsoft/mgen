@@ -9,7 +9,8 @@ get-javascript:
 get-test-data:
 	mkdir -p src_generated
 	mkdir -p src_generated/test
-	cp -f ../../generated/depends/src_generated/javascript/* src_generated/test/
+	mkdir -p src_generated/test/javascript
+	cp -f ../../generated/depends/src_generated/javascript/* src_generated/test/javascript/
 
 get-generated-sources: get-javascript get-test-data
 

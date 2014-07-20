@@ -70,10 +70,10 @@ run-compiler:
 run-visualdesigner:
 	cd mgen-visualdesigner && make run
 
-prepare-integrationtests:
-	cd mgen-integrationtests && make generate
+run-integrationtests:
+	cd mgen-integrationtests && make run-tests
 
-run-tests: prepare-integrationtests
+run-tests: run-integrationtests
 	#########################################################
 	#                                                       #
 	#       RUNNING ALL TESTS                               #

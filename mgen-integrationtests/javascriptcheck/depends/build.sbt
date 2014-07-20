@@ -6,12 +6,20 @@ version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
 isSnapshot := version.value.contains("SNAPSHOT")
 
-crossPaths := false
+// TESTS USING JASMINE
 
-retrieveManaged := true
+seq(jasmineSettings : _*)
 
-unmanagedSourceDirectories in Test += baseDirectory.value / "src_generated/test/javascript"
+appJsDir <+= baseDirectory { x => x }
 
-libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
+appJsLibDir <+= sourceDirectory { x => x / "test" / "javascript" }
 
-publishArtifact in (Compile, packageDoc) := false
+jasmineTestDir <+= sourceDirectory { x => x / "test" / "javascript" }
+
+jasmineRequireJsFile <+= sourceDirectory { x => x / "test" / "javascript" / "require-2.0.6.js" }
+
+jasmineConfFile <+= sourceDirectory { x => x / "test" / "javascript" / "test.dependencies.js" }
+
+jasmineRequireConfFile <+= sourceDirectory { x => x / "test" / "javascript" / "require.conf.js" }
+
+(test in Test) <<= test in Test dependsOn (jasmine)
