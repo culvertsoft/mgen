@@ -30,7 +30,7 @@ public final class FastByteBuffer extends OutputStream {
 		if (newSize > m_data.length) {
 			final byte[] oldArray = m_data;
 			m_data = new byte[newSize];
-			System.arraycopy(oldArray, 0, m_data, 0, oldArray.length);
+			System.arraycopy(oldArray, 0, m_data, 0, m_offset);
 		}
 	}
 
