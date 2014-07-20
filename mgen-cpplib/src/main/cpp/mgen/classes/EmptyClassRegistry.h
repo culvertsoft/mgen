@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef EMPTYCLASSREGISTRY_H_
-#define EMPTYCLASSREGISTRY_H_
+#ifndef MGEN_EMPTYCLASSREGISTRY_H_
+#define MGEN_EMPTYCLASSREGISTRY_H_
 
 #include "mgen/classes/ClassRegistryBase.h"
 #include "mgen/exceptions/Exception.h"
@@ -48,4 +48,4 @@ public:
 
 } /* namespace mgen */
 
-#endif /* EMPTYCLASSREGISTRY_H_ */
+#endif /* MGEN_EMPTYCLASSREGISTRY_H_ */

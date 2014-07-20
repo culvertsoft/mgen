@@ -1,14 +1,13 @@
 # MGen
 
--- HEADS UP: This README is Work-In-Progress. It's about 35% finished! -- 
+-- HEADS UP: This README is Work-In-Progress. It's about 45% finished! -- 
 
-MGen is a toolkit for designing multi langauge data models with built-in functionality such as serialization and type introspection. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code in multiple programming languages may be generated using the MGen Compiler.
+MGen is a toolkit for designing cross-langauge data models to which functionality such as serialization and type introspection can easily be attached. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code (classes) in multiple programming languages may be generated using the MGen Compiler.
 
-The goal of MGen is to to simplify type-safe cross-language data model design and collaboration between software components, while also permitting significant data model changes without requiring all participants to rebuild their software.
-
-To better fit custom applications, extensions to the MGen toolkit can be made without recompiling the MGen tools or libraries through a plug-in based architecture.
+The goal of MGen is to simplify type-safe sharing of state between applications, while permitting significant data model changes without requiring all participants to rebuild their software. We seek to be highly customizable by having plug-in based architecture for extending the MGen toolkit without having to recompile the MGen tools and libraries.
 
 MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), [Flat Buffers](http://google.github.io/flatbuffers/), [Cap'n Proto](http://kentonv.github.io/capnproto/), [Simple Binary Encoding](https://github.com/real-logic/simple-binary-encoding). 
+
 
 Check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
@@ -68,6 +67,7 @@ Check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/Whit
 ## Basic Usage
 
 MGen's basic use case is defining a data model, generating source code and providing serializers and deserializers.
+
 
 ### Defining a data model
 
@@ -240,11 +240,12 @@ Example: Here is how we generate [one of the data models for testing MGen](https
 
 ### Using generated code
 
-Read on below, or check our tests at:
+Read on below, or check some of our tests at:
  - C++: https://github.com/culvertsoft/mgen/tree/master/mgen-cpplib/src/test/cpp/src/tests
  - Scala: https://github.com/culvertsoft/mgen/tree/master/mgen-javalib/src/test/scala/se/culvertsoft/mgen/javapack/test
  - Java: See scala examples (the generated code is pure java, but we wrote our tests in scala as it was easier)
  - Javascript: coming soon!
+ - For advanced tests (with automatic data generation), [click here](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources).
 
 To access the generated types we include the headers of the types we need, or the generated ClassRegistry.h header file which will let us access all the types that were just generated. We will also include some mgen headers for serialization.
 
@@ -272,7 +273,7 @@ Let us then create some objects from the generated classes and set some properti
       
 Now let us try to serialize these cars to JSON. This is how we do it:
 
-      // First we create a class registry. For the curious, it handles dynamic method dispatch to visitor methods with template arguments (the serializer being the template argument).
+      // First we create a class registry.
       ClassRegistry classRegistry;
       
       // We will serialize our objects to this std::vector of bytes
@@ -335,6 +336,9 @@ Now we can read these objects back from the buffer in the following manner:
       // // do something. mgen::Exception extends std::runtime_error
       // }
 
+Additionally, MGen supports reading and writing data types from external non-MGen sources, such as json APIs to existing services, and can easily be further extended to custom binary and text formats by implementing new or extending existing Reader and Writer classes - Entirely separate of generated source code through a simple visitor interface (for example, see our [C++ JsonWriter](https://github.com/culvertsoft/mgen/blob/master/mgen-cpplib/src/main/cpp/mgen/serialization/JsonWriterBase.h)).
+
+
 ## Download links
 
 The following are links where you can download MGen pre-built. You will notice that the compiler and visual designer also have variants named _assembly_.
@@ -360,8 +364,11 @@ We plan on making the MGen tools and libraries available on Maven Central or a s
 
 ### Sample Projects
 
-Currently we haven't had time to produce any dedicated sample projects. But two projects that might of interest are:
- * [The data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources)
+Currently we haven't had time to produce any dedicated sample projects. But some models of interest might be:
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources)
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/depend)
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/read)
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/write)
  * [The data model of the MGen Visual Designer](https://github.com/culvertsoft/mgen/tree/master/mgen-visualdesigner/model)
 
 
@@ -461,8 +468,7 @@ By default generated classes are java-beans and C++ data containers with getters
 * Type metadata accessible through both virtual and static methods
 * Getters and Setters
 * Query methods for asking if a member is set
-* Type IDs (name, 16 bit and 64 bit hash codes) based on the qualified class name (i.e. com.myorg.myproduct.ClassName)
-  * The reason for having this many type IDs is explained in the [wire formats](#wire-formats) section.
+* Type IDs
 * Methods for testing equality (c++: == operator, java: equals(..))
 * Stringification and object Hash Code methods (Java Only)
 
@@ -509,7 +515,7 @@ If you're not satisfied with downloading pre-built libraries (see [the downloads
 Build Requirements:
   * Java JDK >= 1.7
   * CMAKE >= 2.8
-  * g++/MinGW >= 4. (MGen C++ runtime libraries work with Visual Studio, but currently not building the C++ tests.)
+  * MSVC>=2005/g++,mingw>=4/Clang. (But building the tests is currently not possible on MSVC)
   * make (on windows: use gnuwin32 or cygwin)
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 

@@ -18,18 +18,18 @@ object MkSetters {
     val thisFields = t.fields()
     val superFields = t.fieldsInclSuper() -- thisFields
 
+    for (field <- superFields) {
+      txtBuffer.tabs(1).textln(s"public ${t.name()} ${set(field, s"final ${getTypeName(field.typ())} ${field.name()}")} {")
+      txtBuffer.tabs(2).textln(s"super.${set(field, field.name())};")
+      txtBuffer.tabs(2).textln(s"return this;")
+      txtBuffer.tabs(1).textln(s"}").endl()
+    }
+    
     for (field <- thisFields) {
       txtBuffer.tabs(1).textln(s"public ${t.name()} ${set(field, s"final ${getTypeName(field.typ())} ${field.name()}")} {")
       txtBuffer.tabs(2).textln(s"m_${field.name()} = ${field.name()};")
       if (!JavaGenerator.canBeNull(field))
         txtBuffer.tabs(2).textln(s"${isSetName(field)} = true;")
-      txtBuffer.tabs(2).textln(s"return this;")
-      txtBuffer.tabs(1).textln(s"}").endl()
-    }
-
-    for (field <- superFields) {
-      txtBuffer.tabs(1).textln(s"public ${t.name()} ${set(field, s"final ${getTypeName(field.typ())} ${field.name()}")} {")
-      txtBuffer.tabs(2).textln(s"super.${set(field, field.name())};")
       txtBuffer.tabs(2).textln(s"return this;")
       txtBuffer.tabs(1).textln(s"}").endl()
     }

@@ -1,18 +1,19 @@
 package se.culvertsoft.mgen.compiler
 
 import java.io.File
+import java.nio.charset.Charset
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.ArrayList
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.reflect.io.Path
+
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
-import java.nio.file.Files
-import java.nio.file.Paths
-import se.culvertsoft.mgen.compiler.defaultparser.ThrowRTE
-import java.nio.charset.Charset
 
 object Output {
 
@@ -20,7 +21,7 @@ object Output {
 
   def assemble(
     project: Project,
-    generators: Map[String, Generator]): Seq[GeneratedSourceFile] = {
+    generators: Seq[Generator]): Seq[GeneratedSourceFile] = {
 
     print("Generating code...")
 
@@ -32,7 +33,7 @@ object Output {
     val allModules = rootModules ++ dependentModules
 
     for (genSpec <- project.generators()) {
-      val optGenerator = generators.get(genSpec.getGeneratorClassPath())
+      val optGenerator = generators.find(_.getClass.getName == genSpec.getGeneratorClassPath)
 
       if (optGenerator.isDefined) {
 

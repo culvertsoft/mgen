@@ -1,5 +1,5 @@
-#ifndef JSON_PRETTY_WRITER_H_
-#define JSON_PRETTY_WRITER_H_
+#ifndef MGEN_JSON_PRETTY_WRITER_H_
+#define MGEN_JSON_PRETTY_WRITER_H_
 
 #include "JsonWriterBase.h"
 #include "mgen/ext/rapidjson/prettywriter.h"
@@ -25,4 +25,4 @@ public:
 
 } /* namespace mgen */
 
-#endif /* JSON_PRETTY_WRITER_H_ */
+#endif /* MGEN_JSON_PRETTY_WRITER_H_ */

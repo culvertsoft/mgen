@@ -2,13 +2,13 @@ package se.culvertsoft.mgen.compiler.defaultparser
 
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
-import se.culvertsoft.mgen.api.model.CustomType
+
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.api.model.UserDefinedType
 import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
-import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.model.UserDefinedType
 
 class ParseState {
 

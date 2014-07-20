@@ -5,11 +5,10 @@
  *      Author: johan
  */
 
-#ifndef MGENBASE_H_
-#define MGENBASE_H_
+#ifndef MGEN_MGENBASE_H_
+#define MGEN_MGENBASE_H_
 
 #include "mgen/metadata/Field.h"
-#include "mgen/metadata/FieldSetDepth.h"
 
 namespace mgen {
 
@@ -95,4 +94,4 @@ public:
 
 } /* namespace mgen */
 
-#endif /* MGENBASE_H_ */
+#endif /* MGEN_MGENBASE_H_ */

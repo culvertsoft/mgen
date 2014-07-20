@@ -2,37 +2,31 @@ package se.culvertsoft.mgen.javapack.serialization;
 
 import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
 
-import java.io.DataOutput;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.CharBuffer;
-import java.nio.charset.CharacterCodingException;
 import java.nio.charset.Charset;
-import java.nio.charset.CharsetEncoder;
-import java.nio.charset.CodingErrorAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import se.culvertsoft.mgen.api.model.Field;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
+import se.culvertsoft.mgen.javapack.util.StringEncoder;
 
 public abstract class BuiltInWriter implements FieldVisitor {
 
-	static protected final Charset charset = Charset.forName("UTF8");
-	protected final CharsetEncoder stringEncoder;
+	public static final int STRING_ENCODE_BUFFER_SIZE = 256;
+	public static final Charset CHARSET = Charset.forName("UTF8");
 
-	protected final ClassRegistry m_classRegistry;
-	protected final DataOutput m_stream;
+	protected final StringEncoder m_stringEncoder;
+	protected final ClassRegistryBase m_classRegistry;
 
-	public BuiltInWriter(final DataOutput stream, final ClassRegistry classRegistry) {
+	private boolean m_shouldValidate;
+
+	public BuiltInWriter(final ClassRegistryBase classRegistry) {
 		m_classRegistry = classRegistry;
-		m_stream = stream;
-		stringEncoder = charset
-				.newEncoder()
-				.onMalformedInput(CodingErrorAction.REPLACE)
-				.onUnmappableCharacter(CodingErrorAction.REPLACE);
+		m_stringEncoder = new StringEncoder(STRING_ENCODE_BUFFER_SIZE, CHARSET);
+		m_shouldValidate = true;
 	}
 
 	public abstract void writeObject(final MGenBase object) throws IOException;
@@ -74,6 +68,12 @@ public abstract class BuiltInWriter implements FieldVisitor {
 			throws IOException;
 
 	@Override
+	public void visit(final boolean b, final Field field, final boolean isSet) throws IOException {
+		if (isSet)
+			writeBooleanField(b, field);
+	}
+
+	@Override
 	public void visit(final byte o, final Field field, final boolean isSet) throws IOException {
 		if (isSet)
 			writeInt8Field(o, field);
@@ -93,7 +93,8 @@ public abstract class BuiltInWriter implements FieldVisitor {
 
 	@Override
 	public void visit(final long o, final Field field, final boolean isSet) throws IOException {
-		writeInt64Field(o, field);
+		if (isSet)
+			writeInt64Field(o, field);
 	}
 
 	@Override
@@ -148,7 +149,8 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	@Override
 	public void beginVisit(final MGenBase object, final int nFieldsSet, final int nFieldsTotal)
 			throws IOException {
-		ensureNoMissingReqFields(object);
+		if (m_shouldValidate)
+			ensureNoMissingReqFields(object);
 		beginWrite(object, nFieldsSet, nFieldsTotal);
 	}
 
@@ -157,12 +159,8 @@ public abstract class BuiltInWriter implements FieldVisitor {
 		finishWrite();
 	}
 
-	protected ByteBuffer encodeString(final CharSequence s) {
-		try {
-			return stringEncoder.encode(CharBuffer.wrap(s));
-		} catch (CharacterCodingException x) {
-			throw new Error(x); // Can't happen
-		}
+	public void setShouldValidate(final boolean shouldValidate) {
+		m_shouldValidate = shouldValidate;
 	}
 
 }

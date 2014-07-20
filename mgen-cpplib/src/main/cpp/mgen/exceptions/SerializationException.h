@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef SERIALIZATIONEXCEPTION_H_
-#define SERIALIZATIONEXCEPTION_H_
+#ifndef MGEN_SERIALIZATIONEXCEPTION_H_
+#define MGEN_SERIALIZATIONEXCEPTION_H_
 
 #include "mgen/exceptions/Exception.h"
 
@@ -21,4 +21,4 @@ public:
 
 } /* namespace mgen */
 
-#endif /* SERIALIZATIONEXCEPTION_H_ */
+#endif /* MGEN_SERIALIZATIONEXCEPTION_H_ */

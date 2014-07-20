@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<Module>
+
+    <Enums>
+        <EnumValueChange>
+            <low />
+            <medium>15</medium>
+            <high />
+            <uber>9999</uber>
+        </EnumValueChange>
+        
+        <EnumOrderChange>
+            <low />
+            <medium>15</medium>
+            <high />
+            <uber>9999</uber>
+        </EnumOrderChange>
+        
+    </Enums>
+
+    <Types>
+
+	<EnumHolder>
+		<e1 type="EnumValueChange"/>
+		<e2 type="EnumOrderChange"/>
+	</EnumHolder>
+
+        <VectorR3 id="0x01">
+            <x type="int" id="123" />
+            <y type="float" />
+            <z type="double" />
+        </VectorR3>
+
+        <Matrix4x4d id="0x02">
+            <values type="array[array[double]]" />
+        </Matrix4x4d>
+
+        <Positioning id="0x03">
+            <position type="VectorR3" flags="required" />
+            <velocity type="VectorR3" />
+            <acceleration type="VectorR3" flags="polymorphic" />
+        </Positioning>
+
+        <Entity id="0x04">
+            <id type="int64" />
+            <positioning type="Positioning" />
+        </Entity>
+
+        <Creature extends="Entity">
+            <hp type="int16" />
+        </Creature>
+
+        <Vehicle extends="Entity">
+            <topSpeed type="int32" flags="required" />
+        </Vehicle>
+
+        <Car extends="Vehicle">
+            <brand type="String" flags="required" />
+            <nWheels type="int8" />
+        </Car>
+
+        <Item extends="Entity" />
+
+        <EntityHolder>
+            <entity type="Entity" />
+        </EntityHolder>
+
+        <GarageViewer>
+            <vehicles type="array[Vehicle]" />
+        </GarageViewer>
+
+        <World>
+            <name type="String" />
+            <entities type="map[int64, Entity]" />
+            <db type="String" flags="polymorphic" />
+        </World>
+                        
+        
+        <!-- For versioning tests -->
+
+        <NewRequiredFields>
+            <a type="bool" flags="required"/>
+            <b type="int8"/>
+            <c type="byte"/>
+            <d type="int16"/>
+            <e type="int32"/>
+            <f type="int" flags="required"/>
+            <g type="int64"/>
+            <h type="float32"/>
+            <i type="float"/>
+            <j type="float64"/>
+            <k type="double"/>
+            <l type="EnumValueChange"/>
+            <m type="string"/>
+            <n type="array[array[int]]" flags="required"/>
+            <o type="array[VectorR3]" flags="required"/>
+            <p type="array[VectorR3]" flags="polymorphic"/>
+            <q type="list[list[int]]"/>
+            <r type="list[VectorR3]"/>
+            <s type="list[VectorR3]" flags="polymorphic"/>
+            <t type="map[string, array[int]]" flags="required"/>
+            <u type="map[int, VectorR3]"/>
+            <v type="map[float, list[VectorR3]]" flags="polymorphic"/>
+            <w type="VectorR3"/>
+            <x type="VectorR3" flags="polymorphic, required"/>
+        </NewRequiredFields>
+        
+        <BaseType>
+            <someField type="int"/>
+        </BaseType>                
+        <OldSubType extends="BaseType">
+            <oldField type="int"/>
+        </OldSubType>
+        <NewTypeContainer>
+            <f type="BaseType" flags="polymorphic"/>
+            <a type="array[BaseType]" flags="polymorphic"/>
+            <m type="map[string, BaseType]" flags="polymorphic"/>
+        </NewTypeContainer>
+        
+        <FieldTypesA>
+            <f type="bool"/>
+        </FieldTypesA>
+        <FieldTypesB>
+            <f type="int"/>
+        </FieldTypesB>
+        <FieldTypesC>
+            <f type="string"/>
+        </FieldTypesC>
+        <FieldTypesD>
+            <f type="map[int, array[string]]"/>
+        </FieldTypesD>
+        
+        <FieldIdChange>
+            <f type="int" id="0x05"/>
+        </FieldIdChange>
+
+        <FieldNameChange>
+            <f1 type="int" id="0x12"/>
+        </FieldNameChange>
+
+    </Types>
+
+</Module>

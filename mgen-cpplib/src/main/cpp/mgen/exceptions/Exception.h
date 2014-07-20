@@ -5,8 +5,8 @@
  *      Author: johan
  */
 
-#ifndef MGENEXCEPTION_H_
-#define MGENEXCEPTION_H_
+#ifndef MGEN_MGENEXCEPTION_H_
+#define MGEN_MGENEXCEPTION_H_
 
 #include <stdexcept>
 
@@ -21,4 +21,4 @@ public:
 
 } /* namespace mgen */
 
-#endif /* MGENEXCEPTION_H_ */
+#endif /* MGEN_MGENEXCEPTION_H_ */

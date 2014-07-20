@@ -26,7 +26,9 @@ object MkEqOperator {
       ln(2, s" && ${isFieldSet(field, "mgen::SHALLOW")} == other.${isFieldSet(field, "mgen::SHALLOW")}")
     }
     for (field <- allFields) {
-      ln(2, s" && ${get(field)} == other.${get(field)}")
+      txt(2, s" && ${get(field)} == other.${get(field)}")
+      if (field != allFields.last)
+        endl()
     }
     ln(";")
     ln(s"}")

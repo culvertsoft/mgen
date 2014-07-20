@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef VARINT_H_
-#define VARINT_H_
+#ifndef MGEN_VARINT_H_
+#define MGEN_VARINT_H_
 
 #include "mgen/exceptions/StreamCorruptedException.h"
 
@@ -135,4 +135,4 @@ inline int readUnsigned32(Stream& in) {
 }
 } /* namespace mgen */
 
-#endif /* VARINT_H_ */
+#endif /* MGEN_VARINT_H_ */

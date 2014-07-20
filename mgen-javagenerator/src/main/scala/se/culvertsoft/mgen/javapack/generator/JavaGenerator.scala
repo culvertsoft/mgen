@@ -61,7 +61,7 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
 
   implicit val txtBuffer = new SuperStringBuffer
 
-  override def generateTopLevelMetaSources(
+  override def generateMetaSources(
     folder: String,
     packagePath: String,
     referencedModules: Seq[Module],
@@ -91,12 +91,6 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
 
     List(clsRegistry, dispatcher, handler)
 
-  }
-
-  override def generateModuleMetaSources(
-    module: Module,
-    generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    Nil
   }
 
   override def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {

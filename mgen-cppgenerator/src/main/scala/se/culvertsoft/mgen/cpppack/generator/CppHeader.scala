@@ -14,7 +14,6 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkGetters
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkIncludes
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkIsFieldSet
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkMembers
-import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkMetadataFieldMakers
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkMetadataFields
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkMetadataGetters
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkNewInstance
@@ -119,10 +118,6 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
 
   override def mkUsingStatements(t: CustomType) {
     MkUsingStatements(t, currentModule)
-  }
-
-  override def mkMetaDataFieldMakers(t: CustomType) {
-    MkMetadataFieldMakers(t, currentModule)
   }
 
   override def mkSetFieldsSet(t: CustomType) {

@@ -6,12 +6,15 @@ import scala.collection.mutable.ArrayBuffer
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.cpppack.generator.CppConstruction._
+import se.culvertsoft.mgen.cpppack.generator.CppConstruction.defaultConstructNull
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator.canBeNull
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator.writeInitializerList
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
+import se.culvertsoft.mgen.cpppack.generator.impl.HasDefaultCtor
 
 object MkDefaultCtor {
 
@@ -19,7 +22,7 @@ object MkDefaultCtor {
     implicit val currentModule = module
 
     val initializerList = new ArrayBuffer[String]
-    initializerList ++= fields map (f => s"m_${f.name()}(${defaultConstructNull(f)})")
+    initializerList ++= fields.filterNot(HasDefaultCtor(_)) map (f => s"m_${f.name()}(${defaultConstructNull(f)})")
     initializerList ++= fields map (f => s"${isSetName(f)}(false)")
     writeInitializerList(initializerList)
   }

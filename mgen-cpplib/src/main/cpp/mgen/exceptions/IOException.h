@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef IOEXCEPTION_H_
-#define IOEXCEPTION_H_
+#ifndef MGEN_IOEXCEPTION_H_
+#define MGEN_IOEXCEPTION_H_
 
 #include "mgen/exceptions/Exception.h"
 
@@ -21,4 +21,4 @@ public:
 
 } /* namespace mgen */
 
-#endif /* IOEXCEPTION_H_ */
+#endif /* MGEN_IOEXCEPTION_H_ */

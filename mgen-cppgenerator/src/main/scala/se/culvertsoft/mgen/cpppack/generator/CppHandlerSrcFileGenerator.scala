@@ -13,6 +13,10 @@ object CppHandlerSrcFileGenerator extends CppHandlerGenerator(SrcFile) {
 
   override def mkIncludes(param: UtilClassGenParam) {
     CppGenUtils.include("Handler.h")
+    val types = param.modules.flatMap(_.types).distinct.filterNot(_.hasSubTypes())
+    for (t <- types)
+      CppGenUtils.include(t)
+
     endl()
   }
 

@@ -30,7 +30,7 @@ object MkEnumHeader {
     CppGenUtils.mkFancyHeader()
     CppGenUtils.mkIncludeGuardStart(_e.fullName())
 
-    CppGenUtils.includeT("string")
+    CppGenUtils.include("mgen/classes/MGenBase.h")
     endl()
 
     CppGenUtils.mkNameSpaces(namespaces)
@@ -57,16 +57,20 @@ object MkEnumHeader {
     ln()
 
     CppGenUtils.mkNameSpacesEnd(namespaces)
-    
+
     CppGenUtils.mkNameSpaces(List("mgen"))
-    
-    
+
+    ln(s"const std::vector<$fullname>& get_enum_values(const $fullname /* type_evidence */);")
     ln(s"$fullname get_enum_value(const $fullname /* type_evidence */, const std::string& enumName);")
     ln()
 
+    ln(s"const std::vector<std::string>& get_enum_names(const $fullname /* type_evidence */);")
     ln(s"const std::string& get_enum_name(const $fullname enumValue);");
     ln()
-    
+/*
+    ln(s"inline Type::TAG TAG_OF(const $fullname * /* type_evidence */) { return Type::TAG_STRING; }")
+    ln()*/
+
     CppGenUtils.mkNameSpacesEnd(List("mgen"))
     CppGenUtils.mkIncludeGuardEnd()
     txtBuffer.toString()

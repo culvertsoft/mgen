@@ -23,10 +23,13 @@ object JavaConstants {
   val setFieldSetClsStringQ = s"${utilPkg}.${setFieldSetClsString}"
   val deepCopyerClsStringQ = s"${utilPkg}.${deepCopyerClsString}"
   val fieldHasherClsStringQ = s"${utilPkg}.${fieldHasherClsString}"
+  
+  val stringifyerCls = s"Stringifyer"
+  val stringifyerClsQ = s"${utilPkg}.${stringifyerCls}"
 
   val mgenBaseClsString = s"${javapackPkg}.classes.MGenBase"
   val mgenEnumClsString = s"${javapackPkg}.classes.MGenEnum"
-  val clsRegistryClsString = s"${javapackPkg}.classes.ClassRegistry"
+  val clsRegistryClsString = s"${javapackPkg}.classes.ClassRegistryBase"
   val clsRegistryEntryClsString = s"ClassRegistryEntry"
   val clsRegistryEntryClsStringQ = s"$javapackPkg.classes.$clsRegistryEntryClsString"
   val eqTesterClsString = s"EqualityTester"

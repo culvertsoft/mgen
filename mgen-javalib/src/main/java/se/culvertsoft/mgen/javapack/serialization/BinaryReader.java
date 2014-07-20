@@ -18,6 +18,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -30,18 +31,22 @@ import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.model.TypeEnum;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
-import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
 import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
+import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
 
-	public BinaryReader(final InputStream stream, final ClassRegistry classRegistry) {
-		super(stream instanceof DataInputStream ? (DataInputStream) stream : new DataInputStream(
-				stream), classRegistry);
+	private final DataInputStream m_stream;
+
+	public BinaryReader(final InputStream stream, final ClassRegistryBase classRegistry) {
+		super(classRegistry);
+		m_stream = stream instanceof DataInputStream ? (DataInputStream) stream
+				: new DataInputStream(stream);
 	}
 
 	@Override
@@ -53,14 +58,13 @@ public class BinaryReader extends BuiltInReader {
 	@Override
 	public <T extends MGenBase> T readObject(final Class<T> typ) throws IOException {
 
-		final MGenBase out = readMGenObject(true, getRegEntry(typ).typ());
+		final ClassRegistryEntry entry = m_clsReg.getByClass(typ);
 
-		if (out != null && !typ.isAssignableFrom(out.getClass())) {
-			throw new UnexpectedTypeException("Unexpected type. Expected " + typ.getName()
-					+ " but got " + out.getClass().getName());
-		}
+		if (entry == null)
+			throw new UnknownTypeException("Could not read object of type " + typ
+					+ ", since it is know known by the class registry");
 
-		return (T) out;
+		return (T) readMGenObject(true, entry.typ());
 	}
 
 	@Override
@@ -156,35 +160,99 @@ public class BinaryReader extends BuiltInReader {
 	 * 
 	 ******************************************************************/
 
-	private Object skip(final byte typeTag) throws IOException {
+	private static final short[] NO_IDS = new short[0];
+
+	private void skip(final byte typeTag) throws IOException {
 		switch (typeTag) {
 		case TAG_BOOL:
-			return readBoolean(false);
+			readBoolean(false);
+			break;
 		case TAG_INT8:
-			return readInt8(false);
+			readInt8(false);
+			break;
 		case TAG_INT16:
-			return readInt16(false);
+			readInt16(false);
+			break;
 		case TAG_INT32:
-			return readInt32(false);
+			readInt32(false);
+			break;
 		case TAG_INT64:
-			return readInt64(false);
+			readInt64(false);
+			break;
 		case TAG_FLOAT32:
-			return readFloat32(false);
+			readFloat32(false);
+			break;
 		case TAG_FLOAT64:
-			return readFloat64(false);
+			readFloat64(false);
+			break;
 		case TAG_STRING:
-			return readString(false);
+			skipString(false);
+			break;
 		case TAG_LIST: // List and array have the same tags
-			return readList(false, null);
+			skipList(false);
+			break;
 		case TAG_MAP:
-			return readMap(false, null);
-			// case TAG_MGENBASE:
-			// case TAG_UNKNOWN:
+			skipMap(false);
+			break;
 		case TAG_CUSTOM:
-			return readMGenObject(false, null);
+			skipCustom();
+			break;
 		default:
-			throw new StreamCorruptedException("Unknown typeTag: " + typeTag);
+			throw new StreamCorruptedException("Cannot skip item of unknown typeTag: " + typeTag);
 		}
+	}
+
+	private void skipMap(final boolean doReadTag) throws IOException {
+		if (doReadTag)
+			ensureTypeTag(null, TAG_MAP, readTypeTag());
+		final int sz = readSize();
+		if (sz > 0) {
+			skipList(true);
+			skipList(true);
+		}
+	}
+
+	private void skipList(final boolean doReadTag) throws IOException {
+		if (doReadTag)
+			ensureTypeTag(null, TAG_LIST, readTypeTag());
+		final int sz = readSize();
+		if (sz > 0) {
+			final byte tag = readTypeTag();
+			for (int i = 0; i < sz; i++)
+				skip(tag);
+		}
+	}
+
+	private void skipString(final boolean doReadTag) throws IOException {
+		if (doReadTag)
+			ensureTypeTag(null, TAG_STRING, readTypeTag());
+		final int nBytes = readSize();
+		for (int i = 0; i < nBytes; i++)
+			m_stream.readByte();
+	}
+
+	private void skipCustom() throws IOException {
+
+		final int nIdsOrFields = readSize();
+
+		if (nIdsOrFields == 0)
+			return;
+
+		final int nFields;
+
+		if ((nIdsOrFields & 0x01) != 0) {
+			skipTypeIds(nIdsOrFields >> 1);
+			nFields = readSize();
+		} else { // type ids omitted
+			nFields = nIdsOrFields >> 1;
+		}
+
+		skipFields(nFields);
+	}
+
+	private void skipTypeIds(int n) throws IOException {
+		for (int i = 0; i < n; i++)
+			readMgenTypeId();
 	}
 
 	private String readString(final boolean readTag) throws IOException {
@@ -193,14 +261,12 @@ public class BinaryReader extends BuiltInReader {
 			ensureTypeTag(null, TAG_STRING, readTypeTag());
 
 		final int nBytes = readSize();
-
 		if (nBytes > 0) {
-			final byte[] bytes = new byte[nBytes];
-			m_stream.readFully(bytes);
-			return new String(bytes, charset);
+			return m_stringDecoder.decode(m_stream, nBytes);
 		} else {
 			return "";
 		}
+
 	}
 
 	private void readFields(final MGenBase object, final int nFields) throws IOException {
@@ -218,7 +284,7 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private MGenBase readMGenObject(final boolean readTypeTag, final CustomType expectType)
+	private MGenBase readMGenObject(final boolean readTypeTag, final CustomType constraint)
 			throws IOException {
 
 		if (readTypeTag)
@@ -226,8 +292,11 @@ public class BinaryReader extends BuiltInReader {
 
 		final int nIdsOrFields = readSize();
 
-		if (nIdsOrFields == 0)
-			return null;
+		if (nIdsOrFields == 0) {
+			final MGenBase object = instantiate((short[]) null, constraint);
+			ensureNoMissingReqFields(object);
+			return object;
+		}
 
 		final short[] ids;
 		final int nFields;
@@ -240,11 +309,7 @@ public class BinaryReader extends BuiltInReader {
 			nFields = nIdsOrFields >> 1;
 		}
 
-		if (ids == null && expectType == null) {
-			throw new MissingRequiredFieldsException("Missing type information");
-		}
-
-		final MGenBase object = instantiate(ids, expectType);
+		final MGenBase object = instantiate(ids, constraint);
 
 		if (object != null) {
 			readFields(object, nFields);
@@ -337,7 +402,7 @@ public class BinaryReader extends BuiltInReader {
 		}
 	}
 
-	private Object readArray2(final int n, final byte elemTypeTag, final ArrayType arrayType)
+	private Object readArray2(final int n, final byte elemTypeTag, final ArrayType constraint)
 			throws IOException {
 
 		switch (elemTypeTag) {
@@ -356,10 +421,15 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_FLOAT64:
 			return readFloat64Array(n, false);
 		case TAG_STRING:
+			if (constraint != null && constraint.elementType().typeEnum() == TypeEnum.ENUM) {
+				return readEnumArray(n, constraint, false);
+			} else {
+				return readStringArray(n, false);
+			}
 		case TAG_LIST:
 		case TAG_MAP:
 		case TAG_CUSTOM:
-			return readObjectArray(n, elemTypeTag, arrayType);
+			return readObjectArray(n, elemTypeTag, constraint);
 		default:
 			throw new StreamCorruptedException("Unknown elemTypeTag: " + elemTypeTag);
 		}
@@ -413,16 +483,33 @@ public class BinaryReader extends BuiltInReader {
 		return array;
 	}
 
-	private Object readObjectArray(final int n, final byte elemTypeTag, final ArrayType arrayType)
+	private Object readEnumArray(final int n, final ArrayType constraint, final boolean b)
 			throws IOException {
-		final Object[] array = arrayType != null ? (Object[]) arrayType.newInstance(n)
-				: new Object[n];
+		final Enum<?>[] array = constraint != null ? (Enum<?>[]) constraint.newInstance(n)
+				: new Enum<?>[n];
 		for (int i = 0; i < array.length; i++)
-			array[i] = readObject(elemTypeTag, arrayType.elementType());
+			array[i] = readEnum(false, constraint != null ? (EnumType) constraint.elementType()
+					: null);
 		return array;
 	}
 
-	private Object readObject(final byte typeTag, final Type expectType) throws IOException {
+	private String[] readStringArray(final int n, final boolean b) throws IOException {
+		final String[] array = new String[n];
+		for (int i = 0; i < array.length; i++)
+			array[i] = readString(false);
+		return array;
+	}
+
+	private Object readObjectArray(final int n, final byte elemTypeTag, final ArrayType constraint)
+			throws IOException {
+		final Object[] array = constraint != null ? (Object[]) constraint.newInstance(n)
+				: new Object[n];
+		for (int i = 0; i < array.length; i++)
+			array[i] = readObject(elemTypeTag, constraint != null ? constraint.elementType() : null);
+		return array;
+	}
+
+	private Object readObject(final byte typeTag, final Type constraint) throws IOException {
 		switch (typeTag) {
 		case TAG_BOOL:
 			return readBoolean(false);
@@ -439,23 +526,26 @@ public class BinaryReader extends BuiltInReader {
 		case TAG_FLOAT64:
 			return readFloat64(false);
 		case TAG_STRING:
-			if (expectType.typeEnum() == TypeEnum.ENUM) {
-				return readEnum(false, (EnumType) expectType);
+			if (constraint != null && constraint.typeEnum() == TypeEnum.ENUM) {
+				return readEnum(false, (EnumType) constraint);
 			} else {
 				return readString(false);
 			}
 		case TAG_LIST: // array and list have the same write tag
-			return readList(false, (ListOrArrayType) expectType);
+			if (constraint != null && constraint.typeEnum() == TypeEnum.ARRAY)
+				return readArray(false, (ArrayType) constraint);
+			else
+				return readList(false, (ListType) constraint);
 		case TAG_MAP:
-			return readMap(false, (MapType) expectType);
+			return readMap(false, (MapType) constraint);
 		case TAG_CUSTOM:
-			return readMGenObject(false, (CustomType) expectType);
+			return readMGenObject(false, (CustomType) constraint);
 		default:
 			throw new StreamCorruptedException("Unknown type tag: " + typeTag);
 		}
 	}
 
-	private Object readArray(final boolean readTag, final ArrayType expectType) throws IOException {
+	private Object readArray(final boolean readTag, final ArrayType constraint) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
@@ -464,33 +554,31 @@ public class BinaryReader extends BuiltInReader {
 		if (nElements > 0) {
 
 			final byte rcvdTag = readTypeTag();
-			if (expectType != null) {
-				final byte expTag = expectType.elementType().typeTag();
+			if (constraint != null) {
+				final byte expTag = constraint.elementType().typeTag();
 				ensureTypeTag(null, expTag, rcvdTag);
 			}
-			return readArray2(nElements, rcvdTag, expectType);
+			return readArray2(nElements, rcvdTag, constraint);
 
 		} else {
-			return expectType.newInstance(0);
+			return constraint != null ? constraint.newInstance(0) : new Object[0];
 		}
 	}
 
-	private
-			ArrayList<Object>
-			readList(final boolean readTag, final ListOrArrayType listOrArrayType)
-					throws IOException {
+	private ArrayList<Object> readList(final boolean tag, final ListOrArrayType constraint)
+			throws IOException {
 
-		if (readTag)
+		if (tag)
 			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
-		return readElements(listOrArrayType != null ? listOrArrayType.elementType() : null);
+		return readElements(false, constraint != null ? constraint.elementType() : null);
 
 	}
 
-	private HashMap<Object, Object> readMap(final boolean readTag, final MapType mapType)
+	private HashMap<Object, Object> readMap(final boolean doReadTag, final MapType constraint)
 			throws IOException {
 
-		if (readTag)
+		if (doReadTag)
 			ensureTypeTag(null, TAG_MAP, readTypeTag());
 
 		final int nElements = readSize();
@@ -498,8 +586,11 @@ public class BinaryReader extends BuiltInReader {
 
 		if (nElements > 0) {
 
-			final List<Object> keys = readElements(mapType != null ? mapType.keyType() : null);
-			final List<Object> values = readElements(mapType != null ? mapType.valueType() : null);
+			final List<Object> keys = readElements(true, constraint != null ? constraint.keyType()
+					: null);
+			final List<Object> values = readElements(
+					true,
+					constraint != null ? constraint.valueType() : null);
 
 			if (keys.size() != values.size() || keys.size() != nElements)
 				throw new StreamCorruptedException("nKeys != nValues in map");
@@ -512,26 +603,98 @@ public class BinaryReader extends BuiltInReader {
 		return out;
 	}
 
-	private ArrayList<Object> readElements(final Type constraint) throws IOException {
+	private ArrayList<Object> readElements(final boolean doReadTag, final Type constraint)
+			throws IOException {
+
+		if (doReadTag)
+			ensureTypeTag(null, TAG_LIST, readTypeTag());
 
 		final int nElements = readSize();
 
-		final byte readElemTag = readTypeTag();
-
-		if (constraint != null && constraint.typeTag() != readElemTag)
-			throwUnexpectTag("", constraint.typeTag(), readElemTag);
-
 		final ArrayList<Object> out = new ArrayList<Object>(nElements);
 
-		for (int i = 0; i < nElements; i++)
-			out.add(readObject(readTypeTag(), constraint));
+		if (nElements > 0) {
+
+			final byte readElemTag = readTypeTag();
+
+			if (constraint != null && constraint.typeTag() != readElemTag)
+				throwUnexpectTag("", constraint.typeTag(), readElemTag);
+
+			switch (readElemTag) {
+			case TAG_BOOL:
+				for (int i = 0; i < nElements; i++)
+					out.add(readBoolean(false));
+				break;
+			case TAG_INT8:
+				for (int i = 0; i < nElements; i++)
+					out.add(readInt8(false));
+				break;
+			case TAG_INT16:
+				for (int i = 0; i < nElements; i++)
+					out.add(readInt16(false));
+				break;
+			case TAG_INT32:
+				for (int i = 0; i < nElements; i++)
+					out.add(readInt32(false));
+				break;
+			case TAG_INT64:
+				for (int i = 0; i < nElements; i++)
+					out.add(readInt64(false));
+				break;
+			case TAG_FLOAT32:
+				for (int i = 0; i < nElements; i++)
+					out.add(readFloat32(false));
+				break;
+			case TAG_FLOAT64:
+				for (int i = 0; i < nElements; i++)
+					out.add(readFloat64(false));
+				break;
+			case TAG_STRING:
+				if (constraint != null && constraint.typeEnum() == TypeEnum.ENUM) {
+					final EnumType t = (EnumType) constraint;
+					for (int i = 0; i < nElements; i++)
+						out.add(readEnum(false, t));
+				} else {
+					for (int i = 0; i < nElements; i++)
+						out.add(readString(false));
+				}
+				break;
+			default:
+				for (int i = 0; i < nElements; i++)
+					out.add(readObject(readElemTag, constraint));
+				break;
+
+			}
+
+		}
 
 		return out;
 	}
 
-	private Enum<?> readEnum(final boolean readTag, final EnumType typ) throws IOException {
+	protected MGenBase instantiate(final short[] ids, final CustomType constraint) {
+
+		if (ids == null && constraint == null)
+			return null;
+
+		final ClassRegistryEntry entry = ids != null ? m_clsReg.getByTypeIds16Bit(ids) : m_clsReg
+				.getById(constraint.typeId());
+
+		if (constraint != null) {
+			if (entry == null) {
+				throw new UnexpectedTypeException("Unknown type: " + Arrays.toString(ids));
+			} else if (!entry.isInstanceOfTypeId(constraint.typeId())) {
+				throw new UnexpectedTypeException("Unexpected type. Expected "
+						+ constraint.fullName() + " but got " + entry.clsName());
+			}
+		}
+
+		return entry != null ? entry.construct() : null;
+
+	}
+
+	private Enum<?> readEnum(final boolean readTag, final EnumType constraint) throws IOException {
 		final String writtenName = readString(readTag);
-		return typ.get(writtenName);
+		return constraint != null ? constraint.get(writtenName) : null;
 	}
 
 }

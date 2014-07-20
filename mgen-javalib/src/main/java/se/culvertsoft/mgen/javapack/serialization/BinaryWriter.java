@@ -12,10 +12,8 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_LIST;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_MAP;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -27,36 +25,43 @@ import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
+import se.culvertsoft.mgen.javapack.util.FastByteBuffer;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryWriter extends BuiltInWriter {
 
 	public static final boolean DEFAULT_COMPACT = false;
+	public static final int FLUSH_SIZE = 256;
 
+	private final FastByteBuffer m_buffer;
+	private final OutputStream m_streamOut;
 	private final boolean m_compact;
 	private long m_expectType;
 
 	public BinaryWriter(
 			final OutputStream stream,
-			final ClassRegistry classRegistry,
+			final ClassRegistryBase classRegistry,
 			final boolean compact) {
-		super(stream instanceof DataOutputStream ? (DataOutputStream) stream
-				: new DataOutputStream(stream), classRegistry);
+		super(classRegistry);
+		m_buffer = new FastByteBuffer(FLUSH_SIZE * 2);
+		m_streamOut = stream;
 		m_compact = compact;
 		m_expectType = -1;
 	}
 
-	public BinaryWriter(final OutputStream stream, final ClassRegistry classRegistry) {
+	public BinaryWriter(final OutputStream stream, final ClassRegistryBase classRegistry) {
 		this(stream, classRegistry, DEFAULT_COMPACT);
 	}
 
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
 		m_expectType = -1;
+		m_buffer.clear();
 		writeMGenObject(o, true, null);
+		flush();
 	}
 
 	@Override
@@ -147,8 +152,9 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	@Override
-	public void writeEnumField(Enum<?> e, Field field) throws IOException {
-		writeStringField(e != null ? e.toString() : null, field);
+	public void writeEnumField(final Enum<?> e, final Field field) throws IOException {
+		writeFieldStart(field.id(), TAG_STRING);
+		writeEnum(e, false);
 	}
 
 	@Override
@@ -174,7 +180,7 @@ public class BinaryWriter extends BuiltInWriter {
 			m_expectType = typ != null ? typ.typeId() : 0;
 			o._accept(this);
 		} else {
-			m_stream.writeByte(0);
+			writeByte(0);
 		}
 
 	}
@@ -184,29 +190,34 @@ public class BinaryWriter extends BuiltInWriter {
 		writeTypeTag(tag);
 	}
 
+	private void writeEnum(final Enum<?> e, final boolean tag) throws IOException {
+		if (tag)
+			writeTypeTag(TAG_STRING);
+		writeString(String.valueOf(e), tag);
+	}
+
 	private void writeBoolean(final boolean b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_BOOL);
-		m_stream.writeByte(b ? 1 : 0);
+		writeByte(b ? 1 : 0);
 	}
 
 	private void writeInt8(final int b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT8);
-		m_stream.writeByte(b);
+		writeByte(b);
 	}
 
 	private void writeInt16(final short s, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT16);
-		m_stream.writeShort(s);
+		writeRawInt16(s);
 	}
 
 	private void writeInt32(final int i, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT32);
 		writeSignedVarint32(i);
-
 	}
 
 	private void writeInt64(final long l, final boolean tag) throws IOException {
@@ -218,22 +229,22 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeFloat32(final float f, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT32);
-		m_stream.writeFloat(f);
+		writeRawInt32(Float.floatToIntBits(f));
 	}
 
 	private void writeFloat64(final double d, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT64);
-		m_stream.writeDouble(d);
+		writeRawInt64(Double.doubleToLongBits(d));
 	}
 
 	private void writeString(final String s, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_STRING);
 		if (s != null && !s.isEmpty()) {
-			final ByteBuffer bb = encodeString(s);
-			writeSize(bb.remaining());
-			m_stream.write(bb.array(), 0, bb.remaining());
+			m_stringEncoder.encode(s);
+			writeSize(m_stringEncoder.size());
+			writeBytes(m_stringEncoder.data(), m_stringEncoder.size());
 		} else {
 			writeSize(0);
 		}
@@ -245,12 +256,18 @@ public class BinaryWriter extends BuiltInWriter {
 		if (tag)
 			writeTypeTag(TAG_LIST);
 
-		writeElements(list, typ.elementType());
+		writeElements(false, list, typ.elementType());
 
 	}
 
-	private void writeElements(final Collection<Object> list, final Type elementType)
-			throws IOException {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	private void writeElements(
+			final boolean doWriteListTag,
+			final Collection<Object> list,
+			final Type elementType) throws IOException {
+
+		if (doWriteListTag)
+			writeTypeTag(TAG_LIST);
 
 		if (list != null && !list.isEmpty()) {
 
@@ -258,12 +275,71 @@ public class BinaryWriter extends BuiltInWriter {
 
 			writeTypeTag(elementType.typeTag());
 
-			for (final Object o : list)
-				writeObject(o, elementType, false);
+			switch (elementType.typeEnum()) {
+			case ENUM: {
+				final Collection<Enum<?>> l = (Collection) list;
+				for (final Enum<?> e : l)
+					writeEnum(e, false);
+				break;
+			}
+			case BOOL: {
+				final Collection<Boolean> l = (Collection) list;
+				for (final Boolean e : l)
+					writeBoolean(e != null ? e : false, false);
+				break;
+			}
+			case INT8: {
+				final Collection<Byte> l = (Collection) list;
+				for (final Byte e : l)
+					writeInt8(e != null ? e : (byte) 0, false);
+				break;
+			}
+			case INT16: {
+				final Collection<Short> l = (Collection) list;
+				for (final Short e : l)
+					writeInt16(e != null ? e : (short) 0, false);
+				break;
+			}
+			case INT32: {
+				final Collection<Integer> l = (Collection) list;
+				for (final Integer e : l)
+					writeInt32(e != null ? e : 0, false);
+				break;
+			}
+			case INT64: {
+				final Collection<Long> l = (Collection) list;
+				for (final Long e : l)
+					writeInt64(e != null ? e : 0, false);
+				break;
+			}
+			case FLOAT32: {
+				final Collection<Float> l = (Collection) list;
+				for (final Float e : l)
+					writeFloat32(e != null ? e : 0.0f, false);
+				break;
+			}
+			case FLOAT64: {
+				final Collection<Double> l = (Collection) list;
+				for (final Double e : l)
+					writeFloat64(e != null ? e : 0.0, false);
+				break;
+			}
+			case STRING: {
+				final Collection<String> l = (Collection) list;
+				for (final String e : l)
+					writeString(e, false);
+				break;
+			}
+			default:
+				for (final Object o : list)
+					writeObject(o, elementType, false);
+				break;
+			}
 
 		} else {
 			writeSize(0);
 		}
+
 	}
 
 	private void writeMap(final HashMap<Object, Object> map, final MapType typ, final boolean tag)
@@ -276,8 +352,8 @@ public class BinaryWriter extends BuiltInWriter {
 
 			writeSize(map.size());
 
-			writeElements(map.keySet(), typ.keyType());
-			writeElements(map.values(), typ.valueType());
+			writeElements(true, map.keySet(), typ.keyType());
+			writeElements(true, map.values(), typ.valueType());
 
 		} else {
 			writeSize(0);
@@ -296,6 +372,9 @@ public class BinaryWriter extends BuiltInWriter {
 			final Type elementType = typ.elementType();
 
 			switch (elementType.typeEnum()) {
+			case ENUM:
+				writeEnumArray((Enum<?>[]) arrayObj, false);
+				break;
 			case BOOL:
 				writeBooleanArray((boolean[]) arrayObj, false);
 				break;
@@ -328,6 +407,25 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	private void writeEnumArray(final Enum<?>[] array, final boolean tag) throws IOException {
+
+		if (tag)
+			writeTypeTag(TAG_LIST);
+
+		if (array != null && array.length != 0) {
+
+			writeSize(array.length);
+
+			writeTypeTag(TAG_STRING);
+
+			for (final Enum<?> e : array)
+				writeEnum(e, false);
+
+		} else {
+			writeSize(0);
+		}
+	}
+
 	private void writeBooleanArray(final boolean[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -358,7 +456,7 @@ public class BinaryWriter extends BuiltInWriter {
 			writeSize(array.length);
 
 			writeTypeTag(TAG_INT8);
-			m_stream.write(array);
+			writeBytes(array);
 
 		} else {
 			writeSize(0);
@@ -486,16 +584,72 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
+	private void flush() throws IOException {
+		if (m_buffer.nonEmpty()) {
+			m_streamOut.write(m_buffer.data(), 0, m_buffer.size());
+			m_buffer.clear();
+		}
+	}
+
+	private void checkFlush() throws IOException {
+		if (m_buffer.size() >= FLUSH_SIZE)
+			flush();
+	}
+
+	private void writeByte(int b) throws IOException {
+		m_buffer.write(b);
+		checkFlush();
+	}
+
+	private void writeBytes(final byte[] data, final int offset, final int sz) throws IOException {
+		m_buffer.write(data, offset, sz);
+		checkFlush();
+	}
+
+	private void writeBytes(final byte[] data, final int sz) throws IOException {
+		writeBytes(data, 0, sz);
+	}
+
+	private void writeBytes(final byte[] data) throws IOException {
+		writeBytes(data, 0, data.length);
+	}
+
+	private void writeRawInt16(short s) throws IOException {
+		writeByte(s >>> 8);
+		writeByte(s >>> 0);
+	}
+
+	private void writeRawInt32(int v) throws IOException {
+		writeByte(v >>> 24);
+		writeByte(v >>> 16);
+		writeByte(v >>> 8);
+		writeByte(v >>> 0);
+	}
+
+	private void writeRawInt64(long v) throws IOException {
+		writeByte((int) (v >>> 56));
+		writeByte((int) (v >>> 48));
+		writeByte((int) (v >>> 40));
+		writeByte((int) (v >>> 32));
+		writeByte((int) (v >>> 24));
+		writeByte((int) (v >>> 16));
+		writeByte((int) (v >>> 8));
+		writeByte((int) (v >>> 0));
+	}
+
 	private void writeSignedVarint32(final int i) throws IOException {
-		Varint.writeSignedVarInt(i, m_stream);
+		Varint.writeSignedVarInt(i, m_buffer);
+		checkFlush();
 	}
 
 	private void writeSignedVarint64(final long l) throws IOException {
-		Varint.writeSignedVarLong(l, m_stream);
+		Varint.writeSignedVarLong(l, m_buffer);
+		checkFlush();
 	}
 
 	private void writeUnsignedVarint32(final int i) throws IOException {
-		Varint.writeUnsignedVarInt(i, m_stream);
+		Varint.writeUnsignedVarInt(i, m_buffer);
+		checkFlush();
 	}
 
 	private void writeSize(final int i) throws IOException {
@@ -504,9 +658,10 @@ public class BinaryWriter extends BuiltInWriter {
 
 	@SuppressWarnings("unchecked")
 	private void writeObject(final Object o, final Type typ, boolean tag) throws IOException {
+
 		switch (typ.typeEnum()) {
 		case ENUM:
-			writeString(o != null ? o.toString() : null, tag);
+			writeEnum((Enum<?>) o, tag);
 			break;
 		case BOOL:
 			writeBoolean(o != null ? (Boolean) o : false, tag);
@@ -556,7 +711,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	private void writeTypeTag(byte tag) throws IOException {
-		m_stream.writeByte(tag);
+		writeByte(tag);
 	}
 
 }

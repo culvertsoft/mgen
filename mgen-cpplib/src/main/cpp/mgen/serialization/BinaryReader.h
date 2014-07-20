@@ -5,11 +5,12 @@
  *      Author: GiGurra
  */
 
-#ifndef MGENBINARYREADER_H_
-#define MGENBINARYREADER_H_
+#ifndef MGEN_MGENBINARYREADER_H_
+#define MGEN_MGENBINARYREADER_H_
 
-#include "mgen/serialization/VarInt.h"
 #include "mgen/classes/ClassRegistryBase.h"
+#include "mgen/serialization/VarInt.h"
+#include "mgen/serialization/BinaryTags.h"
 #include "mgen/util/missingfields.h"
 #include "mgen/util/BuiltInSerializerUtil.h"
 
@@ -19,8 +20,6 @@
  *              HELPER MACROS
  *
  ********************************************/
-
-#define S(x) toString(x)
 
 #define READ_OBJ_HEADER(retCall) \
     const int nIdsOrFields = readSize(); \
@@ -90,7 +89,7 @@ private:
 
     MGenBase * readPoly(const bool verifyTag, const bool constrained, const long long expectTypeId) {
 
-        verifyReadTagIf(Type::TAG_CUSTOM, verifyTag);
+        verifyReadTagIf(BINARY_TAG_CUSTOM, verifyTag);
 
         READ_OBJ_HEADER(return 0);
 
@@ -109,20 +108,24 @@ private:
 
     }
 
-    void skipList() {
+    void skipList(const bool tag) {
+        if (tag)
+            verifyReadTagIf(BINARY_TAG_LIST, tag);
         const int sz = readSize();
         if (sz > 0) {
-            const Type::TAG tag = readTag();
+            const BINARY_TAG tag = readTag();
             for (int i = 0; i < sz; i++)
                 skip(tag);
         }
     }
 
-    void skipMap() {
+    void skipMap(const bool tag) {
+        if (tag)
+            verifyReadTagIf(BINARY_TAG_MAP, tag);
         const int sz = readSize();
         if (sz > 0) {
-            skipList();
-            skipList();
+            skipList(true);
+            skipList(true);
         }
     }
 
@@ -139,19 +142,19 @@ private:
     }
 
 #define SKIP_CASE_READ(tag, skipcall) case tag: {skipcall; break;}
-    void skip(const Type::TAG tag) {
+    void skip(const BINARY_TAG tag) {
         switch (tag) {
-        SKIP_CASE_READ(Type::TAG_BOOL, read<bool>(false))
-        SKIP_CASE_READ(Type::TAG_INT8, read<char>(false))
-        SKIP_CASE_READ(Type::TAG_INT16, read<short>(false))
-        SKIP_CASE_READ(Type::TAG_INT32, read<int>(false))
-        SKIP_CASE_READ(Type::TAG_INT64, read<long long>(false))
-        SKIP_CASE_READ(Type::TAG_FLOAT32, read<float>(false))
-        SKIP_CASE_READ(Type::TAG_FLOAT64, read<double>(false))
-        SKIP_CASE_READ(Type::TAG_STRING, read<std::string>(false))
-        SKIP_CASE_READ(Type::TAG_LIST, skipList())
-        SKIP_CASE_READ(Type::TAG_MAP, skipMap())
-        SKIP_CASE_READ(Type::TAG_CUSTOM, skipCustom())
+        SKIP_CASE_READ(BINARY_TAG_BOOL, read<bool>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT8, read<char>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT16, read<short>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT32, read<int>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT64, read<long long>(false))
+        SKIP_CASE_READ(BINARY_TAG_FLOAT32, read<float>(false))
+        SKIP_CASE_READ(BINARY_TAG_FLOAT64, read<double>(false))
+        SKIP_CASE_READ(BINARY_TAG_STRING, read<std::string>(false))
+        SKIP_CASE_READ(BINARY_TAG_LIST, skipList(false))
+        SKIP_CASE_READ(BINARY_TAG_MAP, skipMap(false))
+        SKIP_CASE_READ(BINARY_TAG_CUSTOM, skipCustom())
         default:
             throw UnexpectedTypeException("BinaryReader::skipField(..): Unexpected tag");
         }
@@ -160,11 +163,10 @@ private:
 
     template<typename T>
     void read(std::vector<T>& v, const bool verifyTag) {
-        static const Type::TAG elemTag = Type::TAG_OF(T());
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(BINARY_TAG_LIST, verifyTag);
         const int sz = readSize();
         if (sz > 0) {
-            verifyReadTagIf(elemTag, true);
+            verifyReadTagIf(BINARY_TAG_OF((T*) 0), true);
             v.resize(sz);
             for (int i = 0; i < sz; i++)
                 read(v[i], false);
@@ -173,7 +175,7 @@ private:
 
     template<typename K, typename V>
     void read(std::map<K, V>& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(BINARY_TAG_MAP, verifyTag);
         const int sz = readSize();
         if (sz > 0) {
             std::vector<K> keys(sz);
@@ -187,7 +189,7 @@ private:
 
     template<typename T>
     void read(Polymorphic<T>& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(BINARY_TAG_CUSTOM, verifyTag);
         v.set((T*) readPoly(false, true, T::_type_id));
     }
 
@@ -200,9 +202,10 @@ private:
 
     template<typename MGenType>
     void read(MGenType& object, const MGenBase& /* type_evidence */, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(object), verifyTag);
-        READ_OBJ_HEADER({
-            mgen::missingfields::ensureNoMissingFields(object);
+        verifyReadTagIf(BINARY_TAG_CUSTOM, verifyTag);
+        READ_OBJ_HEADER( {
+            mgen::missingfields::ensureNoMissingFields(object)
+            ;
             return;
         });
         if (m_excessiveTypeChecking)
@@ -216,42 +219,42 @@ private:
     }
 
     void read(bool& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(BINARY_TAG_BOOL, verifyTag);
         v = readRaw<char>() != 0;
     }
 
     void read(char & v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        v = endian::ntoh(readRaw<char>());
+        verifyReadTagIf(BINARY_TAG_INT8, verifyTag);
+        v = endian::mgen_ntoh(readRaw<char>());
     }
 
     void read(short & v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        v = endian::ntoh(readRaw<short>());
+        verifyReadTagIf(BINARY_TAG_INT16, verifyTag);
+        v = endian::mgen_ntoh(readRaw<short>());
     }
 
     void read(int& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(BINARY_TAG_INT32, verifyTag);
         v = readSignedVarInt32();
     }
 
     void read(long long& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(BINARY_TAG_INT64, verifyTag);
         v = readSignedVarInt64();
     }
 
     void read(float & v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        v = endian::ntoh(readRaw<float>());
+        verifyReadTagIf(BINARY_TAG_FLOAT32, verifyTag);
+        v = endian::mgen_ntoh(readRaw<float>());
     }
 
     void read(double & v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
-        v = endian::ntoh(readRaw<double>());
+        verifyReadTagIf(BINARY_TAG_FLOAT64, verifyTag);
+        v = endian::mgen_ntoh(readRaw<double>());
     }
 
     void read(std::string& v, const bool verifyTag) {
-        verifyReadTagIf(Type::TAG_OF(v), verifyTag);
+        verifyReadTagIf(BINARY_TAG_STRING, verifyTag);
         const int sz = readSize();
         if (sz == 0) {
             v = "";
@@ -268,19 +271,19 @@ private:
         return out;
     }
 
-    void verifyReadTagIf(const Type::TAG expTag, const bool check) {
+    void verifyReadTagIf(const BINARY_TAG expTag, const bool check) {
         if (check) {
-            const Type::TAG tag = readTag();
+            const BINARY_TAG tag = readTag();
             if (tag != expTag) {
                 throw UnexpectedTypeException(
-                        S("BinaryReader::verifyReadTagIf: Unexpected tag ").append(S(expTag)).append(" but got ").append(
-                                S(tag)));
+                        toString("BinaryReader::verifyReadTagIf: Unexpected tag ").append(toString(expTag)).append(
+                                " but got ").append(toString(tag)));
             }
         }
     }
 
-    Type::TAG readTag() {
-        return (Type::TAG) readByte();
+    BINARY_TAG readTag() {
+        return (BINARY_TAG) readByte();
     }
 
     short readFieldId() {
@@ -324,7 +327,6 @@ private:
 } /* namespace mgen */
 
 #undef READ_OBJ_HEADER
-#undef S
 
-#endif /* MGENBINARYREADER_H_ */
+#endif /* MGEN_MGENBINARYREADER_H_ */
 

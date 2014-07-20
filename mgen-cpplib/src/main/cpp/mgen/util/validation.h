@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef MARKER_H_
-#define MARKER_H_
+#ifndef MGEN_MARKER_H_
+#define MGEN_MARKER_H_
 
 #include "mgen/classes/MGenBase.h"
 
@@ -78,6 +78,7 @@ inline void setFieldSetDeep(long long v);
 inline void setFieldSetDeep(float v);
 inline void setFieldSetDeep(double v);
 inline void setFieldSetDeep(std::string& v);
+inline void setFieldSetDeep(const std::string& v);
 inline void setFieldSetDeep(MGenBase& v);
 template<typename T>
 inline void setFieldSetDeep(Polymorphic<T>& v);
@@ -175,6 +176,9 @@ inline void setFieldSetDeep(double v) {
 inline void setFieldSetDeep(std::string& v) {
 }
 
+inline void setFieldSetDeep(const std::string& v) {
+}
+
 inline void setFieldSetDeep(MGenBase& v) {
     v._setAllFieldsSet(true, DEEP);
 }
@@ -182,4 +186,4 @@ inline void setFieldSetDeep(MGenBase& v) {
 } /* namespace validation */
 } /* namespace mgen */
 
-#endif /* MARKER_H_ */
+#endif /* MGEN_MARKER_H_ */

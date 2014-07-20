@@ -1,5 +1,5 @@
-#ifndef JSON_INPUT_STREAM
-#define JSON_INPUT_STREAM
+#ifndef MGEN_JSON_INPUT_STREAM
+#define MGEN_JSON_INPUT_STREAM
 
 namespace mgen {
 namespace internal {
@@ -65,6 +65,23 @@ private:
 };
 
 } /* namespace internal */
+
+#define MGEN_CASE_ENUM_STR(name) case name: return MGEN_STRINGIFY(name);
+inline std::string get_rapidjson_type_name(const rapidjson::Type e) {
+    switch (e) {
+    MGEN_CASE_ENUM_STR(rapidjson::kNullType)
+    MGEN_CASE_ENUM_STR(rapidjson::kFalseType)
+    MGEN_CASE_ENUM_STR(rapidjson::kTrueType)
+    MGEN_CASE_ENUM_STR(rapidjson::kObjectType)
+    MGEN_CASE_ENUM_STR(rapidjson::kArrayType)
+    MGEN_CASE_ENUM_STR(rapidjson::kStringType)
+    MGEN_CASE_ENUM_STR(rapidjson::kNumberType)
+    default:
+        return "rapidjson::type_unknown";
+    }
+}
+#undef MGEN_CASE_ENUM_STR
+
 } /* namespace mgen */
 
-#endif /* JSON_INPUT_STREAM */
+#endif /* MGEN_JSON_INPUT_STREAM */

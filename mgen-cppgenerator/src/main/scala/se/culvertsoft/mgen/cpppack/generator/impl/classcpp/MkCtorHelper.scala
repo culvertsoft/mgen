@@ -8,6 +8,7 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator._
+import se.culvertsoft.mgen.cpppack.generator.impl.HasDefaultCtor
 
 object MkCtorHelper {
 
@@ -42,7 +43,7 @@ object MkCtorHelper {
 
   def mkReqMemberValues(fields: Seq[Field], module: Module): Seq[String] = {
     implicit val currentModule = module
-    fields.filterNot(canBeNull) map { field =>
+    fields.filterNot(f => canBeNull(f) || (!f.isRequired() && HasDefaultCtor(f))) map { field =>
       if (field.isRequired())
         s"m_${field.name()}(${field.name()})"
       else

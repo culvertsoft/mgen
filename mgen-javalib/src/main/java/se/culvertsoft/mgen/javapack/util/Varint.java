@@ -20,9 +20,9 @@ package se.culvertsoft.mgen.javapack.util;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import java.io.DataInput;
-import java.io.DataOutput;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
 
@@ -50,17 +50,16 @@ public final class Varint {
 	 * href="http://code.google.com/apis/protocolbuffers/docs/encoding.html">
 	 * Google Protocol Buffers</a>. It uses zig-zag encoding to efficiently
 	 * encode signed values. If values are known to be nonnegative,
-	 * {@link #writeUnsignedVarLong(long, DataOutput)} should be used.
+	 * {@link #writeUnsignedVarLong(long, OutputStream)} should be used.
 	 * 
 	 * @param value
 	 *            value to encode
 	 * @param out
 	 *            to write bytes to
 	 * @throws IOException
-	 *             if {@link DataOutput} throws {@link IOException}
+	 *             if {@link OutputStream} throws {@link IOException}
 	 */
-	public static void writeSignedVarLong(long value, DataOutput out)
-			throws IOException {
+	public static void writeSignedVarLong(long value, OutputStream out) throws IOException {
 		// Great trick from
 		// http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
 		writeUnsignedVarLong((value << 1) ^ (value >> 63), out);
@@ -71,45 +70,42 @@ public final class Varint {
 	 * href="http://code.google.com/apis/protocolbuffers/docs/encoding.html">
 	 * Google Protocol Buffers</a>. Zig-zag is not used, so input must not be
 	 * negative. If values can be negative, use
-	 * {@link #writeSignedVarLong(long, DataOutput)} instead. This method treats
-	 * negative input as like a large unsigned value.
+	 * {@link #writeSignedVarLong(long, OutputStream)} instead. This method
+	 * treats negative input as like a large unsigned value.
 	 * 
 	 * @param value
 	 *            value to encode
 	 * @param out
 	 *            to write bytes to
 	 * @throws IOException
-	 *             if {@link DataOutput} throws {@link IOException}
+	 *             if {@link OutputStream} throws {@link IOException}
 	 */
-	public static void writeUnsignedVarLong(long value, DataOutput out)
-			throws IOException {
+	public static void writeUnsignedVarLong(long value, OutputStream out) throws IOException {
 		while ((value & 0xFFFFFFFFFFFFFF80L) != 0L) {
-			out.writeByte(((int) value & 0x7F) | 0x80);
+			out.write(((int) value & 0x7F) | 0x80);
 			value >>>= 7;
 		}
-		out.writeByte((int) value & 0x7F);
+		out.write((int) value & 0x7F);
 	}
 
 	/**
-	 * @see #writeSignedVarLong(long, DataOutput)
+	 * @see #writeSignedVarLong(long, OutputStream)
 	 */
-	public static void writeSignedVarInt(int value, DataOutput out)
-			throws IOException {
+	public static void writeSignedVarInt(int value, OutputStream out) throws IOException {
 		// Great trick from
 		// http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
 		writeUnsignedVarInt((value << 1) ^ (value >> 31), out);
 	}
 
 	/**
-	 * @see #writeUnsignedVarLong(long, DataOutput)
+	 * @see #writeUnsignedVarLong(long, OutputStream)
 	 */
-	public static void writeUnsignedVarInt(int value, DataOutput out)
-			throws IOException {
+	public static void writeUnsignedVarInt(int value, OutputStream out) throws IOException {
 		while ((value & 0xFFFFFF80) != 0L) {
-			out.writeByte((value & 0x7F) | 0x80);
+			out.write((value & 0x7F) | 0x80);
 			value >>>= 7;
 		}
-		out.writeByte(value & 0x7F);
+		out.write(value & 0x7F);
 	}
 
 	/**
@@ -117,13 +113,13 @@ public final class Varint {
 	 *            to read bytes from
 	 * @return decode value
 	 * @throws IOException
-	 *             if {@link DataInput} throws {@link IOException}
+	 *             if {@link InputStream} throws {@link IOException}
 	 * @throws IllegalArgumentException
 	 *             if variable-length value does not terminate after 9 bytes
 	 *             have been read
-	 * @see #writeSignedVarLong(long, DataOutput)
+	 * @see #writeSignedVarLong(long, OutputStream)
 	 */
-	public static long readSignedVarLong(DataInput in) throws IOException {
+	public static long readSignedVarLong(InputStream in) throws IOException {
 		long raw = readUnsignedVarLong(in);
 		// This undoes the trick in writeSignedVarLong()
 		long temp = (((raw << 63) >> 63) ^ raw) >> 1;
@@ -139,17 +135,17 @@ public final class Varint {
 	 *            to read bytes from
 	 * @return decode value
 	 * @throws IOException
-	 *             if {@link DataInput} throws {@link IOException}
+	 *             if {@link InputStream} throws {@link IOException}
 	 * @throws IllegalArgumentException
 	 *             if variable-length value does not terminate after 9 bytes
 	 *             have been read
-	 * @see #writeUnsignedVarLong(long, DataOutput)
+	 * @see #writeUnsignedVarLong(long, OutputStream)
 	 */
-	public static long readUnsignedVarLong(DataInput in) throws IOException {
+	public static long readUnsignedVarLong(InputStream in) throws IOException {
 		long value = 0L;
 		int i = 0;
 		long b;
-		while (((b = in.readByte()) & 0x80L) != 0) {
+		while (((b = in.read()) & 0x80L) != 0) {
 			value |= (b & 0x7F) << i;
 			i += 7;
 			if (i >= 64)
@@ -163,10 +159,10 @@ public final class Varint {
 	 *             if variable-length value does not terminate after 5 bytes
 	 *             have been read
 	 * @throws IOException
-	 *             if {@link DataInput} throws {@link IOException}
-	 * @see #readSignedVarLong(DataInput)
+	 *             if {@link InputStream} throws {@link IOException}
+	 * @see #readSignedVarLong(InputStream)
 	 */
-	public static int readSignedVarInt(DataInput in) throws IOException {
+	public static int readSignedVarInt(InputStream in) throws IOException {
 		int raw = readUnsignedVarInt(in);
 		// This undoes the trick in writeSignedVarInt()
 		int temp = (((raw << 31) >> 31) ^ raw) >> 1;
@@ -182,14 +178,14 @@ public final class Varint {
 	 *             if variable-length value does not terminate after 5 bytes
 	 *             have been read
 	 * @throws IOException
-	 *             if {@link DataInput} throws {@link IOException}
-	 * @see #readUnsignedVarLong(DataInput)
+	 *             if {@link InputStream} throws {@link IOException}
+	 * @see #readUnsignedVarLong(InputStream)
 	 */
-	public static int readUnsignedVarInt(DataInput in) throws IOException {
+	public static int readUnsignedVarInt(InputStream in) throws IOException {
 		int value = 0;
 		int i = 0;
 		int b;
-		while (((b = in.readByte()) & 0x80) != 0) {
+		while (((b = in.read()) & 0x80) != 0) {
 			value |= (b & 0x7F) << i;
 			i += 7;
 			if (i >= 36)

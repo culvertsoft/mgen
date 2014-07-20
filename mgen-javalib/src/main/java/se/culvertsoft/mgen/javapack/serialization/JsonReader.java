@@ -2,12 +2,12 @@ package se.culvertsoft.mgen.javapack.serialization;
 
 import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
 
-import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 import org.json.simple.JSONArray;
@@ -21,7 +21,8 @@ import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.javapack.classes.ClassRegistry;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
+import se.culvertsoft.mgen.javapack.classes.ClassRegistryEntry;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.MissingRequiredFieldsException;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
@@ -33,10 +34,9 @@ public class JsonReader extends BuiltInReader {
 
 	private final MGenJSONParser m_parser;
 
-	public JsonReader(final InputStream stream, final ClassRegistry classRegistry) {
-		super(stream instanceof DataInputStream ? (DataInputStream) stream : new DataInputStream(
-				stream), classRegistry);
-		m_parser = new MGenJSONParser(new InputStreamReader(stream));
+	public JsonReader(final InputStream stream, final ClassRegistryBase classRegistry) {
+		super(classRegistry);
+		m_parser = new MGenJSONParser(new InputStreamReader(stream, CHARSET));
 	}
 
 	@Override
@@ -48,14 +48,13 @@ public class JsonReader extends BuiltInReader {
 	@Override
 	public <T extends MGenBase> T readObject(final Class<T> typ) throws IOException {
 
-		final MGenBase out = readMGenObject(parseRootObject(), getRegEntry(typ).typ());
+		final ClassRegistryEntry entry = m_clsReg.getByClass(typ);
 
-		if (out != null && !typ.isAssignableFrom(out.getClass())) {
-			throw new UnexpectedTypeException("Unexpected type. Expected " + typ.getName()
-					+ " but got " + out.getClass().getName());
-		}
+		if (entry == null)
+			throw new UnknownTypeException("Could not read object of type " + typ
+					+ ", since it is know known by the class registry");
 
-		return (T) out;
+		return (T) readMGenObject(parseRootObject(), entry.typ());
 	}
 
 	@Override
@@ -129,13 +128,20 @@ public class JsonReader extends BuiltInReader {
 	public void handleUnknownField(final Field field, final Object context) throws IOException {
 	}
 
-	private MGenBase readMGenObject(final JSONObject node, final CustomType expType)
+	/************************************************
+	 * 
+	 * 
+	 * PRIVATE METHODS
+	 * 
+	 ***********************************************/
+
+	private MGenBase readMGenObject(final JSONObject node, final CustomType constraint)
 			throws IOException {
 
 		if (node == null)
 			return null;
 
-		final MGenBase object = instantiate(readIds(node, expType), expType);
+		final MGenBase object = instantiate(readIds(node, constraint), constraint);
 
 		if (object != null) {
 			readObjectFields(object, node);
@@ -147,14 +153,14 @@ public class JsonReader extends BuiltInReader {
 
 	}
 
-	private String[] readIds(final JSONObject node, final Type expType) {
+	private String[] readIds(final JSONObject node, final Type constraint) {
 
 		final Object tNode = node.get("__t");
 
 		// Try default type
 		if (tNode == null) {
 
-			if (expType != null)
+			if (constraint != null)
 				return null;
 
 			throw new MissingRequiredFieldsException(
@@ -194,24 +200,54 @@ public class JsonReader extends BuiltInReader {
 		if (node == null)
 			return null;
 
-		final HashMap<Object, Object> out = new HashMap<Object, Object>();
+		final HashMap<Object, Object> out = new HashMap<Object, Object>(node.size());
 
 		for (final Object keyNode : node.keySet()) {
-			final Object valueNode = node.get(keyNode);
-			final Object key = readObject(keyNode, typ.keyType());
-			final Object value = readObject(valueNode, typ.valueType());
+			final Object key = cvtString((String) keyNode, typ.keyType());
+			final Object value = readObject(node.get(keyNode), typ.valueType());
 			out.put(key, value);
 		}
 
 		return out;
 	}
 
-	private Object readArray(final ArrayType typ, final JSONArray node) throws IOException {
+	private Object cvtString(String keyString, Type constraint) {
+
+		if (keyString == null)
+			return null;
+
+		switch (constraint.typeEnum()) {
+		case ENUM:
+			return ((EnumType) constraint).get(keyString);
+		case BOOL:
+			return java.lang.Boolean.valueOf(keyString);
+		case INT8:
+			return java.lang.Byte.valueOf(keyString);
+		case INT16:
+			return java.lang.Short.valueOf(keyString);
+		case INT32:
+			return java.lang.Integer.valueOf(keyString);
+		case INT64:
+			return java.lang.Long.valueOf(keyString);
+		case FLOAT32:
+			return java.lang.Float.valueOf(keyString);
+		case FLOAT64:
+			return java.lang.Double.valueOf(keyString);
+		case STRING:
+			return keyString;
+		default:
+			throw new UnknownTypeException("Unknown map key type: " + constraint);
+		}
+	}
+
+	private Object readArray(final ArrayType constraint, final JSONArray node) throws IOException {
 
 		if (node == null)
 			return null;
 
-		switch (typ.elementType().typeEnum()) {
+		switch (constraint.elementType().typeEnum()) {
+		case ENUM:
+			return readEnumArray(node, constraint);
 		case BOOL:
 			return readBoolArray(node);
 		case INT8:
@@ -233,18 +269,21 @@ public class JsonReader extends BuiltInReader {
 		case MAP:
 		case CUSTOM:
 		case UNKNOWN:
-			return readObjectArray(node, typ);
+			return readObjectArray(node, constraint);
 		default:
-			throw new UnknownTypeException("Unknown array elementType: " + typ.elementType());
+			throw new UnknownTypeException("Unknown array elementType: " + constraint.elementType());
 		}
 	}
 
-	private ArrayList<?> readList(final ListType typ, final JSONArray node) throws IOException {
+	private ArrayList<?> readList(final ListType constraint, final JSONArray node)
+			throws IOException {
 
 		if (node == null)
 			return null;
 
-		switch (typ.elementType().typeEnum()) {
+		switch (constraint.elementType().typeEnum()) {
+		case ENUM:
+			return readEnumList(node, constraint);
 		case BOOL:
 			return readBoolList(node);
 		case INT8:
@@ -266,10 +305,19 @@ public class JsonReader extends BuiltInReader {
 		case MAP:
 		case CUSTOM:
 		case UNKNOWN:
-			return readObjectList(node, typ);
+			return readObjectList(node, constraint);
 		default:
-			throw new UnknownTypeException("Unknown array element type: " + typ.elementType());
+			throw new UnknownTypeException("Unknown array element type: "
+					+ constraint.elementType());
 		}
+	}
+
+	private Object readEnumArray(final JSONArray node, final ArrayType constraint) {
+		final EnumType elementType = (EnumType) constraint.elementType();
+		final Enum<?>[] out = (Enum<?>[]) constraint.newInstance(node.size());
+		for (int i = 0; i < node.size(); i++)
+			out[i] = readEnum(elementType, (String) node.get(i));
+		return out;
 	}
 
 	private boolean[] readBoolArray(JSONArray node) throws IOException {
@@ -332,6 +380,14 @@ public class JsonReader extends BuiltInReader {
 		final Object out = typ.newInstance(node.size());
 		for (int i = 0; i < node.size(); i++)
 			Array.set(out, i, readObject(node.get(i), typ.elementType()));
+		return out;
+	}
+
+	private ArrayList<Enum<?>> readEnumList(JSONArray node, ListType typ) {
+		final EnumType elementType = (EnumType) typ.elementType();
+		final ArrayList<Enum<?>> out = new ArrayList<Enum<?>>(node.size());
+		for (int i = 0; i < node.size(); i++)
+			out.add(readEnum(elementType, (String) node.get(i)));
 		return out;
 	}
 
@@ -457,6 +513,24 @@ public class JsonReader extends BuiltInReader {
 		default:
 			throw new UnknownTypeException("Unknown type: " + typ);
 		}
+	}
+
+	private MGenBase instantiate(final String[] ids, final CustomType constraint) {
+
+		final ClassRegistryEntry entry = ids != null ? m_clsReg.getByTypeIds16BitBase64(ids)
+				: m_clsReg.getById(constraint.typeId());
+
+		if (constraint != null) {
+			if (entry == null) {
+				throw new UnexpectedTypeException("Unknown type: " + Arrays.toString(ids));
+			} else if (!entry.isInstanceOfTypeId(constraint.typeId())) {
+				throw new UnexpectedTypeException("Unexpected type. Expected "
+						+ constraint.fullName() + " but got " + entry.clsName());
+			}
+		}
+
+		return entry != null ? entry.construct() : null;
+
 	}
 
 	private JSONObject parseRootObject() throws IOException {

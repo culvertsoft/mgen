@@ -2,22 +2,26 @@ package se.culvertsoft.mgen.javapack.test
 
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+
 import scala.collection.JavaConversions.collectionAsScalaIterable
+
 import org.junit.Test
+
 import gameworld.types.ClassRegistry
+import gameworld.types.basemodule1.Car
+import gameworld.types.basemodule1.Item
+import gameworld.types.basemodule1.VectorR3
+import gameworld.types.basemodule1.Vehicle
+import gameworld.types.basemodule1.World
+import gameworld.types.basemodule1.kind
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth
 import se.culvertsoft.mgen.javapack.serialization.BinaryReader
 import se.culvertsoft.mgen.javapack.serialization.BinaryWriter
 import se.culvertsoft.mgen.javapack.serialization.BuiltInReader
 import se.culvertsoft.mgen.javapack.serialization.BuiltInWriter
+import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter
 import se.culvertsoft.mgen.javapack.serialization.JsonReader
 import se.culvertsoft.mgen.javapack.serialization.JsonWriter
-import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter
-import gameworld.types.basemodule1.Car
-import gameworld.types.basemodule1.Vehicle
-import gameworld.types.basemodule1.Item
-import gameworld.types.basemodule1.VectorR3
-import gameworld.types.basemodule1.kind
 
 class ObjectSerialization {
 
@@ -79,6 +83,25 @@ class ObjectSerialization {
       valid.foreach(o => /*AssertNoThrow*/ (writer.writeObject(o)))
       invalid.foreach(o => AssertThrows(writer.writeObject(o)))
     }
+
+  }
+
+  @Test
+  def testMap() {
+    implicit val state = new TestState()
+
+    val car = new Car
+    val world = new World
+    world._setAllFieldsSet(true, FieldSetDepth.DEEP)
+    car._setAllFieldsSet(true, FieldSetDepth.DEEP)
+    world.getEntities().put(1, car)
+
+    state.jsonPrettyWriterCompact.writeObject(world)
+
+    val reader = getReader(state.jsonPrettyWriterCompact)
+    val worldBack = reader.readObject()
+    
+    assert(world == worldBack)
 
   }
 

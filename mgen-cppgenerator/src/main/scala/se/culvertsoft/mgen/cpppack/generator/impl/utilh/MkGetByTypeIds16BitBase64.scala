@@ -25,7 +25,7 @@ object MkGetByTypeIds16BitBase64 {
 
     val topLevelTypes = allTypes.filterNot(_.hasSuperType())
 
-    ln(nTabs + 1, "int i = 0;")
+    ln(nTabs + 1, "std::size_t i = 0;")
     MkTypeIdSwitch.apply(
       s => s"getTypeId16bitFromTypeId16BitBase64($s)",
       true,

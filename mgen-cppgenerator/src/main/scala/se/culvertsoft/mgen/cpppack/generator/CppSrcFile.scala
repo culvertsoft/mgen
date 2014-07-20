@@ -10,7 +10,6 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkFieldById
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkGetters
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkIncludes
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkIsFieldSet
-import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkMetadataFieldMakers
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkMetadataFields
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkMetadataGetters
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkNewInstance
@@ -82,10 +81,6 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
   override def mkMetaDataFields(t: CustomType) {
     MkMetadataFields(t, currentModule)
-  }
-
-  override def mkMetaDataFieldMakers(t: CustomType) {
-    MkMetadataFieldMakers(t, currentModule)
   }
 
   override def mkSetFieldsSet(t: CustomType) {

@@ -1,8 +1,9 @@
-#ifndef JSON_WRITER_BASE_H_
-#define JSON_WRITER_BASE_H_
+#ifndef MGEN_JSON_WRITER_BASE_H_
+#define MGEN_JSON_WRITER_BASE_H_
 
 #include "JsonOutputStream.h"
 #include "mgen/util/missingfields.h"
+#include "mgen/util/stringutil.h"
 
 namespace mgen {
 
@@ -27,17 +28,8 @@ public:
         writePoly(object);
     }
 
-    template<typename T>
-    void visit(const T& v, const Field& field, const bool isSet) {
-        if (isSet) {
-            m_rapidJsonWriter.String(field.name().c_str());
-            write(v);
-        }
-    }
-
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
-        static const std::string& idsString = MGenType::_type_ids_16bit_base64_string();
 
         missingfields::ensureNoMissingFields(object);
 
@@ -45,7 +37,15 @@ public:
 
         if (!shouldOmitIds(MGenType::_type_id)) {
             m_rapidJsonWriter.String("__t");
-            m_rapidJsonWriter.String(idsString.c_str());
+            m_rapidJsonWriter.String(MGenType::_type_ids_16bit_base64_string().c_str());
+        }
+    }
+    
+    template<typename T>
+    void visit(const T& v, const Field& field, const bool isSet) {
+        if (isSet) {
+            m_rapidJsonWriter.String(field.name().c_str());
+            write(v);
         }
     }
 
@@ -97,7 +97,7 @@ private:
     void write(const std::map<K, V>& v) {
         m_rapidJsonWriter.StartObject();
         for (typename std::map<K, V>::const_iterator it = v.begin(); it != v.end(); it++) {
-            write(it->first);
+            write(toString(it->first));
             write(it->second);
         }
         m_rapidJsonWriter.EndObject();
@@ -145,4 +145,4 @@ protected:
 
 } /* namespace mgen */
 
-#endif /* JSON_WRITER_BASE_H_ */
+#endif /* MGEN_JSON_WRITER_BASE_H_ */

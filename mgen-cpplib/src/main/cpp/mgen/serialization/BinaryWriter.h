@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef MGENBINARYWRITER_H_
-#define MGENBINARYWRITER_H_
+#ifndef MGEN_MGENBINARYWRITER_H_
+#define MGEN_MGENBINARYWRITER_H_
 
 #include "mgen/util/missingfields.h"
 #include "mgen/serialization/VarInt.h"
@@ -20,10 +20,8 @@ public:
 
     static const bool default_compact = false;
 
-    BinaryWriter(
-            MGenStreamType& outputStream,
-            const ClassRegistryType& classRegistry,
-            const bool compact = default_compact) :
+    BinaryWriter(MGenStreamType& outputStream, const ClassRegistryType& classRegistry, const bool compact =
+            default_compact) :
                     m_compact(compact),
                     m_expectType(-1),
                     m_outputStream(outputStream),
@@ -38,20 +36,20 @@ public:
     template<typename T>
     void visit(const T& v, const Field& field, const bool isSet) {
         if (isSet) {
-            writeFieldStart(field.id(), field.type().tag());
+            writeFieldStart(field.id(), BINARY_TAG_OF(&v));
             write(v, false);
         }
     }
 
     template<typename MGenType>
     void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
-        static const std::vector<short>& ids = MGenType::_type_ids_16bit();
 
         missingfields::ensureNoMissingFields(object);
 
         if (shouldOmitIds(MGenType::_type_id)) {
             writeSize(nFieldsSet << 1);
         } else {
+            const std::vector<short>& ids = MGenType::_type_ids_16bit();
             writeSize((int(ids.size()) << 1) | 0x01);
             for (std::size_t i = 0; i < ids.size(); i++)
                 write(ids[i], false);
@@ -66,14 +64,14 @@ public:
 private:
 
     void writePoly(const MGenBase& v, const bool doTag) {
-        writeTagIf(Type::TAG_CUSTOM, doTag);
+        writeTagIf(BINARY_TAG_CUSTOM, doTag);
         m_classRegistry.visitObject(v, *this);
     }
 
     template<typename MGenType>
     void write(const MGenType& v, const MGenBase&, const bool doTag) {
         m_expectType = MGenType::_type_id;
-        writeTagIf(Type::TAG_CUSTOM, doTag);
+        writeTagIf(BINARY_TAG_CUSTOM, doTag);
         v._accept(*this);
     }
 
@@ -81,38 +79,37 @@ private:
     void write(const EnumType v, const int, const bool doTag) {
         write(get_enum_name(v), doTag);
     }
-    
+
     template<typename MGenTypeOrEnum>
     void write(const MGenTypeOrEnum& v, const bool doTag) {
         write(v, v, doTag);
     }
-    
+
     template<typename MGenType>
     void write(const Polymorphic<MGenType>& v, const bool doTag) {
         if (v.get()) {
             m_expectType = MGenType::_type_id;
             writePoly(*v, doTag);
         } else {
-            writeTagIf(Type::TAG_CUSTOM, doTag);
+            writeTagIf(BINARY_TAG_CUSTOM, doTag);
             writeSize(0);
         }
     }
 
     template<typename T>
-    void write(const std::vector<T>& v, const bool verifyTag) {
-        static const Type::TAG elemTag = Type::TAG_OF(T());
-        writeTagIf(Type::TAG_LIST, verifyTag);
+    void write(const std::vector<T>& v, const bool doTag) {
+        writeTagIf(BINARY_TAG_LIST, doTag);
         writeSize(v.size());
         if (!v.empty()) {
-            writeTagIf(elemTag, true);
+            writeTagIf(BINARY_TAG_OF((T*) 0), true);
             for (std::size_t i = 0; i < v.size(); i++)
                 write(v[i], false);
         }
     }
 
     template<typename K, typename V>
-    void write(const std::map<K, V>& v, const bool verifyTag) {
-        writeTagIf(Type::TAG_MAP, verifyTag);
+    void write(const std::map<K, V>& v, const bool doTag) {
+        writeTagIf(BINARY_TAG_MAP, doTag);
         writeSize(v.size());
         if (!v.empty()) {
             std::vector<K> keys(v.size());
@@ -129,42 +126,42 @@ private:
     }
 
     void write(const bool v, const bool doTag) {
-        writeTagIf(Type::TAG_BOOL, doTag);
+        writeTagIf(BINARY_TAG_BOOL, doTag);
         write(v ? 0x01 : 0x00, false);
     }
 
     void write(const char v, const bool doTag) {
-        writeTagIf(Type::TAG_INT8, doTag);
-        writeRaw(endian::hton(v));
+        writeTagIf(BINARY_TAG_INT8, doTag);
+        writeRaw(endian::mgen_hton(v));
     }
 
     void write(const short v, const bool doTag) {
-        writeTagIf(Type::TAG_INT16, doTag);
-        writeRaw(endian::hton(v));
+        writeTagIf(BINARY_TAG_INT16, doTag);
+        writeRaw(endian::mgen_hton(v));
     }
 
     void write(const int v, const bool doTag) {
-        writeTagIf(Type::TAG_INT32, doTag);
+        writeTagIf(BINARY_TAG_INT32, doTag);
         writeSignedVarint32(v);
     }
 
     void write(const long long v, const bool doTag) {
-        writeTagIf(Type::TAG_INT64, doTag);
+        writeTagIf(BINARY_TAG_INT64, doTag);
         writeSignedVarint64(v);
     }
 
     void write(const float v, const bool doTag) {
-        writeTagIf(Type::TAG_FLOAT32, doTag);
-        writeRaw(endian::hton(v));
+        writeTagIf(BINARY_TAG_FLOAT32, doTag);
+        writeRaw(endian::mgen_hton(v));
     }
 
     void write(const double v, const bool doTag) {
-        writeTagIf(Type::TAG_FLOAT64, doTag);
-        writeRaw(endian::hton(v));
+        writeTagIf(BINARY_TAG_FLOAT64, doTag);
+        writeRaw(endian::mgen_hton(v));
     }
 
     void write(const std::string& v, const bool doTag) {
-        writeTagIf(Type::TAG_STRING, doTag);
+        writeTagIf(BINARY_TAG_STRING, doTag);
         writeSize(v.size());
         if (!v.empty())
             m_outputStream.write(v.data(), v.size());
@@ -175,7 +172,7 @@ private:
         writeTypeTag(tag);
     }
 
-    void writeTagIf(const Type::TAG tagValue, const bool doTag) {
+    void writeTagIf(const BINARY_TAG tagValue, const bool doTag) {
         if (doTag)
             writeTypeTag(tagValue);
     }
@@ -221,4 +218,4 @@ private:
 
 } /* namespace mgen */
 
-#endif /* MGENBINARYWRITER_H_ */
+#endif /* MGEN_MGENBINARYWRITER_H_ */

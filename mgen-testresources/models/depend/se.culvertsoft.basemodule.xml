@@ -25,11 +25,12 @@
             <e type="InternalEnum"/>
             <e2 type="TestEnum"/>
             <e3 type="se.culvertsoft.depmodule.TestEnum"/>
+            <e4 type="ExternalEnum"/>
         </InternalType>
 
         <UsingType>
-            <intern type="InternalType"/>
-            <extern type="ExternalType"/>
+            <internType type="InternalType"/>
+            <externType type="ExternalType"/>
             <internImplic type="ExplicitType"/>
             <internExplic type="se.culvertsoft.basemodule.ExplicitType"/>
             <externExplic type="se.culvertsoft.depmodule.ExplicitType"/>
@@ -64,6 +65,62 @@
             <z type="ExternalType" flags="polymorphic"/>
         </AllFieldTypes>
 
+        <AllArrayTypes>
+			<a type="array[InternalEnum]"/>
+			<b type="array[ExternalEnum]"/>
+			<c type="array[byte]"/>
+			<d type="array[int8]"/>
+			<e type="array[int16]"/>
+			<f type="array[int32]"/>
+			<g type="array[int]"/>
+			<h type="array[int64]"/>
+			<i type="array[float]"/>
+			<j type="array[double]"/>
+			<k type="array[float32]"/>
+			<l type="array[float64]"/>
+			<m type="array[string]"/>
+			<n type="array[array[string]]"/>
+			<p type="array[AllFieldTypes]"/>
+        </AllArrayTypes>
+		
+        <AllListTypes>
+			<a type="list[InternalEnum]"/>
+			<b type="list[ExternalEnum]"/>
+			<c type="list[byte]"/>
+			<d type="list[int8]"/>
+			<e type="list[int16]"/>
+			<f type="list[int32]"/>
+			<g type="list[int]"/>
+			<h type="list[int64]"/>
+			<i type="list[float]"/>
+			<j type="list[double]"/>
+			<k type="list[float32]"/>
+			<l type="list[float64]"/>
+			<m type="list[string]"/>
+			<n type="list[list[string]]"/>
+			<o type="list[map[string, int32]]"/>
+			<p type="list[AllFieldTypes]"/>
+        </AllListTypes>
+		
+        <AllMapTypes>
+			<a type="map[byte, InternalEnum]"/>
+			<b type="map[int8, ExternalEnum]"/>		
+			<c type="map[int16, byte]"/>	
+			<d type="map[int32, int8]"/>
+			<e type="map[int, int16]"/>
+			<f type="map[int64, int32]"/>
+			<g type="map[float, int]"/>
+			<h type="map[float32, int64]"/>
+			<i type="map[double, float]"/>
+			<j type="map[float64, double]"/>
+			<k type="map[string, float32]"/>
+			<l type="map[string, float64]"/>
+			<m type="map[string, string]"/>
+			<n type="map[string, map[string, ExternalEnum]]"/>
+			<o type="map[string, map[string, int32]]"/>
+			<p type="map[string, AllFieldTypes]"/>
+        </AllMapTypes>
+		
         <AllFieldTypesRequired>
             <a type="bool" flags="required"/>
             <b type="int8" flags="required"/>

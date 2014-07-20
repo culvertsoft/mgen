@@ -1,7 +1,7 @@
 
 MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 
-all: generate-test-model
+all:
 	##################################################
 	#   NO BUILD REQUIRED FOR MGEN-CPPLIB (.h-only)  #
 	##################################################
@@ -27,17 +27,12 @@ doc:
 	#   DOCUMENTAION MGEN-CPPLIB            #
 	#########################################
     #NOT_YET_IMPLEMENTED#
-	    
-create-target-directory:
-	#########################################
-	#  CREATING MGEN-CPPLIB-TEST TARG.DIR.  #
-	#########################################
-	mkdir -p target
-    
-generate-test-model:	create-target-directory
+
+generate-test-model:
 	#########################################
 	#   GENERATING MGEN-CPPLIB-TEST-MODEL   #
 	#########################################
+	mkdir -p target
 	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
 
 build-test:	generate-test-model

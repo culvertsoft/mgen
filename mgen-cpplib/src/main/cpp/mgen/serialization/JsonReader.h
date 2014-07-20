@@ -5,21 +5,19 @@
  *      Author: GiGurra
  */
 
-#ifndef JsonREADER_H_
-#define JsonREADER_H_
+#ifndef MGEN_JsonREADER_H_
+#define MGEN_JsonREADER_H_
 
 #include "mgen/ext/rapidjson/document.h"
 #include "mgen/classes/ClassRegistryBase.h"
-#include "mgen/util/BuiltInSerializerUtil.h"
 #include "mgen/exceptions/StreamCorruptedException.h"
-#include "JsonInputStream.h"
+#include "mgen/serialization/JsonInputStream.h"
+#include "mgen/util/BuiltInSerializerUtil.h"
 
 namespace mgen {
 
-#define S(x) toString(x)
-
 #define throw_unexpected_type(expect, actual) \
-    throw UnexpectedTypeException(S("Unexpected type! -> Expected type ").append(S(expect)).append(" but got type ").append(S(actual)))
+    throw UnexpectedTypeException(toString("Unexpected type! -> Expected type ").append(toString(expect)).append(" but got type ").append(toString(actual)))
 
 template<typename MGenStreamType, typename ClassRegistryType>
 class JsonReader {
@@ -128,8 +126,15 @@ private:
                 read(v[i], node[i]);
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type("array", "something_else");
+            throw_unexpected_type("array", get_rapidjson_type_name(node.GetType()));
         }
+    }
+
+    template<typename K>
+    void readMapKey(K& out, const Node& node) {
+        std::string keyString;
+        read(keyString, node);
+        out = fromString<K>(keyString);
     }
 
     template<typename K, typename V>
@@ -137,12 +142,12 @@ private:
         if (node.IsObject()) {
             for (MemberIterator it = node.MemberBegin(); it != node.MemberEnd(); it++) {
                 K key;
-                read(key, it->name);
+                readMapKey(key, it->name);
                 read(v[key], it->value);
             }
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type("map", "something_else");
+            throw_unexpected_type("map", get_rapidjson_type_name(node.GetType()));
         }
     }
 
@@ -152,7 +157,7 @@ private:
             object.set((MGenType*) readPoly(node, true, MGenType::_type_id));
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type(MGenType::_type_name(), "something_else");
+            throw_unexpected_type(MGenType::_type_name(), get_rapidjson_type_name(node.GetType()));
         }
     }
 
@@ -165,13 +170,15 @@ private:
 
     template<typename MGenType>
     void read(MGenType& object, const MGenBase& /* type_evidence */, const Node& node) {
-        if (node.IsObject()) {
+        if (node.IsNull()) {
+            missingfields::ensureNoMissingFields(object);
+        } else if (node.IsObject()) {
             if (m_excessiveTypeChecking)
                 serialutil::checkExpType(m_clsReg, &object, readIds(node));
             readFields(object, node);
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type(object._typeName(), "something_else");
+            throw_unexpected_type(object._typeName(), get_rapidjson_type_name(node.GetType()));
         }
     }
 
@@ -184,7 +191,7 @@ private:
         if (node.IsBool()) {
             v = node.GetBool();
         } else {
-            throw_unexpected_type("bool", "something_else");
+            throw_unexpected_type("bool", get_rapidjson_type_name(node.GetType()));
         }
     }
 
@@ -212,7 +219,7 @@ private:
             v = node.GetString();
         } else if (node.IsNull()) { // TODO: What? Ignore? Zero length? Throw?
         } else {
-            throw_unexpected_type("string", "something_else");
+            throw_unexpected_type("string", get_rapidjson_type_name(node.GetType()));
         }
     }
 
@@ -226,7 +233,7 @@ private:
             else if (node.IsDouble())
                 return (T) node.GetDouble();
         } else {
-            throw_unexpected_type("fixed_point_number", "something_else");
+            throw_unexpected_type("fixed_point_number", get_rapidjson_type_name(node.GetType()));
         }
         return T();
     }
@@ -241,7 +248,7 @@ private:
             else if (node.IsInt())
                 return (T) node.GetInt();
         } else {
-            throw_unexpected_type("floating_point_number", "something_else");
+            throw_unexpected_type("floating_point_number", get_rapidjson_type_name(node.GetType()));
         }
         return T();
     }
@@ -267,8 +274,6 @@ private:
 
 #undef throw_unexpected_type
 
-#undef S
-
 } /* namespace mgen */
 
-#endif /* JsonREADER_H_ */
+#endif /* MGEN_JsonREADER_H_ */

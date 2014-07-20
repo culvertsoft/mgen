@@ -5,20 +5,18 @@
  *      Author: GiGurra
  */
 
-#ifndef BUILTINSERIALIZERUTIL_H_
-#define BUILTINSERIALIZERUTIL_H_
+#ifndef MGEN_BUILTINSERIALIZERUTIL_H_
+#define MGEN_BUILTINSERIALIZERUTIL_H_
 
 #include "mgen/classes/MGenBase.h"
-#include "mgen/util/stringutil.h"
 #include "mgen/exceptions/UnexpectedTypeException.h"
+#include "mgen/util/stringutil.h"
 
 namespace mgen {
 namespace serialutil {
 
-#define S(x) toString(x)
-
 #define throw_unexpected_type(expect, actual) \
-    throw UnexpectedTypeException(S("Unexpected type! -> Expected type ").append(S(expect)).append(" but got type ").append(S(actual)))
+    throw UnexpectedTypeException(toString("Unexpected type! -> Expected type ").append(toString(expect)).append(" but got type ").append(toString(actual)))
 
 template <typename ClassRegistryType, typename MGenType, typename IdType>
 void throwByUnexpectedIds(
@@ -30,7 +28,7 @@ void throwByUnexpectedIds(
     if (entry) {
         throw_unexpected_type(MGenType::_type_name(), entry->typeName());
     } else {
-        throw_unexpected_type(MGenType::_type_name(), S("unknown: ").append(S(actualIds)));
+        throw_unexpected_type(MGenType::_type_name(), toString("unknown: ").append(toString(actualIds)));
     }
 }
 
@@ -140,10 +138,8 @@ void checkExpType(
 
 #undef throw_unexpected_type
 
-#undef S
-
 }
 /* namespace serialutil */
 } /* namespace mgen */
 
-#endif /* BUILTINSERIALIZERUTIL_H_ */
+#endif /* MGEN_BUILTINSERIALIZERUTIL_H_ */

@@ -5,8 +5,8 @@
  *      Author: GiGurra
  */
 
-#ifndef POLYMORPHIC_H_
-#define POLYMORPHIC_H_
+#ifndef MGEN_POLYMORPHIC_H_
+#define MGEN_POLYMORPHIC_H_
 
 namespace mgen {
 
@@ -133,4 +133,4 @@ bool operator==(const T& a, const mgen::Polymorphic<T>& b) {
 
 }
 
-#endif /* POLYMORPHIC_H_ */
+#endif /* MGEN_POLYMORPHIC_H_ */
