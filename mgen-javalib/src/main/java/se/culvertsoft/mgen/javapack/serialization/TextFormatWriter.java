@@ -20,50 +20,42 @@ public abstract class TextFormatWriter extends BuiltInWriter {
 
 	protected void write(final boolean b) throws IOException {
 		m_buffer.append(b);
-		if (m_buffer.length() >= FLUSH_SIZE)
-			flush();
+		checkflush();
 	}
 
 	protected void write(final byte b) throws IOException {
 		m_buffer.append(b);
-		if (m_buffer.length() >= FLUSH_SIZE)
-			flush();
+		checkflush();
 	}
 
 	protected void write(final char s) throws IOException {
 		m_buffer.append(s);
-		if (m_buffer.length() >= FLUSH_SIZE)
-			flush();
+		checkflush();
 	}
 
 	protected void write(final short s) throws IOException {
 		m_buffer.append(s);
-		if (m_buffer.length() >= FLUSH_SIZE)
-			flush();
+		checkflush();
 	}
 
 	protected void write(final int i) throws IOException {
 		m_buffer.append(i);
-		if (m_buffer.length() >= FLUSH_SIZE)
-			flush();
+		checkflush();
 	}
 
 	protected void write(final long i) throws IOException {
 		m_buffer.append(i);
-		if (m_buffer.length() >= FLUSH_SIZE)
-			flush();
+		checkflush();
 	}
 
 	protected void write(final float f) throws IOException {
 		m_buffer.append(f);
-		if (m_buffer.length() >= FLUSH_SIZE)
-			flush();
+		checkflush();
 	}
 
 	protected void write(final double d) throws IOException {
 		m_buffer.append(d);
-		if (m_buffer.length() >= FLUSH_SIZE)
-			flush();
+		checkflush();
 	}
 
 	protected void write(final String s) throws IOException {
@@ -77,6 +69,11 @@ public abstract class TextFormatWriter extends BuiltInWriter {
 			m_stream.write(m_stringEncoder.data(), 0, m_stringEncoder.size());
 			m_buffer.setLength(0);
 		}
+	}
+
+	private void checkflush() throws IOException {
+		if (m_buffer.length() >= FLUSH_SIZE)
+			flush();
 	}
 
 }
