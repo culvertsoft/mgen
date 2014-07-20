@@ -1,4 +1,4 @@
-generate: get-generated-sources
+run-tests: get-generated-sources
 	sbt test
 	
 get-generated-sources:

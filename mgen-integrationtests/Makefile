@@ -1,6 +1,8 @@
+VERSION = SNAPSHOT
+export MGEN_BUILD_VERSION = $(VERSION)
 
 MGEN_ROOT_PATH = ..
-TEST_RESOURCES_ROOT = ${MGEN_ROOT_PATH}/mgen-testresources
+TEST_RESOURCES_ROOT = ${MGEN_ROOT_PATH}/mgen-integrationtests
 MGEN_COMPILER_JAR = ${MGEN_ROOT_PATH}/mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 JAVA_GENERATOR_PATH = ${MGEN_ROOT_PATH}/mgen-javagenerator/target
 CPP_GENERATOR_PATH = ${MGEN_ROOT_PATH}/mgen-cppgenerator/target
@@ -27,7 +29,7 @@ READ_DATA_DIR = ${TEST_RESOURCES_ROOT}/generated/read/data_generated
 
 DBGRLS = RelWithDebInfo
 
-all: generate
+all: run-tests
 
 generate-sources:
 	mkdir -p generated
@@ -41,14 +43,15 @@ generate-sources:
 	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../${WRITE_DATA_GENERATOR_SRC_DIR}
 	cd ${READ_DATA_GENERATOR_BUILD_DIR} && cmake -G"Unix Makefiles" -D CMAKE_BUILD_TYPE=${DBGRLS} ../../../${READ_DATA_GENERATOR_SRC_DIR}
 
-generate: generate-sources
+run-tests: generate-sources
 	mkdir -p ${DEPENDS_DATA_DIR}
 	mkdir -p ${WRITE_DATA_DIR}
 	mkdir -p ${READ_DATA_DIR}
 	cd ${DEPENDS_DATA_GENERATOR_BUILD_DIR} && make && ./generate_depends_testdata
 	cd ${WRITE_DATA_GENERATOR_BUILD_DIR} && make && ./generate_write_testdata
 	cd ${READ_DATA_GENERATOR_BUILD_DIR} && make && ./generate_read_testdata
-	cd javacheck && make generate
+	cd javacheck && make run-tests
+	cd javascriptcheck && make run-tests
 
 eclipse: generate-sources
 	mkdir -p ${DEPENDS_DATA_GENERATOR_BUILD_DIR}/eclipse
@@ -62,3 +65,4 @@ eclipse: generate-sources
 clean:
 	rm -rf generated
 	cd javacheck && make clean
+	cd javascriptcheck && make clean

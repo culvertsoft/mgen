@@ -245,7 +245,7 @@ Read on below, or check some of our tests at:
  - Scala: https://github.com/culvertsoft/mgen/tree/master/mgen-javalib/src/test/scala/se/culvertsoft/mgen/javapack/test
  - Java: See scala examples (the generated code is pure java, but we wrote our tests in scala as it was easier)
  - Javascript: coming soon!
- - For advanced tests (with automatic data generation), [click here](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources).
+ - For advanced tests (with automatic data generation), [click here](https://github.com/culvertsoft/mgen/tree/master/mgen-integrationtests).
 
 To access the generated types we include the headers of the types we need, or the generated ClassRegistry.h header file which will let us access all the types that were just generated. We will also include some mgen headers for serialization.
 
@@ -366,9 +366,9 @@ We plan on making the MGen tools and libraries available on Maven Central or a s
 
 Currently we haven't had time to produce any dedicated sample projects. But some models of interest might be:
  * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources)
- * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/depend)
- * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/read)
- * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-testresources/models/write)
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-integrationtests/models/depend)
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-integrationtests/models/read)
+ * [One of the data model used by our tests](https://github.com/culvertsoft/mgen/tree/master/mgen-integrationtests/models/write)
  * [The data model of the MGen Visual Designer](https://github.com/culvertsoft/mgen/tree/master/mgen-visualdesigner/model)
 
 

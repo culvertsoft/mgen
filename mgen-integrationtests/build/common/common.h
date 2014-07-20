@@ -1,5 +1,5 @@
-#ifndef MGEN_TESTRESOURCES_COMMON_H_
-#define MGEN_TESTRESOURCES_COMMON_H_
+#ifndef MGEN_INTEGRATIONTESTS_COMMON_H_
+#define MGEN_INTEGRATIONTESTS_COMMON_H_
 
 #include <vector>
 #include <string>
