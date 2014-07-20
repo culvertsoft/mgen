@@ -110,7 +110,7 @@ void checkExpType(
     if (actualIds.size() < expIds.size())
         throwByUnexpectedIds(classReg, o, expIds, actualIds);
 
-    for (int i = 0; i < expIds.size(); i++) {
+    for (std::size_t i = 0; i < expIds.size(); i++) {
         if (actualIds[i] != expIds[i]) {
             throwByUnexpectedIds(classReg, o, expIds, actualIds);
         }
