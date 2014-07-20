@@ -278,6 +278,43 @@ class BasicReadWrite {
 
     }
 
+    val doPerfTestOfBinaryWriters = false
+
+    if (doPerfTestOfBinaryWriters) {
+
+      val binaryWriters = writers collect { case w: BinaryWriter => w }
+
+      def getTime() = System.nanoTime() / 1e9
+
+      val t0 = getTime
+
+      def timeSinceStart() = getTime() - t0
+
+      var n = 0L
+
+      while (timeSinceStart() < 25.0) {
+
+        for (writer <- binaryWriters) {
+
+          for (o1 <- gatheredObjects) {
+
+            writer.writeObject(o1)
+
+            n += stream.size().toLong
+            stream.reset()
+          }
+
+        }
+
+      }
+
+      val mb = n.toDouble / 1024.0 / 1024.0
+      val dt = timeSinceStart()
+
+      println("Perf: " + (mb / dt))
+
+    }
+
   }
 
 }

@@ -28,13 +28,16 @@ import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
+import se.culvertsoft.mgen.javapack.util.FastByteBuffer;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryWriter extends BuiltInWriter {
 
 	public static final boolean DEFAULT_COMPACT = false;
+	public static final int FLUSH_SIZE = 256;
 
-	private final OutputStream m_stream;
+	private final FastByteBuffer m_buffer;
+	private final OutputStream m_streamOut;
 	private final boolean m_compact;
 	private long m_expectType;
 
@@ -43,7 +46,8 @@ public class BinaryWriter extends BuiltInWriter {
 			final ClassRegistryBase classRegistry,
 			final boolean compact) {
 		super(classRegistry);
-		m_stream = stream;
+		m_buffer = new FastByteBuffer(FLUSH_SIZE * 2);
+		m_streamOut = stream;
 		m_compact = compact;
 		m_expectType = -1;
 	}
@@ -55,7 +59,9 @@ public class BinaryWriter extends BuiltInWriter {
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
 		m_expectType = -1;
+		m_buffer.clear();
 		writeMGenObject(o, true, null);
+		flush();
 	}
 
 	@Override
@@ -174,7 +180,7 @@ public class BinaryWriter extends BuiltInWriter {
 			m_expectType = typ != null ? typ.typeId() : 0;
 			o._accept(this);
 		} else {
-			m_stream.write(0);
+			writeByte(0);
 		}
 
 	}
@@ -193,13 +199,13 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeBoolean(final boolean b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_BOOL);
-		m_stream.write(b ? 1 : 0);
+		writeByte(b ? 1 : 0);
 	}
 
 	private void writeInt8(final int b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT8);
-		m_stream.write(b);
+		writeByte(b);
 	}
 
 	private void writeInt16(final short s, final boolean tag) throws IOException {
@@ -238,7 +244,7 @@ public class BinaryWriter extends BuiltInWriter {
 		if (s != null && !s.isEmpty()) {
 			m_stringEncoder.encode(s);
 			writeSize(m_stringEncoder.size());
-			m_stream.write(m_stringEncoder.data(), 0, m_stringEncoder.size());
+			writeBytes(m_stringEncoder.data(), m_stringEncoder.size());
 		} else {
 			writeSize(0);
 		}
@@ -450,7 +456,7 @@ public class BinaryWriter extends BuiltInWriter {
 			writeSize(array.length);
 
 			writeTypeTag(TAG_INT8);
-			m_stream.write(array);
+			writeBytes(array);
 
 		} else {
 			writeSize(0);
@@ -578,39 +584,72 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
+	private void flush() throws IOException {
+		if (m_buffer.nonEmpty()) {
+			m_streamOut.write(m_buffer.data(), 0, m_buffer.size());
+			m_buffer.clear();
+		}
+	}
+
+	private void checkFlush() throws IOException {
+		if (m_buffer.size() >= FLUSH_SIZE)
+			flush();
+	}
+
+	private void writeByte(int b) throws IOException {
+		m_buffer.write(b);
+		checkFlush();
+	}
+
+	private void writeBytes(final byte[] data, final int offset, final int sz) throws IOException {
+		m_buffer.write(data, offset, sz);
+		checkFlush();
+	}
+
+	private void writeBytes(final byte[] data, final int sz) throws IOException {
+		writeBytes(data, 0, sz);
+	}
+
+	private void writeBytes(final byte[] data) throws IOException {
+		writeBytes(data, 0, data.length);
+	}
+
 	private void writeRawInt16(short s) throws IOException {
-		m_stream.write((s >>> 8) & 0xFF);
-		m_stream.write((s >>> 0) & 0xFF);
+		writeByte(s >>> 8);
+		writeByte(s >>> 0);
 	}
 
 	private void writeRawInt32(int v) throws IOException {
-		m_stream.write(v >>> 24);
-		m_stream.write(v >>> 16);
-		m_stream.write(v >>> 8);
-		m_stream.write(v >>> 0);
+		writeByte(v >>> 24);
+		writeByte(v >>> 16);
+		writeByte(v >>> 8);
+		writeByte(v >>> 0);
 	}
 
 	private void writeRawInt64(long v) throws IOException {
-		m_stream.write((int) (v >>> 56));
-		m_stream.write((int) (v >>> 48));
-		m_stream.write((int) (v >>> 40));
-		m_stream.write((int) (v >>> 32));
-		m_stream.write((int) (v >>> 24));
-		m_stream.write((int) (v >>> 16));
-		m_stream.write((int) (v >>> 8));
-		m_stream.write((int) (v >>> 0));
+		writeByte((int) (v >>> 56));
+		writeByte((int) (v >>> 48));
+		writeByte((int) (v >>> 40));
+		writeByte((int) (v >>> 32));
+		writeByte((int) (v >>> 24));
+		writeByte((int) (v >>> 16));
+		writeByte((int) (v >>> 8));
+		writeByte((int) (v >>> 0));
 	}
 
 	private void writeSignedVarint32(final int i) throws IOException {
-		Varint.writeSignedVarInt(i, m_stream);
+		Varint.writeSignedVarInt(i, m_buffer);
+		checkFlush();
 	}
 
 	private void writeSignedVarint64(final long l) throws IOException {
-		Varint.writeSignedVarLong(l, m_stream);
+		Varint.writeSignedVarLong(l, m_buffer);
+		checkFlush();
 	}
 
 	private void writeUnsignedVarint32(final int i) throws IOException {
-		Varint.writeUnsignedVarInt(i, m_stream);
+		Varint.writeUnsignedVarInt(i, m_buffer);
+		checkFlush();
 	}
 
 	private void writeSize(final int i) throws IOException {
@@ -672,7 +711,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	private void writeTypeTag(byte tag) throws IOException {
-		m_stream.write(tag);
+		writeByte(tag);
 	}
 
 }
