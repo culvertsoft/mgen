@@ -1,7 +1,7 @@
 /** JSLINT CONFIG */
 /*global mgen_blueprint: false, mGenGenerate: false, it: false, describe: false, expect: false, xit: false, throws: false */
 
-requirejs(['mGen', 'mgen_blueprint'], function (mGen, mgen_blueprint) {
+requirejs(['mGen', 'mgen_classreg'], function (mGen, mgen_classreg) {
 	"use strict";
 
 	/* ***********************************************************\
@@ -14,15 +14,15 @@ requirejs(['mGen', 'mgen_blueprint'], function (mGen, mgen_blueprint) {
 	|*         SETUP -- MAKE SURE ALL FILES ARE IN PLACE           *|
 	 \*************************************************************/
 
-	if (!mgen_blueprint) {
+	if (!mgen_classreg) {
 		throw "mgen_blueprint missing";
 	}
 
 	if (!mGen.generate) {
-		throw "mgen_blueprint missing";
+		throw "mGen.Generate missing";
 	}
 
-	var registry = mGen.generate(mgen_blueprint);
+	var registry = mGen.generate(mgen_classreg);
 
 	/* ***********************************************************\
 	|*         CREATION -- MAKE SURE WE CAN CREATE SOM CLASSES     *|

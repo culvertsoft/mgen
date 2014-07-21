@@ -4,7 +4,7 @@ run-tests: get-generated-sources
 get-javascript:
 	mkdir -p src/main
 	mkdir -p src/main/javascript
-	cp -f ../../../mgen-javascriptlib/target/javascript/* src/main/javascript/
+	cp -f ../../../mgen-javascriptlib/src/main/javascript/* src/main/javascript/
 
 get-test-data:
 	mkdir -p src_generated

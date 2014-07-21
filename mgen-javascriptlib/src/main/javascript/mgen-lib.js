@@ -21,15 +21,16 @@
          */
         generate: function(ClassRegistryBlueprint, settings) {
             var obj, obj_key, ClassRegistry;
-            
-            console.log("hello");
-
+            function tmpWrap(id){
+                if(!id){ throw "Missing id";}
+                return ClassRegistryBlueprint.lookup(id);
+            }
             settings = settings || {};
             settings = {
                 warn: (typeof settings.warn === "undefined") ? true : settings.warn,
                 never_catch_error: (typeof settings.never_catch_error === "undefined") ? false : settings.never_catch_error,
                 validate: (typeof settings.validate === "undefined") ? true : settings.validate,
-                strict_enums: (typeof settings.strict_enums === "undefined") ? true : settings.strict_enums
+                strict_enums: (typeof settings.strict_enums === "undefined") ? false : settings.strict_enums
             };
 
             // Default constructor. All generated classes inherits this (prototype-wize)
@@ -51,7 +52,7 @@
                 extend(options, settings);
 
                 try {
-                    new(ClassRegistry.getClass(ClassRegistryBlueprint.lookup(object.__t)))(object, options);
+                    new(ClassRegistry.getClass(tmpWrap(object.__t)))(object, options);
                 } catch (e) {
                     if (options.warn) {
                         window.console.warn("Validation failed. Reason: \n" + e);
@@ -69,7 +70,7 @@
              * @return {bool} true if the class exist in the ClassRegistry, false otherwise.
              */
             ClassRegistry.hasClassWithId = function(typeId) {
-                return ClassRegistryBlueprint.lookup(typeId) !== undefined;
+                return tmpWrap(typeId) !== undefined;
             };
 
             /**
@@ -77,7 +78,7 @@
              * @return {constructor} returns a class constructor for the specified typeid.
              */
             ClassRegistry.getClassWithId = function(typeId) {
-                return ClassRegistry.getClass(ClassRegistryBlueprint.lookup(typeId));
+                return ClassRegistry.getClass(tmpWrap(typeId));
             };
 
             /**
@@ -122,7 +123,7 @@
             function setParent(obj) {
                 var C, super_path;
                 if (ClassRegistryBlueprint.classes.hasOwnProperty(obj)) {
-                    C = ClassRegistry.getClass(ClassRegistryBlueprint.lookup(ClassRegistryBlueprint.classes[obj].__t));
+                    C = ClassRegistry.getClass(tmpWrap(ClassRegistryBlueprint.classes[obj].__t));
                     if (C.prototype instanceof ClassRegistry) {
                         return;
                     }
@@ -203,11 +204,11 @@
                     // we have a collision. Lets create a list of all the collisions and then later turn it into a warning for the user.
 
                     currentClassType = (new ClassConstructor("NO_CONSTRUCT")).__t;
-                    currentClassPath = ClassRegistryBlueprint.lookup(currentClassType);
+                    currentClassPath = tmpWrap(currentClassType);
 
                     if (typeof ClassRegistry[getShortName(path)] === "function") {
                         collidingClassType = (new ClassRegistry[getShortName(path)]("NO_CONSTRUCT")).__t;
-                        collidingClassPath = ClassRegistryBlueprint.lookup(collidingClassType.__t);
+                        collidingClassPath = tmpWrap(collidingClassType);
 
                         ClassRegistry[getShortName(path)] = [collidingClassPath, currentClassPath];
                     } else {
@@ -220,7 +221,7 @@
             function createClass(obj) {
                 var _c = {}; // the _ object is used to trick the function.name property to be correct for the class.
                 // see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/name
-                _c[ClassRegistryBlueprint.lookup(obj.__t)] = function(data, options) {
+                _c[tmpWrap(obj.__t)] = function(data, options) {
                     if (data === "NO_CONSTRUCT") {
                         this.__t = obj.__t;
                         return;
@@ -242,9 +243,9 @@
                             //If the data does not fit the corresponding type then check if it is a derived type.
                             if (obj.__t != data.__t) {
                                 if (isDerivedType(data.__t, obj.__t)) {
-                                    return new(ClassRegistry.getClass(ClassRegistryBlueprint.lookup(data.__t)))(data);
+                                    return new(ClassRegistry.getClass(tmpWrap(data.__t)))(data);
                                 } else {
-                                    throw " Tried to create " + ClassRegistryBlueprint.lookup(obj.__t) + " but got " + ClassRegistryBlueprint.lookup(data.__t);
+                                    throw " Tried to create " + tmpWrap(obj.__t) + " but got " + tmpWrap(data.__t);
                                 }
                             }
                         }
@@ -272,7 +273,7 @@
                                 if (options.never_catch_error) {
                                     throw err;
                                 } else {
-                                    throw "Could not create object " + ClassRegistryBlueprint.lookup(obj.__t) + " Reason: \n" + err;
+                                    throw "Could not create object " + tmpWrap(obj.__t) + " Reason: \n" + err;
                                 }
                             }
                             if (this[field] === null) {
@@ -281,7 +282,7 @@
                         }
                     }
                 };
-                return _c[ClassRegistryBlueprint.lookup(obj.__t)];
+                return _c[tmpWrap(obj.__t)];
             }
 
             function validateIndata(obj, data) {
@@ -296,7 +297,7 @@
                                 possible += " \t " + pos + " \n ";
                             }
                         }
-                        throw ClassRegistryBlueprint.lookup(obj.__t) + " does not have field " + _key +
+                        throw tmpWrap(obj.__t) + " does not have field " + _key +
                             " \n Possible options are: \n" + possible + " \n ";
                     }
                 }
@@ -304,7 +305,7 @@
 
             function createField(field, key, data, options) {
                 if (hasFlag(field.flags, "required")) {
-                    if (!data || !data[key]) {
+                    if (data === undefined || data[key] === undefined) {
                         throw "Missing REQUIRED value: \"" + key + "\" of type " + field.type;
                     }
                     return createFieldOfType(field.type, data[key], options);
@@ -396,21 +397,30 @@
                             throw "Tried to create " + type + " but had no string data.";
                         }
                         return value || "";
+                    case "boolean":
+                        return !!value;
+                    default:
+                        throw "Tried to create " + type + " but it's not implemented.";
                 }
             }
 
             function checkEnum(value, allowed_values, options) {
                 if (!value) {
-                    return null;
+                    return "UNKNOWN";
                 }
                 if (value && typeof value !== "string") {
                     throw "Tried to create with wrong type (needed string).";
                 }
-                if (options.strict_enums && allowed_values.indexOf(value) === -1) {
-                    throw "Tried to create enum \"" + value +
-                        "\" but only " + allowed_values.join(", ") + " are allowed." +
-                        "You can bypass this with setting strict_enums to false";
+                if (allowed_values.indexOf(value) === -1) {
+                    if(options.strict_enums){
+                        throw "Tried to create enum \"" + value +
+                            "\" but only " + allowed_values.join(", ") + " are allowed." +
+                            "You can bypass this with setting strict_enums to false";
+                    } else {
+                        return "UNKNOWN";
+                    }
                 }
+                return value;
             }
 
             function checkInt(value, size, type, options) {
@@ -471,7 +481,7 @@
             function getParentTypePath(obj) {
                 var parentHash = obj.__t.slice(0, -3);
                 if (parentHash.length > 0) {
-                    return ClassRegistryBlueprint.lookup(parentHash);
+                    return tmpWrap(parentHash);
                 } else {
                     return null;
                 }

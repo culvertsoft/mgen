@@ -18,14 +18,14 @@ object MkOutro {
       txtBuffer {
         ln("define(\"" + classregistryBlueprint + "\", [], function(){")
         txtBuffer {
-          ln(s"return $classregistryBlueprint;")
+          ln(s"return blueprint;")
         }
         ln("});")
       }
       ln("} else {")
       txtBuffer {
         ln("// expose blueprint the old fashioned way.")
-        ln(s"window.$classregistryBlueprint = $classregistryBlueprint;")
+        ln(s"window.$classregistryBlueprint = blueprint;")
       }
       ln("}")
     }
