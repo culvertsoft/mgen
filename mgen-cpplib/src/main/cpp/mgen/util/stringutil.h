@@ -127,7 +127,10 @@ inline int fromString(const std::string& s) {
 
 template<>
 inline long long fromString(const std::string& s) {
-    return std::atoll(s.c_str());
+	long long out;
+	std::istringstream buffer(s);
+	buffer >> out;
+    return out;
 }
 
 template<>
