@@ -396,6 +396,9 @@ public class BinaryWriter extends BuiltInWriter {
 			case FLOAT64:
 				writeFloat64Array((double[]) arrayObj, false);
 				break;
+			case STRING:
+				writeStringArray((String[]) arrayObj, false);
+				break;
 			default:
 				writeObjectArray((Object[]) arrayObj, elementType, false);
 				break;
@@ -544,6 +547,26 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	private void writeStringArray(final String[] array, final boolean tag) throws IOException {
+
+		if (tag)
+			writeTypeTag(TAG_LIST);
+
+		if (array != null && array.length != 0) {
+
+			writeSize(array.length);
+
+			writeTypeTag(TAG_STRING);
+
+			for (final String s : array)
+				writeString(s, false);
+
+		} else {
+			writeSize(0);
+		}
+
+	}
+	
 	private void writeFloat64Array(final double[] array, final boolean tag) throws IOException {
 
 		if (tag)
