@@ -25,11 +25,11 @@
     const int nIdsOrFields = readSize(); \
     if (nIdsOrFields == 0) retCall; \
     const bool hasIds = (nIdsOrFields & 0x01) != 0; \
-    const int nIds = hasIds ? (nIdsOrFields >> 1) : 0; \
+    const int nIds = hasIds ? (nIdsOrFields >> 2) : 0; \
     std::vector<short> ids(nIds); \
     for (int i = 0; i < nIds; i++) \
         read(ids[i], false); \
-    const int nFields = hasIds ? readSize() : (nIdsOrFields >> 1);
+    const int nFields = hasIds ? readSize() : (nIdsOrFields >> 2);
 
 /*********************************************
  *
