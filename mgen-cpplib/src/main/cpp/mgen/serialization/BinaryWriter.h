@@ -8,9 +8,9 @@
 #ifndef MGEN_MGENBINARYWRITER_H_
 #define MGEN_MGENBINARYWRITER_H_
 
-#include "mgen/util/missingfields.h"
 #include "mgen/serialization/VarInt.h"
-#include "mgen/util/endian.h"
+#include "mgen/serialization/BinaryTags.h"
+#include "mgen/util/missingfields.h"
 
 namespace mgen {
 
@@ -127,17 +127,17 @@ private:
 
     void write(const bool v, const bool doTag) {
         writeTagIf(BINARY_TAG_BOOL, doTag);
-        write(v ? 0x01 : 0x00, false);
+        writeByte(v ? 0x01 : 0x00);
     }
 
     void write(const char v, const bool doTag) {
         writeTagIf(BINARY_TAG_INT8, doTag);
-        writeRaw(endian::mgen_hton(v));
+		writeByte(v);
     }
 
     void write(const short v, const bool doTag) {
         writeTagIf(BINARY_TAG_INT16, doTag);
-        writeRaw(endian::mgen_hton(v));
+        write16(v);
     }
 
     void write(const int v, const bool doTag) {
@@ -152,12 +152,12 @@ private:
 
     void write(const float v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT32, doTag);
-        writeRaw(endian::mgen_hton(v));
+        write32(v);
     }
 
     void write(const double v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT64, doTag);
-        writeRaw(endian::mgen_hton(v));
+        write64(v);
     }
 
     void write(const std::string& v, const bool doTag) {
@@ -200,12 +200,62 @@ private:
     void writeByte(const char c) {
         m_outputStream.write(&c, 1);
     }
+		
+	void write16(const unsigned short data) {
+		char buf[2];
+		buf[0] = data >> 8;
+		buf[1] = data >> 0;
+		m_outputStream.write(buf, 2);
+	}
 
-    template<typename T>
-    void writeRaw(const T& v) {
-        m_outputStream.write(&v, sizeof(T));
-    }
-
+	void write32(const float src) {
+		union un {
+			unsigned int i;
+			float f;
+		} un;
+		un.f = src;
+		write32(un.i);
+	}
+	
+	void write32(const int data) {
+		write32((unsigned int) data);
+	}
+	
+	void write32(const unsigned int data) {
+		char buf[4];
+		buf[0] = data >> 24;
+		buf[1] = data >> 16;
+		buf[2] = data >> 8;
+		buf[3] = data >> 0;
+		m_outputStream.write(buf, 4);
+	}
+	
+	void write64(const double src) {
+		union un {
+			unsigned long long l;
+			double d;
+		} un;
+		un.d = src;
+		write64(un.l);
+	}
+	
+	void write64(const long long data) {
+		write64((unsigned long long) data);
+	}
+	
+	void write64(const unsigned long long data) {
+		char buf[8];
+		buf[0] = data >> 56;
+		buf[1] = data >> 48;
+		buf[2] = data >> 40;
+		buf[3] = data >> 32;
+		buf[4] = data >> 24;
+		buf[5] = data >> 16;
+		buf[6] = data >> 8;
+		buf[7] = data >> 0;
+		m_outputStream.write(buf, 8);
+	}
+	
     bool shouldOmitIds(const long long expId) {
         return m_compact && expId == m_expectType;
     }
