@@ -137,7 +137,7 @@ private:
 
     void write(const short v, const bool doTag) {
         writeTagIf(BINARY_TAG_INT16, doTag);
-        write16(v);
+        write16(reinterpret_cast<const unsigned short&>(v));
     }
 
     void write(const int v, const bool doTag) {
@@ -152,12 +152,12 @@ private:
 
     void write(const float v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT32, doTag);
-        write32(v);
+        write32(reinterpret_cast<const unsigned int&>(v));
     }
 
     void write(const double v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT64, doTag);
-        write64(v);
+        write64(reinterpret_cast<const unsigned long long&>(v));
     }
 
     void write(const std::string& v, const bool doTag) {
@@ -207,19 +207,6 @@ private:
 		buf[1] = data >> 0;
 		m_outputStream.write(buf, 2);
 	}
-
-	void write32(const float src) {
-		union un {
-			unsigned int i;
-			float f;
-		} un;
-		un.f = src;
-		write32(un.i);
-	}
-	
-	void write32(const int data) {
-		write32((unsigned int) data);
-	}
 	
 	void write32(const unsigned int data) {
 		char buf[4];
@@ -228,19 +215,6 @@ private:
 		buf[2] = data >> 8;
 		buf[3] = data >> 0;
 		m_outputStream.write(buf, 4);
-	}
-	
-	void write64(const double src) {
-		union un {
-			unsigned long long l;
-			double d;
-		} un;
-		un.d = src;
-		write64(un.l);
-	}
-	
-	void write64(const long long data) {
-		write64((unsigned long long) data);
 	}
 	
 	void write64(const unsigned long long data) {

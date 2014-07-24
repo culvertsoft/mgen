@@ -140,17 +140,23 @@ private:
         skipFields(nFields);
     }
 
+    template<typename T>
+    void skip(const bool checkTag) {
+        T out;
+        read(out, checkTag);
+    }
+    
 #define SKIP_CASE_READ(tag, skipcall) case tag: {skipcall; break;}
     void skip(const BINARY_TAG tag) {
         switch (tag) {
-        SKIP_CASE_READ(BINARY_TAG_BOOL, read<bool>(false))
-        SKIP_CASE_READ(BINARY_TAG_INT8, read<char>(false))
-        SKIP_CASE_READ(BINARY_TAG_INT16, read<short>(false))
-        SKIP_CASE_READ(BINARY_TAG_INT32, read<int>(false))
-        SKIP_CASE_READ(BINARY_TAG_INT64, read<long long>(false))
-        SKIP_CASE_READ(BINARY_TAG_FLOAT32, read<float>(false))
-        SKIP_CASE_READ(BINARY_TAG_FLOAT64, read<double>(false))
-        SKIP_CASE_READ(BINARY_TAG_STRING, read<std::string>(false))
+        SKIP_CASE_READ(BINARY_TAG_BOOL, skip<bool>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT8, skip<char>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT16, skip<short>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT32, skip<int>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT64, skip<long long>(false))
+        SKIP_CASE_READ(BINARY_TAG_FLOAT32, skip<float>(false))
+        SKIP_CASE_READ(BINARY_TAG_FLOAT64, skip<double>(false))
+        SKIP_CASE_READ(BINARY_TAG_STRING, skip<std::string>(false))
         SKIP_CASE_READ(BINARY_TAG_LIST, skipList(false))
         SKIP_CASE_READ(BINARY_TAG_MAP, skipMap(false))
         SKIP_CASE_READ(BINARY_TAG_CUSTOM, skipCustom())
@@ -243,67 +249,51 @@ private:
 
     void read(float & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_FLOAT32, verifyTag);
-		
-		union un {
-			unsigned int i;
-			float f;
-		} un;
-		
-		un.i = read32();
-		v = un.f;
-		
+        reinterpret_cast<unsigned int&>(v) = read32();
     }
 
     void read(double & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_FLOAT64, verifyTag);
-		
-		union un {
-			unsigned long long l;
-			double d;
-		} un;
-		
-		un.l = read64();
-		v = un.d;
+        reinterpret_cast<unsigned long long&>(v) = read64();
     }
 	
-	unsigned short read16() {
+    unsigned short read16() {
 	
-		unsigned char bytes[2];
-		m_inputStream.read(bytes, 2);
+        unsigned char bytes[2];
+        m_inputStream.read(bytes, 2);
 		
-		return
-			( ((unsigned short) bytes[0]) << 8) + 
-			( ((unsigned short) bytes[1]) << 0);
-	}
+        return
+            ( ((unsigned short) bytes[0]) << 8) |
+            ( ((unsigned short) bytes[1]) << 0);
+    }
 
-	unsigned int read32() {
+    unsigned int read32() {
 	
-		unsigned char bytes[4];
-		m_inputStream.read(bytes, 4);
+        unsigned char bytes[4];
+        m_inputStream.read(bytes, 4);
 		
-		return
-			( ((unsigned int) bytes[0]) << 24) + 
-			( ((unsigned int) bytes[1]) << 16) +
-			( ((unsigned int) bytes[2]) << 8) + 
-			( ((unsigned int) bytes[3]) << 0);
-	}
+        return
+            ( ((unsigned int) bytes[0]) << 24) |
+            ( ((unsigned int) bytes[1]) << 16) |
+            ( ((unsigned int) bytes[2]) << 8) |
+            ( ((unsigned int) bytes[3]) << 0);
+    }
 	
-	unsigned long long read64() {
+    unsigned long long read64() {
 	
-		unsigned char src[8];
-		m_inputStream.read(src, 8);
+        unsigned char src[8];
+        m_inputStream.read(src, 8);
 		
-		return
-			( ((unsigned long long) src[0]) << 56) + 
-			( ((unsigned long long) src[1]) << 48) +
-			( ((unsigned long long) src[2]) << 40) + 
-			( ((unsigned long long) src[3]) << 32) + 
-			( ((unsigned long long) src[4]) << 24) + 
-			( ((unsigned long long) src[5]) << 16) +
-			( ((unsigned long long) src[6]) << 8) + 
-			( ((unsigned long long) src[7]) << 0);
-			
-	}
+        return
+            ( ((unsigned long long) src[0]) << 56) | 
+            ( ((unsigned long long) src[1]) << 48) |
+            ( ((unsigned long long) src[2]) << 40) | 
+            ( ((unsigned long long) src[3]) << 32) | 
+            ( ((unsigned long long) src[4]) << 24) | 
+            ( ((unsigned long long) src[5]) << 16) |
+            ( ((unsigned long long) src[6]) << 8) | 
+            ( ((unsigned long long) src[7]) << 0);
+    }
 	
     void read(std::string& v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_STRING, verifyTag);
@@ -314,13 +304,6 @@ private:
             v.resize(sz);
             m_inputStream.read(&v[0], sz);
         }
-    }
-
-    template<typename T>
-    T read(const bool checkTag) {
-        T out;
-        read(out, checkTag);
-        return out;
     }
 
     void verifyReadTagIf(const BINARY_TAG expTag, const bool check) {
@@ -339,7 +322,7 @@ private:
     }
 
     short readFieldId() {
-        return read<short>(false);
+        return read16();
     }
 
     int readSignedVarInt32() {
