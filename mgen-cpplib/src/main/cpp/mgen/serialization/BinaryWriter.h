@@ -201,34 +201,34 @@ private:
         m_outputStream.write(&c, 1);
     }
 		
-	void write16(const unsigned short data) {
-		char buf[2];
-		buf[0] = data >> 8;
-		buf[1] = data >> 0;
-		m_outputStream.write(buf, 2);
-	}
+    void write16(const unsigned short data) {
+        unsigned char buf[2];
+        buf[0] = data >> 8;
+        buf[1] = data >> 0;
+        m_outputStream.write(buf, 2);
+    }
 	
-	void write32(const unsigned int data) {
-		char buf[4];
-		buf[0] = data >> 24;
-		buf[1] = data >> 16;
-		buf[2] = data >> 8;
-		buf[3] = data >> 0;
-		m_outputStream.write(buf, 4);
-	}
+    void write32(const unsigned int data) {
+        unsigned char buf[4];
+        buf[0] = data >> 24;
+        buf[1] = data >> 16;
+        buf[2] = data >> 8;
+        buf[3] = data >> 0;
+        m_outputStream.write(buf, 4);
+    }
 	
-	void write64(const unsigned long long data) {
-		char buf[8];
-		buf[0] = data >> 56;
-		buf[1] = data >> 48;
-		buf[2] = data >> 40;
-		buf[3] = data >> 32;
-		buf[4] = data >> 24;
-		buf[5] = data >> 16;
-		buf[6] = data >> 8;
-		buf[7] = data >> 0;
-		m_outputStream.write(buf, 8);
-	}
+    void write64(const unsigned long long data) {
+        unsigned char buf[8];
+        buf[0] = data >> 56;
+        buf[1] = data >> 48;
+        buf[2] = data >> 40;
+        buf[3] = data >> 32;
+        buf[4] = data >> 24;
+        buf[5] = data >> 16;
+        buf[6] = data >> 8;
+        buf[7] = data >> 0;
+        m_outputStream.write(buf, 8);
+    }
 	
     bool shouldOmitIds(const long long expId) {
         return m_compact && expId == m_expectType;
