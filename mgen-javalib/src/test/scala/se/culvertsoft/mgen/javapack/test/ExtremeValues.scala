@@ -76,6 +76,12 @@ class ExtremeValues {
       writer.writeObject(car.setId(1))
       writer.writeObject(car.setId(-1))
 
+      writer.writeObject(car.setTopSpeed(Int.MaxValue))
+      writer.writeObject(car.setTopSpeed(Int.MinValue))
+      writer.writeObject(car.setTopSpeed(0))
+      writer.writeObject(car.setTopSpeed(1))
+      writer.writeObject(car.setTopSpeed(-1))
+
       val reader = getReader(writer)
 
       assert(reader.readObject(classOf[Car]).getId() == Long.MaxValue)
@@ -83,6 +89,12 @@ class ExtremeValues {
       assert(reader.readObject(classOf[Car]).getId() == 0)
       assert(reader.readObject(classOf[Car]).getId() == 1)
       assert(reader.readObject(classOf[Car]).getId() == -1)
+
+      assert(reader.readObject(classOf[Car]).getTopSpeed() == Int.MaxValue)
+      assert(reader.readObject(classOf[Car]).getTopSpeed() == Int.MinValue)
+      assert(reader.readObject(classOf[Car]).getTopSpeed() == 0)
+      assert(reader.readObject(classOf[Car]).getTopSpeed() == 1)
+      assert(reader.readObject(classOf[Car]).getTopSpeed() == -1)
 
       state.reset
 
