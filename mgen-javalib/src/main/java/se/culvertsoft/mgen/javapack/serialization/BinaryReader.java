@@ -43,7 +43,7 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 public class BinaryReader extends BuiltInReader {
 
 	private final InputStream m_stream;
-	private byte m_readBuffer64[] = new byte[8];
+	private final byte m_readBuffer64[] = new byte[8];
 
 	public BinaryReader(final InputStream stream, final ClassRegistryBase classRegistry) {
 		super(classRegistry);
