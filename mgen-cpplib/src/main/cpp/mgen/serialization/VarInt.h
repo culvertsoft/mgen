@@ -14,10 +14,10 @@ namespace mgen {
 namespace varint {
 
 template<typename Stream>
-inline void writeByte(const char c, Stream& out);
+inline void writeByte(const unsigned char c, Stream& out);
 
 template<typename Stream>
-inline char readByte(Stream& in);
+inline unsigned char readByte(Stream& in);
 
 template<typename Stream>
 inline void writeSigned64(long long value, Stream& out);
@@ -51,13 +51,13 @@ inline unsigned int readUnsigned32(Stream& in);
  ********************************************************/
 
 template<typename Stream>
-inline void writeByte(const char c, Stream& out) {
+inline void writeByte(const unsigned char c, Stream& out) {
     out.write(&c, 1);
 }
 
 template<typename Stream>
-inline char readByte(Stream& in) {
-    char out;
+inline unsigned char readByte(Stream& in) {
+    unsigned char out;
     in.read(&out, 1);
     return out;
 }
