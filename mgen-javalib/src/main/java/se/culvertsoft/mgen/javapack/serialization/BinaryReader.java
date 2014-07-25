@@ -395,11 +395,14 @@ public class BinaryReader extends BuiltInReader {
 
 	private long read64() throws IOException {
 		StreamUtil.readFully(m_stream, 8, m_readBuffer64);
-		return (((long) m_readBuffer64[0] << 56) + ((long) (m_readBuffer64[1] & 255) << 48)
-				+ ((long) (m_readBuffer64[2] & 255) << 40)
-				+ ((long) (m_readBuffer64[3] & 255) << 32)
-				+ ((long) (m_readBuffer64[4] & 255) << 24) + ((m_readBuffer64[5] & 255) << 16)
-				+ ((m_readBuffer64[6] & 255) << 8) + ((m_readBuffer64[7] & 255) << 0));
+		return (((long) m_readBuffer64[0] << 56) + 
+				((long) (m_readBuffer64[1] & 255) << 48) + 
+				((long) (m_readBuffer64[2] & 255) << 40) + 
+				((long) (m_readBuffer64[3] & 255) << 32) + 
+				((long) (m_readBuffer64[4] & 255) << 24) + 
+				((m_readBuffer64[5] & 255) << 16) + 
+				((m_readBuffer64[6] & 255) << 8) + 
+				((m_readBuffer64[7] & 255) << 0));
 	}
 
 	private int readSize() throws IOException {
