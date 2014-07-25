@@ -1,0 +1,6 @@
+{
+	"difficulty": "HIGH"
+	"ai_threads": 4
+	"cpu_threshold": 0.9
+	"host_game": true
+}

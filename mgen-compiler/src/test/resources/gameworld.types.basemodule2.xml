@@ -2,7 +2,21 @@
 
 <Module>
 
+    <Enums>
+        <Grade>
+            <LOW/>
+            <MEDIUM/>
+            <HIGH/>
+        </Grade>
+    </Enums>
+
 	<Types>
+        <AppConfigarion>
+            <difficulty type="Grade"/>
+            <ai_threads type="int"/>
+            <cpu_threshold type="double"/>
+            <host_game type="bool"/>
+        </AppConfigarion>
 	</Types>
 
 </Module>
