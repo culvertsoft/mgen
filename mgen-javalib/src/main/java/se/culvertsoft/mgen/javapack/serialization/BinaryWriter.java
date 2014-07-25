@@ -229,13 +229,13 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeFloat32(final float f, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT32);
-		writeRawInt32(Float.floatToIntBits(f));
+		writeRawInt32(Float.floatToRawIntBits(f));
 	}
 
 	private void writeFloat64(final double d, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT64);
-		writeRawInt64(Double.doubleToLongBits(d));
+		writeRawInt64(Double.doubleToRawLongBits(d));
 	}
 
 	private void writeString(final String s, final boolean tag) throws IOException {
@@ -566,7 +566,7 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 
 	}
-	
+
 	private void writeFloat64Array(final double[] array, final boolean tag) throws IOException {
 
 		if (tag)

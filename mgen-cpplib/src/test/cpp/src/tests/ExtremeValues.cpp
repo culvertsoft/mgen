@@ -9,6 +9,11 @@
 #include "mgen/serialization/JsonWriter.h"
 #include "mgen/serialization/JsonReader.h"
 
+#define MGEN_INT_MAX (0x7FFFFFFF)
+#define MGEN_INT_MIN (0x80000000)
+#define MGEN_LONG_LONG_MAX (0x7FFFFFFFFFFFFFFFLL)
+#define MGEN_LONG_LONG_MIN (0x8000000000000000LL)
+
 #define FLOAT_APPRIX_EQ(a,b) ( fabs((a) - (b)) <= fabs(a * 1e-5))
 
 /////////////////////////////////////////////////////////////////////
@@ -97,16 +102,22 @@ static void testFixedPoint(ExtremeValuesTestData& testData, WriterType& writer, 
     Car car, carBack;
     car._setAllFieldsSet(true, mgen::DEEP);
 
-    car.setId(LONG_LONG_MAX);
+    ASSERT(MGEN_LONG_LONG_MAX > 999);
+    ASSERT(MGEN_LONG_LONG_MIN < -999);
+
+    ASSERT(MGEN_INT_MAX > 999);
+    ASSERT(MGEN_INT_MIN < -999);
+
+    car.setId(MGEN_LONG_LONG_MAX);
     writer.writeObject(car);
     carBack = reader.template readStatic<Car>();
-    ASSERT(carBack.getId() == LONG_LONG_MAX);
+    ASSERT(carBack.getId() == MGEN_LONG_LONG_MAX);
     testData.reset();
 
-    car.setId(LONG_LONG_MIN);
+    car.setId(MGEN_LONG_LONG_MIN);
     writer.writeObject(car);
     carBack = reader.template readStatic<Car>();
-    ASSERT(carBack.getId() == LONG_LONG_MIN);
+    ASSERT(carBack.getId() == MGEN_LONG_LONG_MIN);
     testData.reset();
 
     car.setId(0);
@@ -127,16 +138,16 @@ static void testFixedPoint(ExtremeValuesTestData& testData, WriterType& writer, 
     ASSERT(carBack.getId() == -1);
     testData.reset();
 
-    car.setTopSpeed(INT_MAX);
+    car.setTopSpeed(MGEN_INT_MAX);
     writer.writeObject(car);
     carBack = reader.template readStatic<Car>();
-    ASSERT(carBack.getTopSpeed() == INT_MAX);
+    ASSERT(carBack.getTopSpeed() == MGEN_INT_MAX);
     testData.reset();
 
-    car.setTopSpeed(INT_MIN);
+    car.setTopSpeed(MGEN_INT_MIN);
     writer.writeObject(car);
     carBack = reader.template readStatic<Car>();
-    ASSERT(carBack.getTopSpeed() == INT_MIN);
+    ASSERT(carBack.getTopSpeed() == MGEN_INT_MIN);
     testData.reset();
 
     car.setTopSpeed(0);

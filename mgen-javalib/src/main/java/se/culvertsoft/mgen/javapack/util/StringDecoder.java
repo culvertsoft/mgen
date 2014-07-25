@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.javapack.util;
 
-import java.io.DataInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.nio.CharBuffer;
 import java.nio.charset.Charset;
@@ -35,13 +35,13 @@ public class StringDecoder {
 		m_stringDecoder.reset();
 	}
 
-	public String decode(final DataInputStream stream, final int nBytes) throws IOException {
+	public String decode(final InputStream stream, final int nBytes) throws IOException {
 
 		if (nBytes <= m_inputArray.length) {
 
 			reset();
 
-			stream.readFully(m_inputArray, 0, nBytes);
+			StreamUtil.readFully(stream, nBytes, m_inputArray);
 			m_inputBuffer.limit(nBytes);
 
 			CoderResult cr = m_stringDecoder.decode(m_inputBuffer, m_outputBuffer, true);
@@ -57,7 +57,7 @@ public class StringDecoder {
 
 		} else {
 			final byte[] data = new byte[nBytes];
-			stream.readFully(data);
+			StreamUtil.readFully(stream, data.length, data);
 			final ByteBuffer in = ByteBuffer.wrap(data);
 			return m_stringDecoder.decode(in).toString();
 		}
