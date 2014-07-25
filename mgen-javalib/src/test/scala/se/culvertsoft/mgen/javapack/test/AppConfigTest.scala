@@ -11,11 +11,9 @@ import se.culvertsoft.mgen.javapack.serialization.JsonReader
 
 class AppConfigTest {
 
-  val registry = new ClassRegistry
-
-  def readConfig(filePath: String): AppConfigarion = {
-    val reader = new JsonReader(new FileInputStream(filePath), registry)
-    reader.readObject(classOf[AppConfigarion])
+  def readConfig(filePath: String) = {
+    new JsonReader(new FileInputStream(filePath), new ClassRegistry)
+      .readObject(classOf[AppConfigarion])
   }
 
   @Test
