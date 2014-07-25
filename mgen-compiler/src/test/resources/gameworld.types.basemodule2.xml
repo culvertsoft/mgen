@@ -4,19 +4,19 @@
 
     <Enums>
         <Grade>
-            <LOW/>
-            <MEDIUM/>
-            <HIGH/>
+            <LOW />
+            <MEDIUM />
+            <HIGH />
         </Grade>
     </Enums>
 
-	<Types>
+    <Types>
         <AppConfigarion>
-            <difficulty type="Grade"/>
-            <ai_threads type="int"/>
-            <cpu_threshold type="double"/>
-            <host_game type="bool"/>
+            <difficulty type="Grade" />
+            <ai_threads type="int" />
+            <cpu_threshold type="double" />
+            <host_game type="bool" />
         </AppConfigarion>
-	</Types>
+    </Types>
 
 </Module>
