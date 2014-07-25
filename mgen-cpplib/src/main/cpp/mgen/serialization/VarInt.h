@@ -23,25 +23,25 @@ template<typename Stream>
 inline void writeSigned64(long long value, Stream& out);
 
 template<typename Stream>
-inline void writeUnsigned64(long long value, Stream& out);
+inline void writeUnsigned64(unsigned long long value, Stream& out);
 
 template<typename Stream>
 inline void writeSigned32(int value, Stream& out);
 
 template<typename Stream>
-inline void writeUnsigned32(int value, Stream& out);
+inline void writeUnsigned32(unsigned int value, Stream& out);
 
 template<typename Stream>
 inline long long readSigned64(Stream& in);
 
 template<typename Stream>
-inline long long readUnsigned64(Stream& in);
+inline unsigned long long readUnsigned64(Stream& in);
 
 template<typename Stream>
 inline int readSigned32(Stream& in);
 
 template<typename Stream>
-inline int readUnsigned32(Stream& in);
+inline unsigned int readUnsigned32(Stream& in);
 
 /********************************************************
  *
@@ -68,7 +68,7 @@ inline void writeSigned64(long long value, Stream& out) {
 }
 
 template<typename Stream>
-inline void writeUnsigned64(long long value, Stream& out) {
+inline void writeUnsigned64(unsigned long long value, Stream& out) {
     while ((value & 0xFFFFFFFFFFFFFF80LL) != 0LL) {
         writeByte((value & 0x7F) | 0x80, out);
         value >>= 7;
@@ -82,7 +82,7 @@ inline void writeSigned32(int value, Stream& out) {
 }
 
 template<typename Stream>
-inline void writeUnsigned32(int value, Stream& out) {
+inline void writeUnsigned32(unsigned int value, Stream& out) {
     while ((value & 0xFFFFFF80) != 0LL) {
         writeByte((value & 0x7F) | 0x80, out);
         value >>= 7;
@@ -98,10 +98,10 @@ inline long long readSigned64(Stream& in) {
 }
 
 template<typename Stream>
-inline long long readUnsigned64(Stream& in) {
-    long long value = 0LL;
-    int i = 0;
-    long long b;
+inline unsigned long long readUnsigned64(Stream& in) {
+    unsigned long long value = 0LL;
+    unsigned int i = 0;
+    unsigned long long b;
     while (((b = readByte(in)) & 0x80LL) != 0) {
         value |= (b & 0x7F) << i;
         i += 7;
@@ -119,10 +119,10 @@ inline int readSigned32(Stream& in) {
 }
 
 template<typename Stream>
-inline int readUnsigned32(Stream& in) {
-    int value = 0;
-    int i = 0;
-    int b;
+inline unsigned int readUnsigned32(Stream& in) {
+    unsigned int value = 0;
+    unsigned int i = 0;
+    unsigned int b;
     while (((b = readByte(in)) & 0x80) != 0) {
         value |= (b & 0x7F) << i;
         i += 7;
