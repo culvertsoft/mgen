@@ -625,8 +625,13 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	private void writeBytes(final byte[] data, final int offset, final int sz) throws IOException {
-		m_buffer.write(data, offset, sz);
-		checkFlush();
+		if (sz >= FLUSH_SIZE) {
+			flush();
+			m_streamOut.write(data, offset, sz);
+		} else {
+			m_buffer.write(data, offset, sz);
+			checkFlush();
+		}
 	}
 
 	private void writeBytes(final byte[] data, final int sz) throws IOException {
