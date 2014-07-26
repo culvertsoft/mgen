@@ -112,16 +112,15 @@ private:
         writeTagIf(BINARY_TAG_MAP, doTag);
         writeSize(v.size());
         if (!v.empty()) {
-            std::vector<K> keys(v.size());
-            std::vector<V> values(v.size());
-            int i = 0;
+
+            writeTagIf(BINARY_TAG_OF((K*) 0), true);
+            writeTagIf(BINARY_TAG_OF((V*) 0), true);
+
             for (typename std::map<K, V>::const_iterator it = v.begin(); it != v.end(); it++) {
-                keys[i] = it->first;
-                values[i] = it->second;
-                i++;
+                write(it->first, false);
+                write(it->second, false);
             }
-            write(keys, true);
-            write(values, true);
+
         }
     }
 

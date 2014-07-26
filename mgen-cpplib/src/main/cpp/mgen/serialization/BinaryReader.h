@@ -123,8 +123,15 @@ private:
             verifyReadTagIf(BINARY_TAG_MAP, tag);
         const int sz = readSize();
         if (sz > 0) {
-            skipList(true);
-            skipList(true);
+
+            const BINARY_TAG keyTag = readTag();
+            const BINARY_TAG valueTag = readTag();
+
+            for (int i = 0; i< sz; i++) {
+                skip(keyTag);
+                skip(valueTag);
+            }
+
         }
     }
 
@@ -181,14 +188,18 @@ private:
     template<typename K, typename V>
     void read(std::map<K, V>& v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_MAP, verifyTag);
+
         const int sz = readSize();
         if (sz > 0) {
-            std::vector<K> keys(sz);
-            std::vector<V> values(sz);
-            read(keys, true);
-            read(values, true);
-            for (int i = 0; i < sz; i++)
-                v[keys[i]] = values[i];
+            verifyReadTagIf(BINARY_TAG_OF((K*) 0), true);
+            verifyReadTagIf(BINARY_TAG_OF((V*) 0), true);
+
+            for (int i = 0; i < sz; i++) {
+                K key;
+                read(key, false);
+                read(v[key], false);
+            }
+
         }
     }
 

@@ -20,7 +20,6 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.CustomType;
@@ -208,8 +207,15 @@ public class BinaryReader extends BuiltInReader {
 			ensureTypeTag(null, TAG_MAP, readTypeTag());
 		final int sz = readSize();
 		if (sz > 0) {
-			skipList(true);
-			skipList(true);
+
+			final byte keyTag = readTypeTag();
+			final byte valueTag = readTypeTag();
+
+			for (int i = 0; i < sz; i++) {
+				skip(keyTag);
+				skip(valueTag);
+			}
+
 		}
 	}
 
@@ -610,18 +616,23 @@ public class BinaryReader extends BuiltInReader {
 		final HashMap<Object, Object> out = new HashMap<Object, Object>(nElements);
 
 		if (nElements > 0) {
-
-			final List<Object> keys = readElements(true, constraint != null ? constraint.keyType()
-					: null);
-			final List<Object> values = readElements(
-					true,
-					constraint != null ? constraint.valueType() : null);
-
-			if (keys.size() != values.size() || keys.size() != nElements)
-				throw new StreamCorruptedException("nKeys != nValues in map");
-
-			for (int i = 0; i < keys.size(); i++)
-				out.put(keys.get(i), values.get(i));
+			
+			final byte keyTag = readTypeTag();
+			final byte valueTag = readTypeTag();
+			
+			final Type keyType = constraint != null ? constraint.keyType() : null;
+			final Type valueType = constraint != null ? constraint.valueType() : null;
+			
+			if (constraint != null) {
+				ensureTypeTag(null, keyType.typeTag(), keyTag);
+				ensureTypeTag(null, valueType.typeTag(), valueTag);
+			}
+			
+			for (int i = 0; i< nElements; i++) {
+				final Object key = readObject(keyTag, keyType);
+				final Object value = readObject(valueTag, valueType);		
+				out.put(key, value);
+			}
 
 		}
 

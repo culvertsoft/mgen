@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.CustomType;
@@ -351,10 +352,18 @@ public class BinaryWriter extends BuiltInWriter {
 		if (map != null && !map.isEmpty()) {
 
 			writeSize(map.size());
+			
+			final Type keyType = typ.keyType();
+			final Type valueType = typ.valueType();			
 
-			writeElements(true, map.keySet(), typ.keyType());
-			writeElements(true, map.values(), typ.valueType());
-
+			writeTypeTag(keyType.typeTag());
+			writeTypeTag(valueType.typeTag());
+						
+			for (Map.Entry<Object, Object> entry : map.entrySet()) {
+				writeObject(entry.getKey(), keyType, false);
+				writeObject(entry.getValue(), valueType, false);
+		    }
+			
 		} else {
 			writeSize(0);
 		}
