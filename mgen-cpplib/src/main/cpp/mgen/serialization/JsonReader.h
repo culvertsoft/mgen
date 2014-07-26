@@ -84,7 +84,7 @@ private:
         if (node.IsNull())
             return 0;
 
-        const std::vector<std::string> ids = readIds(node);
+        const std::vector<std::string>& ids = readIds(node);
 
         const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(m_clsReg, ids, constrained, expectTypeId);
 
