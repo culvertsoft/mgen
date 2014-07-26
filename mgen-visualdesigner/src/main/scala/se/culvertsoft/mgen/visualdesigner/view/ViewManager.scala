@@ -5,9 +5,11 @@ import java.awt.Cursor
 import java.awt.Dimension
 import java.awt.Point
 import java.awt.Rectangle
+
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.reflect.ClassTag
+
 import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
@@ -23,6 +25,8 @@ import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
 import se.culvertsoft.mgen.visualdesigner.model.Entity
 import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
 import se.culvertsoft.mgen.visualdesigner.model.ModelOps.toRichCustomType
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.PlacedEntity
@@ -31,8 +35,6 @@ import se.culvertsoft.mgen.visualdesigner.util.AwtMath.RichDimension
 import se.culvertsoft.mgen.visualdesigner.util.AwtMath.RichPoint
 import se.culvertsoft.mgen.visualdesigner.util.OperationStatus
 import se.culvertsoft.mgen.visualdesigner.view.searchdialog.SearchDialog
-import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
-import se.culvertsoft.mgen.visualdesigner.model.EnumType
 
 class ViewManager(
   private val controller: Controller,
@@ -718,6 +720,8 @@ class ViewManager(
       controller.mouseInputMgr.mousePos.onScreen - searchDialog.getSize / 2
 
     searchDialog.setLocation(mousePos)
+
+    ClampPos(searchDialog, getWindow)
 
     if (!searchDialog.isVisible()) {
       searchDialog.setVisible(true)

@@ -10,6 +10,7 @@ import java.awt.Toolkit
 import java.awt.event.WindowAdapter
 import java.awt.event.WindowEvent
 import java.io.File
+
 import EntityFactory.mkModel
 import javax.swing.JLabel
 import javax.swing.JPanel
@@ -26,8 +27,6 @@ import se.culvertsoft.mgen.visualdesigner.uiInit.ToolbarsInit
 import se.culvertsoft.mgen.visualdesigner.util.ConsolePipe
 import se.culvertsoft.mgen.visualdesigner.view.AddressField
 import se.culvertsoft.mgen.visualdesigner.view.PackageExplorer
-import java.io.PrintStream
-import java.io.ByteArrayOutputStream
 
 object VisualDesigner {
 
