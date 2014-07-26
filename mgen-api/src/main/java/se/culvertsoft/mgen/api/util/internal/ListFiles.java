@@ -8,10 +8,11 @@ import se.culvertsoft.mgen.api.exceptions.MGenException;
 
 public class ListFiles {
 
-	private static
-			void
-			recursively(final String dir, final String ending, final TreeSet<String> out)
-					throws FileNotFoundException {
+	private static void list(
+			final String dir,
+			final String ending,
+			final TreeSet<String> out,
+			final boolean recurse) throws FileNotFoundException {
 		final File pluginFolder = new File(dir);
 		if (!pluginFolder.exists())
 			throw new MGenException("Missing directory: " + dir);
@@ -20,17 +21,20 @@ public class ListFiles {
 		final File[] curFiles = pluginFolder.listFiles();
 		for (File file : curFiles) {
 			if (file.isDirectory()) {
-				recursively(file.getAbsolutePath(), ending, out);
+				if (recurse)
+					list(file.getAbsolutePath(), ending, out, recurse);
 			} else if (file.getName().endsWith(ending)) {
 				out.add(file.getAbsolutePath());
 			}
 		}
 	}
 
-	public static TreeSet<String> recursively(final String dir, final String ending)
-			throws FileNotFoundException {
+	public static
+			TreeSet<String>
+			list(final String dir, final String ending, final boolean recurse)
+					throws FileNotFoundException {
 		final TreeSet<String> out = new TreeSet<String>();
-		recursively(dir, ending, out);
+		list(dir, ending, out, recurse);
 		return out;
 	}
 

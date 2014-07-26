@@ -26,8 +26,8 @@ object MkMetadataFields {
     // Own type data
     ln(s"const std::string& ${t.shortName()}::_type_name() {")
     ln(1, s"static const std::string out(${quote(t.fullName)});")
-    ln(1, s"return out;")
-    ln(s"}")
+    ln(1, "return out;")
+    ln("}")
     endl()
 
     {
@@ -35,7 +35,7 @@ object MkMetadataFields {
       ln(s"const std::vector<long long>& ${t.shortName()}::_type_ids() {")
       ln(1, s"static const std::vector<long long> out = mgen::make_vector<long long>() << ${ids.mkString(" << ")};")
       ln(1, s"return out;")
-      ln(s"}")
+      ln("}")
       endl()
     }
 
@@ -43,8 +43,8 @@ object MkMetadataFields {
       val ids16bit = t.superTypeHierarchy.map(_.typeId16Bit.toString)
       ln(s"const std::vector<short>& ${t.shortName()}::_type_ids_16bit() {")
       ln(1, s"static const std::vector<short> out = mgen::make_vector<short>() << ${ids16bit.mkString(" << ")};")
-      ln(1, s"return out;")
-      ln(s"}")
+      ln(1, "return out;")
+      ln("}")
       endl()
     }
 
@@ -52,8 +52,8 @@ object MkMetadataFields {
       val names = t.superTypeHierarchy.map(x => quote(x.fullName))
       ln(s"const std::vector<std::string>& ${t.shortName()}::_type_names() {")
       ln(1, s"static const std::vector<std::string> out = mgen::make_vector<std::string>() << ${names.mkString(" << ")};")
-      ln(1, s"return out;")
-      ln(s"}")
+      ln(1, "return out;")
+      ln("}")
       endl()
     }
 
@@ -61,8 +61,8 @@ object MkMetadataFields {
       val ids = t.superTypeHierarchy.map(x => quote(x.typeId16BitBase64))
       ln(s"const std::vector<std::string>& ${t.shortName()}::_type_ids_16bit_base64() {")
       ln(1, s"static const std::vector<std::string> out = mgen::make_vector<std::string>() << ${ids.mkString(" << ")};")
-      ln(1, s"return out;")
-      ln(s"}")
+      ln(1, "return out;")
+      ln("}")
       endl()
     }
 
@@ -71,14 +71,14 @@ object MkMetadataFields {
 
     ln(s"const std::string& ${t.shortName()}::_type_ids_16bit_base64_string() {")
     ln(1, s"static const std::string out($base64String);")
-    ln(1, s"return out;")
-    ln(s"}")
+    ln(1, "return out;")
+    ln("}")
     endl()
 
     ln(s"const std::string& ${t.shortName()}::_type_id_16bit_base64() {")
     ln(1, s"static const std::string out(${quote(t.typeId16BitBase64)});")
-    ln(1, s"return out;")
-    ln(s"}")
+    ln(1, "return out;")
+    ln("}")
     endl()
 
     // Field type data
@@ -87,8 +87,8 @@ object MkMetadataFields {
     val metadatasString = if (metadatas.isEmpty) ";" else s" = mgen::make_vector<mgen::Field>() << ${metadatas.mkString(" << ")};"
 
     ln(1, s"static const std::vector<mgen::Field> out${metadatasString}")
-    ln(1, s"return out;")
-    ln(s"}")
+    ln(1, "return out;")
+    ln("}")
     endl()
 
     // Fields metadata implementation
@@ -104,10 +104,9 @@ object MkMetadataFields {
 
       val flagsString = if (field.flags.nonEmpty) s", mgen::make_vector<std::string>() << ${field.flags.map(quote).mkString(" << ")}" else ""
 
-      ln(1,
-        s"static const mgen::Field out(${field.id}, ${quote(field.name)}$flagsString);")
-      ln(1, s"return out;")
-      ln(s"}")
+      ln(1, s"static const mgen::Field out(${field.id}, ${quote(field.name)}$flagsString);")
+      ln(1, "return out;")
+      ln("}")
       endl()
     }
 
