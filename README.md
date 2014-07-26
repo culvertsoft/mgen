@@ -11,6 +11,14 @@ MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/p
 
 Check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
+Why is MGen interesting? - MGen helps you solve the following problems, cross-language and cross-platform:
+ - Reading/writing config files directly to objects
+ - Saving/Loading the state of an application to memory, file, network etc
+ - Simplifying the process of sharing the state of your application over network
+ - Making sure the software you build today will be compatible with future programming langauges and platforms
+ - Much much more..
+
+
 ## Table of Contents
 
 * [Basic Usage](#basic-usage)
