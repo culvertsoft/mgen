@@ -127,7 +127,7 @@ inline unsigned int readUnsigned32(Stream& in) {
         value |= (b & 0x7F) << i;
         i += 7;
         if (i >= 36)
-            throw SerializationException("Varint::readUnsigned32 overflow.");
+            throw StreamCorruptedException("Varint::readUnsigned32 overflow.");
     }
     return value | (b << i);
 }
