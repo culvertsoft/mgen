@@ -9,10 +9,10 @@
 #define MGEN_JsonREADER_H_
 
 #include "mgen/ext/rapidjson/document.h"
-#include "mgen/classes/ClassRegistryBase.h"
 #include "mgen/exceptions/StreamCorruptedException.h"
 #include "mgen/serialization/JsonInputStream.h"
 #include "mgen/util/BuiltInSerializerUtil.h"
+#include "mgen/util/missingfields.h"
 
 namespace mgen {
 

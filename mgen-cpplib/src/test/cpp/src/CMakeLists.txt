@@ -19,5 +19,6 @@ add_executable(
 	tests/Performance.cpp
 	tests/WhitepaperExample.cpp
 	tests/ExtremeValues.cpp
+	tests/ConfigFileTest.cpp
 )
 
