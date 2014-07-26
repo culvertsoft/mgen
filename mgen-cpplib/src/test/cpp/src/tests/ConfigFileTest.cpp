@@ -1,5 +1,6 @@
 #include "TestBase.h"
 
+#include <cmath>
 #include <fstream>
 
 #include "gameworld/types/ClassRegistry.h"
@@ -40,6 +41,8 @@ BEGIN_TEST("TestHaveDifficultyParameter")
     ASSERT(!cfg.hasCpu_threshold());
     ASSERT(!cfg.hasHost_game());
 
+    ASSERT(cfg.getDifficulty() == Grade_MEDIUM);
+
 END_TEST
 
 /////////////////////////////////////////////////////////////////////
@@ -60,6 +63,11 @@ BEGIN_TEST("TestHaveAllParameters")
     ASSERT(cfg.hasAi_threads());
     ASSERT(cfg.hasCpu_threshold());
     ASSERT(cfg.hasHost_game());
+
+    ASSERT(cfg.getDifficulty() == Grade_HIGH);
+    ASSERT(cfg.getAi_threads() == 4);
+    ASSERT(cfg.getHost_game() == true);
+    ASSERT(std::abs(cfg.getCpu_threshold() - 0.9) < 1e-5);
 
 END_TEST
 
