@@ -17,7 +17,7 @@ object MkEnumCpp {
 
   def apply(module: Module, _e: EnumType, generatorSettings: java.util.Map[String, String]): String = {
 
-    implicit val txtBuffer = new SuperStringBuffer
+    implicit val txtBuffer = SuperStringBuffer.getCached()
     implicit val currentModule = module
     val namespaces = currentModule.path().split("\\.")
 
