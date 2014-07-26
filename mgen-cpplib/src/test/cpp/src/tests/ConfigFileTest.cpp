@@ -29,7 +29,7 @@ BEGIN_TEST("TestHaveDifficultyParameter")
     ClassRegistry classRegistry;
 
     const std::vector<char> data = readFile("../src/test/cpp/src/testdata/TestConfigDiff.txt");
-    ASSERT(!diffData.empty());
+    ASSERT(!data.empty());
 
     VectorInputStream stream(data);
     JsonReader<VectorInputStream, ClassRegistry> reader(stream, classRegistry);
@@ -52,7 +52,7 @@ BEGIN_TEST("TestHaveAllParameters")
     ClassRegistry classRegistry;
 
     const std::vector<char> data = readFile("../src/test/cpp/src/testdata/TestConfigAll.txt");
-    ASSERT(!diffData.empty());
+    ASSERT(!data.empty());
 
     VectorInputStream stream(data);
     JsonReader<VectorInputStream, ClassRegistry> reader(stream, classRegistry);
