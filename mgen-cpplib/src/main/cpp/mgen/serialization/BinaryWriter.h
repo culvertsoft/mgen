@@ -34,26 +34,24 @@ public:
     }
 
     template<typename T>
-    void visit(const T& v, const Field& field, const bool isSet) {
-        if (isSet) {
-            writeFieldStart(field.id(), BINARY_TAG_OF(&v));
-            write(v, false);
-        }
+    void visit(const T& v, const Field& field) {
+        writeFieldStart(field.id(), BINARY_TAG_OF(&v));
+        write(v, false);
     }
 
     template<typename MGenType>
-    void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
+    void beginVisit(const MGenType& object, const int nFieldsToVisit) {
 
         missingfields::ensureNoMissingFields(object);
 
         if (shouldOmitIds(MGenType::_type_id)) {
-            writeSize((nFieldsSet << 2) | 0x02);
+            writeSize((nFieldsToVisit << 2) | 0x02);
         } else {
             const std::vector<short>& ids = MGenType::_type_ids_16bit();
             writeSize((int(ids.size()) << 2) | 0x01);
             for (std::size_t i = 0; i < ids.size(); i++)
                 write(ids[i], false);
-            writeSize(nFieldsSet);
+            writeSize(nFieldsToVisit);
         }
 
     }
@@ -65,14 +63,14 @@ private:
 
     void writePoly(const MGenBase& v, const bool doTag) {
         writeTagIf(BINARY_TAG_CUSTOM, doTag);
-        m_classRegistry.visitObject(v, *this);
+        m_classRegistry.visitObject(v, *this, mgen::ALL_SET_NONTRANSIENT);
     }
 
     template<typename MGenType>
     void write(const MGenType& v, const MGenBase&, const bool doTag) {
         m_expectType = MGenType::_type_id;
         writeTagIf(BINARY_TAG_CUSTOM, doTag);
-        v._accept(*this);
+        v._accept(*this, ALL_SET_NONTRANSIENT);
     }
 
     template<typename EnumType>
@@ -131,7 +129,7 @@ private:
 
     void write(const char v, const bool doTag) {
         writeTagIf(BINARY_TAG_INT8, doTag);
-		writeByte(v);
+        writeByte(v);
     }
 
     void write(const short v, const bool doTag) {
@@ -199,14 +197,14 @@ private:
     void writeByte(const char c) {
         m_outputStream.write(&c, 1);
     }
-		
+
     void write16(const unsigned short data) {
         unsigned char buf[2];
         buf[0] = data >> 8;
         buf[1] = data >> 0;
         m_outputStream.write(buf, 2);
     }
-	
+
     void write32(const unsigned int data) {
         unsigned char buf[4];
         buf[0] = data >> 24;
@@ -215,7 +213,7 @@ private:
         buf[3] = data >> 0;
         m_outputStream.write(buf, 4);
     }
-	
+
     void write64(const unsigned long long data) {
         unsigned char buf[8];
         buf[0] = data >> 56;
@@ -228,7 +226,7 @@ private:
         buf[7] = data >> 0;
         m_outputStream.write(buf, 8);
     }
-	
+
     bool shouldOmitIds(const long long expId) {
         return m_compact && expId == m_expectType;
     }

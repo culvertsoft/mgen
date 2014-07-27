@@ -16,6 +16,7 @@ import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
+import se.culvertsoft.mgen.javapack.metadata.FieldVisitSelection;
 
 public class JsonWriter extends TextFormatWriter {
 
@@ -61,7 +62,7 @@ public class JsonWriter extends TextFormatWriter {
 	}
 
 	@Override
-	public void beginWrite(final MGenBase o, final int nFieldsSet, final int nFieldsTotal)
+	public void beginWrite(final MGenBase o, final int nFields)
 			throws IOException {
 	}
 
@@ -182,7 +183,7 @@ public class JsonWriter extends TextFormatWriter {
 			beginBlock("{");
 			if (needWriteTypeId(o, expectType))
 				writeTypeId(o);
-			o._accept(this);
+			o._accept(this, FieldVisitSelection.ALL_SET_NONTRANSIENT);
 			endBlock("}", m_iEntry[m_depth] > 0);
 		}
 	}

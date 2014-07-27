@@ -6,6 +6,7 @@ import java.util.List;
 
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
+import se.culvertsoft.mgen.javapack.metadata.FieldVisitSelection;
 import se.culvertsoft.mgen.javapack.serialization.FieldVisitor;
 import se.culvertsoft.mgen.javapack.serialization.Reader;
 
@@ -64,7 +65,7 @@ public abstract class MGenBase {
 
 	public abstract Field _fieldByName(final String name);
 
-	public abstract int _nFieldsSet(final FieldSetDepth fieldSetDepth);
+	public abstract int _nFieldsSet(final FieldSetDepth fieldSetDepth, final boolean includeTransient);
 
 	public abstract boolean _isFieldSet(
 			final Field field,
@@ -76,7 +77,7 @@ public abstract class MGenBase {
 
 	public abstract boolean _validate(final FieldSetDepth depth);
 
-	public abstract void _accept(final FieldVisitor visitor) throws IOException;
+	public abstract void _accept(final FieldVisitor visitor, final FieldVisitSelection fieldSelection) throws IOException;
 
 	public abstract boolean _readField(
 			final short fieldId,

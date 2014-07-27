@@ -12,7 +12,7 @@ object MkNumFieldsSet {
 
     implicit val currentModule = module
 
-    txtBuffer.tabs(1).textln(s"int _numFieldsSet(const mgen::FieldSetDepth depth) const;")
+    txtBuffer.tabs(1).textln(s"int _numFieldsSet(const mgen::FieldSetDepth depth, const bool includeTransient) const;")
     txtBuffer.endl()
 
   }

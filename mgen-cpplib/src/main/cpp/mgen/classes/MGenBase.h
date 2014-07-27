@@ -59,7 +59,7 @@ public:
 
     virtual const mgen::Field * _fieldByName(const std::string& name) const = 0;
 
-    virtual int _numFieldsSet(const FieldSetDepth depth) const = 0;
+    virtual int _numFieldsSet(const FieldSetDepth depth, const bool includeTransient) const = 0;
 
     virtual bool _isFieldSet(const mgen::Field& field, const FieldSetDepth depth) const = 0;
 

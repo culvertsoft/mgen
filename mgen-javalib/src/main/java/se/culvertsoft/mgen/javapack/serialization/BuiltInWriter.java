@@ -31,10 +31,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 
 	public abstract void writeObject(final MGenBase object) throws IOException;
 
-	public abstract void beginWrite(
-			final MGenBase object,
-			final int nFieldsSet,
-			final int nFieldsTotal) throws IOException;
+	public abstract void beginWrite(final MGenBase object, final int nFields) throws IOException;
 
 	public abstract void finishWrite() throws IOException;
 
@@ -68,90 +65,78 @@ public abstract class BuiltInWriter implements FieldVisitor {
 			throws IOException;
 
 	@Override
-	public void visit(final boolean b, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeBooleanField(b, field);
+	public void visit(final boolean b, final Field field) throws IOException {
+		writeBooleanField(b, field);
 	}
 
 	@Override
-	public void visit(final byte o, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeInt8Field(o, field);
+	public void visit(final byte o, final Field field) throws IOException {
+		writeInt8Field(o, field);
 	}
 
 	@Override
-	public void visit(final short o, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeInt16Field(o, field);
+	public void visit(final short o, final Field field) throws IOException {
+		writeInt16Field(o, field);
 	}
 
 	@Override
-	public void visit(final int o, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeInt32Field(o, field);
+	public void visit(final int o, final Field field) throws IOException {
+		writeInt32Field(o, field);
 	}
 
 	@Override
-	public void visit(final long o, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeInt64Field(o, field);
+	public void visit(final long o, final Field field) throws IOException {
+		writeInt64Field(o, field);
 	}
 
 	@Override
-	public void visit(final float o, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeFloat32Field(o, field);
+	public void visit(final float o, final Field field) throws IOException {
+		writeFloat32Field(o, field);
 	}
 
 	@Override
-	public void visit(final double o, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeFloat64Field(o, field);
+	public void visit(final double o, final Field field) throws IOException {
+		writeFloat64Field(o, field);
 	}
 
 	@Override
-	public void visit(final String o, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeStringField(o, field);
+	public void visit(final String o, final Field field) throws IOException {
+		writeStringField(o, field);
 	}
 
 	@Override
-	public void visit(final Enum<?> e, final Field field, final boolean isSet) throws IOException {
-		if (isSet)
-			writeEnumField(e, field);
+	public void visit(final Enum<?> e, final Field field) throws IOException {
+		writeEnumField(e, field);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public void visit(final Object o, final Field field, final boolean isSet) throws IOException {
-		if (isSet) {
-			switch (field.typ().typeEnum()) {
-			case ARRAY:
-				writeArrayField(o, field);
-				break;
-			case LIST:
-				writeListField((ArrayList<Object>) o, field);
-				break;
-			case MAP:
-				writeMapField((HashMap<Object, Object>) o, field);
-				break;
-			case UNKNOWN:
-			case CUSTOM:
-				writeMGenObjectField((MGenBase) o, field);
-				break;
-			default:
-				throw new UnknownTypeException("Don't know how to write " + o + "("
-						+ field.typ().typeEnum() + ") of field " + field);
-			}
+	public void visit(final Object o, final Field field) throws IOException {
+		switch (field.typ().typeEnum()) {
+		case ARRAY:
+			writeArrayField(o, field);
+			break;
+		case LIST:
+			writeListField((ArrayList<Object>) o, field);
+			break;
+		case MAP:
+			writeMapField((HashMap<Object, Object>) o, field);
+			break;
+		case UNKNOWN:
+		case CUSTOM:
+			writeMGenObjectField((MGenBase) o, field);
+			break;
+		default:
+			throw new UnknownTypeException("Don't know how to write " + o + "("
+					+ field.typ().typeEnum() + ") of field " + field);
 		}
 	}
 
 	@Override
-	public void beginVisit(final MGenBase object, final int nFieldsSet, final int nFieldsTotal)
-			throws IOException {
+	public void beginVisit(final MGenBase object, final int nFields) throws IOException {
 		if (m_shouldValidate)
 			ensureNoMissingReqFields(object);
-		beginWrite(object, nFieldsSet, nFieldsTotal);
+		beginWrite(object, nFields);
 	}
 
 	@Override

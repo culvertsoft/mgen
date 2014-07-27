@@ -18,6 +18,7 @@ public class Field {
 	private final boolean m_required;
 	private final boolean m_polymorphic;
 	private final boolean m_parked;
+	private final boolean m_transient;
 
 	@SuppressWarnings("unchecked")
 	public Field(
@@ -35,6 +36,7 @@ public class Field {
 		m_required = m_flags.contains("required");
 		m_polymorphic = m_flags.contains("polymorphic");
 		m_parked = m_flags.contains("parked");
+		m_transient = m_flags.contains("transient");
 	}
 
 	public String name() {
@@ -75,6 +77,10 @@ public class Field {
 
 	public boolean isParked() {
 		return m_parked;
+	}
+	
+	public boolean isTransient() {
+		return m_transient;
 	}
 
 	@Override

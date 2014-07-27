@@ -27,15 +27,15 @@ public:
 
     void randomizeObject(mgen::MGenBase& object) {
         m_depth = 0;
-        m_classReg.visitObject(object, *this);
+        m_classReg.visitObject(object, *this, mgen::ALL);
     }
 
     template<typename MGenType>
-    void beginVisit(MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
+    void beginVisit(MGenType& object, const int nFieldsFollow) {
     }
 
     template<typename T>
-    void visit(T& v, const Field& field, const bool isSet) {
+    void visit(T& v, const Field& field) {
         if (m_depth < m_maxDepth || field.isRequired()) {
             m_depth++;
             randomize(v);
@@ -57,12 +57,12 @@ private:
     }
 
     void randomizePoly(MGenBase& v) {
-        m_classReg.visitObject(v, *this);
+        m_classReg.visitObject(v, *this, mgen::ALL);
     }
 
     template<typename MGenType>
     void randomize(MGenType& v, const MGenBase& /* type_evidence */) {
-        v._accept(*this);
+        v._accept(*this, mgen::ALL);
     }
 
     template<typename EnumType>

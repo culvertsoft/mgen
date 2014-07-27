@@ -25,10 +25,14 @@ public:
                     m_id(id),
                     m_name(name),
                     m_flags(flags),
-                    m_required(false) {
+                    m_required(false),
+                    m_transient(false) {
         for (std::size_t i = 0; i < flags.size(); i++) {
             if (flags[i] == "required") {
                 m_required = true;
+                break;
+            } else if (flags[i] == "transient") {
+                m_transient = true;
                 break;
             }
         }
@@ -50,17 +54,28 @@ public:
         return m_required;
     }
 
+    bool isTransient() const {
+        return m_transient;
+    }
+
 private:
     short m_id;
     std::string m_name;
     std::vector<std::string> m_flags;
     bool m_required;
+    bool m_transient;
 
 };
 
 enum FieldSetDepth {
     SHALLOW,
     DEEP
+};
+
+enum FieldVisitSelection {
+    ALL,
+    ALL_SET,
+    ALL_SET_NONTRANSIENT
 };
 
 } /* namespace mgen */

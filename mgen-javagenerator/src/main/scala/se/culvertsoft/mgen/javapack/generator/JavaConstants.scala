@@ -47,7 +47,9 @@ object JavaConstants {
   val fieldVisitorClsStringQ = s"${javapackPkg}.serialization.${fieldVisitorClsString}"
 
   val fieldSetDepthClsString = s"FieldSetDepth"
+  val fieldVisitSelectionClsString = s"FieldVisitSelection"
   val fieldSetDepthClsStringQ = s"${metadataPkg}.${fieldSetDepthClsString}"
+  val fieldVisitSelectionClsStringQ = s"${metadataPkg}.${fieldVisitSelectionClsString}"
 
   val fileHeader = FancyHeaders.fileHeader
   val serializationSectionHeader = FancyHeaders.serializationSectionHeader

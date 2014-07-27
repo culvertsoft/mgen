@@ -24,7 +24,7 @@ object MkVisitorDispatch {
     for (constString <- List("", "const ")) {
 
       ln(1, s"template<typename VisitorType>")
-      ln(1, s"void visitObject(${constString}mgen::MGenBase& o, VisitorType& visitor) const {")
+      ln(1, s"void visitObject(${constString}mgen::MGenBase& o, VisitorType& visitor, const mgen::FieldVisitSelection selection) const {")
 
       txtBuffer.endl()
 
@@ -38,7 +38,7 @@ object MkVisitorDispatch {
         "return;",
         topLevelTypes,
         t => s"${MkLongTypeName.cpp(t)}::_type_id_16bit",
-        t => s"static_cast<${constString}${fullName(t)}&>(o)._accept<VisitorType>(visitor);")
+        t => s"static_cast<${constString}${fullName(t)}&>(o)._accept<VisitorType>(visitor, selection);")
 
       ln(nTabs + 1, "return;")
 

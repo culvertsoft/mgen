@@ -29,7 +29,7 @@ public:
     }
 
     template<typename MGenType>
-    void beginVisit(const MGenType& object, const int nFieldsSet, const int nFieldsTotal) {
+    void beginVisit(const MGenType& object, const int nFieldsToVisit) {
 
         missingfields::ensureNoMissingFields(object);
 
@@ -40,13 +40,11 @@ public:
             m_rapidJsonWriter.String(MGenType::_type_ids_16bit_base64_string().c_str());
         }
     }
-    
+
     template<typename T>
-    void visit(const T& v, const Field& field, const bool isSet) {
-        if (isSet) {
-            m_rapidJsonWriter.String(field.name().c_str());
-            write(v);
-        }
+    void visit(const T& v, const Field& field) {
+        m_rapidJsonWriter.String(field.name().c_str());
+        write(v);
     }
 
     void endVisit() {
@@ -56,13 +54,13 @@ public:
 private:
 
     void writePoly(const MGenBase& v) {
-        m_classRegistry.visitObject(v, *this);
+        m_classRegistry.visitObject(v, *this, mgen::ALL_SET_NONTRANSIENT);
     }
 
     template<typename MGenType>
     void write(const MGenType& v, const MGenBase&) {
         m_expectType = MGenType::_type_id;
-        v._accept(*this);
+        v._accept(*this, ALL_SET_NONTRANSIENT);
     }
 
     template<typename EnumType>

@@ -29,6 +29,7 @@ import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
+import se.culvertsoft.mgen.javapack.metadata.FieldVisitSelection;
 import se.culvertsoft.mgen.javapack.util.FastByteBuffer;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
@@ -66,17 +67,17 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	@Override
-	public void beginWrite(final MGenBase object, final int nFieldsSet, final int nFieldsTotal)
+	public void beginWrite(final MGenBase object, final int nFields)
 			throws IOException {
 
 		if (shouldOmitIds(object)) {
-			writeSize((nFieldsSet << 2) | 0x02);
+			writeSize((nFields << 2) | 0x02);
 		} else {
 			final short[] ids = object._typeIds16Bit();
 			writeSize((ids.length << 2) | 0x01);
 			for (final short id : ids)
 				writeInt16(id, false);
-			writeSize(nFieldsSet);
+			writeSize(nFields);
 		}
 
 	}
@@ -179,7 +180,7 @@ public class BinaryWriter extends BuiltInWriter {
 
 		if (o != null) {
 			m_expectType = typ != null ? typ.typeId() : 0;
-			o._accept(this);
+			o._accept(this, FieldVisitSelection.ALL_SET_NONTRANSIENT);
 		} else {
 			writeByte(0);
 		}

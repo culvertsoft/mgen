@@ -20,12 +20,26 @@ object MkNumFieldsSet {
     implicit val currentModule = module
 
     val allFields = t.fieldsInclSuper()
-    txtBuffer.tabs(0).textln(s"int ${t.shortName()}::_numFieldsSet(const mgen::FieldSetDepth depth) const {")
-    txtBuffer.tabs(1).textln(s"int out = 0;")
-    for (field <- allFields)
-      txtBuffer.tabs(1).textln(s"out += ${isFieldSet(field, "depth")} ? 1 : 0;")
-    txtBuffer.tabs(1).textln(s"return out;")
-    txtBuffer.tabs(0).textln("}").endl()
+    val nonTransientFields = allFields.filterNot(_.isTransient)
+    val haveTransientFields = allFields.size != nonTransientFields.size
+
+    ln(0, s"int ${t.shortName()}::_numFieldsSet(const mgen::FieldSetDepth depth, const bool includeTransient) const {")
+    ln(1, s"int out = 0;")
+
+    if (haveTransientFields) {
+      ln(1, s"if (includeTransient) {")
+      for (field <- allFields)
+        ln(2, s"out += ${isFieldSet(field, "depth")} ? 1 : 0;")
+      ln(1, s"} else {")
+      for (field <- nonTransientFields)
+        ln(2, s"out += ${isFieldSet(field, "depth")} ? 1 : 0;")
+      ln(1, s"}")
+    } else {
+      for (field <- allFields)
+        ln(1, s"out += ${isFieldSet(field, "depth")} ? 1 : 0;")
+    }
+    ln(1, s"return out;")
+    ln(0, "}").endl()
 
   }
 
