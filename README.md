@@ -68,7 +68,7 @@ Why is MGen interesting? - MGen can help you with the following, cross-language 
   * [Build Time Tools](#build-build-time-tools)
   * [Runtime Libraries](#build-runtime-libraries)
   * [Tests](#tests)
-* [Version History](#version-history)
+* [State of Development](#state-of-development)
 * [Future Plans](#future-plans)
   * [RPC Interfaces](#rpc-interfaces)
   * [Transport Layers](#transport-layers)
@@ -537,7 +537,7 @@ Build Instructions:
 Output will be placed inside each mgen-component's target/ directory (e.g. mgen-api/target/).
  
 
-## Version History
+## State of Development
 
 Development is a few months from an initial beta release. 
 
