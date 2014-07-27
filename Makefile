@@ -33,7 +33,7 @@ clean:
 	#           CLEANING MGEN                               #
 	#                                                       #
 	#########################################################
-	cd mgen-testresources && make clean
+	cd mgen-integrationtests && make clean
 	cd mgen-api && make clean
 	cd mgen-compiler && make clean
 	cd mgen-cppgenerator && make clean
@@ -57,7 +57,7 @@ eclipse:
 	#########################################################
 	sbt eclipse
 	cd mgen-cpplib && make eclipse
-	cd mgen-testresources && make eclipse
+	cd mgen-integrationtests && make eclipse
 	#########################################################
 	#                                                       #
 	#        DONE CREATING ECLIPSE PROJECTS                 #
@@ -70,10 +70,10 @@ run-compiler:
 run-visualdesigner:
 	cd mgen-visualdesigner && make run
 
-prepare-testresources:
-	cd mgen-testresources && make generate
+run-integrationtests:
+	cd mgen-integrationtests && make run-tests
 
-run-tests: prepare-testresources
+run-tests: run-integrationtests
 	#########################################################
 	#                                                       #
 	#       RUNNING ALL TESTS                               #

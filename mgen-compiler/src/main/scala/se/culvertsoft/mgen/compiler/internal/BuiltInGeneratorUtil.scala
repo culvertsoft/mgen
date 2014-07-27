@@ -43,6 +43,13 @@ object BuiltInGeneratorUtil {
     b.tabs(b.tabLevel).text(b.scopeEnd).endl()
   }
 
+  def scopeExt(head: String, extraEnd: String)(body: => Any)(implicit b: SuperStringBuffer) {
+    b.tabs(b.tabLevel).text(head).text(b.scopeBegin).endl() {
+      body
+    }
+    b.tabs(b.tabLevel).text(b.scopeEnd + extraEnd).endl()
+  }
+
   def endl()(implicit b: SuperStringBuffer): SuperStringBuffer = {
     b.endl()
   }

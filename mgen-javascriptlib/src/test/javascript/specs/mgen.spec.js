@@ -1,7 +1,7 @@
 /** JSLINT CONFIG */
-/*global mgen_classreg: false, mGenGenerate: false, it: false, describe: false, expect: false, xit: false, throws: false */
+/*global mgen_blueprint: false, mGenGenerate: false, it: false, describe: false, expect: false, xit: false, throws: false */
 
-(function() {
+requirejs(['mGen', 'mgen_classreg'], function (mGen, mgen_classreg) {
 	"use strict";
 
 	/* ***********************************************************\
@@ -15,11 +15,11 @@
 	 \*************************************************************/
 
 	if (!mgen_classreg) {
-		throw "mgen_classreg missing";
+		throw "mgen_blueprint missing";
 	}
 
 	if (!mGen.generate) {
-		throw "mgen_classreg missing";
+		throw "mGen.Generate missing";
 	}
 
 	var registry = mGen.generate(mgen_classreg);
@@ -167,7 +167,7 @@
 				brand: "IAmRolling"
 			});
 
-			var jsonHandler = mGen.jsonHandlerFactory(registry);
+			var jsonHandler = mGen.jsonHandler(registry);
 
 			expect( jsonHandler.objectToString(a) ).toBe( car_as_string );
 
@@ -202,7 +202,7 @@
 				brand: "IAmRolling"
 			});
 
-			var jsonHandler = mGen.jsonHandlerFactory(registry);
+			var jsonHandler = mGen.jsonHandler(registry);
 			var b = jsonHandler.stringToObject(jsonHandler.objectToString(a))
 
 			expect( jsonHandler.objectToString(a) ).toBe( jsonHandler.objectToString(b) );
@@ -349,4 +349,4 @@
 		});
 
 	});
-})();
+});
