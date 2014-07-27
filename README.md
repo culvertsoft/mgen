@@ -541,11 +541,10 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 
 Development is a few months from an initial beta release. 
 
-All the core functionality is implemented and we've built about half the cross-language integration tests we want. 
-
-We've not yet started on configuring test boxes for multiple simulated dev environments, and the build scripts for our C++ tests currently do not work with Visual Studio.
-
-Documentation is somewhat lacking.
+All the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
+ - We've not yet started on configuring test boxes for multiple dev platforms
+ - Our build scripts for C++ tests currently do not build with Visual Studio.
+ - Documentation is somewhat lacking.
 
 
 ## License
