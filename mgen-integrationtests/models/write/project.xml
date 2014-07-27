@@ -12,7 +12,7 @@
         	<generator_class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </generator_class_path>
         	<output_path>src_generated/javascript</output_path>
         	<output_filename>mgen-data.js</output_filename>
-        	<classregistry_name>mgen_classreg</classregistry_name>
+        	<classregistryblueprint>se_culvertsoft</classregistryblueprint>
 		<classregistry_path>se.culvertsoft.testmodule</classregistry_path>
     	</Generator>
 

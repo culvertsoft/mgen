@@ -66,7 +66,7 @@ requirejs(['mGen', 'se_culvertsoft'], function(mGen, se_culvertsoft) {
 	|*         TEST EMPTY OBJECTS                                *|
 	\*************************************************************/
 	describe("Empty Objects", function() {
-		var filepath = "../../generated/depends/data_generated/emptyObjects_json.data";
+		var filepath = "../../generated/read/data_generated/emptyObjects_json.data";
 		var jPath = java.nio.file.Paths.get(filepath);
 		var fileBytes = java.nio.file.Files.readAllBytes(jPath)
 		var testdata = javaToJavaScript(new java.lang.String(fileBytes));
@@ -87,7 +87,7 @@ requirejs(['mGen', 'se_culvertsoft'], function(mGen, se_culvertsoft) {
 	|*         TEST RANDOM OBJECTS                                *|
 	\***********************************************************/
 	describe("Random Objects", function() {
-		var filepath = "../../generated/depends/data_generated/randomizedObjects_json.data";
+		var filepath = "../../generated/read/data_generated/randomizedObjects_json.data";
 		var jPath = java.nio.file.Paths.get(filepath);
 		var fileBytes = java.nio.file.Files.readAllBytes(jPath)
 		var testdata = javaToJavaScript(new java.lang.String(fileBytes));
