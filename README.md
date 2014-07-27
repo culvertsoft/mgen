@@ -539,7 +539,13 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 
 ## Version History
 
-Development is slightly passed half-way to the first beta release, but at this point we're not putting any version numbers on it yet. So you could call it Alpha v0.x (pre-release experimental code).
+Development is a few months from an initial beta release. 
+
+All the core functionality is implemented and we've built about half the cross-language integration tests we want. 
+
+We've not yet started on configuring test boxes for multiple simulated dev environments, and our build scripts for C++ currently do not build with Visual Studio.
+
+Documentation is somewhat lacking.
 
 
 ## License
