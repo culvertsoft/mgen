@@ -16,7 +16,7 @@ Why is MGen interesting? - MGen can help you with the following, cross-language 
  - Reading/writing config files directly to objects
  - Simplifying the process of sharing the state of your application over network
  - Making sure the data model and software you build today is as accessible as possible for any future projects
- - Building powerful, accessible, compatible data models that you come to much later and easily understand.
+ - Building powerful, accessible, compatible data models that you come back later and still understand.
  - Use native language objects with external services and interfaces requiring text formats such as JSON.
  - Much much more..
 
