@@ -48,7 +48,7 @@ object MainMenuInit {
     viewMenu.addSeparator()
     viewMenu.add(Actions.MainMenu.View.SET_VIEW_ROOT)
     viewMenu.add(Actions.MainMenu.View.RESET_VIEW_ROOT)
-    viewMenu.add(Actions.MainMenu.View.MAXIMIZE)
+    viewMenu.add(Actions.MainMenu.View.TOGGLE_FULL_SCREEN)
     viewMenu.addSeparator()
     viewMenu.add(Actions.MainMenu.View.ICONS_ONLY_VIEW)
     viewMenu.addSeparator()

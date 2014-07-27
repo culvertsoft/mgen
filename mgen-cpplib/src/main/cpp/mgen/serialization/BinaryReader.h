@@ -8,11 +8,10 @@
 #ifndef MGEN_MGENBINARYREADER_H_
 #define MGEN_MGENBINARYREADER_H_
 
-#include "mgen/classes/ClassRegistryBase.h"
 #include "mgen/serialization/VarInt.h"
 #include "mgen/serialization/BinaryTags.h"
-#include "mgen/util/missingfields.h"
 #include "mgen/util/BuiltInSerializerUtil.h"
+#include "mgen/util/missingfields.h"
 
 /*********************************************
  *
@@ -25,11 +24,11 @@
     const int nIdsOrFields = readSize(); \
     if (nIdsOrFields == 0) retCall; \
     const bool hasIds = (nIdsOrFields & 0x01) != 0; \
-    const int nIds = hasIds ? (nIdsOrFields >> 1) : 0; \
+    const int nIds = hasIds ? (nIdsOrFields >> 2) : 0; \
     std::vector<short> ids(nIds); \
     for (int i = 0; i < nIds; i++) \
         read(ids[i], false); \
-    const int nFields = hasIds ? readSize() : (nIdsOrFields >> 1);
+    const int nFields = hasIds ? readSize() : (nIdsOrFields >> 2);
 
 /*********************************************
  *
@@ -124,8 +123,15 @@ private:
             verifyReadTagIf(BINARY_TAG_MAP, tag);
         const int sz = readSize();
         if (sz > 0) {
-            skipList(true);
-            skipList(true);
+
+            const BINARY_TAG keyTag = readTag();
+            const BINARY_TAG valueTag = readTag();
+
+            for (int i = 0; i< sz; i++) {
+                skip(keyTag);
+                skip(valueTag);
+            }
+
         }
     }
 
@@ -141,17 +147,23 @@ private:
         skipFields(nFields);
     }
 
+    template<typename T>
+    void skip(const bool checkTag) {
+        T out;
+        read(out, checkTag);
+    }
+    
 #define SKIP_CASE_READ(tag, skipcall) case tag: {skipcall; break;}
     void skip(const BINARY_TAG tag) {
         switch (tag) {
-        SKIP_CASE_READ(BINARY_TAG_BOOL, read<bool>(false))
-        SKIP_CASE_READ(BINARY_TAG_INT8, read<char>(false))
-        SKIP_CASE_READ(BINARY_TAG_INT16, read<short>(false))
-        SKIP_CASE_READ(BINARY_TAG_INT32, read<int>(false))
-        SKIP_CASE_READ(BINARY_TAG_INT64, read<long long>(false))
-        SKIP_CASE_READ(BINARY_TAG_FLOAT32, read<float>(false))
-        SKIP_CASE_READ(BINARY_TAG_FLOAT64, read<double>(false))
-        SKIP_CASE_READ(BINARY_TAG_STRING, read<std::string>(false))
+        SKIP_CASE_READ(BINARY_TAG_BOOL, skip<bool>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT8, skip<char>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT16, skip<short>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT32, skip<int>(false))
+        SKIP_CASE_READ(BINARY_TAG_INT64, skip<long long>(false))
+        SKIP_CASE_READ(BINARY_TAG_FLOAT32, skip<float>(false))
+        SKIP_CASE_READ(BINARY_TAG_FLOAT64, skip<double>(false))
+        SKIP_CASE_READ(BINARY_TAG_STRING, skip<std::string>(false))
         SKIP_CASE_READ(BINARY_TAG_LIST, skipList(false))
         SKIP_CASE_READ(BINARY_TAG_MAP, skipMap(false))
         SKIP_CASE_READ(BINARY_TAG_CUSTOM, skipCustom())
@@ -176,14 +188,18 @@ private:
     template<typename K, typename V>
     void read(std::map<K, V>& v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_MAP, verifyTag);
+
         const int sz = readSize();
         if (sz > 0) {
-            std::vector<K> keys(sz);
-            std::vector<V> values(sz);
-            read(keys, true);
-            read(values, true);
-            for (int i = 0; i < sz; i++)
-                v[keys[i]] = values[i];
+            verifyReadTagIf(BINARY_TAG_OF((K*) 0), true);
+            verifyReadTagIf(BINARY_TAG_OF((V*) 0), true);
+
+            for (int i = 0; i < sz; i++) {
+                K key;
+                read(key, false);
+                read(v[key], false);
+            }
+
         }
     }
 
@@ -203,9 +219,8 @@ private:
     template<typename MGenType>
     void read(MGenType& object, const MGenBase& /* type_evidence */, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_CUSTOM, verifyTag);
-        READ_OBJ_HEADER( {
-            mgen::missingfields::ensureNoMissingFields(object)
-            ;
+        READ_OBJ_HEADER({
+            mgen::missingfields::ensureNoMissingFields(object);
             return;
         });
         if (m_excessiveTypeChecking)
@@ -220,17 +235,17 @@ private:
 
     void read(bool& v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_BOOL, verifyTag);
-        v = readRaw<char>() != 0;
+        v = readByte() != 0;
     }
 
     void read(char & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_INT8, verifyTag);
-        v = endian::mgen_ntoh(readRaw<char>());
+        v = readByte();
     }
 
     void read(short & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_INT16, verifyTag);
-        v = endian::mgen_ntoh(readRaw<short>());
+		v = read16();
     }
 
     void read(int& v, const bool verifyTag) {
@@ -245,14 +260,52 @@ private:
 
     void read(float & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_FLOAT32, verifyTag);
-        v = endian::mgen_ntoh(readRaw<float>());
+        reinterpret_cast<unsigned int&>(v) = read32();
     }
 
     void read(double & v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_FLOAT64, verifyTag);
-        v = endian::mgen_ntoh(readRaw<double>());
+        reinterpret_cast<unsigned long long&>(v) = read64();
+    }
+	
+    unsigned short read16() {
+	
+        unsigned char bytes[2];
+        m_inputStream.read(bytes, 2);
+		
+        return
+            ( ((unsigned short) bytes[0]) << 8) |
+            ( ((unsigned short) bytes[1]) << 0);
     }
 
+    unsigned int read32() {
+	
+        unsigned char bytes[4];
+        m_inputStream.read(bytes, 4);
+		
+        return
+            ( ((unsigned int) bytes[0]) << 24) |
+            ( ((unsigned int) bytes[1]) << 16) |
+            ( ((unsigned int) bytes[2]) << 8) |
+            ( ((unsigned int) bytes[3]) << 0);
+    }
+	
+    unsigned long long read64() {
+	
+        unsigned char src[8];
+        m_inputStream.read(src, 8);
+		
+        return
+            ( ((unsigned long long) src[0]) << 56) | 
+            ( ((unsigned long long) src[1]) << 48) |
+            ( ((unsigned long long) src[2]) << 40) | 
+            ( ((unsigned long long) src[3]) << 32) | 
+            ( ((unsigned long long) src[4]) << 24) | 
+            ( ((unsigned long long) src[5]) << 16) |
+            ( ((unsigned long long) src[6]) << 8) | 
+            ( ((unsigned long long) src[7]) << 0);
+    }
+	
     void read(std::string& v, const bool verifyTag) {
         verifyReadTagIf(BINARY_TAG_STRING, verifyTag);
         const int sz = readSize();
@@ -262,13 +315,6 @@ private:
             v.resize(sz);
             m_inputStream.read(&v[0], sz);
         }
-    }
-
-    template<typename T>
-    T read(const bool checkTag) {
-        T out;
-        read(out, checkTag);
-        return out;
     }
 
     void verifyReadTagIf(const BINARY_TAG expTag, const bool check) {
@@ -287,7 +333,7 @@ private:
     }
 
     short readFieldId() {
-        return read<short>(false);
+        return read16();
     }
 
     int readSignedVarInt32() {
@@ -308,13 +354,6 @@ private:
     char readByte() {
         char out;
         m_inputStream.read(&out, 1);
-        return out;
-    }
-
-    template<typename T>
-    T readRaw() {
-        T out;
-        m_inputStream.read(&out, sizeof(T));
         return out;
     }
 

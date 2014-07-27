@@ -16,7 +16,7 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 abstract class CppSrcFileOrHeader(val fileEnding: String) {
   import CppTypeNames._
 
-  implicit val txtBuffer = new SuperStringBuffer
+  implicit val txtBuffer = SuperStringBuffer.getCached()
   implicit var currentModule: Module = null
 
   def generate(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {

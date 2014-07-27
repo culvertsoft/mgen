@@ -7,19 +7,17 @@ object Icons {
   object TreeView {
 
     object Dash {
-
       val PROJECT_ICON = MkImgIcon.small("placeholder.png")
-      val MODULE_ICON = MkImgIcon.small("folder-16.png")
-      val CLASS_ICON = MkImgIcon.small("folder_table.png")
-      val FIELD_ICON = MkImgIcon.small("add.png")
-
+      val MODULE_ICON = MkImgIcon.small("v3/list_icon_module.png")
+      val CLASS_ICON = MkImgIcon.small("v3/list_icon_class.png")
+      val FIELD_ICON = MkImgIcon.small("v3/list_icon_field.png")
     }
 
     object Top {
-      val MOVE_UP = MkImgIcon.large("moveup.png")
-      val MOVE_DOWN = MkImgIcon.large("movedown.png")
+      val MOVE_UP = MkImgIcon.large("v3/list_up.png")
+      val MOVE_DOWN = MkImgIcon.large("v3/list_down.png")
       val RENAME = MkImgIcon.large("rename.png")
-      val FIND = MkImgIcon.large("find.png")
+      val FIND = MkImgIcon.large("v3/list_find.png")
     }
 
   }
@@ -28,40 +26,40 @@ object Icons {
 
     object Top {
 
-      val ALIGN_X_RIGHT_ICON = MkImgIcon.large("align-right.png")
-      val ALIGN_X_CENTER_ICON = MkImgIcon.large("align-center-vertical.png")
-      val ALIGN_X_LEFT_ICON = MkImgIcon.large("align-left.png")
+      val ALIGN_X_RIGHT_ICON = MkImgIcon.large("v3/arrange_align_right.png")
+      val ALIGN_X_CENTER_ICON = MkImgIcon.large("v3/arrange_align_horizontal_middle.png")
+      val ALIGN_X_LEFT_ICON = MkImgIcon.large("v3/arrange_align_left.png")
 
-      val ALIGN_Y_TOP_ICON = MkImgIcon.large("align-top.png")
-      val ALIGN_Y_CENTER_ICON = MkImgIcon.large("align-center-horizontal.png")
-      val ALIGN_Y_BOTTOM_ICON = MkImgIcon.large("align-bottom.png")
+      val ALIGN_Y_TOP_ICON = MkImgIcon.large("v3/arrange_align_top.png")
+      val ALIGN_Y_CENTER_ICON = MkImgIcon.large("v3/arrange_align_vertical_middle.png")
+      val ALIGN_Y_BOTTOM_ICON = MkImgIcon.large("v3/arrange_align_bottom.png")
 
-      val SPREAD_EQUAL_X = MkImgIcon.large("distribute-horizontal.png")
-      val SPREAD_EQUAL_Y = MkImgIcon.large("distribute-vertical.png")
+      val SPREAD_EQUAL_X = MkImgIcon.large("v3/arrange_spacing_equal_horizontal.png")
+      val SPREAD_EQUAL_Y = MkImgIcon.large("v3/arrange_spacing_equal_vertical.png")
 
-      val RESIZE_EQUAL_X = MkImgIcon.large("samew.png")
-      val RESIZE_EQUAL_Y = MkImgIcon.large("sameh.png")
+      val RESIZE_EQUAL_X = MkImgIcon.large("v3/arrange_same_width.png")
+      val RESIZE_EQUAL_Y = MkImgIcon.large("v3/arrange_same_height.png")
 
-      val SPACE_OUT_X = MkImgIcon.large("spacew.png")
-      val SPACE_OUT_Y = MkImgIcon.large("spaceh.png")
+      val SPACE_OUT_X = MkImgIcon.large("v3/arrange_spacing_horizontal.png")
+      val SPACE_OUT_Y = MkImgIcon.large("v3/arrange_spacing_vertical.png")
 
-      val LAY_OUT = MkImgIcon.large("distribute.png")
-
-      val GENERATE = MkImgIcon.large("generate.png")
+      val LAY_OUT = MkImgIcon.large("v3/arrange_auto.png")
 
     }
 
     object Left {
-      val GO_UP = MkImgIcon.large("up.png")
-      val GO_BACK = MkImgIcon.large("left.png")
-      val GO_FORWARD = MkImgIcon.large("right.png")
-      val FULL_SREEN = MkImgIcon.large("fullscreen.png")
-      val RESET_VIEW = MkImgIcon.large("resetView.png")
 
-      val NEW_PROJECT = MkImgIcon.large("placeholder.png")
-      val NEW_MODULE = MkImgIcon.large("folder-16.png")
-      val NEW_TYPE = MkImgIcon.large("folder_table.png")
-      val NEW_FIELD = MkImgIcon.large("add.png")
+      val GO_UP = MkImgIcon.large("v3/view_up.png")
+      val GO_BACK = MkImgIcon.large("v3/view_back.png")
+      val GO_FORWARD = MkImgIcon.large("v3/view_forward.png")
+      val RESET_VIEW = MkImgIcon.large("v3/view_top.png")
+      val VIEW_SELECTED = MkImgIcon.large("v3/view_selected.png")
+      val TOGGLE_FULL_SCREEN = MkImgIcon.large("fullscreen.png")
+
+      val NEW_MODULE = MkImgIcon.large("v3/add_module.png")
+      val NEW_CLASS = MkImgIcon.large("v3/add_class.png")
+      val NEW_ENUM = MkImgIcon.large("v3/add_enum.png")
+      val NEW_FIELD = MkImgIcon.large("v3/add_field.png")
 
     }
 
@@ -74,12 +72,6 @@ object Icons {
       val LOAD = MkImgIcon.small("open-16.png")
       val SAVE = MkImgIcon.small("save-16.png")
       val EXIT = MkImgIcon.small("exit-16.png")
-
-      val IMPORT_PROJECT = MkImgIcon.small("import1.png")
-      val IMPORT_MODULE = MkImgIcon.small("import2.png")
-
-      val EXPORT_PROJECT = MkImgIcon.small("export1.png")
-      val EXPORT_MODULE = MkImgIcon.small("export2.png")
     }
 
     object Edit {
@@ -91,7 +83,7 @@ object Icons {
       val COPY = MkImgIcon.small("copy.png")
       val PASTE = MkImgIcon.small("paste.png")
 
-      val FIND = MkImgIcon.small("find.png")
+      val FIND = MkImgIcon.small("v3/list_find.png")
 
       val SELECT_ALL = MkImgIcon.small("selectAll.png")
       val DESELECT_ALL = MkImgIcon.small("script_delete.png")
@@ -104,11 +96,12 @@ object Icons {
       val GO_UP = MkImgIcon.small("up.png")
       val GO_BACK = MkImgIcon.small("left.png")
       val GO_FORWARD = MkImgIcon.small("right.png")
+      val SET_VIEW_ROOT = MkImgIcon.small("v3/view_selected.png")
       val FULL_SREEN = MkImgIcon.small("fullscreen.png")
       val RESET_VIEW = MkImgIcon.small("resetView.png")
 
       val ICONS_ONLY_VIEW = MkImgIcon.small("find.png")
-      
+
       val OPEN_CONSOLE = MkImgIcon.small("console.png")
       val REBUILD_VIEW = MkImgIcon.small("rebuildView.png")
     }

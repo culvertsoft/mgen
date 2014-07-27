@@ -43,11 +43,6 @@ object ToolbarsInit {
 
     toolbar.addSeparator()
 
-    toolbar.add(Actions.DashBoard.Top.SPREAD_EQUAL_Y)
-    toolbar.add(Actions.DashBoard.Top.SPREAD_EQUAL_X)
-
-    toolbar.addSeparator()
-
     toolbar.add(Actions.DashBoard.Top.RESIZE_EQUAL_Y)
     toolbar.add(Actions.DashBoard.Top.RESIZE_EQUAL_X)
 
@@ -55,6 +50,11 @@ object ToolbarsInit {
 
     toolbar.add(Actions.DashBoard.Top.SPACE_OUT_Y)
     toolbar.add(Actions.DashBoard.Top.SPACE_OUT_X)
+
+    toolbar.addSeparator()
+
+    toolbar.add(Actions.DashBoard.Top.SPREAD_EQUAL_Y)
+    toolbar.add(Actions.DashBoard.Top.SPREAD_EQUAL_X)
 
     toolbar.addSeparator()
 
@@ -75,8 +75,8 @@ object ToolbarsInit {
 
     toolbar.add(Actions.TreeView.MOVE_UP)
     toolbar.add(Actions.TreeView.MOVE_DOWN)
-    toolbar.add(Actions.TreeView.RENAME)
     toolbar.add(Actions.TreeView.FIND_SELECTED)
+    toolbar.add(Actions.TreeView.RENAME)
     toolbar.setFloatable(false)
 
     toolbar
@@ -94,7 +94,7 @@ object ToolbarsInit {
     toolbar.add(Actions.DashBoard.Left.GO_BACK)
     toolbar.add(Actions.DashBoard.Left.GO_FORWARD)
     toolbar.add(Actions.DashBoard.Left.SET_VIEW_ROOT)
-    toolbar.add(Actions.DashBoard.Left.MAXIMIZE)
+    toolbar.add(Actions.DashBoard.Left.TOGGLE_FULL_SCREEN)
 
     toolbar.addSeparator()
     toolbar.addSeparator()

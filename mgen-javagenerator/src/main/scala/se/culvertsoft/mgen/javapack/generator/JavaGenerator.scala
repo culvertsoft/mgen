@@ -59,7 +59,7 @@ object JavaGenerator {
 
 class JavaGenerator extends BuiltInStaticLangGenerator {
 
-  implicit val txtBuffer = new SuperStringBuffer
+  implicit val txtBuffer = SuperStringBuffer.getCached()
 
   override def generateMetaSources(
     folder: String,

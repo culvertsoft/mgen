@@ -8,9 +8,9 @@
 #ifndef MGEN_MGENBINARYWRITER_H_
 #define MGEN_MGENBINARYWRITER_H_
 
-#include "mgen/util/missingfields.h"
 #include "mgen/serialization/VarInt.h"
-#include "mgen/util/endian.h"
+#include "mgen/serialization/BinaryTags.h"
+#include "mgen/util/missingfields.h"
 
 namespace mgen {
 
@@ -47,10 +47,10 @@ public:
         missingfields::ensureNoMissingFields(object);
 
         if (shouldOmitIds(MGenType::_type_id)) {
-            writeSize(nFieldsSet << 1);
+            writeSize((nFieldsSet << 2) | 0x02);
         } else {
             const std::vector<short>& ids = MGenType::_type_ids_16bit();
-            writeSize((int(ids.size()) << 1) | 0x01);
+            writeSize((int(ids.size()) << 2) | 0x01);
             for (std::size_t i = 0; i < ids.size(); i++)
                 write(ids[i], false);
             writeSize(nFieldsSet);
@@ -112,32 +112,31 @@ private:
         writeTagIf(BINARY_TAG_MAP, doTag);
         writeSize(v.size());
         if (!v.empty()) {
-            std::vector<K> keys(v.size());
-            std::vector<V> values(v.size());
-            int i = 0;
+
+            writeTagIf(BINARY_TAG_OF((K*) 0), true);
+            writeTagIf(BINARY_TAG_OF((V*) 0), true);
+
             for (typename std::map<K, V>::const_iterator it = v.begin(); it != v.end(); it++) {
-                keys[i] = it->first;
-                values[i] = it->second;
-                i++;
+                write(it->first, false);
+                write(it->second, false);
             }
-            write(keys, true);
-            write(values, true);
+
         }
     }
 
     void write(const bool v, const bool doTag) {
         writeTagIf(BINARY_TAG_BOOL, doTag);
-        write(v ? 0x01 : 0x00, false);
+        writeByte(v ? 0x01 : 0x00);
     }
 
     void write(const char v, const bool doTag) {
         writeTagIf(BINARY_TAG_INT8, doTag);
-        writeRaw(endian::mgen_hton(v));
+		writeByte(v);
     }
 
     void write(const short v, const bool doTag) {
         writeTagIf(BINARY_TAG_INT16, doTag);
-        writeRaw(endian::mgen_hton(v));
+        write16(reinterpret_cast<const unsigned short&>(v));
     }
 
     void write(const int v, const bool doTag) {
@@ -152,12 +151,12 @@ private:
 
     void write(const float v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT32, doTag);
-        writeRaw(endian::mgen_hton(v));
+        write32(reinterpret_cast<const unsigned int&>(v));
     }
 
     void write(const double v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT64, doTag);
-        writeRaw(endian::mgen_hton(v));
+        write64(reinterpret_cast<const unsigned long long&>(v));
     }
 
     void write(const std::string& v, const bool doTag) {
@@ -200,12 +199,36 @@ private:
     void writeByte(const char c) {
         m_outputStream.write(&c, 1);
     }
-
-    template<typename T>
-    void writeRaw(const T& v) {
-        m_outputStream.write(&v, sizeof(T));
+		
+    void write16(const unsigned short data) {
+        unsigned char buf[2];
+        buf[0] = data >> 8;
+        buf[1] = data >> 0;
+        m_outputStream.write(buf, 2);
     }
-
+	
+    void write32(const unsigned int data) {
+        unsigned char buf[4];
+        buf[0] = data >> 24;
+        buf[1] = data >> 16;
+        buf[2] = data >> 8;
+        buf[3] = data >> 0;
+        m_outputStream.write(buf, 4);
+    }
+	
+    void write64(const unsigned long long data) {
+        unsigned char buf[8];
+        buf[0] = data >> 56;
+        buf[1] = data >> 48;
+        buf[2] = data >> 40;
+        buf[3] = data >> 32;
+        buf[4] = data >> 24;
+        buf[5] = data >> 16;
+        buf[6] = data >> 8;
+        buf[7] = data >> 0;
+        m_outputStream.write(buf, 8);
+    }
+	
     bool shouldOmitIds(const long long expId) {
         return m_compact && expId == m_expectType;
     }

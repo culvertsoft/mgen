@@ -17,7 +17,7 @@ namespace mgen {
 class VectorInputStream {
 public:
 
-    VectorInputStream(std::vector<char>& input, const int offset = 0) :
+    VectorInputStream(const std::vector<char>& input, const int offset = 0) :
             m_input(input), m_offset(offset) {
     }
 
@@ -45,7 +45,7 @@ public:
     }
 
 private:
-    std::vector<char>& m_input;
+    const std::vector<char>& m_input;
     int m_offset;
 
 };

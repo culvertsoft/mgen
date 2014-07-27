@@ -24,7 +24,7 @@ object MGen {
 
     // Print introduction
     printIntro()
-
+    
     val compileResult = Try {
 
       // Parse input parameters

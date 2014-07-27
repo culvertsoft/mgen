@@ -14,13 +14,12 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
 import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.throwUnexpectTag;
 
-import java.io.DataInputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.CustomType;
@@ -37,16 +36,17 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.StreamCorruptedException;
 import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
 import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
+import se.culvertsoft.mgen.javapack.util.StreamUtil;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
 
-	private final DataInputStream m_stream;
+	private final InputStream m_stream;
+	private final byte m_readBuffer64[] = new byte[8];
 
 	public BinaryReader(final InputStream stream, final ClassRegistryBase classRegistry) {
 		super(classRegistry);
-		m_stream = stream instanceof DataInputStream ? (DataInputStream) stream
-				: new DataInputStream(stream);
+		m_stream = stream;
 	}
 
 	@Override
@@ -207,8 +207,15 @@ public class BinaryReader extends BuiltInReader {
 			ensureTypeTag(null, TAG_MAP, readTypeTag());
 		final int sz = readSize();
 		if (sz > 0) {
-			skipList(true);
-			skipList(true);
+
+			final byte keyTag = readTypeTag();
+			final byte valueTag = readTypeTag();
+
+			for (int i = 0; i < sz; i++) {
+				skip(keyTag);
+				skip(valueTag);
+			}
+
 		}
 	}
 
@@ -228,7 +235,7 @@ public class BinaryReader extends BuiltInReader {
 			ensureTypeTag(null, TAG_STRING, readTypeTag());
 		final int nBytes = readSize();
 		for (int i = 0; i < nBytes; i++)
-			m_stream.readByte();
+			m_stream.read();
 	}
 
 	private void skipCustom() throws IOException {
@@ -241,10 +248,10 @@ public class BinaryReader extends BuiltInReader {
 		final int nFields;
 
 		if ((nIdsOrFields & 0x01) != 0) {
-			skipTypeIds(nIdsOrFields >> 1);
+			skipTypeIds(nIdsOrFields >> 2);
 			nFields = readSize();
 		} else { // type ids omitted
-			nFields = nIdsOrFields >> 1;
+			nFields = nIdsOrFields >> 2;
 		}
 
 		skipFields(nFields);
@@ -292,21 +299,18 @@ public class BinaryReader extends BuiltInReader {
 
 		final int nIdsOrFields = readSize();
 
-		if (nIdsOrFields == 0) {
-			final MGenBase object = instantiate((short[]) null, constraint);
-			ensureNoMissingReqFields(object);
-			return object;
-		}
+		if (nIdsOrFields == 0)
+			return null;
 
 		final short[] ids;
 		final int nFields;
 
 		if ((nIdsOrFields & 0x01) != 0) {
-			ids = readTypeIds(nIdsOrFields >> 1);
+			ids = readTypeIds(nIdsOrFields >> 2);
 			nFields = readSize();
 		} else { // type ids omitted
 			ids = null;
-			nFields = nIdsOrFields >> 1;
+			nFields = nIdsOrFields >> 2;
 		}
 
 		final MGenBase object = instantiate(ids, constraint);
@@ -335,25 +339,29 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	private byte readTypeTag() throws IOException {
-		return m_stream.readByte();
+		return (byte) m_stream.read();
 	}
 
 	private boolean readBoolean(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_BOOL, readTypeTag());
-		return m_stream.readByte() != 0;
+		return m_stream.read() != 0;
 	}
 
 	private byte readInt8(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_INT8, readTypeTag());
-		return m_stream.readByte();
+		return (byte) m_stream.read();
 	}
 
 	private short readInt16(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_INT16, readTypeTag());
-		return m_stream.readShort();
+		int ch1 = m_stream.read();
+		int ch2 = m_stream.read();
+		if ((ch1 | ch2) < 0)
+			throw new EOFException();
+		return (short) ((ch1 << 8) + (ch2 << 0));
 	}
 
 	private int readInt32(final boolean readTag) throws IOException {
@@ -371,13 +379,36 @@ public class BinaryReader extends BuiltInReader {
 	private float readFloat32(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_FLOAT32, readTypeTag());
-		return m_stream.readFloat();
+
+		return Float.intBitsToFloat(read32());
+	}
+
+	private int read32() throws IOException {
+		int ch1 = m_stream.read();
+		int ch2 = m_stream.read();
+		int ch3 = m_stream.read();
+		int ch4 = m_stream.read();
+		if ((ch1 | ch2 | ch3 | ch4) < 0)
+			throw new EOFException();
+		return ((ch1 << 24) + (ch2 << 16) + (ch3 << 8) + (ch4 << 0));
 	}
 
 	private double readFloat64(final boolean readTag) throws IOException {
 		if (readTag)
 			ensureTypeTag(null, TAG_FLOAT64, readTypeTag());
-		return m_stream.readDouble();
+		return Double.longBitsToDouble(read64());
+	}
+
+	private long read64() throws IOException {
+		StreamUtil.readFully(m_stream, 8, m_readBuffer64);
+		return (((long) m_readBuffer64[0] << 56) + 
+				((long) (m_readBuffer64[1] & 255) << 48) + 
+				((long) (m_readBuffer64[2] & 255) << 40) + 
+				((long) (m_readBuffer64[3] & 255) << 32) + 
+				((long) (m_readBuffer64[4] & 255) << 24) + 
+				((m_readBuffer64[5] & 255) << 16) + 
+				((m_readBuffer64[6] & 255) << 8) + 
+				((m_readBuffer64[7] & 255) << 0));
 	}
 
 	private int readSize() throws IOException {
@@ -444,7 +475,7 @@ public class BinaryReader extends BuiltInReader {
 
 	private Object readInt8Array(final int n, final boolean b) throws IOException {
 		final byte[] array = new byte[n];
-		m_stream.readFully(array);
+		StreamUtil.readFully(m_stream, n, array);
 		return array;
 	}
 
@@ -585,18 +616,23 @@ public class BinaryReader extends BuiltInReader {
 		final HashMap<Object, Object> out = new HashMap<Object, Object>(nElements);
 
 		if (nElements > 0) {
-
-			final List<Object> keys = readElements(true, constraint != null ? constraint.keyType()
-					: null);
-			final List<Object> values = readElements(
-					true,
-					constraint != null ? constraint.valueType() : null);
-
-			if (keys.size() != values.size() || keys.size() != nElements)
-				throw new StreamCorruptedException("nKeys != nValues in map");
-
-			for (int i = 0; i < keys.size(); i++)
-				out.put(keys.get(i), values.get(i));
+			
+			final byte keyTag = readTypeTag();
+			final byte valueTag = readTypeTag();
+			
+			final Type keyType = constraint != null ? constraint.keyType() : null;
+			final Type valueType = constraint != null ? constraint.valueType() : null;
+			
+			if (constraint != null) {
+				ensureTypeTag(null, keyType.typeTag(), keyTag);
+				ensureTypeTag(null, valueType.typeTag(), valueTag);
+			}
+			
+			for (int i = 0; i< nElements; i++) {
+				final Object key = readObject(keyTag, keyType);
+				final Object value = readObject(valueTag, valueType);		
+				out.put(key, value);
+			}
 
 		}
 

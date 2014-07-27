@@ -1,7 +1,7 @@
 #ifndef MGEN_JSON_WRITER_H_
 #define MGEN_JSON_WRITER_H_
 
-#include "JsonWriterBase.h"
+#include "mgen/serialization/JsonWriterBase.h"
 #include "mgen/ext/rapidjson/writer.h"
 
 namespace mgen {

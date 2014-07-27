@@ -12,7 +12,7 @@ class PluginFinder(pluginPaths_in: Seq[String]) {
 
   val DEFAULT_PATH = "plugins/"
   val pluginPaths = getPaths()
-  val fileNames = pluginPaths.flatMap(path => ListFiles.recursively(path, ".jar"))
+  val fileNames = pluginPaths.flatMap(path => ListFiles.list(path, ".jar", false))
   val jarUrls = fileNames.map(fileName => new URL("jar:file:" + fileName + "!/")).toArray
   val classLoader = URLClassLoader.newInstance(jarUrls)
 

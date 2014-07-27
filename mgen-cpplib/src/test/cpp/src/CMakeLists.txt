@@ -18,5 +18,8 @@ add_executable(
 	tests/Serialization.cpp
 	tests/Performance.cpp
 	tests/WhitepaperExample.cpp
+	tests/ExtremeValues.cpp
+	tests/ConfigFileTest.cpp
+	tests/UtfTests.cpp
 )
 

@@ -75,10 +75,10 @@ object Actions {
       def LAY_OUT(implicit c: Controller) = MkAction("Lay out Entities", Icons.DashBoard.Top.LAY_OUT) {
         c.boundsMgr.layOut(false)
       }
-
+/*
       def GENERATE(implicit c: Controller) = MkAction("Generate Code", Icons.DashBoard.Top.GENERATE) {
         c.generateMgr.generate()
-      }
+      }*/
     }
 
     object Left {
@@ -92,10 +92,10 @@ object Actions {
       def GO_FORWARD(implicit c: Controller) = MkAction("Go Forward", Icons.DashBoard.Left.GO_FORWARD, "Go forward to the next view root") {
         c.viewMgr.goForward()
       }
-      def SET_VIEW_ROOT(implicit c: Controller) = MkAction("Set as View Root", Icons.DashBoard.Left.FULL_SREEN, "Set View Root: Sets the selected entity as the view root") {
+      def SET_VIEW_ROOT(implicit c: Controller) = MkAction("Set as View Root", Icons.DashBoard.Left.VIEW_SELECTED, "Set View Root: Sets the selected entity as the view root") {
         c.viewMgr.setSelectedAsRootView()
       }
-      def MAXIMIZE(implicit c: Controller) = MkAction("Maximize", Icons.DashBoard.Left.FULL_SREEN, "Maximize: Removes toolbars and package explorer (left side column)") {
+      def TOGGLE_FULL_SCREEN(implicit c: Controller) = MkAction("Maximize", Icons.DashBoard.Left.TOGGLE_FULL_SCREEN, "Maximize: Removes toolbars and package explorer (left side column)") {
         c.viewMgr.maximize()
       }
       def RESET_VIEW_ROOT(implicit c: Controller) = MkAction("Reset View Root", Icons.DashBoard.Left.RESET_VIEW, "Reset the view root back to the top level project") {
@@ -104,10 +104,10 @@ object Actions {
       def NEW_MODULE(implicit c: Controller) = MkAction("New Module", Icons.DashBoard.Left.NEW_MODULE) {
         c.entityAddMgr.addModule()
       }
-      def NEW_TYPE(implicit c: Controller) = MkAction("New Class/Type", Icons.DashBoard.Left.NEW_TYPE) {
+      def NEW_TYPE(implicit c: Controller) = MkAction("New Class/Type", Icons.DashBoard.Left.NEW_CLASS) {
         c.entityAddMgr.addType()
       }
-      def NEW_ENUM(implicit c: Controller) = MkAction("New Enumeration", Icons.DashBoard.Left.NEW_TYPE) {
+      def NEW_ENUM(implicit c: Controller) = MkAction("New Enumeration", Icons.DashBoard.Left.NEW_ENUM) {
         c.entityAddMgr.addEnum()
       }
       def NEW_FIELD(implicit c: Controller) = MkAction("Add Field/Entry", Icons.DashBoard.Left.NEW_FIELD, "Add field/entry to selected class/enum") {
@@ -192,10 +192,10 @@ object Actions {
       }
 
 
-      def SET_VIEW_ROOT(implicit c: Controller) = MkAction("Set as View Root", Icons.DashBoard.Left.FULL_SREEN, HotKey.ctrl(KeyEvent.VK_ENTER), "Set View Root: Sets the selected entity as the view root") {
+      def SET_VIEW_ROOT(implicit c: Controller) = MkAction("Set as View Root", Icons.MainMenu.View.SET_VIEW_ROOT, HotKey.ctrl(KeyEvent.VK_ENTER), "Set View Root: Sets the selected entity as the view root") {
         c.viewMgr.setSelectedAsRootView()
       }
-      def MAXIMIZE(implicit c: Controller) = MkAction("Maximize", Icons.DashBoard.Left.FULL_SREEN, HotKey.alt(KeyEvent.VK_ENTER), "Maximize: Removes toolbars and package explorer (left side column)") {
+      def TOGGLE_FULL_SCREEN(implicit c: Controller) = MkAction("Maximize", Icons.MainMenu.View.FULL_SREEN, HotKey.alt(KeyEvent.VK_ENTER), "Maximize: Removes toolbars and package explorer (left side column)") {
         c.viewMgr.maximize()
       }
       

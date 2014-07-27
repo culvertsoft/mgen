@@ -19,26 +19,17 @@ public:
 
     template<typename ContextType, typename ReaderType>
     void readObjectFields(mgen::MGenBase& o, ContextType& /* context */, ReaderType& /*reader*/) const {
-        throw mgen::Exception(
-                std::string(
-                        "gameworld::types::ClassRegistry::readObjectFields: Incorrect usage. Class '").append(
-                        o._typeName()).append(" not registered."));
+        throw mgen::Exception("Cannot call readObjectFields(..) on EmptyClassRegistry");
     }
 
     template<typename VisitorType>
     void visitObject(mgen::MGenBase& o, VisitorType& /*visitor*/) const {
-        throw mgen::Exception(
-                std::string(
-                        "gameworld::types::ClassRegistry::visitObject: Incorrect usage. Class '").append(
-                        o._typeName()).append(" not registered."));
+        throw mgen::Exception("Cannot call visitObject(..) on EmptyClassRegistry");
     }
 
     template<typename VisitorType>
     void visitObject(const mgen::MGenBase& o, VisitorType& /*visitor*/) const {
-        throw mgen::Exception(
-                std::string(
-                        "gameworld::types::ClassRegistry::visitObject: Incorrect usage. Class '").append(
-                        o._typeName()).append(" not registered."));
+        throw mgen::Exception("Cannot call visitObject(..) on EmptyClassRegistry");
     }
 
     const ClassRegistryEntry * getByIds(const std::vector<short>& typeIds16bit) const { return 0; }

@@ -123,8 +123,7 @@ void checkExpType(
         const MGenClassRegType& classReg,
         const MGenType * o,
         const std::vector<std::string>& actualIds) {
-    static const std::vector<std::string>& expIds = MGenType::_type_ids_16bit_base64();
-    checkExpType(classReg, o, expIds, actualIds);
+    checkExpType(classReg, o, MGenType::_type_ids_16bit_base64(), actualIds);
 }
 
 template<typename MGenClassRegType, typename MGenType>
@@ -132,8 +131,7 @@ void checkExpType(
         const MGenClassRegType& classReg,
         const MGenType * o,
         const std::vector<short>& actualIds) {
-    static const std::vector<short>& expIds = MGenType::_type_ids_16bit();
-    checkExpType(classReg, o, expIds, actualIds);
+    checkExpType(classReg, o, MGenType::_type_ids_16bit(), actualIds);
 }
 
 #undef throw_unexpected_type

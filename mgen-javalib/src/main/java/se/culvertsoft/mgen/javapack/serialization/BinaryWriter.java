@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
 import se.culvertsoft.mgen.api.model.CustomType;
@@ -69,10 +70,10 @@ public class BinaryWriter extends BuiltInWriter {
 			throws IOException {
 
 		if (shouldOmitIds(object)) {
-			writeSize(nFieldsSet << 1);
+			writeSize((nFieldsSet << 2) | 0x02);
 		} else {
 			final short[] ids = object._typeIds16Bit();
-			writeSize((ids.length << 1) | 0x01);
+			writeSize((ids.length << 2) | 0x01);
 			for (final short id : ids)
 				writeInt16(id, false);
 			writeSize(nFieldsSet);
@@ -229,13 +230,13 @@ public class BinaryWriter extends BuiltInWriter {
 	private void writeFloat32(final float f, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT32);
-		writeRawInt32(Float.floatToIntBits(f));
+		writeRawInt32(Float.floatToRawIntBits(f));
 	}
 
 	private void writeFloat64(final double d, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT64);
-		writeRawInt64(Double.doubleToLongBits(d));
+		writeRawInt64(Double.doubleToRawLongBits(d));
 	}
 
 	private void writeString(final String s, final boolean tag) throws IOException {
@@ -351,10 +352,18 @@ public class BinaryWriter extends BuiltInWriter {
 		if (map != null && !map.isEmpty()) {
 
 			writeSize(map.size());
+			
+			final Type keyType = typ.keyType();
+			final Type valueType = typ.valueType();			
 
-			writeElements(true, map.keySet(), typ.keyType());
-			writeElements(true, map.values(), typ.valueType());
-
+			writeTypeTag(keyType.typeTag());
+			writeTypeTag(valueType.typeTag());
+						
+			for (Map.Entry<Object, Object> entry : map.entrySet()) {
+				writeObject(entry.getKey(), keyType, false);
+				writeObject(entry.getValue(), valueType, false);
+		    }
+			
 		} else {
 			writeSize(0);
 		}
@@ -395,6 +404,9 @@ public class BinaryWriter extends BuiltInWriter {
 				break;
 			case FLOAT64:
 				writeFloat64Array((double[]) arrayObj, false);
+				break;
+			case STRING:
+				writeStringArray((String[]) arrayObj, false);
 				break;
 			default:
 				writeObjectArray((Object[]) arrayObj, elementType, false);
@@ -544,6 +556,26 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	private void writeStringArray(final String[] array, final boolean tag) throws IOException {
+
+		if (tag)
+			writeTypeTag(TAG_LIST);
+
+		if (array != null && array.length != 0) {
+
+			writeSize(array.length);
+
+			writeTypeTag(TAG_STRING);
+
+			for (final String s : array)
+				writeString(s, false);
+
+		} else {
+			writeSize(0);
+		}
+
+	}
+
 	private void writeFloat64Array(final double[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -602,8 +634,13 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	private void writeBytes(final byte[] data, final int offset, final int sz) throws IOException {
-		m_buffer.write(data, offset, sz);
-		checkFlush();
+		if (sz >= FLUSH_SIZE) {
+			flush();
+			m_streamOut.write(data, offset, sz);
+		} else {
+			m_buffer.write(data, offset, sz);
+			checkFlush();
+		}
 	}
 
 	private void writeBytes(final byte[] data, final int sz) throws IOException {

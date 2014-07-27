@@ -20,7 +20,7 @@ abstract class UtilityClassGenerator(
   def isHeader(): Boolean = artifactType == Header
   def isSrcFile(): Boolean = artifactType == SrcFile
 
-  implicit val txtBuffer = new SuperStringBuffer
+  implicit val txtBuffer = SuperStringBuffer.getCached()
 
   case class UtilClassGenParam(
     packagePath: String,
