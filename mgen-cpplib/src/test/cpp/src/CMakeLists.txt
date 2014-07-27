@@ -20,5 +20,6 @@ add_executable(
 	tests/WhitepaperExample.cpp
 	tests/ExtremeValues.cpp
 	tests/ConfigFileTest.cpp
+	tests/UtfTests.cpp
 )
 
