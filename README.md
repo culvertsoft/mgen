@@ -17,7 +17,7 @@ Why is MGen interesting? - MGen can help you with the following, cross-language 
  - Reduce the amount of work required to build and maintain data structures in multiple languages
  - Simplify the process of sharing the state of your application over network
  - Make sure the data model in software you build today is as accessible as possible for future projects
- - Build scalable, accessible, compatible data models that you come back later and still understand.
+ - Build scalable, accessible, compatible data models that you come back to later and understand.
  - Use native language objects with external services and interfaces requiring text formats such as JSON.
  - Much much more..
 
@@ -405,9 +405,14 @@ See [Generating source code](#generating-source-code) for how to use it.
 
 ### Installing the Java runtime libraries
 
-The [java runtime libraries](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/) are compiled to a java jar file. This file depends on [the mgen API](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/) (also a jar file). Both can be downloaded from the [downloads section](#download-links). You will also need [json-simple](https://code.google.com/p/json-simple/).
+The java libraries are compiled to java jar files, and currently have one external dependency: json-simple. Add the following jar files to your build:
+ - [mgen-api](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/)
+ - [mgen-javalib](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/)
+ - [json-simple](https://code.google.com/p/json-simple/)
 
-Add the jar files to your build and you should be good to go. If you want to include the runtime libries by source instead or build them yourself, see [Building MGen](#building-mgen).
+Check the [downloads section](#download-links) or try the snapshots above.
+
+If you want to include the runtime libries by source instead or build them yourself, see [Building MGen](#building-mgen).
 
 
 ### Installing the C++ runtime libraries
