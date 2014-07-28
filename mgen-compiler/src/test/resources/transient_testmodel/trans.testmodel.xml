@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<Module>
+
+    <Types>
+
+        <SomeType>
+        </SomeType>
+
+        <MyType>
+            <a type="int" />
+            <b type="float" />
+            <c type="double" />
+            <d type="string" />
+            <e type="array[int]" />
+            <f type="list[array[float]]" />
+            <g type="map[string, list[byte]]" />
+            <h type="SomeType" />
+
+            <ta type="int" flags="transient" />
+            <tb type="float" flags="transient" />
+            <tc type="double" flags="transient" />
+            <td type="string" flags="transient" />
+            <te type="array[int]" flags="transient" />
+            <tf type="list[array[float]]" flags="transient" />
+            <tg type="map[string, list[byte]]" flags="transient" />
+            <th type="SomeType" flags="transient" />
+        </MyType>
+
+    </Types>
+
+</Module>

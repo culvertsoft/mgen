@@ -23,6 +23,8 @@ public class JsonWriter extends TextFormatWriter {
 	public static final int DEFAULT_MAX_DEPTH = 256;
 	public static final boolean DEFAULT_COMPACT = false;
 
+	private final FieldVisitSelection m_selection;
+
 	protected final boolean m_compact;
 	protected final int[] m_iEntry;
 	protected int m_depth = 0;
@@ -31,10 +33,21 @@ public class JsonWriter extends TextFormatWriter {
 			final OutputStream outputStream,
 			final ClassRegistryBase classRegistry,
 			final boolean compact,
-			final int maxDepth) {
+			final int maxDepth,
+			final boolean includeTransientFields) {
 		super(outputStream, classRegistry);
+		m_selection = includeTransientFields ? FieldVisitSelection.ALL_SET
+				: FieldVisitSelection.ALL_SET_NONTRANSIENT;
 		m_compact = compact;
 		m_iEntry = new int[maxDepth];
+	}
+
+	public JsonWriter(
+			final OutputStream outputStream,
+			final ClassRegistryBase classRegistry,
+			final boolean compact,
+			final int maxDepth) {
+		this(outputStream, classRegistry, compact, maxDepth, false);
 	}
 
 	public JsonWriter(
@@ -62,8 +75,7 @@ public class JsonWriter extends TextFormatWriter {
 	}
 
 	@Override
-	public void beginWrite(final MGenBase o, final int nFields)
-			throws IOException {
+	public void beginWrite(final MGenBase o, final int nFields) throws IOException {
 	}
 
 	@Override
@@ -183,7 +195,7 @@ public class JsonWriter extends TextFormatWriter {
 			beginBlock("{");
 			if (needWriteTypeId(o, expectType))
 				writeTypeId(o);
-			o._accept(this, FieldVisitSelection.ALL_SET_NONTRANSIENT);
+			o._accept(this, m_selection);
 			endBlock("}", m_iEntry[m_depth] > 0);
 		}
 	}

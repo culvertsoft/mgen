@@ -1,6 +1,6 @@
 MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 
-all: generate-test-model
+all: generate-test-models
 	#########################################
 	#     BUILDING MGEN-JAVALIB             #
 	#########################################
@@ -20,13 +20,14 @@ clean:
 	rm -rf target/*
 	rm -rf src_generated/*
 
-generate-test-model:
-	############################################
-	#  GENERATING TEST-MODEL FOR MGEN-JAVALIB  #
-	############################################
-	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/project.xml" -plugin_paths="../mgen-javagenerator/target/"
+generate-test-models:
+	#############################################
+	#  GENERATING TEST-MODELS FOR MGEN-JAVALIB  #
+	#############################################
+	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/project.xml" -plugin_paths="../mgen-javagenerator/target/"	
+	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/transient_testmodel/project.xml" -plugin_paths="../mgen-javagenerator/target/"
 	
-run-tests: generate-test-model
+run-tests: generate-test-models
 	###################################
 	#     TESTING MGEN-JAVALIB        #
 	###################################

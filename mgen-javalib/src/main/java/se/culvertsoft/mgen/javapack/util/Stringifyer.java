@@ -8,10 +8,12 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
 import se.culvertsoft.mgen.javapack.serialization.BuiltInWriter;
 import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter;
+import se.culvertsoft.mgen.javapack.serialization.JsonWriter;
 
 public class Stringifyer {
 
 	public static final ClassRegistryBase REGISTRY = new EmptyClassRegistry();
+	final BosExposed stream = new BosExposed();
 
 	static class BosExposed extends ByteArrayOutputStream {
 		public byte[] getBackingBuffer() {
@@ -22,7 +24,12 @@ public class Stringifyer {
 	public static String toString(final MGenBase object) {
 
 		final BosExposed stream = new BosExposed();
-		final JsonPrettyWriter writer = new JsonPrettyWriter(stream, REGISTRY, true);
+		final JsonPrettyWriter writer = new JsonPrettyWriter(
+				stream,
+				REGISTRY,
+				true,
+				JsonWriter.DEFAULT_MAX_DEPTH,
+				true);
 		writer.setShouldValidate(false);
 
 		try {

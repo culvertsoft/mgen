@@ -11,6 +11,15 @@ public class JsonPrettyWriter extends JsonWriter {
 			final OutputStream outputStream,
 			final ClassRegistryBase classRegistry,
 			final boolean compact,
+			final int maxDepth,
+			final boolean includeTransientFields) {
+		super(outputStream, classRegistry, compact, maxDepth, includeTransientFields);
+	}
+	
+	public JsonPrettyWriter(
+			final OutputStream outputStream,
+			final ClassRegistryBase classRegistry,
+			final boolean compact,
 			final int maxDepth) {
 		super(outputStream, classRegistry, compact, maxDepth);
 	}

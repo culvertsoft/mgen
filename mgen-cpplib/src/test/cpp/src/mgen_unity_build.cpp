@@ -7,3 +7,4 @@
 
 // Build our generated classes in the gameworld.types project
 #include "gameworld/types/ClassRegistry.cpp"
+#include "trans/testmodel/ClassRegistry.cpp"

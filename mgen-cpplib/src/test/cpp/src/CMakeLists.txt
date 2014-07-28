@@ -21,5 +21,6 @@ add_executable(
 	tests/ExtremeValues.cpp
 	tests/ConfigFileTest.cpp
 	tests/UtfTests.cpp
+	tests/TransientFields.cpp
 )
 
