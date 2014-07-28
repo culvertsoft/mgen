@@ -405,16 +405,14 @@ See [Generating source code](#generating-source-code) for how to use it.
 
 ### Installing the Java runtime libraries
 
-The java libraries are compiled to java jar files. You will also need json-simple (which is used for json parsing). 
-
-To summarize, you need the following jar files:
- - [mgen-API](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/)
+The java libraries are compiled to java jar files, and currently have one external dependency: json-simple. Add the following jar files to your build:
+ - [mgen-api](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/)
  - [mgen-javalib](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/)
  - [json-simple](https://code.google.com/p/json-simple/)
 
 Check the [downloads section](#download-links) or try the snapshots above.
 
-Add the jar files to your build and you should be good to go. If you want to include the runtime libries by source instead or build them yourself, see [Building MGen](#building-mgen).
+If you want to include the runtime libries by source instead or build them yourself, see [Building MGen](#building-mgen).
 
 
 ### Installing the C++ runtime libraries
