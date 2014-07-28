@@ -408,8 +408,8 @@ See [Generating source code](#generating-source-code) for how to use it.
 The java libraries are compiled to java jar files. You will also need json-simple (which is used for json parsing). 
 
 To summarize, you need the following jar files:
- - [the mgen API](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/)
- - [the mgen runtime libraries](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/)
+ - [mgen-API](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/)
+ - [mgen-javalib](http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/)
  - [json-simple](https://code.google.com/p/json-simple/)
 
 Check the [downloads section](#download-links) or try the snapshots above.
