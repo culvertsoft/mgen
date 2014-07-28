@@ -414,9 +414,6 @@ To summarize, you need the following jar files:
 
 Check the [downloads section](#download-links) or try the snapshots above.
 
-
-To summ
-
 Add the jar files to your build and you should be good to go. If you want to include the runtime libries by source instead or build them yourself, see [Building MGen](#building-mgen).
 
 
