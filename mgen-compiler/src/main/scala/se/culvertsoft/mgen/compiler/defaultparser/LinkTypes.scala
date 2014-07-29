@@ -81,9 +81,10 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
       implicit val parent = t
       if (t.hasSuperType())
         t.setSuperType(replace(t.superType).asInstanceOf[CustomType])
-      t.setFields(t.fields().map { f => f.transformToType(replace(f.typ)) })
+      t.setFields(t.fields().map { f => f.transform(replace(f.typ)) })
     }
 
+    // Link super types
     for (t <- cache.typeLookup.typesFullName.values) {
       t match {
         case t: CustomType =>
@@ -94,6 +95,9 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
         case _ =>
       }
     }
+    
+    // Link default values
+    
 
   }
 
