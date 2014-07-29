@@ -22,8 +22,20 @@ public class EnumDefaultValue extends DefaultValue {
 		return (EnumType) super.expectedType();
 	}
 
-	public EnumDefaultValue(final EnumType typ, final String writtenString) {
+	/**
+	 * Returns if the type of this default value is defined in the same module
+	 * as where it's now referenced.
+	 */
+	public boolean isCurrentModule() {
+		return m_isCurrentModule;
+	}
+
+	public EnumDefaultValue(
+			final EnumType typ, 
+			final String writtenString,
+			final Module currentModule) {
 		super(typ, writtenString);
+		m_isCurrentModule = typ.module() == currentModule;
 		for (final EnumEntry e : typ.entries()) {
 			if (e.name().equals(writtenString)) {
 				m_value = e;
@@ -35,5 +47,6 @@ public class EnumDefaultValue extends DefaultValue {
 	}
 
 	private final EnumEntry m_value;
+	private final boolean m_isCurrentModule;
 
 }

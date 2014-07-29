@@ -46,7 +46,7 @@ public abstract class DefaultValue {
 			final Module currentModule) {
 		switch (expectedType.typeEnum()) {
 		case ENUM:
-			return new EnumDefaultValue((EnumType) expectedType, writtenString);
+			return new EnumDefaultValue((EnumType) expectedType, writtenString, currentModule);
 		case BOOL:
 			return new BoolDefaultValue((BoolType) expectedType, writtenString);
 		case INT8:

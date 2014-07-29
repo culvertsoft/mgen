@@ -2,7 +2,6 @@ package se.culvertsoft.mgen.compiler.defaultparser
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.xml.PrettyPrinter
-
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.BoolType
 import se.culvertsoft.mgen.api.model.CustomType
@@ -24,6 +23,7 @@ import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.GeneratorDescriptor
 import se.culvertsoft.mgen.api.util.CRC16
+import scala.xml.Text
 
 object Project2Xml {
 
@@ -136,12 +136,18 @@ object Project2Xml {
     val flagsString = s"${flags.mkString(", ")}"
     val idString = if (field.hasIdOverride()) field.id().toString else null
 
-    val xml =
+    val xmlT =
       (if (flags.nonEmpty)
         <fieldname type={ typeString } flags={ flagsString } id={ idString }/>
       else
         <fieldname type={ typeString } id={ idString }/>)
-        .copy(label = field.name)
+
+    val xml =
+      if (field.hasDefaultValue) {
+        xmlT.copy(label = field.name, child = Text(field.defaultValue.writtenString))
+      } else {
+        xmlT.copy(label = field.name)
+      }
 
     xml
   }

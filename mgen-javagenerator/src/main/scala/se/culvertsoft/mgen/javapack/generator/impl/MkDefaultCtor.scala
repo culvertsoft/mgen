@@ -1,11 +1,13 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
+
 import Alias.isSetName
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstruction.defaultConstructNull
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 
 object MkDefaultCtor {
@@ -14,17 +16,17 @@ object MkDefaultCtor {
 
     implicit val m = module
 
-    txtBuffer.tabs(1).textln(s"public ${t.name()}() {")
-    txtBuffer.tabs(2).textln(s"super();");
+    ln(1, s"public ${t.name()}() {")
+    ln(2, s"super();");
     for (field <- t.fields()) {
-      txtBuffer.tabs(2).textln(s"m_${field.name()} = ${defaultConstructNull(field.typ())};")
+      ln(2, s"m_${field.name()} = ${MkDefaultValue(field)};")
     }
     for (field <- t.fields()) {
       if (!JavaGenerator.canBeNull(field))
-        txtBuffer.tabs(2).textln(s"${isSetName(field)} = false;")
+        ln(2, s"${isSetName(field)} = ${field.hasDefaultValue};")
     }
-    txtBuffer.tabs(1).textln("}")
-    txtBuffer.endl()
+    ln(1, "}")
+    endl()
 
   }
 
