@@ -1,14 +1,13 @@
 package se.culvertsoft.mgen.javapack.test
 
 import scala.collection.JavaConversions.collectionAsScalaIterable
-
 import org.junit.Test
-
 import gameworld.types.ClassRegistry
 import gameworld.types.basemodule1.Car
 import gameworld.types.basemodule1.GarageViewer
 import gameworld.types.basemodule1.Vehicle
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth
+import gameworld.types.basemodule1.Matrix4x4d
 
 class ObjectManipulation {
 
@@ -35,8 +34,10 @@ class ObjectManipulation {
       val a = e.construct()
       val b = e.construct()
       for (o <- List(a, b)) {
-        for (f <- o._fields()) {
-          assert(!o._isFieldSet(f, FieldSetDepth.SHALLOW))
+        if (!o.isInstanceOf[Matrix4x4d]) {
+          for (f <- o._fields()) {
+            assert(!o._isFieldSet(f, FieldSetDepth.SHALLOW))
+          }
         }
       }
     }
@@ -47,13 +48,15 @@ class ObjectManipulation {
     for (e <- classRegEntries) {
       val a = e.construct()
       val b = e.construct()
-      for (o <- List(a, b)) {
-        for (f <- o._fields()) {
-          assert(!o._isFieldSet(f, FieldSetDepth.SHALLOW))
-        }
-        o._setAllFieldsSet(true, FieldSetDepth.SHALLOW)
-        for (f <- o._fields()) {
-          assert(o._isFieldSet(f, FieldSetDepth.SHALLOW))
+      if (!a.isInstanceOf[Matrix4x4d]) {
+        for (o <- List(a, b)) {
+          for (f <- o._fields()) {
+            assert(!o._isFieldSet(f, FieldSetDepth.SHALLOW))
+          }
+          o._setAllFieldsSet(true, FieldSetDepth.SHALLOW)
+          for (f <- o._fields()) {
+            assert(o._isFieldSet(f, FieldSetDepth.SHALLOW))
+          }
         }
       }
     }
@@ -64,13 +67,15 @@ class ObjectManipulation {
     for (e <- classRegEntries) {
       val a = e.construct()
       val b = e.construct()
-      for (o <- List(a, b)) {
-        for (f <- o._fields()) {
-          assert(!o._isFieldSet(f, FieldSetDepth.DEEP))
-        }
-        o._setAllFieldsSet(true, FieldSetDepth.DEEP)
-        for (f <- o._fields()) {
-          assert(o._isFieldSet(f, FieldSetDepth.DEEP))
+      if (!a.isInstanceOf[Matrix4x4d]) {
+        for (o <- List(a, b)) {
+          for (f <- o._fields()) {
+            assert(!o._isFieldSet(f, FieldSetDepth.DEEP))
+          }
+          o._setAllFieldsSet(true, FieldSetDepth.DEEP)
+          for (f <- o._fields()) {
+            assert(o._isFieldSet(f, FieldSetDepth.DEEP))
+          }
         }
       }
     }
