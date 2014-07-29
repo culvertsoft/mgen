@@ -57,7 +57,6 @@ public class ObjectDefaultValue extends DefaultValue {
 			final String writtenString,
 			final Module currentModule) {
 		super(expectedType, writtenString);
-		m_isCurrentModule = expectedType.module() == currentModule;
 		m_values = new HashMap<Field, DefaultValue>();
 		try {
 
@@ -79,9 +78,12 @@ public class ObjectDefaultValue extends DefaultValue {
 										+ " does not qualify for defaultvalue. It is not the same type or a subtype of "
 										+ expectedType);
 					}
+					jsonObject.remove("__TYPE");
 				} else {
 					m_actualType = expectedType;
 				}
+
+				m_isCurrentModule = m_actualType.module() == currentModule;
 
 				for (final Field f : m_actualType.fieldsInclSuper()) {
 					if (f.hasDefaultValue()) {
@@ -91,20 +93,18 @@ public class ObjectDefaultValue extends DefaultValue {
 
 				for (final Map.Entry<String, Object> e : ((Map<String, Object>) src).entrySet()) {
 					final String fieldName = e.getKey();
-					if (!fieldName.equals("__TYPE")) {
 
-						final Field f = m_actualType.findField(fieldName);
-						if (f == null) {
-							throw new AnalysisException(
-									"Failed to set default value. No field named " + fieldName
-											+ " was found on type " + m_actualType);
-						}
-
-						final DefaultValue value = DefaultValue.parse(f.typ(), e
-								.getValue()
-								.toString(), currentModule);
-						m_values.put(f, value);
+					final Field f = m_actualType.findField(fieldName);
+					if (f == null) {
+						throw new AnalysisException("Failed to set default value. No field named "
+								+ fieldName + " was found on type " + m_actualType);
 					}
+
+					final DefaultValue value = DefaultValue.parse(
+							f.typ(),
+							e.getValue().toString(),
+							currentModule);
+					m_values.put(f, value);
 				}
 
 			} else {

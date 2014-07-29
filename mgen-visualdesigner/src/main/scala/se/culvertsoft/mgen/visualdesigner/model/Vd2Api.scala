@@ -177,7 +177,7 @@ object Vd2Api {
       absolutePrepend + fullModuleName + ".xml")
   }
 
-  private def cvtModule(vdModule: VdModule, parentPath: String = "")(implicit cvState: Vd2ApiConversionState): Seq[ApiModuleImpl] = {
+  private def cvtModule(vdModule: VdModule, apiProject: ApiProjectImpl, parentPath: String = "")(implicit cvState: Vd2ApiConversionState): Seq[ApiModuleImpl] = {
 
     val out = new ArrayBuffer[ApiModuleImpl]
 
@@ -188,7 +188,8 @@ object Vd2Api {
       fullModuleName,
       savePath.getWritten(),
       savePath.getAbsolute(),
-      vdModule.getSettings())
+      vdModule.getSettings(),
+      apiProject)
 
     cvState.apiObjLkup.put(fullModuleName, apiModule)
 
@@ -196,12 +197,12 @@ object Vd2Api {
     apiModule.setTypes(vdModule.getTypes().map(cvtType(_, apiModule)))
 
     out += apiModule
-    out ++= vdModule.getSubmodules().flatMap(cvtModule(_, fullModuleName))
+    out ++= vdModule.getSubmodules().flatMap(cvtModule(_, apiProject, fullModuleName))
 
     out
   }
 
-  private def cvtProject(vdProject: VdProject, isRoot: Boolean)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
+  private def cvtProject(vdProject: VdProject, isRoot: Boolean, apiParent: ApiProjectImpl = null)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
 
     cvState.apiObjLkup.getOrElse(vdProject.getFilePath().getAbsolute(), {
 
@@ -209,7 +210,7 @@ object Vd2Api {
         vdProject.getName(),
         vdProject.getFilePath().getWritten(),
         vdProject.getFilePath().getAbsolute(),
-        isRoot)
+        apiParent)
 
       cvState.apiObjLkup.put(vdProject.getFilePath().getAbsolute(), apiProject)
 
@@ -217,13 +218,13 @@ object Vd2Api {
         apiProject.setGenerators(vdProject.getGenerators.map(cvtGenerator))
 
       if (vdProject.hasModules)
-        apiProject.setModules(vdProject.getModules.flatMap(cvtModule(_)))
+        apiProject.setModules(vdProject.getModules.flatMap(cvtModule(_, apiProject)))
 
       if (vdProject.hasSettings)
         apiProject.setSettings(vdProject.getSettings)
 
       if (vdProject.hasDependencies)
-        apiProject.setDependencies(vdProject.getDependencies.map(cvtProject(_, false)))
+        apiProject.setDependencies(vdProject.getDependencies.map(cvtProject(_, false, apiParent)))
 
       apiProject
 
