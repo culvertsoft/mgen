@@ -18,7 +18,12 @@ object JavaConstants {
   val setFieldSetClsString = s"Marker"
   val deepCopyerClsString = s"DeepCopyer"
   val fieldHasherClsString = s"FieldHasher"
+  
+  val listMakerClsString = s"ListMaker"
+  val mapMakerClsString = s"MapMaker"
 
+  val listMakerClsStringQ = s"${utilPkg}.${listMakerClsString}"
+  val mapMakerClsStringQ = s"${utilPkg}.${mapMakerClsString}"
   val validatorClsStringQ = s"${utilPkg}.${validatorClsString}"
   val setFieldSetClsStringQ = s"${utilPkg}.${setFieldSetClsString}"
   val deepCopyerClsStringQ = s"${utilPkg}.${deepCopyerClsString}"

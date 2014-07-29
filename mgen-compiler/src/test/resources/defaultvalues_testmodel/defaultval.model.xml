@@ -38,6 +38,9 @@
             <k type="array[array[int]]">[ [0,0], [0,0]]</k>
             <l type="list[int]">[1,2,3,4]</l>
             <m type="list[list[int]]">[ [0,0], [0,0]]</m>
+            <n type="map[string, int]">{ "a": 1} </n>
+            <o type="map[int, int]">{ "1": 1} </o>
+            <p type="map[int, map[string, int]]">{ "1": {}} </p>
         </TypeWithDefValues>
 
     </Types>
