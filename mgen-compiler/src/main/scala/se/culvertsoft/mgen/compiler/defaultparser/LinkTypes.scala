@@ -2,14 +2,18 @@ package se.culvertsoft.mgen.compiler.defaultparser
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
+import scala.collection.mutable.ArrayBuffer
 
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.DefaultValue
+import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
+import se.culvertsoft.mgen.api.model.UnlinkedDefaultValue
 import se.culvertsoft.mgen.api.model.impl.ArrayTypeImpl
 import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.ListTypeImpl
@@ -60,7 +64,7 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
               replacement
             case _ =>
               if (matches.size > 1)
-            	  throw new AnalysisException(s"Ambigously referenced type ${written} in type ${parent}")
+                throw new AnalysisException(s"Ambigously referenced type ${written} in type ${parent}")
               matches.head
           }
         } else {
@@ -81,7 +85,7 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
       implicit val parent = t
       if (t.hasSuperType())
         t.setSuperType(replace(t.superType).asInstanceOf[CustomType])
-      t.setFields(t.fields().map { f => f.transform(replace(f.typ)) })
+      t.setFields(t.fields.map { f => f.transform(replace(f.typ)) })
     }
 
     // Link super types
@@ -95,9 +99,27 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
         case _ =>
       }
     }
-    
+
     // Link default values
-    
+    val newFields = new ArrayBuffer[Field]
+
+    for (t <- cache.needLinkage.types) {
+      val m = t.module()
+
+      newFields.clear()
+
+      for (f <- t.fields) {
+        if (!f.isLinked()) {
+          val src = f.defaultValue().asInstanceOf[UnlinkedDefaultValue]
+          newFields += f.transform(DefaultValue.parse(f.typ, src.writtenString, m))
+        } else {
+          newFields += f
+        }
+      }
+
+      t.setFields(newFields)
+
+    }
 
   }
 
