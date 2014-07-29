@@ -13,8 +13,12 @@ public class MapDefaultValue extends DefaultValue {
 		return (MapType) super.expectedType();
 	}
 
-	public MapDefaultValue(final MapType typ, final String writtenString, final Module module) {
+	public MapDefaultValue(
+			final MapType typ, 
+			final String writtenString,
+			final Module currentModule) {
 		super(typ, writtenString);
+		throw new RuntimeException("Not yet implemented!");
 	}
 
 }

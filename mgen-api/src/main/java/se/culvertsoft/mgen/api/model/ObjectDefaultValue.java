@@ -21,8 +21,12 @@ public class ObjectDefaultValue extends DefaultValue {
 		return m_actualType;
 	}
 
-	public ObjectDefaultValue(final CustomType expectedType, final String writtenString) {
+	public ObjectDefaultValue(
+			final CustomType expectedType,
+			final String writtenString,
+			final Module currentModule) {
 		super(expectedType, writtenString);
+		throw new RuntimeException("Not yet implemented!");
 	}
 
 	private CustomType m_actualType;

@@ -218,6 +218,7 @@ object Api2Vd {
     parent.getFields().add(fld)
     fld.setType(cvtFieldType(apiField, state))
     fld.setId16Bit(apiField.id())
+    fld.setDefaultValue(apiField.defaultValue().writtenString())
     fld
   }
 

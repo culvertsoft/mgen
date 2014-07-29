@@ -16,8 +16,9 @@ public class ListOrArrayDefaultValue extends DefaultValue {
 	public ListOrArrayDefaultValue(
 			final ListOrArrayType typ,
 			final String writtenString,
-			final Module type) {
+			final Module currentModule) {
 		super(typ, writtenString);
+		throw new RuntimeException("Not yet implemented!");
 	}
 
 }

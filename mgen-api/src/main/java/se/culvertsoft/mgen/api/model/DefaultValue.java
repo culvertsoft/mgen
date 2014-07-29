@@ -1,5 +1,7 @@
 package se.culvertsoft.mgen.api.model;
 
+import se.culvertsoft.mgen.api.exceptions.AnalysisException;
+
 /**
  * Represents a default value specified in the IDL for a field.
  */
@@ -38,8 +40,38 @@ public abstract class DefaultValue {
 	 * Intended to be used by the compiler during the type linkage phase to
 	 * parse default value strings.
 	 */
-	public static DefaultValue parse(final String writtenString, final Module type) {
-		throw new RuntimeException("Not yet implemented!");
+	public static DefaultValue parse(
+			final Type expectedType,
+			final String writtenString,
+			final Module currentModule) {
+		switch (expectedType.typeEnum()) {
+		case ENUM:
+			return new EnumDefaultValue((EnumType) expectedType, writtenString);
+		case BOOL:
+			return new BoolDefaultValue((BoolType) expectedType, writtenString);
+		case INT8:
+		case INT16:
+		case INT32:
+		case INT64:
+		case FLOAT32:
+		case FLOAT64:
+			return new NumericDefaultValue((PrimitiveType) expectedType, writtenString);
+		case STRING:
+			return new StringDefaultValue((StringType) expectedType, writtenString);
+		case LIST:
+		case ARRAY:
+			return new ListOrArrayDefaultValue(
+					(ListOrArrayType) expectedType,
+					writtenString,
+					currentModule);
+		case MAP:
+			return new MapDefaultValue((MapType) expectedType, writtenString, currentModule);
+		case UNKNOWN:
+		case CUSTOM:
+			return new ObjectDefaultValue((CustomType) expectedType, writtenString, currentModule);
+		default:
+			throw new AnalysisException("Unexpected type enum: " + expectedType.typeEnum());
+		}
 	}
 
 }

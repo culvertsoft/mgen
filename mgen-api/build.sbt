@@ -13,6 +13,8 @@ crossPaths := false
 
 retrieveManaged := true
 
+libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
+
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false

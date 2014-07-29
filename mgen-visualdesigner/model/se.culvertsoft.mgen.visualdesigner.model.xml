@@ -74,6 +74,7 @@
         <CustomTypeField extends="Entity">
             <type type="FieldType" flags="required" />
             <flags type="list[string]" />
+            <defaultValue type="String" />
             <id16Bit type="int16" />
         </CustomTypeField>
         <FieldType>

@@ -24,10 +24,8 @@ public class EnumDefaultValue extends DefaultValue {
 
 	public EnumDefaultValue(final EnumType typ, final String writtenString) {
 		super(typ, writtenString);
-		final String[] parts = writtenString.split("\\.");
-		final String entryName = parts[parts.length - 1];
 		for (final EnumEntry e : typ.entries()) {
-			if (e.name().equals(entryName)) {
+			if (e.name().equals(writtenString)) {
 				m_value = e;
 				return;
 			}
