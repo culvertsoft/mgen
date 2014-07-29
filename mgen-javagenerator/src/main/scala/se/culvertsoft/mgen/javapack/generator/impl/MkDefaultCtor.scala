@@ -19,7 +19,7 @@ object MkDefaultCtor {
     ln(1, s"public ${t.name()}() {")
     ln(2, s"super();");
     for (field <- t.fields()) {
-      ln(2, s"m_${field.name()} = ${MkDefaultValue(field)};")
+      ln(2, s"m_${field.name()} = ${MkDefaultValue(field, false)};")
     }
     for (field <- t.fields()) {
       if (!JavaGenerator.canBeNull(field))

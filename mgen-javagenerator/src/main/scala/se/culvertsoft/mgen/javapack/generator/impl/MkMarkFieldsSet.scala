@@ -28,12 +28,12 @@ object MkMarkFieldsSet {
 
       if (JavaGenerator.canBeNull(field)) {
         ln(2, "if (state)")
-        ln(3, s"m_${field.name} = m_${field.name} != null ? m_${field.name} : ${MkDefaultValue(field)};")
+        ln(3, s"m_${field.name} = m_${field.name} != null ? m_${field.name} : ${MkDefaultValue(field, true)};")
         ln(2, "else")
         ln(3, s"m_${field.name} = null;")
       } else {
         ln(2, "if (!state)")
-        ln(3, s"m_${field.name} = ${MkDefaultValue(field)};")
+        ln(3, s"m_${field.name} = ${MkDefaultValue(field, false)};")
         ln(2, s"${isSetName(field)} = state;")
       }
 

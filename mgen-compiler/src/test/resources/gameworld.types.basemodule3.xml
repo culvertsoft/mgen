@@ -2,40 +2,4 @@
 
 <Module>
 
-    <Enums>
-        <MyEnum>
-            <a />
-            <b />
-            <c />
-        </MyEnum>
-    </Enums>
-
-    <Types>
-
-        <BaseWithDefValues>
-            <ba type="bool" flags="required" />
-            <bb type="MyEnum" />
-            <bc type="int8" flags="required">-1</bc>
-            <bd type="int16">-2</bd>
-            <be type="int32">-3</be>
-            <bf type="int64" flags="required">-4.5</bf>
-            <bg type="float32" flags="required" />
-            <bh type="float64" />
-            <bi type="string" />
-        </BaseWithDefValues>
-
-        <TypeWithDefValues extends="BaseWithDefValues">
-            <a type="bool">true</a>
-            <b type="MyEnum" flags="required">b</b>
-            <c type="int8">-1</c>
-            <d type="int16">-2</d>
-            <e type="int32">-3</e>
-            <f type="int64" flags="required">-4.5</f>
-            <g type="float32" flags="required">3.5</g>
-            <h type="float64">-6.5</h>
-            <i type="string">-6.5</i>
-        </TypeWithDefValues>
-
-    </Types>
-
 </Module>

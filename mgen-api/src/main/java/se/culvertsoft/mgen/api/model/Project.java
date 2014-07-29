@@ -67,4 +67,19 @@ public interface Project {
 	 */
 	public boolean isRoot();
 
+	/**
+	 * Searches the types of this project and its dependencies for a type with a
+	 * given name
+	 * 
+	 * @param name
+	 *            The short or full class name of the type to find
+	 * @return The found type, or null if none found
+	 */
+	public Type findType(final String name);
+	
+	/**
+	 * Gets the parent project of this project (if it's a dependency), otherwise it returns null.
+	 */
+	public Project parent();
+
 }

@@ -51,7 +51,7 @@ object MkRequiredMembersCtor {
         if (field.isRequired)
           ln(2, s"m_${field.name()} = ${field.name()};")
         else
-          ln(2, s"m_${field.name()} = ${MkDefaultValue(field)};")
+          ln(2, s"m_${field.name()} = ${MkDefaultValue(field, false)};")
       }
 
       for (f <- t.fields) {

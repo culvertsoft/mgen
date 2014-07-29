@@ -17,7 +17,7 @@ class DefaultParser(allowNoGenerators: Boolean) extends Parser {
 
     FileUtils.checkiSsFileOrThrow(projectPath)
 
-    val project = ParseProject(projectPath, settings.toMap, Nil, true)
+    val project = ParseProject(projectPath, settings.toMap, Nil, null)
 
     LinkTypes(project)
 

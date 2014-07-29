@@ -2,8 +2,8 @@ package se.culvertsoft.mgen.javapack.generator.impl
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
-import se.culvertsoft.mgen.api.model.DefaultValue
 import se.culvertsoft.mgen.api.model.EnumDefaultValue
+import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Float32Type
 import se.culvertsoft.mgen.api.model.Float64Type
 import se.culvertsoft.mgen.api.model.Int16Type
@@ -17,16 +17,20 @@ import se.culvertsoft.mgen.api.model.NumericDefaultValue
 import se.culvertsoft.mgen.api.model.ObjectDefaultValue
 import se.culvertsoft.mgen.api.model.StringDefaultValue
 import se.culvertsoft.mgen.javapack.generator.JavaConstruction
-import se.culvertsoft.mgen.api.model.Field
 
 object MkDefaultValue {
 
   def apply(
     f: Field,
+    nonNull: Boolean,
     isGenericArg: Boolean = false)(implicit currentModule: Module): String = {
 
-    if (!f.hasDefaultValue)
-      return JavaConstruction.defaultConstructNull(f.typ, isGenericArg)
+    if (!f.hasDefaultValue) {
+      if (nonNull)
+        return JavaConstruction.defaultConstruct(f.typ, isGenericArg)
+      else
+        return JavaConstruction.defaultConstructNull(f.typ, isGenericArg)
+    }
 
     f.defaultValue match {
       case v: EnumDefaultValue =>

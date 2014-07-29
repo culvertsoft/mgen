@@ -129,4 +129,9 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 		throw new MGenException("Type details unknown: Cannot call referencedEnums()");
 	}
 
+	@Override
+	public Field findField(final String name) {
+		throw new MGenException("Type details unknown: Cannot call findField()");
+	}
+
 }

@@ -7,6 +7,8 @@ import java.util.Map;
 import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.EnumType;
 import se.culvertsoft.mgen.api.model.Module;
+import se.culvertsoft.mgen.api.model.Project;
+import se.culvertsoft.mgen.api.model.Type;
 
 public class ModuleImpl implements Module {
 
@@ -16,18 +18,21 @@ public class ModuleImpl implements Module {
 	private final Map<String, String> m_settings;
 	private final ArrayList<LinkedCustomType> m_types;
 	private final ArrayList<EnumTypeImpl> m_enums;
+	private final Project m_parent;
 
 	public ModuleImpl(
 			final String path,
 			final String filePath,
 			final String absoluteFilePath,
-			final Map<String, String> settings) {
+			final Map<String, String> settings,
+			final Project parent) {
 		m_path = path;
 		m_filePath = filePath;
 		m_absoluteFilePath = absoluteFilePath;
 		m_settings = settings;
 		m_types = new ArrayList<LinkedCustomType>();
 		m_enums = new ArrayList<EnumTypeImpl>();
+		m_parent = parent;
 	}
 
 	public Map<String, String> settings() {
@@ -44,6 +49,11 @@ public class ModuleImpl implements Module {
 
 	public String absoluteFilePath() {
 		return m_absoluteFilePath;
+	}
+
+	@Override
+	public Project parent() {
+		return m_parent;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -76,6 +86,21 @@ public class ModuleImpl implements Module {
 
 	public void addType(final LinkedCustomType type) {
 		m_types.add(type);
+	}
+
+	@Override
+	public Type findType(final String name) {
+		for (final CustomType t : types()) {
+			if (t.shortName().equals(name) || t.fullName().equals(name)) {
+				return t;
+			}
+		}
+		for (final EnumType t : enums()) {
+			if (t.shortName().equals(name) || t.fullName().equals(name)) {
+				return t;
+			}
+		}
+		return null;
 	}
 
 }

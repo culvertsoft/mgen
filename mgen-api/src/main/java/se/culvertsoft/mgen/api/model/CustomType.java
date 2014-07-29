@@ -100,5 +100,10 @@ public interface CustomType extends UserDefinedType {
 	 * Returns the set of types referenced from this type.
 	 */
 	public Set<EnumType> referencedEnums();
+	
+	/**
+	 * Finds/Gets a field by name. Returns null if no such field is found.
+	 */
+	public Field findField(final String name);
 
 }

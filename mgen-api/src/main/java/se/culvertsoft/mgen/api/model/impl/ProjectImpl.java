@@ -2,11 +2,13 @@ package se.culvertsoft.mgen.api.model.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.Project;
+import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.api.plugins.GeneratorDescriptor;
 
 public class ProjectImpl implements Project {
@@ -18,13 +20,13 @@ public class ProjectImpl implements Project {
 	private List<ModuleImpl> m_modules;
 	private List<ProjectImpl> m_dependencies;
 	private List<GeneratorDescriptor> m_generators;
-	private boolean m_isRoot;
+	private final ProjectImpl m_parent;
 
 	public ProjectImpl(
 			final String name,
 			final String filePath,
 			final String absoluteFilePath,
-			final boolean isRoot) {
+			final ProjectImpl parent) {
 		m_name = name;
 		m_filePath = filePath;
 		m_absoluteFilePath = absoluteFilePath;
@@ -32,7 +34,7 @@ public class ProjectImpl implements Project {
 		m_modules = new ArrayList<ModuleImpl>();
 		m_dependencies = new ArrayList<ProjectImpl>();
 		m_generators = new ArrayList<GeneratorDescriptor>();
-		m_isRoot = isRoot;
+		m_parent = parent;
 	}
 
 	@Override
@@ -69,7 +71,7 @@ public class ProjectImpl implements Project {
 
 	@Override
 	public boolean isRoot() {
-		return m_isRoot;
+		return m_parent == null;
 	}
 
 	public void setName(String name) {
@@ -96,8 +98,9 @@ public class ProjectImpl implements Project {
 		m_dependencies = dependencies;
 	}
 
-	public void setIsRoot(boolean state) {
-		m_isRoot = state;
+	@Override
+	public Project parent() {
+		return m_parent;
 	}
 
 	@Override
@@ -107,6 +110,34 @@ public class ProjectImpl implements Project {
 
 	public void setGenerators(List<GeneratorDescriptor> generators) {
 		m_generators = generators;
+	}
+
+	private Type findType(final String name, final HashSet<Project> alreadySearchedProjects) {
+
+		for (final Module m : modules()) {
+			final Type foundType = m.findType(name);
+			if (foundType != null)
+				return foundType;
+		}
+		alreadySearchedProjects.add(this);
+
+		for (final ProjectImpl d : m_dependencies) {
+			final Type foundType = d.findType(name, alreadySearchedProjects);
+			if (foundType != null) {
+				return foundType;
+			}
+		}
+		return null;
+	}
+
+	@Override
+	public Type findType(final String name) {
+		if (isRoot()) {
+			final HashSet<Project> alreadySearchedProjects = new HashSet<Project>();
+			return findType(name, alreadySearchedProjects);
+		} else {
+			return m_parent.findType(name);
+		}
 	}
 
 }

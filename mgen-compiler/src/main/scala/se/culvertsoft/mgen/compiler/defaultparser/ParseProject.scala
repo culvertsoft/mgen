@@ -15,7 +15,7 @@ object ParseProject {
     filePath: String,
     settings0: Map[String, String],
     searchPaths0: Seq[String],
-    isRoot: Boolean)(implicit cache: ParseState): ProjectImpl = {
+    parent: ProjectImpl)(implicit cache: ParseState): ProjectImpl = {
 
     val file = FileUtils.findFile(filePath, searchPaths0)
       .getOrElse(ThrowRTE(s"Could not find referenced project file: ${filePath}"))
@@ -28,7 +28,7 @@ object ParseProject {
 
       val projectName = FileUtils.removeFileEnding(FileUtils.nameOf(absoluteFilePath))
       val projectDir = FileUtils.directoryOf(absoluteFilePath)
-      val project = new ProjectImpl(projectName, filePath, file.getAbsolutePath(), isRoot)
+      val project = new ProjectImpl(projectName, filePath, file.getAbsolutePath(), parent)
 
       val searchPaths: Seq[String] = searchPaths0 ++ Seq(projectDir)
 
@@ -44,12 +44,12 @@ object ParseProject {
 
       // Parse dependenciesw
       val dependFilePaths = projectXml.getAllNodeContents("Depend").map(_.toString)
-      val dependencies = dependFilePaths.map(ParseProject(_, settings, searchPaths, false))
+      val dependencies = dependFilePaths.map(ParseProject(_, settings, searchPaths, project))
       project.setDependencies(dependencies)
 
       // Parse modules
       val moduleFilePaths = projectXml.getAllNodeContents("Module").map { _.toString }
-      val modules = moduleFilePaths.map { ParseModule(_, settings, searchPaths) }
+      val modules = moduleFilePaths.map { ParseModule(_, settings, searchPaths, project) }
       project.setModules(modules)
 
       // Parse Generators

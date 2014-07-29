@@ -3,16 +3,17 @@ package se.culvertsoft.mgen.compiler.defaultparser
 import scala.collection.JavaConversions.mapAsJavaMap
 import scala.collection.JavaConversions.seqAsJavaList
 import scala.xml.XML.loadFile
-
 import XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
+import se.culvertsoft.mgen.api.model.Project
 
 object ParseModule {
 
   def apply(
     filePath: String,
     settings0: Map[String, String],
-    searchPaths0: Seq[String])(implicit cache: ParseState): ModuleImpl = {
+    searchPaths0: Seq[String],
+    parent: Project)(implicit cache: ParseState): ModuleImpl = {
 
     val file = FileUtils.findFile(filePath, searchPaths0)
       .getOrElse(ThrowRTE(s"Could not find referenced module file: ${filePath}"))
@@ -40,7 +41,8 @@ object ParseModule {
         modulePath,
         filePath,
         absoluteFilePath,
-        settings)
+        settings,
+        parent)
 
       // Parse enumerations
       val enumsXml = moduleXml.getAllNodeContents("Enums")

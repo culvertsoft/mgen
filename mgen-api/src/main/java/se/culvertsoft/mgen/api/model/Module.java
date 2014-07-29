@@ -58,4 +58,20 @@ public interface Module {
 	 */
 	public List<EnumType> enums();
 
+	/**
+	 * Returns the parent project of this module.
+	 * 
+	 * @return The parent project of this module.
+	 */
+	public Project parent();
+
+	/**
+	 * Searches the types of this module for a type with a given name
+	 * 
+	 * @param name
+	 *            The short or full class name of the type to find
+	 * @return The found type, or null if none found
+	 */
+	public Type findType(final String name);
+
 }
