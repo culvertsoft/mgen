@@ -12,6 +12,18 @@
 
     <Types>
 
+        <SomeTypeBase>
+            <ba type="int" />
+            <bb type="int">2</bb>
+            <bc type="int">3</bc>
+        </SomeTypeBase>
+
+        <SomeType extends="SomeTypeBase">
+            <a type="int" />
+            <b type="int">2</b>
+            <c type="int">3</c>
+        </SomeType>
+
         <BaseWithDefValues>
             <ba type="bool" />
             <bb type="MyEnum" />
@@ -41,6 +53,8 @@
             <n type="map[string, int]">{ "a": 1} </n>
             <o type="map[int, int]">{ "1": 1} </o>
             <p type="map[int, map[string, int]]">{ "1": {}} </p>
+            <a_obj type="SomeType"></a_obj>
+            <b_obj type="SomeType"> { "a": -1, "b": -3, "c": -2, "ba": -11, "bb": -23, "bc": -32 } </b_obj>
         </TypeWithDefValues>
 
     </Types>

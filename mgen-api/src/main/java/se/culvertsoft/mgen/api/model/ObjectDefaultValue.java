@@ -45,10 +45,10 @@ public class ObjectDefaultValue extends DefaultValue {
 	}
 
 	/**
-	 * The field default values of this default value
+	 * The overridden field default values of this default value
 	 */
-	public Map<Field, DefaultValue> values() {
-		return m_values;
+	public Map<Field, DefaultValue> overriddenDefaultValues() {
+		return m_overriddenDefaultValues;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -57,7 +57,7 @@ public class ObjectDefaultValue extends DefaultValue {
 			final String writtenString,
 			final Module currentModule) {
 		super(expectedType, writtenString);
-		m_values = new HashMap<Field, DefaultValue>();
+		m_overriddenDefaultValues = new HashMap<Field, DefaultValue>();
 		try {
 
 			final Object src = JSONValue.parseWithException(writtenString);
@@ -65,10 +65,16 @@ public class ObjectDefaultValue extends DefaultValue {
 
 				final JSONObject jsonObject = (JSONObject) src;
 
-				final String optActualTypeName = jsonObject.get("__TYPE").toString();
+				final String optActualTypeName = (String) jsonObject.get("__TYPE");
 
 				if (optActualTypeName != null) {
+
 					m_actualType = findType(optActualTypeName, currentModule);
+
+					if (m_actualType == null) {
+						throw new AnalysisException("Could not find specified default value type "
+								+ optActualTypeName + " for expected type " + expectedType);
+					}
 
 					if (expectedType != m_actualType
 							&& !m_actualType.superTypeHierarchy().contains(expectedType)) {
@@ -85,12 +91,6 @@ public class ObjectDefaultValue extends DefaultValue {
 
 				m_isCurrentModule = m_actualType.module() == currentModule;
 
-				for (final Field f : m_actualType.fieldsInclSuper()) {
-					if (f.hasDefaultValue()) {
-						m_values.put(f, f.defaultValue());
-					}
-				}
-
 				for (final Map.Entry<String, Object> e : ((Map<String, Object>) src).entrySet()) {
 					final String fieldName = e.getKey();
 
@@ -104,7 +104,7 @@ public class ObjectDefaultValue extends DefaultValue {
 							f.typ(),
 							e.getValue().toString(),
 							currentModule);
-					m_values.put(f, value);
+					m_overriddenDefaultValues.put(f, value);
 				}
 
 			} else {
@@ -123,6 +123,6 @@ public class ObjectDefaultValue extends DefaultValue {
 
 	private final CustomType m_actualType;
 	private final boolean m_isCurrentModule;
-	private final Map<Field, DefaultValue> m_values;
+	private final Map<Field, DefaultValue> m_overriddenDefaultValues;
 
 }

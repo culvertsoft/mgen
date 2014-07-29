@@ -244,7 +244,7 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 
 	@Override
 	public Field findField(final String name) {
-		for (final Field f : fields()) {
+		for (final Field f : fieldsInclSuper()) {
 			if (f.name().equals(name)) {
 				return f;
 			}

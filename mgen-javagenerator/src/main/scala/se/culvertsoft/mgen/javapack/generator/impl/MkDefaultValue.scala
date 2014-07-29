@@ -95,7 +95,9 @@ object MkDefaultValue {
           s"new java.util.HashMap<$typeArg>()"
         }
       case v: ObjectDefaultValue =>
-        throw new GenerationException(s"Not yet implemented!")
+        val values = v.overriddenDefaultValues
+        val setCalls = values.map(e => s".${Alias.set(e._1, apply(e._2, true, isGenericArg, false))}").mkString("")
+        JavaConstruction.defaultConstruct(v.actualType, false) + setCalls
       case _ =>
         throw new GenerationException(s"Don't know how to generate default value code for $d")
     }
