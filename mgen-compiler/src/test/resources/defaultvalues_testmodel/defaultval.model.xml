@@ -34,6 +34,10 @@
             <g type="float32">3.5</g>
             <h type="float64" />
             <i type="string">-6.5</i>
+            <j type="array[int]">[1,2,3,4]</j>
+            <k type="array[array[int]]">[ [0,0], [0,0]]</k>
+            <l type="list[int]">[1,2,3,4]</l>
+            <m type="list[list[int]]">[ [0,0], [0,0]]</m>
         </TypeWithDefValues>
 
     </Types>
