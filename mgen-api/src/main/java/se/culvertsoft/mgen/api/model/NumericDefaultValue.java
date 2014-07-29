@@ -11,8 +11,8 @@ public class NumericDefaultValue extends DefaultValue {
 	 * The type of this default value
 	 */
 	@Override
-	public PrimitiveType typ() {
-		return (PrimitiveType) super.typ();
+	public PrimitiveType expectedType() {
+		return (PrimitiveType) super.expectedType();
 	}
 
 	/**

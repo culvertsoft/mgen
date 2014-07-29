@@ -8,8 +8,9 @@ public class MapDefaultValue extends DefaultValue {
 	/**
 	 * The type of this default value
 	 */
-	public MapType typ() {
-		return (MapType) super.typ();
+	@Override
+	public MapType expectedType() {
+		return (MapType) super.expectedType();
 	}
 
 	public MapDefaultValue(final MapType typ, final String writtenString, final Module module) {

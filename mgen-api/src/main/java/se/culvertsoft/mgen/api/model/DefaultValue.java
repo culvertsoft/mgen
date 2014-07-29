@@ -6,10 +6,10 @@ package se.culvertsoft.mgen.api.model;
 public abstract class DefaultValue {
 
 	/**
-	 * The type of this default value
+	 * The expected type of this default value
 	 */
-	public Type typ() {
-		return m_type;
+	public Type expectedType() {
+		return m_expectedType;
 	}
 
 	/**
@@ -23,15 +23,15 @@ public abstract class DefaultValue {
 	 * The actual written default value string in the IDL
 	 */
 	public boolean isLinked() {
-		return m_type != null;
+		return m_expectedType != null;
 	}
 
 	protected DefaultValue(final Type typ, final String writtenString) {
-		m_type = typ;
+		m_expectedType = typ;
 		m_writtenString = writtenString;
 	}
 
-	private Type m_type;
+	private Type m_expectedType;
 	private String m_writtenString;
 
 	/**

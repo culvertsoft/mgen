@@ -39,7 +39,7 @@ object ParseType {
     cache.typeLookup.typesShortName.getOrElseUpdate(clas.shortName(), new ArrayBuffer[UserDefinedType])
     cache.typeLookup.typesShortName(clas.shortName()) += clas
 
-    if (clas.hasSuperType() || clas.fields().exists(!_.typ().isLinked()))
+    if (clas.hasSuperType() || clas.fields.exists(!_.isLinked))
       cache.needLinkage.types += clas
 
     clas

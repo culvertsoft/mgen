@@ -18,8 +18,8 @@ public class EnumDefaultValue extends DefaultValue {
 	 * The type of this enum default value
 	 */
 	@Override
-	public EnumType typ() {
-		return (EnumType) super.typ();
+	public EnumType expectedType() {
+		return (EnumType) super.expectedType();
 	}
 
 	public EnumDefaultValue(final EnumType typ, final String writtenString) {

@@ -8,8 +8,9 @@ public class ListOrArrayDefaultValue extends DefaultValue {
 	/**
 	 * The type of this default value
 	 */
-	public ListOrArrayType typ() {
-		return (ListOrArrayType) super.typ();
+	@Override
+	public ListOrArrayType expectedType() {
+		return (ListOrArrayType) super.expectedType();
 	}
 
 	public ListOrArrayDefaultValue(

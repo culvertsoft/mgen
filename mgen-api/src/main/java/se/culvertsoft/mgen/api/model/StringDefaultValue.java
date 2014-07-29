@@ -8,8 +8,9 @@ public class StringDefaultValue extends DefaultValue {
 	/**
 	 * The type of this default value
 	 */
-	public StringType typ() {
-		return (StringType) super.typ();
+	@Override
+	public StringType expectedType() {
+		return (StringType) super.expectedType();
 	}
 
 	/**

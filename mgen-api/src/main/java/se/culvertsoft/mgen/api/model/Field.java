@@ -103,6 +103,10 @@ public class Field {
 	public boolean isTransient() {
 		return m_transient;
 	}
+	
+	public boolean isLinked() {
+		return m_type.isLinked() && (!hasDefaultValue() || m_defaultValue.isLinked());
+	}
 
 	public boolean hasDefaultValue() {
 		return m_defaultValue != null;
