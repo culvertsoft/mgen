@@ -27,7 +27,7 @@ object MkRequiredMembersCtor {
       if (fieldsToSuper.nonEmpty)
         initializerList += MkCtorHelper.mkPassToSuper(fieldsToSuper, t, module)
       if (t.fields.nonEmpty)
-        initializerList ++= MkCtorHelper.mkReqMemberValues(t.fields, module)
+        initializerList ++= MkCtorHelper.mkReqMemberCtorInitListValues(t.fields, module)
       if (nonNullFields.nonEmpty)
         initializerList ++= MkCtorHelper.mkReqNonNullFields(nonNullFields)
       writeInitializerList(initializerList)

@@ -12,7 +12,7 @@ object HasDefaultCtor {
     field.typ match {
       case _: ListOrArrayType => true
       case _: MapType => true
-      case _: CustomType => true
+      case _: CustomType => !field.isPolymorphic
       case _: StringType => true
       case _ => false
     }

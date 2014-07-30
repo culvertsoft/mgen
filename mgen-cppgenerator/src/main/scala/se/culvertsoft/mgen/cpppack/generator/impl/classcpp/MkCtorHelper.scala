@@ -37,17 +37,24 @@ object MkCtorHelper {
 
   def mkReqNonNullFields(fields: Seq[Field]): Seq[String] = {
     fields map { field =>
-      s"${isSetName(field)}(${if (field.isRequired) "true" else "false"})"
+      s"${isSetName(field)}(${if (field.isRequired) "true" else field.hasDefaultValue})"
     }
   }
 
-  def mkReqMemberValues(fields: Seq[Field], module: Module): Seq[String] = {
+  def requiredInitializerListValue(field: Field): Boolean = {
+    field.hasDefaultValue ||
+      field.isRequired ||
+      !HasDefaultCtor(field) ||
+      canBeNull(field)
+  }
+
+  def mkReqMemberCtorInitListValues(fields: Seq[Field], module: Module): Seq[String] = {
     implicit val currentModule = module
-    fields.filterNot(f => canBeNull(f) || (!f.isRequired() && HasDefaultCtor(f))) map { field =>
+    fields.filter(requiredInitializerListValue) map { field =>
       if (field.isRequired())
         s"m_${field.name()}(${field.name()})"
       else
-        s"m_${field.name()}(${CppConstruction.defaultConstructNull(field)})"
+        s"m_${field.name()}(${MkDefaultValue.apply(field)})"
     }
   }
 

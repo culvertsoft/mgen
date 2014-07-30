@@ -14,24 +14,24 @@
 
         <SomeTypeBase>
             <ba type="int" />
-            <bb type="int">2</bb>
+            <bb type="int" flags="required">2</bb>
             <bc type="int">3</bc>
         </SomeTypeBase>
 
         <SomeType extends="SomeTypeBase">
             <a type="int" />
             <b type="int">2</b>
-            <c type="int">3</c>
+            <c type="int" flags="required">3</c>
         </SomeType>
 
         <BaseWithDefValues>
             <ba type="bool" />
             <bb type="MyEnum" />
-            <bc type="int8">-1</bc>
+            <bc type="int8" flags="required">-1</bc>
             <bd type="int16">-2</bd>
-            <be type="int32">-3</be>
+            <be type="int32" flags="required">-3</be>
             <bf type="int64">-4.5</bf>
-            <bg type="float32" />
+            <bg type="float32" flags="required" />
             <bh type="float64" />
             <bi type="string" />
         </BaseWithDefValues>
@@ -42,21 +42,30 @@
             <c type="int8">-1</c>
             <d type="int16" />
             <e type="int32">-3</e>
-            <f type="int64">-4.5</f>
+            <f type="int64" flags="required">-4.5</f>
             <g type="float32">3.5</g>
             <h type="float64" />
-            <i type="string">-6.5</i>
-            <j type="array[int]">[1,2,3,4]</j>
+            <i type="string" flags="required">-6.5</i>
+            <j type="array[int]" flags="required">[1,2,3,4]</j>
             <k type="array[array[int]]">[ [0,0], [0,0]]</k>
             <l type="list[int]">[1,2,3,4]</l>
-            <m type="list[list[int]]">[ [0,0], [0,0]]</m>
+            <m type="list[list[int]]" flags="required">[ [0,0], [0,0]]</m>
             <n type="map[string, int]">{ "a": 1} </n>
-            <o type="map[int, int]">{ "1": 1} </o>
+            <o type="map[int, int]" flags="required">{ "1": 1} </o>
             <p type="map[int, map[string, int]]">{ "1": {}} </p>
             <a_obj type="SomeType"></a_obj>
-            <b_obj type="SomeType"> { "a": -1, "b": -3, "c": -2, "ba": -11, "bb": -23, "bc": -32 } </b_obj>
-            <c_obj type="SomeTypeBase" flags="polymorphic"> { "__TYPE": "SomeType", "a": -1, "b": -3, "c": -2, "ba": -11, "bb": -23, "bc": -32 } </c_obj>
+            <b_obj type="SomeType" flags="required"> { "a": -1, "b": -3, "c":
+                -2, "ba": -11, "bb": -23, "bc": -32 }
+            </b_obj>
         </TypeWithDefValues>
+
+
+        <PolyHolder>
+            <a type="SomeType" flags="polymorphic">{}</a>
+            <b type="SomeType" flags="polymorphic, required">{}</b>
+            <c type="SomeType" flags="">{}</c>
+            <d type="SomeType" flags="required">{}</d>
+        </PolyHolder>
 
     </Types>
 

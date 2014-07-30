@@ -35,6 +35,8 @@ generate-test-models:
 	mkdir -p target
 	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
 	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/transient_testmodel/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
+	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/defaultvalues_testmodel/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
+	java -jar $(MGEN_COMPILER_JAR) -project="../mgen-compiler/src/test/resources/defaultvaluesreq_testmodel/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
 
 build-test:	generate-test-models
 	#########################################

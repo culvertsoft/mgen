@@ -6,36 +6,62 @@
 
 namespace mgen {
 
-template <typename T>
+template<typename T>
 class make_vector {
 public:
-	make_vector& operator<<(const T& val) {
-		m_data.push_back(val);
-		return *this;
-	}
-	
-	operator std::vector<T>() const {
-		return m_data;
-	}
-	
+    make_vector() {
+    }
+
+    make_vector(const int n) {
+        m_data.reserve(n);
+    }
+
+    make_vector& operator<<(const T& val) {
+        m_data.push_back(val);
+        return *this;
+    }
+
+    make_vector& add(const T& val) {
+        m_data.push_back(val);
+        return *this;
+    }
+
+    operator std::vector<T>() const {
+        return m_data;
+    }
+
+    std::vector<T> make() const {
+        return m_data;
+    }
+
 private:
-	std::vector<T> m_data;
+    std::vector<T> m_data;
 };
 
-template <typename K, typename V>
+template<typename K, typename V>
 class make_map {
 public:
-	make_map& operator()(const K& key, const V& value) {
-		m_data[key] = value;
-		return *this;
-	}
-	
-	operator std::map<K,V>() const {
-		return m_data;
-	}
-	
+
+    make_map& operator()(const K& key, const V& value) {
+        m_data[key] = value;
+        return *this;
+    }
+
+    make_map& put(const K& key, const V& value) {
+        m_data[key] = value;
+        return *this;
+    }
+
+    operator std::map<K,V>() const {
+        return m_data;
+    }
+
+    std::map<K, V> make() const {
+        return m_data;
+    }
+
 private:
-	std::map<K,V> m_data;
+    std::map<K, V> m_data;
 };
 
 }
