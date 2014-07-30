@@ -47,7 +47,8 @@ object MkDefaultValue {
     d: DefaultValue,
     nonNull: Boolean,
     isGenericArg: Boolean = false,
-    isFirstCall: Boolean = true)(implicit currentModule: Module): String = {
+    isFirstCall: Boolean = true,
+    lastIsArray: Boolean = false)(implicit currentModule: Module): String = {
 
     d match {
       case v: EnumDefaultValue =>
@@ -62,10 +63,10 @@ object MkDefaultValue {
         v.expectedType match {
           case t: Int8Type => s"(byte)${v.fixedPtValue}"
           case t: Int16Type => s"(short)${v.fixedPtValue}"
-          case t: Int32Type => s"(int)${v.fixedPtValue}"
-          case t: Int64Type => s"(long)${v.fixedPtValue}L"
+          case t: Int32Type => s"${v.fixedPtValue}"
+          case t: Int64Type => s"${v.fixedPtValue}L"
           case t: Float32Type => s"(float)${v.floatingPtValue}"
-          case t: Float64Type => s"(double)${v.floatingPtValue}"
+          case t: Float64Type => s"${v.floatingPtValue}"
         }
       case v: StringDefaultValue =>
         '"' + v.value + '"'
@@ -73,8 +74,13 @@ object MkDefaultValue {
         val values = v.values
         v.expectedType() match {
           case t: ArrayType =>
-            val entries = values.map(v => apply(v, true, isGenericArg, false)).mkString(", ")
-            s"new ${JavaTypeNames.getTypeName(d.expectedType, isGenericArg, false)} { $entries }"
+            val entries = values.map(v => apply(v, true, isGenericArg, false, true)).mkString(", ")
+            val prepend =
+              if (!lastIsArray)
+                s"new ${JavaTypeNames.getTypeName(d.expectedType, isGenericArg, false)}"
+              else
+                ""
+            s"${prepend}{$entries}"
           case t: ListType =>
             val typeArg = s"${JavaTypeNames.getTypeName(t.elementType(), true, false)}"
             if (values.nonEmpty) {
