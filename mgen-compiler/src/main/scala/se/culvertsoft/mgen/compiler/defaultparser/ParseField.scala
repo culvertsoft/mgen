@@ -5,7 +5,8 @@ import scala.collection.JavaConversions.seqAsJavaList
 
 import XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.api.model.UnlinkedDefaultValue
+import se.culvertsoft.mgen.api.model.impl.FieldImpl
+import se.culvertsoft.mgen.api.model.impl.UnlinkedDefaultValueImpl
 import se.culvertsoft.mgen.api.util.CRC16
 
 object ParseField {
@@ -20,11 +21,11 @@ object ParseField {
     val flagString = node.getAttribString("flags").getOrElse("")
     val idOverride = node.getAttribString("id").map(java.lang.Short.decode(_).shortValue()).getOrElse(CRC16.calc(name))
     val defaultValue = node.text match {
-      case s: String if (s.trim.nonEmpty) => new UnlinkedDefaultValue(s.trim)
+      case s: String if (s.trim.nonEmpty) => new UnlinkedDefaultValueImpl(s.trim)
       case _ => null
     }
 
-    new Field(
+    new FieldImpl(
       ownerClassName,
       name,
       typ,

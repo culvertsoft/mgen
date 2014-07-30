@@ -1,11 +1,5 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import java.io.File
-
-import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-
 abstract class CppClassRegistryGenerator(artifactType: CppArtifactType)
   extends UtilityClassGenerator("ClassRegistry", Some("mgen::ClassRegistryBase"), artifactType) {
 

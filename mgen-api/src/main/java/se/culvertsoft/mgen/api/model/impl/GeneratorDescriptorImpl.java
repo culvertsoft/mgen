@@ -1,10 +1,12 @@
-package se.culvertsoft.mgen.api.plugins;
+package se.culvertsoft.mgen.api.model.impl;
 
 import java.util.Map;
 
-public class GeneratorDescriptor {
+import se.culvertsoft.mgen.api.model.GeneratorDescriptor;
 
-	public GeneratorDescriptor(
+public class GeneratorDescriptorImpl implements GeneratorDescriptor {
+
+	public GeneratorDescriptorImpl(
 			final String generatorName,
 			final String generatorClassName,
 			final Map<String, String> generatorSettings) {
@@ -13,14 +15,17 @@ public class GeneratorDescriptor {
 		this.generatorSettings = generatorSettings;
 	}
 
+	@Override
 	public String getGeneratorName() {
 		return generatorName;
 	}
 
+	@Override
 	public String getGeneratorClassPath() {
 		return generatorClassName;
 	}
 
+	@Override
 	public Map<String, String> getGeneratorSettings() {
 		return generatorSettings;
 	}
@@ -50,7 +55,7 @@ public class GeneratorDescriptor {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		GeneratorDescriptor other = (GeneratorDescriptor) obj;
+		GeneratorDescriptorImpl other = (GeneratorDescriptorImpl) obj;
 		if (generatorClassName == null) {
 			if (other.generatorClassName != null)
 				return false;

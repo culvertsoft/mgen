@@ -1,16 +1,20 @@
-package se.culvertsoft.mgen.api.plugins;
+package se.culvertsoft.mgen.api.model.impl;
 
-public class GeneratedSourceFile {
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile;
 
-	public GeneratedSourceFile(final String filePath, final String sourceCode) {
+public class GeneratedSourceFileImpl implements GeneratedSourceFile {
+
+	public GeneratedSourceFileImpl(final String filePath, final String sourceCode) {
 		m_filePath = filePath;
 		m_sourceCode = sourceCode;
 	}
 
+	@Override
 	public String sourceCode() {
 		return m_sourceCode;
 	}
 
+	@Override
 	public String filePath() {
 		return m_filePath;
 	}
@@ -38,7 +42,7 @@ public class GeneratedSourceFile {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		GeneratedSourceFile other = (GeneratedSourceFile) obj;
+		GeneratedSourceFileImpl other = (GeneratedSourceFileImpl) obj;
 		if (m_filePath == null) {
 			if (other.m_filePath != null)
 				return false;

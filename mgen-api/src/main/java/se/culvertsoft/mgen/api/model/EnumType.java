@@ -17,7 +17,7 @@ public interface EnumType extends UserDefinedType {
 	 * 
 	 * @return The entries of this enumeration.
 	 */
-	public List<EnumEntry> entries();
+	List<EnumEntry> entries();
 
 	/**
 	 * The module this enumeration is defined in
@@ -27,7 +27,7 @@ public interface EnumType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public Module module();
+	Module module();
 	
 	/**
 	 * Intended for serializers. gets enum instances by name.
@@ -35,7 +35,7 @@ public interface EnumType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called inside the compiler
 	 */
-	public Enum<?> get(final String entryStringName);
+	Enum<?> get(final String entryStringName);
 
 	/**
 	 * Intended for serializers. gets enum instances by integer.
@@ -43,7 +43,7 @@ public interface EnumType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called inside the compiler
 	 */
-	public Enum<?> get(final int entryIntvalue);
+	Enum<?> get(final int entryIntvalue);
 
 	public static final EnumType INSTANCE = new EnumTypeImpl("0xFFFF", "UNKNOWN", null);
 

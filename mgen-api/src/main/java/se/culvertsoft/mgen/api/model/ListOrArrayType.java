@@ -11,6 +11,6 @@ public interface ListOrArrayType extends Type {
 	 * @throws RuntimeException
 	 *             If called inside the compiler
 	 */
-	public Type elementType();
+	Type elementType();
 
 }

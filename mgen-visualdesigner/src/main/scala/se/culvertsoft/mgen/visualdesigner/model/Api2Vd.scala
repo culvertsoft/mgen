@@ -7,6 +7,8 @@ import scala.collection.mutable.HashMap
 import ModelConversion.ApiArrayType
 import ModelConversion.ApiBoolType
 import ModelConversion.ApiCustomType
+import ModelConversion.ApiEnumEntry
+import ModelConversion.ApiEnumType
 import ModelConversion.ApiField
 import ModelConversion.ApiFloat32Type
 import ModelConversion.ApiFloat64Type
@@ -15,13 +17,15 @@ import ModelConversion.ApiInt16Type
 import ModelConversion.ApiInt32Type
 import ModelConversion.ApiInt64Type
 import ModelConversion.ApiInt8Type
-import ModelConversion._
+import ModelConversion.ApiListType
 import ModelConversion.ApiMapType
 import ModelConversion.ApiModule
 import ModelConversion.ApiProject
 import ModelConversion.ApiStringType
 import ModelConversion.VdClass
 import ModelConversion.VdEntity
+import ModelConversion.VdEnum
+import ModelConversion.VdEnumEntry
 import ModelConversion.VdField
 import ModelConversion.VdGenerator
 import ModelConversion.VdModule

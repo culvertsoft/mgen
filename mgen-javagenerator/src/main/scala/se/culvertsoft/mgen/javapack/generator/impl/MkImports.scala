@@ -9,8 +9,9 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.eqTesterClsStringQ
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldHasherClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldIfcClsStringQ
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldImplClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldVisitSelectionClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldVisitorClsStringQ
@@ -22,7 +23,9 @@ object MkImports {
 
   def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
-    ln(s"import ${fieldClsStringQ};")
+    ln(s"import ${fieldIfcClsStringQ};")
+    if (t.fieldsInclSuper().nonEmpty)
+      ln(s"import ${fieldImplClsStringQ};")
 
     ln(s"import ${fieldSetDepthClsStringQ};")
     ln(s"import ${fieldVisitSelectionClsStringQ};")

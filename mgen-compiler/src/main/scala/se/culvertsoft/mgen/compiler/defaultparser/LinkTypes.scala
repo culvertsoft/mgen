@@ -3,7 +3,6 @@ package se.culvertsoft.mgen.compiler.defaultparser
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.mutable.ArrayBuffer
-
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
@@ -20,6 +19,7 @@ import se.culvertsoft.mgen.api.model.impl.ListTypeImpl
 import se.culvertsoft.mgen.api.model.impl.MapTypeImpl
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
+import se.culvertsoft.mgen.api.model.impl.DefaultValueImpl
 
 object LinkTypes {
 
@@ -111,7 +111,7 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
       for (f <- t.fields) {
         if (!f.isLinked()) {
           val src = f.defaultValue().asInstanceOf[UnlinkedDefaultValue]
-          newFields += f.transform(DefaultValue.parse(f.typ, src.writtenString, m))
+          newFields += f.transform(DefaultValueImpl.parse(f.typ, src.writtenString, m))
         } else {
           newFields += f
         }

@@ -18,6 +18,6 @@ public interface ArrayType extends ListOrArrayType {
 	 * Creates a new array instance of this class. Intended for use outside the
 	 * compiler.
 	 */
-	public Object newInstance(final int n);
+	Object newInstance(final int n);
 
 }

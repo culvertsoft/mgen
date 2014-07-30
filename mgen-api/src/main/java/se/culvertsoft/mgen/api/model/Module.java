@@ -19,7 +19,7 @@ public interface Module {
 	 * 
 	 * @return The settings for this module
 	 */
-	public Map<String, String> settings();
+	Map<String, String> settings();
 
 	/**
 	 * Returns the path of this module, i.e. the java package or c++ namespace
@@ -27,7 +27,7 @@ public interface Module {
 	 * 
 	 * @return The module path of this module.
 	 */
-	public String path();
+	String path();
 
 	/**
 	 * The written file path used to reference this module in its parent project
@@ -35,35 +35,35 @@ public interface Module {
 	 * 
 	 * @return The written file path to this module.
 	 */
-	public String filePath();
+	String filePath();
 
 	/**
 	 * The absolute file path calculated from \filePath().
 	 * 
 	 * @return The absolute file path to this module
 	 */
-	public String absoluteFilePath();
+	String absoluteFilePath();
 
 	/**
 	 * Returns the classes defined within this module.
 	 * 
 	 * @return The classes defined within this module.
 	 */
-	public List<CustomType> types();
+	List<CustomType> types();
 
 	/**
 	 * Returns the enumerations defined within this module.
 	 * 
 	 * @return The enumerations defined within this module.
 	 */
-	public List<EnumType> enums();
+	List<EnumType> enums();
 
 	/**
 	 * Returns the parent project of this module.
 	 * 
 	 * @return The parent project of this module.
 	 */
-	public Project parent();
+	Project parent();
 
 	/**
 	 * Searches the types of this module for a type with a given name
@@ -72,6 +72,6 @@ public interface Module {
 	 *            The short or full class name of the type to find
 	 * @return The found type, or null if none found
 	 */
-	public Type findType(final String name);
+	Type findType(final String name);
 
 }

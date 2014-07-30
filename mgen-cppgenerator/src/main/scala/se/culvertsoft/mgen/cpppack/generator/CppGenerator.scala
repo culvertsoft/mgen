@@ -7,8 +7,9 @@ import scala.collection.JavaConversions.seqAsJavaList
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
+import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
@@ -78,8 +79,8 @@ class CppGenerator extends BuiltInStaticLangGenerator {
     val cppFileName = t.shortName + ".cpp"
     val cppSourceCode = MkEnumCpp(module, t, generatorSettings)
     List(
-      new GeneratedSourceFile(folder + File.separator + hFileName, hSourceCode),
-      new GeneratedSourceFile(folder + File.separator + cppFileName, cppSourceCode))
+      new GeneratedSourceFileImpl(folder + File.separator + hFileName, hSourceCode),
+      new GeneratedSourceFileImpl(folder + File.separator + cppFileName, cppSourceCode))
   }
 
 }

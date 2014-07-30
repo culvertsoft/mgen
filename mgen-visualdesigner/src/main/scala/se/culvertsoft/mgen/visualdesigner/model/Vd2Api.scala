@@ -1,20 +1,26 @@
 package se.culvertsoft.mgen.visualdesigner.model
 
 import java.io.File
+
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
+
 import ModelConversion.ApiArrayTypeImpl
 import ModelConversion.ApiBoolTypeInstance
 import ModelConversion.ApiClassImpl
 import ModelConversion.ApiCustomType
 import ModelConversion.ApiEntity
+import ModelConversion.ApiEnum
+import ModelConversion.ApiEnumEntryImpl
+import ModelConversion.ApiEnumTypeImpl
 import ModelConversion.ApiField
+import ModelConversion.ApiFieldImpl
 import ModelConversion.ApiFloat32TypeInstance
 import ModelConversion.ApiFloat64TypeInstance
-import ModelConversion.ApiGenerator
+import ModelConversion.ApiGeneratorImpl
 import ModelConversion.ApiInt16TypeInstance
 import ModelConversion.ApiInt32TypeInstance
 import ModelConversion.ApiInt64TypeInstance
@@ -32,6 +38,8 @@ import ModelConversion.VdArrayType
 import ModelConversion.VdBoolType
 import ModelConversion.VdClass
 import ModelConversion.VdEntity
+import ModelConversion.VdEnum
+import ModelConversion.VdEnumEntry
 import ModelConversion.VdField
 import ModelConversion.VdFieldType
 import ModelConversion.VdFloat32Type
@@ -49,11 +57,11 @@ import ModelConversion.VdProject
 import ModelConversion.VdStringType
 import ModelConversion.VdUserTypeRef
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
+import se.culvertsoft.mgen.api.model.impl.UnlinkedDefaultValueImpl
 import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.compiler.defaultparser.LinkTypes
 import se.culvertsoft.mgen.compiler.defaultparser.ParseState
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
-import se.culvertsoft.mgen.api.model.UnlinkedDefaultValue
 
 class Vd2ApiConversionState(val srcModel: Model) {
   import ModelConversion._
@@ -63,13 +71,13 @@ class Vd2ApiConversionState(val srcModel: Model) {
 object Vd2Api {
   import ModelConversion._
 
-  private def cvtGenerator(vdGenerator: VdGenerator)(implicit cvState: Vd2ApiConversionState): ApiGenerator = {
+  private def cvtGenerator(vdGenerator: VdGenerator)(implicit cvState: Vd2ApiConversionState): ApiGeneratorImpl = {
     val settings = new java.util.HashMap[String, String](vdGenerator.getSettings())
     settings.put("jar_file_folder", vdGenerator.getGeneratorJarFileFolder())
     settings.put("generator_class_path", vdGenerator.getGeneratorClassName())
     settings.put("output_path", vdGenerator.getOutputFolder())
     settings.put("classregistry_path", vdGenerator.getClassRegistryPath())
-    new ApiGenerator(vdGenerator.getName(), vdGenerator.getGeneratorClassName(), settings)
+    new ApiGeneratorImpl(vdGenerator.getName(), vdGenerator.getGeneratorClassName(), settings)
   }
 
   private def getApiCustomType(fullClassPath: String)(implicit cvState: Vd2ApiConversionState): ApiCustomType = {
@@ -117,13 +125,13 @@ object Vd2Api {
   }
 
   private def cvtField(vdField: VdField, parentClass: ApiType)(implicit cvState: Vd2ApiConversionState): ApiField = {
-    new ApiField(
+    new ApiFieldImpl(
       parentClass.fullName(),
       vdField.getName(),
       cvtFieldType(vdField.getType()),
       vdField.getFlags(),
       getId16Bit(vdField),
-      if (vdField.hasDefaultValue()) new UnlinkedDefaultValue(vdField.getDefaultValue()) else null)
+      if (vdField.hasDefaultValue()) new UnlinkedDefaultValueImpl(vdField.getDefaultValue()) else null)
   }
 
   private def cvtEnumEntry(vdEntry: VdEnumEntry, parentEnum: ApiEnum)(implicit cvState: Vd2ApiConversionState): ApiEnumEntryImpl = {

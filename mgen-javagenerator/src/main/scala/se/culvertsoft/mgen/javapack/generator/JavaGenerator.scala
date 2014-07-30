@@ -1,10 +1,17 @@
 package se.culvertsoft.mgen.javapack.generator
 
 import java.io.File
+
 import scala.collection.JavaConversions.seqAsJavaList
+
 import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.EnumType
+import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
+import se.culvertsoft.mgen.api.model.PrimitiveType
+import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
@@ -16,6 +23,7 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkClassStart
 import se.culvertsoft.mgen.javapack.generator.impl.MkDeepCopy
 import se.culvertsoft.mgen.javapack.generator.impl.MkDefaultCtor
 import se.culvertsoft.mgen.javapack.generator.impl.MkDispatcher
+import se.culvertsoft.mgen.javapack.generator.impl.MkEnum
 import se.culvertsoft.mgen.javapack.generator.impl.MkEquals
 import se.culvertsoft.mgen.javapack.generator.impl.MkFancyHeader
 import se.culvertsoft.mgen.javapack.generator.impl.MkFancyHeader.MkMetadataComment
@@ -39,11 +47,6 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkToString
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdFields
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdMethods
 import se.culvertsoft.mgen.javapack.generator.impl.MkValidate
-import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.model.PrimitiveType
-import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.api.model.EnumType
-import se.culvertsoft.mgen.javapack.generator.impl.MkEnum
 
 object JavaGenerator {
   def canBeNull(f: Field): Boolean = {
@@ -70,19 +73,19 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     def mkClasReg(): GeneratedSourceFile = {
       val fileName = "ClassRegistry" + ".java"
       val sourceCode = MkClassRegistry(referencedModules, packagePath)
-      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+      new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
     }
 
     def mkDispatcher(): GeneratedSourceFile = {
       val fileName = "Dispatcher" + ".java"
       val sourceCode = MkDispatcher(referencedModules, packagePath)
-      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+      new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
     }
 
     def mkHandler(): GeneratedSourceFile = {
       val fileName = "Handler" + ".java"
       val sourceCode = MkHandler(referencedModules, packagePath)
-      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+      new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
     }
 
     val clsRegistry = mkClasReg()
@@ -97,14 +100,14 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     val folder = getModuleFolderPath(module, generatorSettings)
     val fileName = t.name() + ".java"
     val sourceCode = generateClassSourceCode(t)
-    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
+    List(new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode))
   }
 
   override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     val folder = getModuleFolderPath(module, generatorSettings)
     val fileName = t.shortName() + ".java"
     val sourceCode = generateEnumSourceCode(t)
-    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
+    List(new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode))
   }
 
   def generateClassSourceCode(t: CustomType): String = {

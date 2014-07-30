@@ -6,7 +6,7 @@ import Alias.fieldMetadata
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsString
+import se.culvertsoft.mgen.javapack.generator.JavaConstants._
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 
 object MkFieldById {
@@ -18,7 +18,7 @@ object MkFieldById {
     val allFields = t.fieldsInclSuper()
 
     ln(1, "@Override")
-    ln(1, s"public $fieldClsString _fieldById(final short fieldId) {")
+    ln(1, s"public $fieldIfcClsString _fieldById(final short fieldId) {")
     ln(2, s"switch(fieldId) {")
     for (field <- allFields) {
       ln(3, s"case (${fieldId(field)}):")
@@ -30,7 +30,7 @@ object MkFieldById {
     ln(1, "}").endl()
 
     ln(1, "@Override")
-    ln(1, s"public $fieldClsString _fieldByName(final String fieldName) {")
+    ln(1, s"public $fieldIfcClsString _fieldByName(final String fieldName) {")
     ln(2, s"switch(fieldName) {")
     for (field <- allFields) {
       ln(3, s"case (${quote(field.name)}):")

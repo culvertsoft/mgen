@@ -3,12 +3,9 @@ package se.culvertsoft.mgen.cpppack.generator
 import java.io.File
 
 import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.model.TypeEnum
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
+import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
@@ -24,7 +21,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, generatorSettings)
     val fileName = t.shortName() + fileEnding
     val sourceCode = generateSourceCode(module, t, generatorSettings)
-    new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+    new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
   }
 
   def generateSourceCode(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): String = {

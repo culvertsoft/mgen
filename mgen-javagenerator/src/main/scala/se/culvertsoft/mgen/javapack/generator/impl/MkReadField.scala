@@ -8,7 +8,6 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsString
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.readerClsString
 import se.culvertsoft.mgen.javapack.generator.JavaReadCalls.mkReadCall
 import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName

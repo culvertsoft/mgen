@@ -1,9 +1,13 @@
 package se.culvertsoft.mgen.jspack.generator
 
+import scala.collection.JavaConversions.asScalaBuffer
+
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.plugins.{GeneratedSourceFile, Generator}
+import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
+import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import scala.collection.JavaConversions._
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer.SuperStringBuffer2String
 
 class JavascriptGenerator extends Generator {
 
@@ -19,7 +23,7 @@ class JavascriptGenerator extends Generator {
     MkOutro(generatorSettings)
 
     val out = new java.util.ArrayList[GeneratedSourceFile]
-    out.add(new GeneratedSourceFile(filePath, txtBuffer))
+    out.add(new GeneratedSourceFileImpl(filePath, txtBuffer))
     out
   }
 }

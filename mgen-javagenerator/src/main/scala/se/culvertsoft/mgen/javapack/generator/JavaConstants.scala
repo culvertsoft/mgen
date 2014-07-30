@@ -12,6 +12,7 @@ object JavaConstants {
   val metadataPkg = "se.culvertsoft.mgen.javapack.metadata"
   val apiPkg = "se.culvertsoft.mgen.api"
   val modelPkg = s"${apiPkg}.model"
+  val modelImplPkg = s"${modelPkg}.impl"
   val javapackPkg = "se.culvertsoft.mgen.javapack"
 
   val validatorClsString = s"Validator"
@@ -43,11 +44,13 @@ object JavaConstants {
   val enumImplClsString = "EnumTypeImpl"
   val enumImplClsStringQ = s"se.culvertsoft.mgen.api.model.impl.${enumImplClsString}"
   
-  val fieldClsString = s"Field"
+  val fieldIfcClsString = s"Field"
+  val fieldImplClsString = s"FieldImpl"
   val readerClsString = s"Reader"
   val fieldVisitorClsString = s"FieldVisitor"
 
-  val fieldClsStringQ = s"${modelPkg}.${fieldClsString}"
+  val fieldIfcClsStringQ = s"${modelPkg}.${fieldIfcClsString}"
+  val fieldImplClsStringQ = s"${modelImplPkg}.${fieldImplClsString}"
   val readerClsStringQ = s"${javapackPkg}.serialization.${readerClsString}"
   val fieldVisitorClsStringQ = s"${javapackPkg}.serialization.${fieldVisitorClsString}"
 

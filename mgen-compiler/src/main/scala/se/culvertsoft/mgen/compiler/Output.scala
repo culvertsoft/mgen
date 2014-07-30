@@ -10,8 +10,8 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.reflect.io.Path
 
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Project
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 

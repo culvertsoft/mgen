@@ -1,11 +1,5 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import java.io.File
-
-import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-
 object CppHandlerGenerator {
   def includeStringH(namespaceString: String): String = {
     s"$namespaceString::Handler.h".replaceAllLiterally("::", "/")

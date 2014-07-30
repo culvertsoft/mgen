@@ -9,7 +9,6 @@ import java.util.Map;
 import se.culvertsoft.mgen.api.model.Module;
 import se.culvertsoft.mgen.api.model.Project;
 import se.culvertsoft.mgen.api.model.Type;
-import se.culvertsoft.mgen.api.plugins.GeneratorDescriptor;
 
 public class ProjectImpl implements Project {
 
@@ -19,7 +18,7 @@ public class ProjectImpl implements Project {
 	private Map<String, String> m_settings;
 	private List<ModuleImpl> m_modules;
 	private List<ProjectImpl> m_dependencies;
-	private List<GeneratorDescriptor> m_generators;
+	private List<GeneratorDescriptorImpl> m_generators;
 	private final ProjectImpl m_parent;
 
 	public ProjectImpl(
@@ -33,7 +32,7 @@ public class ProjectImpl implements Project {
 		m_settings = new HashMap<String, String>();
 		m_modules = new ArrayList<ModuleImpl>();
 		m_dependencies = new ArrayList<ProjectImpl>();
-		m_generators = new ArrayList<GeneratorDescriptor>();
+		m_generators = new ArrayList<GeneratorDescriptorImpl>();
 		m_parent = parent;
 	}
 
@@ -104,11 +103,11 @@ public class ProjectImpl implements Project {
 	}
 
 	@Override
-	public List<GeneratorDescriptor> generators() {
+	public List<GeneratorDescriptorImpl> generators() {
 		return m_generators;
 	}
 
-	public void setGenerators(List<GeneratorDescriptor> generators) {
+	public void setGenerators(List<GeneratorDescriptorImpl> generators) {
 		m_generators = generators;
 	}
 

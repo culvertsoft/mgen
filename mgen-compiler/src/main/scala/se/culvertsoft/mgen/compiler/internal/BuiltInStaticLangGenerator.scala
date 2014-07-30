@@ -10,8 +10,8 @@ import scala.collection.JavaConverters.mapAsScalaMapConverter
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.EnumType
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
 import se.culvertsoft.mgen.api.plugins.Generator
 
 object BuiltInStaticLangGenerator {

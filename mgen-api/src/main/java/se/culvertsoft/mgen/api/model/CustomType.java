@@ -14,23 +14,23 @@ public interface CustomType extends UserDefinedType {
 	/**
 	 * 64 bit id hashed from the qualified type name of this class
 	 */
-	public long typeId();
+	long typeId();
 
 	/**
 	 * 16 bit id hashed from the qualified type name of this class. Verified by
 	 * the compiler to be unique among classes with the same super type.
 	 */
-	public short typeId16Bit();
+	short typeId16Bit();
 
 	/**
 	 * The base64 representation of typeId16Bit()
 	 */
-	public String typeId16BitBase64();
+	String typeId16BitBase64();
 
 	/**
 	 * The written name of this type
 	 */
-	public String name();
+	String name();
 
 	/**
 	 * The super type of this class, or null if it has none
@@ -38,7 +38,7 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public CustomType superType();
+	CustomType superType();
 
 	/**
 	 * True if this type has a super type
@@ -46,7 +46,7 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public boolean hasSuperType();
+	boolean hasSuperType();
 
 	/**
 	 * True if this type has sub types
@@ -54,7 +54,7 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public boolean hasSubTypes();
+	boolean hasSubTypes();
 
 	/**
 	 * Returns the sub types of this class
@@ -62,7 +62,7 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public List<CustomType> subTypes();
+	List<CustomType> subTypes();
 
 	/**
 	 * Returns all (recursive) super types of this class
@@ -70,7 +70,7 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public List<CustomType> superTypeHierarchy();
+	List<CustomType> superTypeHierarchy();
 
 	/**
 	 * Returns all fields of this class, excluding those of its super type(s)
@@ -78,7 +78,7 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public List<Field> fields();
+	List<Field> fields();
 
 	/**
 	 * Returns all fields of this class, including those of its super type(s)
@@ -86,7 +86,7 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public List<Field> fieldsInclSuper();
+	List<Field> fieldsInclSuper();
 
 	/**
 	 * Returns the set of types referenced from this type.
@@ -94,16 +94,16 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public Set<CustomType> referencedClasses();
+	Set<CustomType> referencedClasses();
 
 	/**
 	 * Returns the set of types referenced from this type.
 	 */
-	public Set<EnumType> referencedEnums();
+	Set<EnumType> referencedEnums();
 	
 	/**
 	 * Finds/Gets a field by name. Returns null if no such field is found.
 	 */
-	public Field findField(final String name);
+	Field findField(final String name);
 
 }

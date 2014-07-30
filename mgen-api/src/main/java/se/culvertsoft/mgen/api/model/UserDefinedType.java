@@ -8,6 +8,6 @@ public interface UserDefinedType extends Type {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public Module module();
+	Module module();
 
 }

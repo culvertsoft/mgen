@@ -8,11 +8,11 @@ public interface MapType extends Type {
 	/**
 	 * The type of the keys of this map
 	 */
-	public Type keyType();
+	Type keyType();
 
 	/**
 	 * The type of the values of this map
 	 */
-	public Type valueType();
+	Type valueType();
 
 }

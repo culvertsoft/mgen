@@ -1,6 +1,7 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
+
 import Alias.fieldId
 import Alias.fieldMetadata
 import se.culvertsoft.mgen.api.exceptions.GenerationException
@@ -14,9 +15,9 @@ import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsString
-import se.culvertsoft.mgen.javapack.generator.JavaConstants._
-import se.culvertsoft.mgen.api.model.EnumType
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldIfcClsString
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldImplClsString
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.modelPkg
 
 object MkFieldMetaData {
 
@@ -35,8 +36,8 @@ object MkFieldMetaData {
           else
             s"java.util.Arrays.asList(${field.flags().map(s => '"' + s + '"').mkString(",")})"
         txtBuffer.tabs(1)
-          .text(s"public static final ${fieldClsString} ")
-          .text(s"${fieldMetadata(field)} = new ${fieldClsString}(")
+          .text(s"public static final ${fieldIfcClsString} ")
+          .text(s"${fieldMetadata(field)} = new ${fieldImplClsString}(")
           .text(quote(t.fullName())).commaSpace()
           .text(quote(field.name())).commaSpace()
           .text(mkMetaData(field.typ())).commaSpace()
@@ -55,7 +56,7 @@ object MkFieldMetaData {
 
     }
 
-    ln(1, s"public static final $fieldClsString[] _FIELDS = { ${fields.map(fieldMetadata).mkString(", ")} };")
+    ln(1, s"public static final $fieldIfcClsString[] _FIELDS = { ${fields.map(fieldMetadata).mkString(", ")} };")
     txtBuffer.endl()
 
   }

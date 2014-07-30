@@ -14,7 +14,7 @@ public interface Type {
 	 * @throws RuntimeException
 	 *             If called inside the compiler
 	 */
-	public Class<?> classOf();
+	Class<?> classOf();
 
 	/**
 	 * Returns a utility enum to easier switch on field and data types
@@ -22,36 +22,36 @@ public interface Type {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	public TypeEnum typeEnum();
+	TypeEnum typeEnum();
 
 	/**
 	 * The 1 byte type tag of this type, specifically used by MGen binary
 	 * streams. Can be used both within the compiler and during runtime.
 	 */
-	public byte typeTag();
+	byte typeTag();
 
 	/**
 	 * The short (unqualified) name of this type. If used outside the compiler,
 	 * it will not return the short name but instead return the same as
 	 * fullName().
 	 */
-	public String shortName();
+	String shortName();
 
 	/**
 	 * The full (qualified) name of this type.
 	 */
-	public String fullName();
+	String fullName();
 
 	/**
 	 * Checks if this type has been fully parsed and linked by the compiler.
 	 * Always returns false outside the compiler.
 	 */
-	public boolean isLinked();
+	boolean isLinked();
 
 	/**
 	 * Returns if this type contains any custom defined type. Specifically
 	 * useful for generic types and containers, where it's not always obvious.
 	 */
-	public boolean containsCustomType();
+	boolean containsCustomType();
 
 }

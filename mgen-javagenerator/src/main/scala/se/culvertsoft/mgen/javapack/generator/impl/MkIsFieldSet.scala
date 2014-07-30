@@ -10,7 +10,7 @@ import Alias.isSetName
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldClsString
+import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldIfcClsString
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.validatorClsString
 
@@ -34,7 +34,7 @@ object MkIsFieldSet {
       txtBuffer.tabs(1).textln(s"}").endl()
     }
 
-    txtBuffer.tabs(1).textln(s"public boolean _isFieldSet(final $fieldClsString field, final ${fieldSetDepthClsString} depth) {")
+    txtBuffer.tabs(1).textln(s"public boolean _isFieldSet(final $fieldIfcClsString field, final ${fieldSetDepthClsString} depth) {")
     txtBuffer.tabs(2).textln(s"switch(field.id()) {")
     for (field <- t.fieldsInclSuper()) {
       txtBuffer.tabs(3).textln(s"case (${fieldId(field)}):")

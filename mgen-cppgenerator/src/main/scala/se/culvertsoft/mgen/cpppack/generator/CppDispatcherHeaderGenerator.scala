@@ -1,10 +1,7 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import java.io.File
-import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 
 object CppDispatchHeaderGenerator extends CppDispatchGenerator(Header) {
 

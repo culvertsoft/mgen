@@ -7,7 +7,9 @@ object ModelConversion {
   type ApiModule = se.culvertsoft.mgen.api.model.Module
   type ApiClass = se.culvertsoft.mgen.api.model.CustomType
   type ApiField = se.culvertsoft.mgen.api.model.Field
-  type ApiGenerator = se.culvertsoft.mgen.api.plugins.GeneratorDescriptor
+  type ApiFieldImpl = se.culvertsoft.mgen.api.model.impl.FieldImpl
+  type ApiGenerator = se.culvertsoft.mgen.api.model.GeneratorDescriptor
+  type ApiGeneratorImpl = se.culvertsoft.mgen.api.model.impl.GeneratorDescriptorImpl
   type ApiProjectImpl = se.culvertsoft.mgen.api.model.impl.ProjectImpl
   type ApiModuleImpl = se.culvertsoft.mgen.api.model.impl.ModuleImpl
   type ApiClassImpl = se.culvertsoft.mgen.api.model.impl.LinkedCustomType

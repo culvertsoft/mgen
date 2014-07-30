@@ -20,8 +20,9 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.plugins.GeneratedSourceFile
-import se.culvertsoft.mgen.api.plugins.GeneratorDescriptor
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
+import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
+import se.culvertsoft.mgen.api.model.GeneratorDescriptor
 import se.culvertsoft.mgen.api.util.CRC16
 import scala.xml.Text
 
@@ -53,7 +54,7 @@ object Project2Xml {
     sources.map { source =>
 
       val sourceCode = printer.format(source.xml)
-      new GeneratedSourceFile(source.path, sourceCode)
+      new GeneratedSourceFileImpl(source.path, sourceCode)
 
     }
 

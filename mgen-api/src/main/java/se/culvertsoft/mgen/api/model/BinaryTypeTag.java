@@ -4,7 +4,7 @@ package se.culvertsoft.mgen.api.model;
  * One byte type tags intended to be used primarily outside the compiler for
  * verifying types when reading/writing binary streams.
  */
-public class BinaryTypeTag {
+public interface BinaryTypeTag {
 	public static final byte TAG_BOOL = (byte) 0;
 	public static final byte TAG_INT8 = (byte) 1;
 	public static final byte TAG_INT16 = (byte) 2;

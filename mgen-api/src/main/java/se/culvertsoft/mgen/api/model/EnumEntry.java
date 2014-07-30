@@ -13,13 +13,13 @@ public interface EnumEntry {
 	 * 
 	 * @return The written name of the entry
 	 */
-	public String name();
+	String name();
 
 	/**
 	 * The value specified for the enum, or null otherwise
 	 * 
 	 * @return The value specified for the enum, or null otherwise
 	 */
-	public String constant();
+	String constant();
 
 }
