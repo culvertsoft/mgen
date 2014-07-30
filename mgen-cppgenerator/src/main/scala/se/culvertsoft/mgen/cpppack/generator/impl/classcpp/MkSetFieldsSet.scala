@@ -42,10 +42,8 @@ object MkSetFieldsSet {
       } else {
 
         def setGeneric() {
-          if (!field.hasDefaultValue) {
-            ln(1, "if (!state)")
-            ln(2, s"m_${field.name}.clear();")
-          }
+          ln(1, "if (!state)")
+          ln(2, s"m_${field.name}.clear();")
           if (t.containsCustomType()) {
             ln(1, s"else if (depth == mgen::DEEP)")
             ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
@@ -58,10 +56,8 @@ object MkSetFieldsSet {
         }
 
         def setByDefCtor() {
-          if (!field.hasDefaultValue) {
-            ln(1, "if (!state)")
-            ln(2, s"m_${field.name} = ${CppConstruction.defaultConstructNull(field)};")
-          }
+          ln(1, "if (!state)")
+          ln(2, s"m_${field.name} = ${CppConstruction.defaultConstructNull(field)};")
         }
 
         field.typ() match {
