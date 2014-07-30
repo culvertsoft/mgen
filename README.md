@@ -351,9 +351,8 @@ Additionally, MGen supports reading and writing data types from external non-MGe
 
 ## Download links
 
-The following are links where you can download MGen pre-built. You will notice that the compiler and visual designer also have variants named _assembly_.
-
- * JAR files marked _assembly_ are standalone executables. They are packaged with all library dependencies included. 
+The following are links where you can download MGen pre-built. NOTE:
+ * JAR files marked _assembly_ are standalone executables, packaged with all dependencies included. 
  * JAR files intended as programming libraries are NOT marked _assembly_.
 
 ### Stable
