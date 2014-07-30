@@ -35,8 +35,7 @@ object MkSetFieldsSet {
       }
 
       if (CppGenerator.canBeNull(field)) {
-        if (!field.hasDefaultValue)
-          ln(1, s"m_${field.name()}.ensureIsSet(state);")
+        ln(1, s"m_${field.name()}.ensureIsSet(state);")
         ln(1, s"if (state && depth == mgen::DEEP)")
         ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
       } else {
