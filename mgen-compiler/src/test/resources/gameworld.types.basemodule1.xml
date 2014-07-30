@@ -33,8 +33,7 @@
 
         <Matrix4x4d id="0x02">
             <fieldWithoutDefaultValue type="int"></fieldWithoutDefaultValue>
-            <values type="array[array[double]]"> [[0,0,0,0],
-                [0,0,0,0], [0,0,0,0], [0,0,0,0]]</values>
+            <values type="array[array[double]]"> [[0,0,0,0], [0,0,0,0], [0,0,0,0], [0,0,0,0]]</values>
         </Matrix4x4d>
 
         <Positioning id="0x03">
