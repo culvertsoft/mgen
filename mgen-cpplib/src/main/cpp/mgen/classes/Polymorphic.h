@@ -14,7 +14,12 @@ template<typename T>
 class Polymorphic {
 public:
 
-    Polymorphic(T * v = 0, const bool managed = true) :
+    template<typename T2>
+    explicit Polymorphic(T2 * v = 0, const bool managed = true) :
+            m_ptr(v), m_managed(managed) {
+    }
+
+    explicit Polymorphic(T * v = 0, const bool managed = true) :
             m_ptr(v), m_managed(managed) {
     }
 
@@ -33,10 +38,6 @@ public:
 
     Polymorphic& operator=(T* v) {
         return set<T>(v);
-    }
-
-    Polymorphic& operator=(const T* v) {
-        return set<T>(v ? v._deepCopy() : 0);
     }
 
     template<typename T2>

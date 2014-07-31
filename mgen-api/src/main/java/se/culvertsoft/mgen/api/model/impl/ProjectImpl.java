@@ -1,8 +1,8 @@
 package se.culvertsoft.mgen.api.model.impl;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public class ProjectImpl implements Project {
 		m_name = name;
 		m_filePath = filePath;
 		m_absoluteFilePath = absoluteFilePath;
-		m_settings = new HashMap<String, String>();
+		m_settings = new LinkedHashMap<String, String>();
 		m_modules = new ArrayList<ModuleImpl>();
 		m_dependencies = new ArrayList<ProjectImpl>();
 		m_generators = new ArrayList<GeneratorDescriptorImpl>();

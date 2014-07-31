@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.api.model.impl;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -33,7 +33,7 @@ public class MapDefaultValueImpl extends DefaultValueImpl implements MapDefaultV
 			final String writtenString,
 			final Module currentModule) {
 		super(typ, writtenString);
-		m_values = new HashMap<DefaultValue, DefaultValue>();
+		m_values = new LinkedHashMap<DefaultValue, DefaultValue>();
 		try {
 			final Object src = JSONValue.parseWithException(writtenString);
 			if (src instanceof JSONObject) {
@@ -56,6 +56,6 @@ public class MapDefaultValueImpl extends DefaultValueImpl implements MapDefaultV
 		}
 	}
 
-	private final HashMap<DefaultValue, DefaultValue> m_values;
+	private final Map<DefaultValue, DefaultValue> m_values;
 
 }

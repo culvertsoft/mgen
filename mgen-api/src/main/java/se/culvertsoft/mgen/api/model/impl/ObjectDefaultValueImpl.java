@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.api.model.impl;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.json.simple.JSONObject;
@@ -66,7 +66,7 @@ public class ObjectDefaultValueImpl extends DefaultValueImpl implements ObjectDe
 			final String writtenString,
 			final Module currentModule) {
 		super(expectedType, writtenString);
-		m_overriddenDefaultValues = new HashMap<Field, DefaultValue>();
+		m_overriddenDefaultValues = new LinkedHashMap<Field, DefaultValue>();
 		try {
 
 			final Object src = JSONValue.parseWithException(writtenString);
