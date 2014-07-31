@@ -16,20 +16,24 @@ public:
 
     template<typename T2>
     explicit Polymorphic(T2 * v = 0, const bool managed = true) :
-            m_ptr(v), m_managed(managed) {
+                    m_ptr(v),
+                    m_managed(managed) {
     }
 
     explicit Polymorphic(T * v = 0, const bool managed = true) :
-            m_ptr(v), m_managed(managed) {
+                    m_ptr(v),
+                    m_managed(managed) {
     }
 
     Polymorphic(const Polymorphic& v) :
-            m_ptr(v.deepCopy()), m_managed(true) {
+                    m_ptr(v.deepCopy()),
+                    m_managed(true) {
     }
 
     template<typename T2>
     Polymorphic(const Polymorphic<T2>& v) :
-            m_ptr(v.deepCopy()), m_managed(true) {
+                    m_ptr(v.deepCopy()),
+                    m_managed(true) {
     }
 
     Polymorphic& operator=(const Polymorphic& v) {
