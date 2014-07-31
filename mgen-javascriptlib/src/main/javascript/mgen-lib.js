@@ -1,4 +1,3 @@
-/*exported mGen */
 (function() {
 
     "use strict";
@@ -336,13 +335,13 @@
                 if (ClassRegistryBlueprint.classes[base]) {
                     //if we got a complete path as type
                     base = "object";
-                    type = in_type
+                    type = in_type;
                 } else if (base === "list" || base === "map" || base === "enum") {
                     // if its a contaner type
                     type = in_type.substr(in_type.indexOf(base) + base.length + 1);
                 } else {
                     // it's a base type
-                    type = base
+                    type = base;
                 }
 
                 //base: is now primitive type (int32, etc or object)
@@ -410,13 +409,13 @@
                     value_type = type.substr(type.indexOf(key_type) + key_type.length + 1);
 
                 if (key_type === "int64" && options.warn) {
-                    window.console.warn("mgen_js cannot handle 64 bit integers well due to javascript limitations. See https://developer.mozilla.org/en-US/docs/Mozilla/js-ctypes/js-ctypes_reference/Int64");
+                    window.console.warn("mGen cannot handle 64 bit integers well due to javascript limitations. See https://developer.mozilla.org/en-US/docs/Mozilla/js-ctypes/js-ctypes_reference/Int64");
                 }
 
-                //mgen supports key in a map to be of type int*, but that is not supported in json.
+                //mgen supports that the key in a map to be of type int*, but that is not supported in json.
                 //the result is that we have to use it as string.
                 if (key_type === "int8" || key_type === "int16" || key_type === "int32" || key_type === "int64") {
-                    key_type = "string"
+                    key_type = "string";
                 }
 
 
@@ -451,7 +450,7 @@
             function checkInt(value, size, type, options) {
                 if (size > 32) {
                     if (options.warn) {
-                        window.console.warn("mgen_js cannot handle 64 bit integers well due to javascript limitations. See https://developer.mozilla.org/en-US/docs/Mozilla/js-ctypes/js-ctypes_reference/Int64");
+                        window.console.warn("mGen cannot handle 64 bit integers well due to javascript limitations. See https://developer.mozilla.org/en-US/docs/Mozilla/js-ctypes/js-ctypes_reference/Int64");
                     }
                 }
 
@@ -541,7 +540,7 @@
         }
     };
 
-    // Support for requirejs etc.
+    // AMD style support.
     if (typeof define === "function" && define.amd) {
         define("mGen", [], function() {
             return mGen;
