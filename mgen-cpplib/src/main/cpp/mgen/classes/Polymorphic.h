@@ -36,7 +36,7 @@ public:
     }
 
     Polymorphic& operator=(const T* v) {
-        return set<T>(v ? v._deepCopy() : 0);
+        return set<T>(v ? v->_deepCopy() : 0);
     }
 
     template<typename T2>
