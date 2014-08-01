@@ -40,13 +40,13 @@ public:
         return this->operator =<T>(v);
     }
 
-    Polymorphic& operator=(T* v) {
-        return set<T>(v);
-    }
-
     template<typename T2>
     Polymorphic& operator=(const Polymorphic<T2>& v) {
         return set<T2>(v.deepCopy());
+    }
+
+    Polymorphic& operator=(T* v) {
+        return set<T>(v);
     }
 
     template<typename T2>
