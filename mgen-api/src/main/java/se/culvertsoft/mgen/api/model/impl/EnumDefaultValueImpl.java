@@ -1,6 +1,5 @@
 package se.culvertsoft.mgen.api.model.impl;
 
-import se.culvertsoft.mgen.api.exceptions.AnalysisException;
 import se.culvertsoft.mgen.api.model.EnumDefaultValue;
 import se.culvertsoft.mgen.api.model.EnumEntry;
 import se.culvertsoft.mgen.api.model.EnumType;
@@ -38,18 +37,11 @@ public class EnumDefaultValueImpl extends DefaultValueImpl implements EnumDefaul
 
 	public EnumDefaultValueImpl(
 			final EnumType typ,
-			final String writtenString,
+			final EnumEntry entry,
 			final Module currentModule) {
-		super(typ, writtenString);
+		super(typ);
 		m_isCurrentModule = typ.module() == currentModule;
-		for (final EnumEntry e : typ.entries()) {
-			if (e.name().equals(writtenString)) {
-				m_value = e;
-				return;
-			}
-		}
-		throw new AnalysisException("Don't know any enum value named " + writtenString
-				+ " for enum type " + typ);
+		m_value = entry;
 	}
 
 	private final EnumEntry m_value;

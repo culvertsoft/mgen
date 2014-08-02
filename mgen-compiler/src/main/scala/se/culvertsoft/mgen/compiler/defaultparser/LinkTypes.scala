@@ -111,7 +111,7 @@ private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
       for (f <- t.fields) {
         if (!f.isLinked()) {
           val src = f.defaultValue().asInstanceOf[UnlinkedDefaultValue]
-          newFields += f.transform(DefaultValueImpl.parse(f.typ, src.writtenString, m))
+          newFields += f.transform(ParseDefaultValue(f.typ, src.writtenString, m))
         } else {
           newFields += f
         }

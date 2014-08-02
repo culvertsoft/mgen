@@ -5,4 +5,9 @@ package se.culvertsoft.mgen.api.model;
  */
 public interface UnlinkedDefaultValue extends DefaultValue {
 
+	/**
+	 * The actual written default value string in the IDL used 
+	 */
+	String writtenString();
+
 }

@@ -3,7 +3,6 @@ package se.culvertsoft.mgen.visualdesigner.model
 import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.HashMap
-
 import ModelConversion.ApiArrayType
 import ModelConversion.ApiBoolType
 import ModelConversion.ApiCustomType
@@ -34,6 +33,7 @@ import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
+import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
 
 case class UnlinkedId(val apiType: ModelConversion.ApiUserDefinedType) extends EntityId
 
@@ -222,7 +222,7 @@ object Api2Vd {
     parent.getFields().add(fld)
     fld.setType(cvtFieldType(apiField, state))
     fld.setId16Bit(apiField.id())
-    fld.setDefaultValue(apiField.defaultValue().writtenString())
+    fld.setDefaultValue(Project2Xml.defaultVal2String(apiField.defaultValue))
     fld
   }
 

@@ -21,9 +21,9 @@ public class BoolDefaultValueImpl extends DefaultValueImpl implements BoolDefaul
 		return (BoolType) super.expectedType();
 	}
 
-	public BoolDefaultValueImpl(final BoolType typ, final String writtenString) {
-		super(typ, writtenString);
-		m_value = Boolean.valueOf(writtenString);
+	public BoolDefaultValueImpl(final boolean value) {
+		super(BoolType.INSTANCE);
+		m_value = value;
 	}
 
 	private final boolean m_value;
