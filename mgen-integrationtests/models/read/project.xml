@@ -3,21 +3,21 @@
 <Project>
 
 	<Generator name="Java">
-		<generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</generator_class_path>
+		<class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
 		<output_path>src_generated/java</output_path>
 		<classregistry_path>se.culvertsoft.testmodule</classregistry_path>
 	</Generator>
 
-   	<Generator name="Javascript">
-        	<generator_class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </generator_class_path>
-	        <output_path>src_generated/javascript</output_path>
-	        <output_filename>mgen-data.js</output_filename>
-	        <classregistryblueprint>se_culvertsoft</classregistryblueprint>
+	<Generator name="Javascript">
+		<class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </class_path>
+		<output_path>src_generated/javascript</output_path>
+		<output_filename>mgen-data.js</output_filename>
+		<classregistryblueprint>se_culvertsoft</classregistryblueprint>
 		<classregistry_path>se.culvertsoft.testmodule</classregistry_path>
 	</Generator>
 
 	<Generator name="C++">
-		<generator_class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</generator_class_path>
+		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</class_path>
 		<output_path>src_generated/cpp</output_path>
 		<generate_unity_build>true</generate_unity_build>
 		<classregistry_path>se.culvertsoft.testmodule</classregistry_path>

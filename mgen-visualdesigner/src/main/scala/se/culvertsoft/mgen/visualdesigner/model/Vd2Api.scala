@@ -74,7 +74,7 @@ object Vd2Api {
   private def cvtGenerator(vdGenerator: VdGenerator)(implicit cvState: Vd2ApiConversionState): ApiGeneratorImpl = {
     val settings = new java.util.HashMap[String, String](vdGenerator.getSettings())
     settings.put("jar_file_folder", vdGenerator.getGeneratorJarFileFolder())
-    settings.put("generator_class_path", vdGenerator.getGeneratorClassName())
+    settings.put("class_path", vdGenerator.getGeneratorClassName())
     settings.put("output_path", vdGenerator.getOutputFolder())
     settings.put("classregistry_path", vdGenerator.getClassRegistryPath())
     new ApiGeneratorImpl(vdGenerator.getName(), vdGenerator.getGeneratorClassName(), settings)

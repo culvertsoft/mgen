@@ -235,7 +235,7 @@ object Api2Vd {
     out.setOutputFolder(apiGenerator.getGeneratorSettings().get("output_path"))
     val settings = new java.util.HashMap[String, String]
     settings.putAll(apiGenerator.getGeneratorSettings())
-    settings.remove("generator_class_path")
+    settings.remove("class_path")
     settings.remove("output_path")
     settings.remove("classregistry_path")
     out.setSettings(settings)

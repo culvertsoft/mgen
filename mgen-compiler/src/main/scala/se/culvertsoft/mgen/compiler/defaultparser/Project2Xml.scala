@@ -73,7 +73,7 @@ object Project2Xml {
 
   def generator2xml(generator: GeneratorDescriptor): Seq[scala.xml.Node] = {
     <Generator name={ generator.getGeneratorName }>
-      <generator_class_path>{ generator.getGeneratorClassPath }</generator_class_path>
+      <class_path>{ generator.getGeneratorClassPath }</class_path>
       <output_path>{ generator.getGeneratorSettings().get("output_path") }</output_path>
       <classregistry_path>{ generator.getGeneratorSettings().get("classregistry_path") }</classregistry_path>
     </Generator>
