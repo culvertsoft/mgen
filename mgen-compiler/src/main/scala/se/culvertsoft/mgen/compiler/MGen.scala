@@ -12,19 +12,19 @@ import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.api.plugins.Parser
+import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
 import se.culvertsoft.mgen.compiler.plugins.PluginFinder
 
 object MGen {
 
-  val DEFAULT_PARSER = "se.culvertsoft.mgen.compiler.defaultparser.DefaultParser"
-
+  val DEFAULT_PARSER = classOf[DefaultParser].getName
   val VERSION = "0.x"
 
   def main(paramsUntrimmed: Array[String]) {
 
     // Print introduction
     printIntro()
-    
+
     val compileResult = Try {
 
       // Parse input parameters
