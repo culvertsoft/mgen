@@ -3,6 +3,7 @@ package se.culvertsoft.mgen.api.model.impl;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -136,6 +137,32 @@ public class ProjectImpl implements Project {
 			return findType(name, alreadySearchedProjects);
 		} else {
 			return m_parent.findType(name);
+		}
+	}
+
+	@Override
+	public List<Module> allModulesRecursively() {
+		final HashSet<Module> modules = new LinkedHashSet<Module>();
+		final HashSet<ProjectImpl> projects = new LinkedHashSet<ProjectImpl>();
+		allModulesRecursively(modules, projects);
+		return new ArrayList<Module>(modules);
+	}
+
+	private void allModulesRecursively(
+			final HashSet<Module> out,
+			final HashSet<ProjectImpl> scannedProjects) {
+
+		if (!scannedProjects.contains(this)) {
+			scannedProjects.add(this);
+
+			for (final ProjectImpl d : m_dependencies) {
+				d.allModulesRecursively(out, scannedProjects);
+			}
+
+			for (final Module m : m_modules) {
+				out.add(m);
+			}
+
 		}
 	}
 

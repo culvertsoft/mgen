@@ -4,12 +4,12 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.ArrayBuffer
 
-import XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.api.model.UserDefinedType
 import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import se.culvertsoft.mgen.api.util.CRC16
+import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
 
 object ParseType {
 

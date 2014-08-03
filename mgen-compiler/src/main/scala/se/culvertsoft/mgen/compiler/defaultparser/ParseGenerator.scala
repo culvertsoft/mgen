@@ -2,8 +2,9 @@ package se.culvertsoft.mgen.compiler.defaultparser
 
 import scala.collection.JavaConversions.mapAsJavaMap
 
-import XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.api.model.impl.GeneratorDescriptorImpl
+import se.culvertsoft.mgen.compiler.util.ThrowRTE
+import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
 
 object ParseGenerator {
   def apply(node: scala.xml.Node): GeneratorDescriptorImpl = {

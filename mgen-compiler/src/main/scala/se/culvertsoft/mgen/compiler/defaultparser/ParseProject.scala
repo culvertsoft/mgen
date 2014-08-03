@@ -1,13 +1,13 @@
 package se.culvertsoft.mgen.compiler.defaultparser
 
-import java.io.File
-
 import scala.collection.JavaConversions.mapAsJavaMap
 import scala.collection.JavaConversions.seqAsJavaList
 import scala.xml.XML.loadFile
 
-import XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
+import se.culvertsoft.mgen.compiler.util.FileUtils
+import se.culvertsoft.mgen.compiler.util.ThrowRTE
+import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
 
 object ParseProject {
 

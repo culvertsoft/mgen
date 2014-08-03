@@ -3,6 +3,7 @@ package se.culvertsoft.mgen.visualdesigner.model
 import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.HashMap
+
 import ModelConversion.ApiArrayType
 import ModelConversion.ApiBoolType
 import ModelConversion.ApiCustomType
@@ -30,10 +31,10 @@ import ModelConversion.VdGenerator
 import ModelConversion.VdModule
 import ModelConversion.VdProject
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
+import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
+import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
-import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
 
 case class UnlinkedId(val apiType: ModelConversion.ApiUserDefinedType) extends EntityId
 

@@ -14,6 +14,8 @@ import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.api.plugins.Parser
 import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
 import se.culvertsoft.mgen.compiler.plugins.PluginFinder
+import se.culvertsoft.mgen.compiler.util.FileUtils
+import se.culvertsoft.mgen.compiler.util.GenerateCode
 
 object MGen {
 
@@ -95,14 +97,14 @@ object MGen {
         throw new AnalysisException(s"Failed to instantiate any of the specified generators (${selectedGenerators})")
 
       // Run the generators
-      val generatedSources = Output.assemble(project, generators)
+      val generatedSources = GenerateCode(project, generators)
 
       // Check that we actually generated some code
       if (generatedSources.isEmpty)
         throw new AnalysisException(s"Generators generated no code...")
 
       // Write the actual code to disk 
-      Output.write(generatedSources, settings.get("output_path"))
+      FileUtils.writeIfChanged(generatedSources, settings.get("output_path"))
 
     }
 

@@ -2,21 +2,22 @@ package se.culvertsoft.mgen.visualdesigner.control
 
 import java.awt.Point
 import java.awt.Rectangle
+
 import javax.swing.JOptionPane
+import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
 import se.culvertsoft.mgen.visualdesigner.model.Entity
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
+import se.culvertsoft.mgen.visualdesigner.model.FilePath
 import se.culvertsoft.mgen.visualdesigner.model.ModelOps.toRichCustomType
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.PlacedEntity
 import se.culvertsoft.mgen.visualdesigner.util.Asof.RichFilterable
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 import se.culvertsoft.mgen.visualdesigner.view.ModuleView
-import se.culvertsoft.mgen.visualdesigner.model.FilePath
-import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
-import se.culvertsoft.mgen.visualdesigner.model.EnumType
-import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
 
 class EntityAddController(controller: Controller) extends SubController(controller) {
 

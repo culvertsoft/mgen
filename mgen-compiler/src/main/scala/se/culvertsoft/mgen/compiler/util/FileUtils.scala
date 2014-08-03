@@ -1,9 +1,11 @@
-package se.culvertsoft.mgen.compiler.defaultparser
+package se.culvertsoft.mgen.compiler.util
 
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
 import java.nio.charset.Charset
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
+import scala.reflect.io.Path
 
 object FileUtils {
 
@@ -76,4 +78,35 @@ object FileUtils {
     return new String(encoded, chrset);
   }
 
+  def writeIfChanged(
+      outputs: Seq[GeneratedSourceFile], 
+      outputPathPrepend: Option[String] = None) {
+
+    println("Writing files to disk:")
+
+    for (output <- outputs) {
+
+      val filePath = outputPathPrepend match {
+        case Some(prepend) => prepend + File.separator + output.filePath
+        case _ => output.filePath
+      }
+
+      val file = new File(filePath)
+      if (!file.exists || FileUtils.readToString(filePath, charset) != output.sourceCode) {
+        println(s"  writing: ${filePath}")
+        if (!file.exists) {
+          val dir = FileUtils.directoryOf(filePath)
+          Path(dir).createDirectory(true, false)
+        }
+        Files.write(Paths.get(filePath), output.sourceCode.getBytes(charset));
+      } else {
+        println(s"  skipping (no change): ${filePath}")
+      }
+
+    }
+
+    println("")
+
+  }
+  
 }

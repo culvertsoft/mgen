@@ -3,11 +3,12 @@ package se.culvertsoft.mgen.compiler.defaultparser
 import scala.Array.canBuildFrom
 import scala.collection.JavaConversions.seqAsJavaList
 
-import XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.impl.FieldImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedDefaultValueImpl
 import se.culvertsoft.mgen.api.util.CRC16
+import se.culvertsoft.mgen.compiler.util.ThrowRTE
+import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
 
 object ParseField {
 

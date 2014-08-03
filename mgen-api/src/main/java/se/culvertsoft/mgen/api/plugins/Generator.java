@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile;
-import se.culvertsoft.mgen.api.model.Module;
+import se.culvertsoft.mgen.api.model.Project;
 
 /**
  * Base interface for all source code generators. Users can derive from this
@@ -19,7 +19,7 @@ public interface Generator {
 	 * Overload this method to generate you own source code.
 	 */
 	List<GeneratedSourceFile> generate(
-			final List<Module> modules,
+			final Project project,
 			final Map<String, String> generatorSettings);
 
 }

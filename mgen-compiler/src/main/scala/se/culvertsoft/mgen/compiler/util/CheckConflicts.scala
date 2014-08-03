@@ -1,7 +1,6 @@
-package se.culvertsoft.mgen.compiler.defaultparser
+package se.culvertsoft.mgen.compiler.util
 
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.collectionAsScalaIterable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.HashSet
 

@@ -76,10 +76,17 @@ public interface Project {
 	 * @return The found type, or null if none found
 	 */
 	Type findType(final String name);
-	
+
 	/**
-	 * Gets the parent project of this project (if it's a dependency), otherwise it returns null.
+	 * Gets the parent project of this project (if it's a dependency), otherwise
+	 * it returns null.
 	 */
 	Project parent();
+
+	/**
+	 * Creates a list of all references modules, recursively including all
+	 * dependencies and dependencies of dependencies
+	 */
+	List<Module> allModulesRecursively();
 
 }
