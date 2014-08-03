@@ -31,7 +31,7 @@ import ModelConversion.VdGenerator
 import ModelConversion.VdModule
 import ModelConversion.VdProject
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
+import se.culvertsoft.mgen.compiler.components.Project2Xml
 import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities

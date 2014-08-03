@@ -1,12 +1,8 @@
-package se.culvertsoft.mgen.compiler.defaultparser
-
-import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.bufferAsJavaList
+package se.culvertsoft.mgen.compiler.components
 import scala.collection.mutable.ArrayBuffer
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.api.model.DefaultValue
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
@@ -19,7 +15,9 @@ import se.culvertsoft.mgen.api.model.impl.ListTypeImpl
 import se.culvertsoft.mgen.api.model.impl.MapTypeImpl
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
-import se.culvertsoft.mgen.api.model.impl.DefaultValueImpl
+import se.culvertsoft.mgen.compiler.defaultparser.ParseState
+import scala.collection.JavaConversions._
+import se.culvertsoft.mgen.compiler.defaultparser.ParseDefaultValue
 
 object LinkTypes {
 

@@ -4,7 +4,8 @@ import scala.collection.JavaConversions.mapAsScalaMap
 
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.Parser
-import se.culvertsoft.mgen.compiler.util.CheckConflicts
+import se.culvertsoft.mgen.compiler.components.CheckConflicts
+import se.culvertsoft.mgen.compiler.components.LinkTypes
 import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.compiler.util.ThrowRTE
 

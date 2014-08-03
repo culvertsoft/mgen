@@ -59,7 +59,7 @@ import ModelConversion.VdUserTypeRef
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.UnlinkedDefaultValueImpl
 import se.culvertsoft.mgen.api.util.CRC16
-import se.culvertsoft.mgen.compiler.defaultparser.LinkTypes
+import se.culvertsoft.mgen.compiler.components.LinkTypes
 import se.culvertsoft.mgen.compiler.defaultparser.ParseState
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
 

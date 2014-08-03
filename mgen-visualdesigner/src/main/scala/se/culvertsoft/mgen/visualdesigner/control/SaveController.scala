@@ -11,8 +11,8 @@ import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
+import se.culvertsoft.mgen.compiler.components.Project2Xml
 import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
-import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
 import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.visualdesigner.ClassRegistry
 import se.culvertsoft.mgen.visualdesigner.EntityFactory

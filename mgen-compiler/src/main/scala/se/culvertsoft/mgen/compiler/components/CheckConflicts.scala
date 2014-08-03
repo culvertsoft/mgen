@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.compiler.util
+package se.culvertsoft.mgen.compiler.components
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.HashMap
