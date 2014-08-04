@@ -9,7 +9,6 @@ import scala.xml.XML.loadFile
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
 import se.culvertsoft.mgen.api.plugins.Parser
 import se.culvertsoft.mgen.compiler.util.FileUtils
-import se.culvertsoft.mgen.compiler.util.ThrowRTE
 import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.idlparser.IdlParser
 
@@ -22,7 +21,7 @@ object ParseProject {
     val projectPath =
       settings
         .get("project")
-        .getOrElse(ThrowRTE("Missing '-project' cmd line argument"))
+        .getOrElse(throw new RuntimeException("Missing '-project' cmd line argument"))
 
     FileUtils.checkiSsFileOrThrow(projectPath)
 
@@ -39,14 +38,14 @@ object ParseProject {
     pluginFinder: PluginFinder): ProjectImpl = {
 
     val file = FileUtils.findFile(filePath, searchPaths0)
-      .getOrElse(ThrowRTE(s"Could not find referenced project file: ${filePath}"))
+      .getOrElse(throw new RuntimeException(s"Could not find referenced project file: ${filePath}"))
 
     val absoluteFilePath = file.getCanonicalPath()
 
     alreadyParsed.get(absoluteFilePath) match {
       case Some(p) => p
       case _ =>
-        println(s"parsing project: ${absoluteFilePath}")
+        println(s"  parsing project: ${absoluteFilePath}")
 
         val projectName = FileUtils.removeFileEnding(FileUtils.nameOf(absoluteFilePath))
         val projectDir = FileUtils.directoryOf(absoluteFilePath)
@@ -78,11 +77,11 @@ object ParseProject {
         val sourcesNodes = (projectXml \ "Sources")
         val allParsedSources = sourcesNodes map { sourcesNode =>
           val parserName = sourcesNode.getAttribString("parser").getOrElse(classOf[IdlParser].getName())
-          val parser = pluginFinder.getCached[Parser](parserName).getOrElse(ThrowRTE(s"Parser not found: Unknown parser $parserName in project file $absoluteFilePath"))
+          val parser = pluginFinder.getCached[Parser](parserName).getOrElse(throw new RuntimeException(s"Parser not found: Unknown parser $parserName in project file $absoluteFilePath"))
           val sourceFileNames = (sourcesNode \ "Source") map (_.text)
           val files = sourceFileNames.map { fileName =>
             FileUtils.findFile(fileName, searchPaths)
-              .getOrElse(ThrowRTE(s"Could not find source file: ${fileName} specified for parser ${parserName} in project ${absoluteFilePath}"))
+              .getOrElse(throw new RuntimeException(s"Could not find source file: ${fileName} specified for parser ${parserName} in project ${absoluteFilePath}"))
           }
 
           parser.parse(files, settings, project)

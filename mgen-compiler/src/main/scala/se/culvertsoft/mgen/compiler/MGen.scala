@@ -50,13 +50,13 @@ object MGen {
       println("ok\n")
 
       // Link custom types and enums
-      println("Linking types...")
+      print("Linking types...")
       LinkTypes(project)
       println("ok\n")
 
       // Check for type conflicts (ids, names, hashes etc)
       if (checkForConflicts) {
-        println("Checking for type conflicts...")
+        print("Checking for type conflicts...")
         CheckConflicts(project)
         println("ok\n")
       }

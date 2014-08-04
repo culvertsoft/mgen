@@ -19,7 +19,7 @@ object ParseModule {
 
     val absoluteFilePath = file.getCanonicalPath()
 
-    println(s"parsing module: ${absoluteFilePath}")
+    println(s"  parsing module: ${absoluteFilePath}")
 
     // Calculate module path
     val modulePath = file.getName.split('.').dropRight(1).mkString(".")
