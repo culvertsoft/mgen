@@ -8,7 +8,6 @@ import scala.xml.XML.loadFile
 
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
 import se.culvertsoft.mgen.api.plugins.Parser
-import se.culvertsoft.mgen.compiler.plugins.PluginFinder
 import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.compiler.util.ThrowRTE
 import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode

@@ -14,7 +14,7 @@ import se.culvertsoft.mgen.compiler.components.CheckConflicts
 import se.culvertsoft.mgen.compiler.components.GenerateCode
 import se.culvertsoft.mgen.compiler.components.LinkTypes
 import se.culvertsoft.mgen.compiler.components.ParseProject
-import se.culvertsoft.mgen.compiler.plugins.PluginFinder
+import se.culvertsoft.mgen.compiler.components.PluginFinder
 import se.culvertsoft.mgen.compiler.util.FileUtils
 
 object MGen {

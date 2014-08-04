@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.compiler.plugins
+package se.culvertsoft.mgen.compiler.components
 
 import java.io.File
 import java.net.URL
