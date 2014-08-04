@@ -27,7 +27,12 @@ public interface CustomType extends UserDefinedType {
 	 */
 	String typeId16BitBase64();
 
-	/**
+    /**
+     * the base 16 bit type concatinated with all parents 16 bits hash.
+     */
+    String typeId16BitBase64Hierarchy();
+
+    /**
 	 * The written name of this type
 	 */
 	String name();
@@ -70,7 +75,7 @@ public interface CustomType extends UserDefinedType {
 	 * @throws RuntimeException
 	 *             If called outside the compiler
 	 */
-	List<CustomType> superTypeHierarchy();
+	List<CustomType> typeHierarchy();
 
 	/**
 	 * Returns all fields of this class, excluding those of its super type(s)

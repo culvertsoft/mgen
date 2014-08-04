@@ -178,7 +178,7 @@ object ParseDefaultValue {
             }
 
             if (expectedType != actualType
-              && !actualType.superTypeHierarchy().contains(expectedType)) {
+              && !actualType.typeHierarchy().contains(expectedType)) {
               throw new AnalysisException(
                 "Specified default value type "
                   + optActualTypeName

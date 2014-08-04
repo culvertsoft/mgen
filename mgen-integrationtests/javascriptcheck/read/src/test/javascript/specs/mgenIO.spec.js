@@ -1,6 +1,3 @@
-/** JSLINT CONFIG */
-/*global mgen_classreg: false, mGenGenerate: false, it: false, describe: false, expect: false, xit: false, throws: false */
-
 requirejs(['mGen', 'se_culvertsoft'], function(mGen, se_culvertsoft) {
 	"use strict";
 
@@ -51,16 +48,8 @@ requirejs(['mGen', 'se_culvertsoft'], function(mGen, se_culvertsoft) {
 		never_catch_error: true
 	});
 
-	// var data = {
-	// 	"__t": "xwE",
-	// 	"a": ["low", "medium", "high", "UNKNOWN", "low", "medium", "high", "UNKNOWN", "low", "medium", "high", "UNKNOWN", "low", "medium", "high", "UNKNOWN"],
-	// 	"b": ["low", "medium", "high", "UNKNOWN", "low", "medium", "high", "UNKNOWN", "low", "medium", "high", "UNKNOWN", "low", "medium", "high", "UNKNOWN"]
-	// };
-	var j = mGen.jsonHandler(registry);
 
-	// var o = j.jsonToObject(data);
-	// var res = j.objectToString(o);
-	// console.log(res);
+	var j = mGen.jsonHandler(registry);
 
 	/* ***********************************************************\
 	|*         TEST EMPTY OBJECTS                                *|

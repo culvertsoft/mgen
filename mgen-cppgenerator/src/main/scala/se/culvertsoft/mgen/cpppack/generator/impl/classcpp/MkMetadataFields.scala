@@ -31,7 +31,7 @@ object MkMetadataFields {
     endl()
 
     {
-      val ids = t.superTypeHierarchy.map(_.typeId.toString + "LL")
+      val ids = t.typeHierarchy.map(_.typeId.toString + "LL")
       ln(s"const std::vector<long long>& ${t.shortName()}::_type_ids() {")
       ln(1, s"static const std::vector<long long> out = mgen::make_vector<long long>() << ${ids.mkString(" << ")};")
       ln(1, s"return out;")
@@ -40,7 +40,7 @@ object MkMetadataFields {
     }
 
     {
-      val ids16bit = t.superTypeHierarchy.map(_.typeId16Bit.toString)
+      val ids16bit = t.typeHierarchy.map(_.typeId16Bit.toString)
       ln(s"const std::vector<short>& ${t.shortName()}::_type_ids_16bit() {")
       ln(1, s"static const std::vector<short> out = mgen::make_vector<short>() << ${ids16bit.mkString(" << ")};")
       ln(1, "return out;")
@@ -49,7 +49,7 @@ object MkMetadataFields {
     }
 
     {
-      val names = t.superTypeHierarchy.map(x => quote(x.fullName))
+      val names = t.typeHierarchy.map(x => quote(x.fullName))
       ln(s"const std::vector<std::string>& ${t.shortName()}::_type_names() {")
       ln(1, s"static const std::vector<std::string> out = mgen::make_vector<std::string>() << ${names.mkString(" << ")};")
       ln(1, "return out;")
@@ -58,7 +58,7 @@ object MkMetadataFields {
     }
 
     {
-      val ids = t.superTypeHierarchy.map(x => quote(x.typeId16BitBase64))
+      val ids = t.typeHierarchy.map(x => quote(x.typeId16BitBase64))
       ln(s"const std::vector<std::string>& ${t.shortName()}::_type_ids_16bit_base64() {")
       ln(1, s"static const std::vector<std::string> out = mgen::make_vector<std::string>() << ${ids.mkString(" << ")};")
       ln(1, "return out;")
@@ -66,7 +66,7 @@ object MkMetadataFields {
       endl()
     }
 
-    val base64ids = t.superTypeHierarchy().map(_.typeId16BitBase64())
+    val base64ids = t.typeHierarchy().map(_.typeId16BitBase64())
     val base64String = quote(base64ids.mkString(""))
 
     ln(s"const std::string& ${t.shortName()}::_type_ids_16bit_base64_string() {")
