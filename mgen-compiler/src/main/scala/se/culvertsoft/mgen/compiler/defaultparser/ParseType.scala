@@ -13,7 +13,7 @@ import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
 
 object ParseType {
 
-  def apply(node: scala.xml.Node, module: ModuleImpl)(implicit cache: ParseState): LinkedCustomType = {
+  def apply(node: scala.xml.Node, module: ModuleImpl): LinkedCustomType = {
 
     val name = node.label
     val fullName = s"${module.path}.$name"
@@ -34,13 +34,6 @@ object ParseType {
 
     val fields = node.child.map { ParseField(_, clas.fullName) }
     clas.setFields(fields)
-
-    cache.typeLookup.typesFullName.put(clas.fullName(), clas)
-    cache.typeLookup.typesShortName.getOrElseUpdate(clas.shortName(), new ArrayBuffer[UserDefinedType])
-    cache.typeLookup.typesShortName(clas.shortName()) += clas
-
-    if (clas.hasSuperType() || clas.fields.exists(!_.isLinked))
-      cache.needLinkage.types += clas
 
     clas
   }

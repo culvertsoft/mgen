@@ -16,50 +16,46 @@ object ParseModule {
     filePath: String,
     settings0: Map[String, String],
     searchPaths0: Seq[String],
-    parent: Project)(implicit cache: ParseState): ModuleImpl = {
+    parent: Project): ModuleImpl = {
 
     val file = FileUtils.findFile(filePath, searchPaths0)
       .getOrElse(ThrowRTE(s"Could not find referenced module file: ${filePath}"))
 
     val absoluteFilePath = file.getCanonicalPath()
 
-    cache.fileParsing.modules.getOrElseUpdate(absoluteFilePath, {
+    println(s"parsing module: ${absoluteFilePath}")
 
-      println(s"parsing module: ${absoluteFilePath}")
+    // Calculate module path
+    val modulePath = FileUtils.removeFileEnding(FileUtils.nameOf(filePath))
 
-      // Calculate module path
-      val modulePath = FileUtils.removeFileEnding(FileUtils.nameOf(filePath))
+    // Read in module xml source code 
+    val moduleXml = scala.xml.Utility.trim(loadFile(file))
+    if (moduleXml.label.toLowerCase() != "module") {
+      throw new RuntimeException(s"Tried to load $filePath as module, but it was not a module file!")
+    }
 
-      // Read in module xml source code 
-      val moduleXml = scala.xml.Utility.trim(loadFile(file))
-      if (moduleXml.label.toLowerCase() != "module") {
-        throw new RuntimeException(s"Tried to load $filePath as module, but it was not a module file!")
-      }
+    // Parse settings
+    val settings = settings0 ++ moduleXml.getSettings()
 
-      // Parse settings
-      val settings = settings0 ++ moduleXml.getSettings()
+    // Create the module
+    val module = new ModuleImpl(
+      modulePath,
+      filePath,
+      absoluteFilePath,
+      settings,
+      parent)
 
-      // Create the module
-      val module = new ModuleImpl(
-        modulePath,
-        filePath,
-        absoluteFilePath,
-        settings,
-        parent)
+    // Parse enumerations
+    val enumsXml = moduleXml.getAllNodeContents("Enums")
+    val enums = enumsXml.map { ParseEnum(_, module) }
+    module.setEnums(enums)
 
-      // Parse enumerations
-      val enumsXml = moduleXml.getAllNodeContents("Enums")
-      val enums = enumsXml.map { ParseEnum(_, module) }
-      module.setEnums(enums)
+    // Parse types
+    val typesXml = moduleXml.getAllNodeContents("Types")
+    val types = typesXml.map { ParseType(_, module) }
+    module.setTypes(types)
 
-      // Parse types
-      val typesXml = moduleXml.getAllNodeContents("Types")
-      val types = typesXml.map { ParseType(_, module) }
-      module.setTypes(types)
-
-      module
-
-    })
+    module
 
   }
 

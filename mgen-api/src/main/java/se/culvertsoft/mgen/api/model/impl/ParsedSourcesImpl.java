@@ -79,14 +79,20 @@ public class ParsedSourcesImpl implements ParsedSources {
 		}
 	}
 
-	protected Type findType(final String name, final HashSet<ParsedSources> alreadySearched) {
+	protected Type findType(
+			final String name,
+			final HashSet<ParsedSources> alreadySearched) {
+
+		if (alreadySearched.contains(this))
+			return null;
+
+		alreadySearched.add(this);
 
 		for (final Module m : modules()) {
 			final Type foundType = m.findType(name);
 			if (foundType != null)
 				return foundType;
 		}
-		alreadySearched.add(this);
 
 		for (final ProjectImpl d : m_dependencies) {
 			final Type foundType = d.findType(name, alreadySearched);

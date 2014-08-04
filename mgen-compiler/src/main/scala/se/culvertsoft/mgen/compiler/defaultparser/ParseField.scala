@@ -14,7 +14,7 @@ object ParseField {
 
   def apply(
     node: scala.xml.Node,
-    ownerClassName: String)(implicit cache: ParseState): Field = {
+    ownerClassName: String): Field = {
 
     val name = node.label
     val typeString = node.getAttribString("type").getOrElse(ThrowRTE(s"Missing type attribute for field ${name}"))
