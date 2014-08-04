@@ -1,20 +1,20 @@
 /** JSLINT CONFIG */
-/*global mgen_blueprint: false, mGenGenerate: false, it: false, describe: false, expect: false, xit: false, throws: false */
+/*global requirejs: false, describe: false, it: false, expect: false */
 
-requirejs(['mGen', 'mgen_classreg'], function (mGen, mgen_classreg) {
+requirejs(["mGen", "standard_blueprint"], function (mGen, standard_blueprint) {
 	"use strict";
 
 	/* ***********************************************************\
 	|*         TEST DATA                                           *|
 	 \*************************************************************/
-	// read this from file
+	 
 	var car_as_string = "{\"__t\":\"AAQKskL20\",\"positioning\":{\"__t\":\"AAM\",\"position\":{\"__t\":\"AAE\",\"x\":0,\"y\":0,\"z\":0}},\"topSpeed\":100,\"brand\":\"IAmRolling\"}";
 
 	/* ***********************************************************\
 	|*         SETUP -- MAKE SURE ALL FILES ARE IN PLACE           *|
 	 \*************************************************************/
 
-	if (!mgen_classreg) {
+	if (!standard_blueprint) {
 		throw "mgen_blueprint missing";
 	}
 
@@ -22,7 +22,7 @@ requirejs(['mGen', 'mgen_classreg'], function (mGen, mgen_classreg) {
 		throw "mGen.Generate missing";
 	}
 
-	var registry = mGen.generate(mgen_classreg);
+	var registry = mGen.generate(standard_blueprint);
 
 	/* ***********************************************************\
 	|*         CREATION -- MAKE SURE WE CAN CREATE SOM CLASSES     *|
@@ -94,7 +94,7 @@ requirejs(['mGen', 'mgen_classreg'], function (mGen, mgen_classreg) {
 
 		it("Test required field.", function() {
 			expect(function() {
-				new registry.Positioning()
+				new registry.Positioning();
 			}).toThrow();
 
 			var c = new registry.Positioning({
@@ -203,7 +203,7 @@ requirejs(['mGen', 'mgen_classreg'], function (mGen, mgen_classreg) {
 			});
 
 			var jsonHandler = mGen.jsonHandler(registry);
-			var b = jsonHandler.stringToObject(jsonHandler.objectToString(a))
+			var b = jsonHandler.stringToObject(jsonHandler.objectToString(a));
 
 			expect( jsonHandler.objectToString(a) ).toBe( jsonHandler.objectToString(b) );
 		});
@@ -303,50 +303,5 @@ requirejs(['mGen', 'mgen_classreg'], function (mGen, mgen_classreg) {
 
 			 expect(registry.validate(d)).toBe(true);
 		});
-
-	});
-
-	/* ***********************************************************\
-	|*  HANDLER -- TEST THE SPECIALIZED HANDLER SYSTEM             *|
-	 \*************************************************************/
-
-	describe("Handler", function() {
-
-		xit("Test simple handler.", function() {
-			var handler = new registry.handler();
-
-			var handler_vehicle_called = false;
-			var handler_car_called = false;
-
-
-			//set up handler listeners:
-			handler
-				.on(registry.Vehicle, function() {
-					handler_vehicle_called = true;
-				})
-				.on(registry.Car, function() {
-					handler_car_called = true;
-				});
-
-
-			// send the handler some messages:
-
-			handler.handle(car_as_string);
-
-			handler.handle(new registry.Vehicle({
-				positioning: {
-					position: {
-						x: 13,
-						y: 0,
-						z: 0
-					}
-				},
-				topSpeed: 100
-			}));
-
-			expect(handler_car_called, "Car message has run");
-			expect(handler_vehicle_called, "Vehicle message has run");
-		});
-
 	});
 });

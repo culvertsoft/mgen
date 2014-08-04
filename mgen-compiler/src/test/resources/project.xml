@@ -11,8 +11,8 @@
     <Generator name="Javascript">
         <class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </class_path>
         <output_path>src_generated/test/javascript</output_path>
-        <output_filename>mgen-data.js</output_filename>
-        <classregistryblueprint>mgen_classreg</classregistryblueprint>
+        <output_filename>standard_blueprint.js</output_filename>
+        <classregistryblueprint>standard_blueprint</classregistryblueprint>
     </Generator>
 
 	<Generator name="C++">

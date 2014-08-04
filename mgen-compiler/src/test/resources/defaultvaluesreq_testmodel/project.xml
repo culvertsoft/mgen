@@ -8,6 +8,13 @@
 		<classregistry_path>defaultvalreq.model</classregistry_path>
 	</Generator>
 
+    <Generator name="Javascript">
+        <class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </class_path>
+        <output_path>src_generated/test/javascript</output_path>
+        <output_filename>default_required_blueprint.js</output_filename>
+        <classregistryblueprint>default_required_blueprint</classregistryblueprint>
+    </Generator>
+
 	<Generator name="C++">
 		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</class_path>
 		<output_path>src_generated/test/cpp</output_path>
