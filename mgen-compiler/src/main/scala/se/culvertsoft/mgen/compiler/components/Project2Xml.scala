@@ -170,7 +170,7 @@ object Project2Xml {
       return null
 
     v match {
-      case v: EnumDefaultValue => getString(v.value.name)
+      case v: EnumDefaultValue => getQuotedStringOrNull(v.value.name)
       case v: BoolDefaultValue => getString(v.value)
       case v: StringDefaultValue => getQuotedStringOrNull(v.value)
       case v: NumericDefaultValue =>
