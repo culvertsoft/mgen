@@ -1,1 +1,0 @@
-This is a placeholder file is for keeping the directory in git.

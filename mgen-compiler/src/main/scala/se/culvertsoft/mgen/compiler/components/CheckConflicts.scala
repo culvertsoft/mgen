@@ -2,33 +2,13 @@ package se.culvertsoft.mgen.compiler.components
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.HashMap
-import scala.collection.mutable.HashSet
 
 import se.culvertsoft.mgen.api.exceptions.TypeConflictException
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Project
 
 object CheckConflicts {
-
-  private class GatherModulesState {
-    val projectsScanned = new HashSet[Project]
-    val modulesFound = new HashSet[Module]
-  }
-
-  private def gatherModulesFromProject(project: Project): GatherModulesState = {
-    val state = new GatherModulesState
-    def gatherModulesInternal(project: Project, state: GatherModulesState) {
-      if (!state.projectsScanned.contains(project)) {
-        state.projectsScanned += project
-        project.dependencies.foreach(gatherModulesInternal(_, state))
-        state.modulesFound ++= project.modules
-      }
-    }
-    gatherModulesInternal(project, state)
-    state
-  }
 
   private def assertNoDuplicates[T <: AnyRef, A](
     ts: Seq[T],
@@ -44,14 +24,8 @@ object CheckConflicts {
 
   def apply(project: Project) {
 
-    val state = gatherModulesFromProject(project)
-
-    val allModules = state.modulesFound.toSeq
+    val allModules = project.allModulesRecursively
     val allTypes = allModules.flatMap(_.types)
-
-    assertNoDuplicates(allModules, (m: Module) => m.path) { (m1, m2) =>
-      throw new TypeConflictException(s"Module defined twice with same path: ${m1.path} ")
-    }
 
     assertNoDuplicates(allTypes, (t: CustomType) => t.fullName) { (t1, t2) =>
       throw new TypeConflictException(s"Type defined twice with same class path: ${t1.fullName}")

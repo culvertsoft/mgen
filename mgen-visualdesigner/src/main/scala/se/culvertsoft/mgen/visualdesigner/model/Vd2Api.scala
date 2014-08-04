@@ -4,9 +4,9 @@ import java.io.File
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
+import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
-import scala.collection.mutable.HashSet
 
 import ModelConversion.ApiArrayTypeImpl
 import ModelConversion.ApiBoolTypeInstance
@@ -25,12 +25,9 @@ import ModelConversion.ApiInt16TypeInstance
 import ModelConversion.ApiInt32TypeInstance
 import ModelConversion.ApiInt64TypeInstance
 import ModelConversion.ApiInt8TypeInstance
-import ModelConversion.ApiLinkedCustomType
 import ModelConversion.ApiListTypeImpl
 import ModelConversion.ApiMapTypeImpl
-import ModelConversion.ApiModule
 import ModelConversion.ApiModuleImpl
-import ModelConversion.ApiProject
 import ModelConversion.ApiProjectImpl
 import ModelConversion.ApiStringTypeInstance
 import ModelConversion.ApiType
@@ -57,10 +54,9 @@ import ModelConversion.VdProject
 import ModelConversion.VdStringType
 import ModelConversion.VdUserTypeRef
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
-import se.culvertsoft.mgen.api.model.impl.UnlinkedDefaultValueImpl
 import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.compiler.components.LinkTypes
-import se.culvertsoft.mgen.compiler.defaultparser.ParseState
+import se.culvertsoft.mgen.idlparser.IdlDefaultValue
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
 
 class Vd2ApiConversionState(val srcModel: Model) {
@@ -131,13 +127,13 @@ object Vd2Api {
       cvtFieldType(vdField.getType()),
       vdField.getFlags(),
       getId16Bit(vdField),
-      if (vdField.hasDefaultValue()) new UnlinkedDefaultValueImpl(vdField.getDefaultValue()) else null)
+      if (vdField.hasDefaultValue()) new IdlDefaultValue(vdField.getDefaultValue()) else null)
   }
 
   private def cvtEnumEntry(vdEntry: VdEnumEntry, parentEnum: ApiEnum)(implicit cvState: Vd2ApiConversionState): ApiEnumEntryImpl = {
     new ApiEnumEntryImpl(vdEntry.getName(), vdEntry.getConstant())
   }
-  
+
   private def cvtEnum(vdEnum: VdEnum, parentModule: ApiModuleImpl)(implicit cvState: Vd2ApiConversionState): ApiEnumTypeImpl = {
 
     implicit val model = cvState.srcModel
@@ -240,49 +236,8 @@ object Vd2Api {
 
   }
 
-  private def linkTypes(apiProject: ApiProjectImpl)(implicit cvState: Vd2ApiConversionState) {
-
-    // Use the same linking algorithm that the compiler uses
-    implicit val parseState = new ParseState
-
-    // Fill in the type lookup
-    for (pair <- cvState.apiObjLkup) {
-      val path = pair._1
-      val e = pair._2
-      e match {
-        case e: ApiLinkedCustomType =>
-          parseState.typeLookup.typesFullName.put(path, e)
-        case _ =>
-      }
-    }
-
-    // Add the types that need to be linked
-    val doneProjects = new HashSet[String]
-    def checkProjectLinkage(project: ApiProject) {
-
-      def checkClassLinkage(t: ApiCustomType) {
-        if ((t.hasSuperType() && !t.superType().isLinked()) ||
-          t.fields().exists(!_.typ().isLinked())) {
-          parseState.needLinkage.types += t.asInstanceOf[ApiLinkedCustomType]
-        }
-      }
-
-      def checkModuleLinkage(m: ApiModule) {
-        m.types foreach checkClassLinkage
-      }
-
-      if (!doneProjects.contains(project.filePath)) {
-        doneProjects += project.filePath
-        project.dependencies foreach checkProjectLinkage
-        project.modules foreach checkModuleLinkage
-      }
-
-    }
-
-    checkProjectLinkage(apiProject)
-
+  private def linkTypes(apiProject: ApiProjectImpl) {
     LinkTypes(apiProject)
-
   }
 
   def apply(model: VdModel): ApiProjectImpl = {

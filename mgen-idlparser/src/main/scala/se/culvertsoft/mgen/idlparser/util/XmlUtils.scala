@@ -1,8 +1,8 @@
-package se.culvertsoft.mgen.compiler.util
+package se.culvertsoft.mgen.idlparser.util
 
 object XmlUtils {
 
-  implicit class RichXmlNode(node: scala.xml.Node) {
+   implicit class RichXmlNode(node: scala.xml.Node) {
 
     def getAllNodeContents(named: String): Seq[scala.xml.Node] = {
       (node \ named).flatMap(_.child)
@@ -11,7 +11,7 @@ object XmlUtils {
     def getNodeContents(named: String): scala.xml.Node = {
       getAllNodeContents(named).headOption.getOrElse(throw new RuntimeException(s"Missing node <${named}>"))
     }
-
+    
     def getOptNodeContents(named: String): Option[scala.xml.Node] = {
       getAllNodeContents(named).headOption
     }

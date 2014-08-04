@@ -1,13 +1,14 @@
 package se.culvertsoft.mgen.compiler.components
-import scala.collection.mutable.ArrayBuffer
+
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConversions.bufferAsJavaList
+
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.api.model.UnlinkedDefaultValue
 import se.culvertsoft.mgen.api.model.impl.ArrayTypeImpl
 import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
@@ -15,103 +16,69 @@ import se.culvertsoft.mgen.api.model.impl.ListTypeImpl
 import se.culvertsoft.mgen.api.model.impl.MapTypeImpl
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
-import se.culvertsoft.mgen.compiler.defaultparser.ParseState
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.compiler.defaultparser.ParseDefaultValue
 
 object LinkTypes {
 
-  def apply(project: ProjectImpl)(implicit cache: ParseState) {
-    val linkage = new Linkage(project)
-    linkage.link()
-  }
-}
-
-private class Linkage(root: ProjectImpl)(implicit cache: ParseState) {
-
-  def link() {
-    link(root)
+  def apply(project: ProjectImpl) {
+    link(project)
   }
 
-  private def replace(t: Type)(implicit parent: LinkedCustomType): Type = {
+  private def replace(t: Type, owner: LinkedCustomType)(implicit lkup: TypeLookup): Type = {
 
-    val out = t.typeEnum() match {
-      case TypeEnum.ARRAY =>
-        val arrayType = t.asInstanceOf[ArrayType]
-        new ArrayTypeImpl(replace(arrayType.elementType()))
-      case TypeEnum.LIST =>
-        val listType = t.asInstanceOf[ListType]
-        new ListTypeImpl(replace(listType.elementType()))
-      case TypeEnum.MAP =>
-        val mapType = t.asInstanceOf[MapType]
-        new MapTypeImpl(replace(mapType.keyType()), replace(mapType.valueType()))
-      case TypeEnum.UNKNOWN =>
+    t match {
+      case t: ArrayType =>
+        new ArrayTypeImpl(replace(t.elementType, owner))
+      case t: ListType =>
+        new ListTypeImpl(replace(t.elementType, owner))
+      case t: MapType =>
+        new MapTypeImpl(replace(t.keyType, owner), replace(t.valueType, owner))
+      case t: UnlinkedCustomType =>
 
-        val unknownType = t.asInstanceOf[UnlinkedCustomType]
-        val written = unknownType.writtenType
-
-        val fullNames = cache.typeLookup.typesFullName
-        val shortNames = cache.typeLookup.typesShortName
-
-        if (fullNames.contains(written)) {
-          fullNames(written)
-        } else if (shortNames.contains(written)) {
-          val matches = shortNames(written)
-          matches.find(_.module() == parent.module()) match {
-            case Some(replacement) =>
-              replacement
-            case _ =>
-              if (matches.size > 1)
-                throw new AnalysisException(s"Ambigously referenced type ${written} in type ${parent}")
-              matches.head
-          }
+        val found = lkup.find(t.writtenType)
+        if (found.isEmpty) {
+          throw new AnalysisException(s"Could not find any matching types for type ${t.writtenType} referenced in parent ${owner}")
+        } else if (found.size == 1) {
+          found.head
         } else {
-          throw new AnalysisException(s"Could not find any matching types for type ${written} referenced in parent ${parent}")
+
+          found.find(_.module == owner.module) match {
+            case Some(x) => x
+            case _ =>
+              throw new AnalysisException(s"Ambigously referenced type ${t.writtenType} in type ${owner}")
+          }
+
         }
 
       case _ => t
 
     }
 
-    out
   }
 
   private def link(project: ProjectImpl) {
 
-    // Link fields and super types of unfinished types
-    for (t <- cache.needLinkage.types) {
-      implicit val parent = t
-      if (t.hasSuperType())
-        t.setSuperType(replace(t.superType).asInstanceOf[CustomType])
-      t.setFields(t.fields.map { f => f.transform(replace(f.typ)) })
-    }
+    implicit val typeLkup = new TypeLookup(project)
+    val classes = project.allModulesRecursively.flatMap(_.types).collect { case t: LinkedCustomType => t }
 
-    // Link super types
-    for (t <- cache.typeLookup.typesFullName.values) {
-      t match {
-        case t: CustomType =>
-          t.superType() match {
-            case s: LinkedCustomType => s.addSubType(t);
-            case _ =>
-          }
-        case _ =>
+    // Link fields and super types
+    for (t <- classes) {
+      if (t.hasSuperType()) {
+        t.setSuperType(replace(t.superType, t).asInstanceOf[CustomType])
+        t.superType() match {
+          case s: LinkedCustomType => s.addSubType(t);
+          case _ =>
+        }
       }
+      t.setFields(t.fields.map { f => f.transform(replace(f.typ, t)) })
     }
 
     // Link default values
-    val newFields = new ArrayBuffer[Field]
+    for (t <- classes) {
 
-    for (t <- cache.needLinkage.types) {
-      val m = t.module()
-
-      newFields.clear()
-
-      for (f <- t.fields) {
-        if (!f.isLinked()) {
-          val src = f.defaultValue().asInstanceOf[UnlinkedDefaultValue]
-          newFields += f.transform(ParseDefaultValue(f.typ, src.writtenString, m))
-        } else {
-          newFields += f
+      val newFields = t.fields.map { f =>
+        f.defaultValue match {
+          case d: UnlinkedDefaultValue => f.transform(d.parse(f.typ, t.module))
+          case _ => f
         }
       }
 

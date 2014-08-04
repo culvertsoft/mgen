@@ -15,12 +15,12 @@ import se.culvertsoft.mgen.api.model.Type;
 public class ParsedSourcesImpl implements ParsedSources {
 
 	private Map<String, String> m_settings;
-	private List<ModuleImpl> m_modules;
+	private List<Module> m_modules;
 	private List<ProjectImpl> m_dependencies;
 
 	public ParsedSourcesImpl() {
 		m_settings = new LinkedHashMap<String, String>();
-		m_modules = new ArrayList<ModuleImpl>();
+		m_modules = new ArrayList<Module>();
 		m_dependencies = new ArrayList<ProjectImpl>();
 	}
 
@@ -30,9 +30,8 @@ public class ParsedSourcesImpl implements ParsedSources {
 	}
 
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public List<Module> modules() {
-		return (List) m_modules;
+		return m_modules;
 	}
 
 	@Override
@@ -45,7 +44,7 @@ public class ParsedSourcesImpl implements ParsedSources {
 		m_settings = settings;
 	}
 
-	public void setModules(List<ModuleImpl> modules) {
+	public void setModules(List<Module> modules) {
 		m_modules = modules;
 	}
 
@@ -79,14 +78,20 @@ public class ParsedSourcesImpl implements ParsedSources {
 		}
 	}
 
-	protected Type findType(final String name, final HashSet<ParsedSources> alreadySearched) {
+	protected Type findType(
+			final String name,
+			final HashSet<ParsedSources> alreadySearched) {
+
+		if (alreadySearched.contains(this))
+			return null;
+
+		alreadySearched.add(this);
 
 		for (final Module m : modules()) {
 			final Type foundType = m.findType(name);
 			if (foundType != null)
 				return foundType;
 		}
-		alreadySearched.add(this);
 
 		for (final ProjectImpl d : m_dependencies) {
 			final Type foundType = d.findType(name, alreadySearched);

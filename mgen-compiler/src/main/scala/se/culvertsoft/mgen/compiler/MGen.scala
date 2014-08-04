@@ -3,7 +3,6 @@ package se.culvertsoft.mgen.compiler
 import scala.Array.canBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.mapAsJavaMap
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
@@ -11,15 +10,15 @@ import scala.util.Try
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.plugins.Generator
-import se.culvertsoft.mgen.api.plugins.Parser
+import se.culvertsoft.mgen.compiler.components.CheckConflicts
 import se.culvertsoft.mgen.compiler.components.GenerateCode
-import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
-import se.culvertsoft.mgen.compiler.plugins.PluginFinder
+import se.culvertsoft.mgen.compiler.components.LinkTypes
+import se.culvertsoft.mgen.compiler.components.ParseProject
+import se.culvertsoft.mgen.compiler.components.PluginFinder
 import se.culvertsoft.mgen.compiler.util.FileUtils
 
 object MGen {
 
-  val DEFAULT_PARSER = classOf[DefaultParser].getName
   val VERSION = "0.x"
 
   def main(paramsUntrimmed: Array[String]) {
@@ -39,36 +38,28 @@ object MGen {
       // Parse cmd line args      
       val settings = parseKeyValuePairs(params)
       val failOnMissingGenerator = settings.getOrElse("fail_on_missing_generator", "false").toBoolean
-
-      // Ensure parsers are specified
-      val parserPath =
-        settings.get("parser") match {
-          case Some(parserPath) =>
-            println(s"INFO: Using parser '$parserPath'")
-            println("")
-            parserPath
-          case _ =>
-            println(s"INFO: Using default parser '$DEFAULT_PARSER' (No -parser specified)")
-            println("")
-            DEFAULT_PARSER
-        }
+      val checkForConflicts = settings.get("check_conflicts").map(_.toBoolean).getOrElse(true)
 
       // Load plugins
       val pluginPaths = split(settings.getOrElse("plugin_paths", ""))
       val pluginFinder = new PluginFinder(pluginPaths)
 
-      // Instantiate the parser
-      print("Instantiating parser...")
-      val parser = pluginFinder.find[Parser](parserPath) match {
-        case Some(parserClass) => parserClass.newInstance()
-        case _ => throw new AnalysisException(s"Aborting: Specified parser class '${parserPath}' not found")
-      }
+      // Parse the project shallow
+      println("Parsing project...")
+      val project = ParseProject(settings, pluginFinder)
       println("ok\n")
 
-      // Run the parsers
-      println("Executing parser...")
-      val project = parser.parse(settings)
+      // Link custom types and enums
+      print("Linking types...")
+      LinkTypes(project)
       println("ok\n")
+
+      // Check for type conflicts (ids, names, hashes etc)
+      if (checkForConflicts) {
+        print("Checking for type conflicts...")
+        CheckConflicts(project)
+        println("ok\n")
+      }
 
       // Find our selected generators
       val selectedGenerators = project.generators()
@@ -143,10 +134,10 @@ object MGen {
     println(s"Valid MGen compiler arguments are: ")
     println("  -help: displays this help ")
     println("  -project=\"myProjectFile.xml\": specify project file (Required)")
-    println("  -parser=\"se.culvertsoft.Dummyparser,se.coocoo.MyParser\": specify IDL parser (Optional) ")
     println("  -plugin_paths=\"my/external/path1, my/external/path2\": specify additional plugin paths (Optional) ")
     println("  -output_path=\"specify output path (Optional) ")
     println("  -fail_on_missing_generator=true/false: Default false (Optional)")
+    println("  -check_conflicts=\"true/false\" (default=true): If false: the compiler will ignore any type name/id/hash conflicts (Optional). Useful for IDL<->IDL translation")
   }
 
   def trimKeyVal(in: String): String = {

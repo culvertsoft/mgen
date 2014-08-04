@@ -26,7 +26,7 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	private CustomType m_superType;
 	private List<CustomType> m_typeHierarchy;
 	private List<CustomType> m_subTypes;
-	private ArrayList<Field> m_fields;
+	private List<Field> m_fields;
 
 	private ArrayList<Field> m_fieldsInclSuper;
 	private Set<CustomType> m_referencedClasses;
@@ -73,7 +73,7 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	public void setFields(final List<Field> fields) {
-		m_fields = new ArrayList<Field>(fields);
+		m_fields = fields;
 	}
 
 	public void addField(final Field field) {

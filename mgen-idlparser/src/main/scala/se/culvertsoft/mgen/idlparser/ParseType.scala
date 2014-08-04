@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.compiler.defaultparser
+package se.culvertsoft.mgen.idlparser
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.seqAsJavaList
@@ -9,11 +9,11 @@ import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import se.culvertsoft.mgen.api.util.CRC16
-import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
+import se.culvertsoft.mgen.idlparser.util.XmlUtils.RichXmlNode
 
 object ParseType {
 
-  def apply(node: scala.xml.Node, module: ModuleImpl)(implicit cache: ParseState): LinkedCustomType = {
+  def apply(node: scala.xml.Node, module: ModuleImpl): LinkedCustomType = {
 
     val name = node.label
     val fullName = s"${module.path}.$name"
@@ -34,13 +34,6 @@ object ParseType {
 
     val fields = node.child.map { ParseField(_, clas.fullName) }
     clas.setFields(fields)
-
-    cache.typeLookup.typesFullName.put(clas.fullName(), clas)
-    cache.typeLookup.typesShortName.getOrElseUpdate(clas.shortName(), new ArrayBuffer[UserDefinedType])
-    cache.typeLookup.typesShortName(clas.shortName()) += clas
-
-    if (clas.hasSuperType() || clas.fields.exists(!_.isLinked))
-      cache.needLinkage.types += clas
 
     clas
   }

@@ -22,8 +22,10 @@
 		<generate_unity_build>true</generate_unity_build>
 	</Generator>
 
-	<Depend>dependencies/project.xml</Depend>
+	<Dependency>dependencies/project.xml</Dependency>
 
-	<Module>se.culvertsoft.basemodule.xml</Module>
+	<Sources>
+		<Source>se.culvertsoft.basemodule.xml</Source>
+	</Sources>
 
 </Project>

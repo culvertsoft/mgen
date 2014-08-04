@@ -2,8 +2,10 @@
 
 <Project>
 
-	<Module>gameworld.dependency.depmodule1.xml</Module>
-	<Module>gameworld.dependency.depmodule2.xml</Module>
-	<Module>gameworld.dependency.depmodule3.xml</Module>
+	<Sources>
+		<Source>gameworld.dependency.depmodule1.xml</Source>
+		<Source>gameworld.dependency.depmodule2.xml</Source>
+		<Source>gameworld.dependency.depmodule3.xml</Source>
+	</Sources>
 
 </Project>

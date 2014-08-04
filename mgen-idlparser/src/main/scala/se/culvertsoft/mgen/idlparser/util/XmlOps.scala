@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.compiler.util
+package se.culvertsoft.mgen.idlparser.util
 
 import scala.xml.Node
 import scala.xml.NodeSeq
