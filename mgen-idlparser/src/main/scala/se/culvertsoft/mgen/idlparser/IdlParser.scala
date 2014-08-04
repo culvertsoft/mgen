@@ -8,7 +8,7 @@ import scala.collection.JavaConversions.seqAsJavaList
 
 import se.culvertsoft.mgen.api.model.ParsedSources
 import se.culvertsoft.mgen.api.model.Project
-import se.culvertsoft.mgen.api.model.impl.ProjectImpl
+import se.culvertsoft.mgen.api.model.impl.ParsedSourcesImpl
 import se.culvertsoft.mgen.api.plugins.Parser
 
 class IdlParser extends Parser {
@@ -17,7 +17,7 @@ class IdlParser extends Parser {
     sources: java.util.List[File],
     settings: java.util.Map[String, String],
     parent: Project): ParsedSources = {
-    val out = new ProjectImpl("Module_List", null, null, parent)
+    val out = new ParsedSourcesImpl()
     out.setModules(sources.map(source => ParseModule(source, settings.toMap, parent)))
     out
   }
