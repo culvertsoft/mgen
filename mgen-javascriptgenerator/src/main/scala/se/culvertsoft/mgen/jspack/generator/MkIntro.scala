@@ -14,9 +14,9 @@ object MkIntro {
     ln("")
     ln("/*jshint -W069 */ // Turn of lint warnings for accessing a property using a string literal with square bracket notation.")
     ln("(function(){")
-    txtBuffer {
-      ln("var blueprint = {};")
+    txtBuffer {        
       ln("\"use strict\";")
+      ln("var blueprint = {};")
       ln("")
     }
   }
