@@ -159,7 +159,6 @@ Here we run the compiler with two arguments, project and plugin_paths.
 
 Example: Here is how we generate [one of the data models for testing MGen](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources):
 
-    java -jar ../mgen-compiler/target/mgen-compiler-assembly-SNAPSHOT.jar -project="../mgen-compiler/src/test/resources/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
                                            
     ***************************************
     **                                   **
@@ -168,84 +167,98 @@ Example: Here is how we generate [one of the data models for testing MGen](https
     **                                   **
     ***************************************
                                            
-    Parsing command line args...ok
-      project: ../mgen-compiler/src/test/resources/project.xml
-      plugin_paths: ../mgen-cppgenerator/target/
+Parsing command line args...ok
+  project: ../mgen-compiler/src/test/resources/project.xml
+  plugin_paths: ../mgen-cppgenerator/target/
 
-    Detecting available plugins
-      --> detected available parsers: se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
-      --> detected available generators: se.culvertsoft.mgen.cpppack.generator.CppGenerator
+Parsing project...
+parsing project: /home/johan/git/mgen/mgen-compiler/src/test/resources/project.xml
+parsing project: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/project.xml
+parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule1.xml
+parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule2.xml
+parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule3.xml
+parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule1.xml
+parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule2.xml
+parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule3.xml
+ok
 
-    INFO: Using default parser 'se.culvertsoft.mgen.compiler.defaultparser.DefaultParser' (No -parser specified)
-    
-    Instantiating parser...ok
+Linking types...
+ok
 
-    Executing parser...
-    parsing project: /home/johan/git/mgen/mgen-compiler/src/test/resources/project.xml
-    parsing project: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/project.xml
-    parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule1.xml
-    parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule2.xml
-    parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule3.xml
-    parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule1.xml
-    parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule2.xml
-    parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule3.xml
-    ok
+Checking for type conflicts...
+ok
 
-    WARNING: Could not find specified generator 'se.culvertsoft.mgen.javapack.generator.JavaGenerator', skipping
-    Created generator: se.culvertsoft.mgen.cpppack.generator.CppGenerator
+Instantiating generators...
+WARNING: Could not find specified generator 'se.culvertsoft.mgen.javapack.generator.JavaGenerator', skipping
+WARNING: Could not find specified generator 'se.culvertsoft.mgen.jspack.generator.JavascriptGenerator', skipping
+Created generator: se.culvertsoft.mgen.cpppack.generator.CppGenerator
 
-    Generating code...ok
+Generating code...ok
 
-    Writing files to disk:
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/VectorR3.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/VectorR3.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Matrix4x4d.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Matrix4x4d.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Positioning.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Positioning.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Entity.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Entity.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Creature.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Creature.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Vehicle.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Vehicle.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Car.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Car.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Item.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/Item.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/EntityHolder.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/EntityHolder.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/GarageViewer.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/GarageViewer.cpp
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/World.h
-      writing: src_generated/test/cpp/gameworld/types/basemodule1/World.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVectorR3.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVectorR3.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepPositioning.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepPositioning.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntity.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntity.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCreature.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCreature.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVehicle.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVehicle.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCar.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCar.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepItem.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepItem.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntityHolder.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntityHolder.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepGarageViewer.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepGarageViewer.cpp
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepWorld.h
-      writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepWorld.cpp
-      writing: src_generated/test/cpp/gameworld/types/ClassRegistry.h
-      writing: src_generated/test/cpp/gameworld/types/ClassRegistry.cpp
-      writing: src_generated/test/cpp/gameworld/types/Dispatcher.h
-      writing: src_generated/test/cpp/gameworld/types/Dispatcher.cpp
-      writing: src_generated/test/cpp/gameworld/types/Handler.h
-      writing: src_generated/test/cpp/gameworld/types/Handler.cpp
-      writing: src_generated/test/cpp/gameworld/types/ForwardDeclare.h
+Writing files to disk:
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVectorR3.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVectorR3.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepPositioning.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepPositioning.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntity.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntity.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCreature.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCreature.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVehicle.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVehicle.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCar.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCar.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepItem.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepItem.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntityHolder.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntityHolder.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepGarageViewer.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepGarageViewer.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepWorld.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepWorld.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/priority.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/priority.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/transport.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/transport.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/kind.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/kind.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/VectorR3.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/VectorR3.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Matrix4x4d.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Matrix4x4d.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Positioning.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Positioning.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Entity.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Entity.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Creature.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Creature.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Vehicle.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Vehicle.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Car.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Car.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Item.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Item.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/EntityHolder.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/EntityHolder.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/GarageViewer.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/GarageViewer.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/World.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/World.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/Grade.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/Grade.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/AppConfigarion.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/AppConfigarion.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/StringContainer.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/StringContainer.cpp
+  writing: src_generated/test/cpp/gameworld/types/ClassRegistry.h
+  writing: src_generated/test/cpp/gameworld/types/ClassRegistry.cpp
+  writing: src_generated/test/cpp/gameworld/types/Dispatcher.h
+  writing: src_generated/test/cpp/gameworld/types/Dispatcher.cpp
+  writing: src_generated/test/cpp/gameworld/types/Handler.h
+  writing: src_generated/test/cpp/gameworld/types/Handler.cpp
+  writing: src_generated/test/cpp/gameworld/types/ForwardDeclare.h
+
+*** COMPILATION SUCCESS ***
 
 
 ### Using generated code
