@@ -21,11 +21,15 @@ public class StringDefaultValueImpl extends DefaultValueImpl implements StringDe
 	 */
 	@Override
 	public String value() {
-		return writtenString();
+		return m_value;
 	}
 
-	public StringDefaultValueImpl(final StringType typ, final String writtenString) {
-		super(typ, writtenString);
+	public StringDefaultValueImpl(final String value) {
+		super(StringType.INSTANCE);
+		m_value = value;
 	}
+	
+	private final String m_value;
+	
 
 }

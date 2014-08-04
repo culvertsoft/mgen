@@ -12,6 +12,7 @@ import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.Generator
 
 object BuiltInStaticLangGenerator {
@@ -29,7 +30,8 @@ abstract class BuiltInStaticLangGenerator extends Generator {
 
   implicit var currentModule: Module = null
 
-  override def generate(modules: java.util.List[Module], generatorSettings: java.util.Map[String, String]): java.util.List[GeneratedSourceFile] = {
+  override def generate(project: Project, generatorSettings: java.util.Map[String, String]): java.util.List[GeneratedSourceFile] = {
+    val modules = project.allModulesRecursively()
     val sources = modules.flatMap(generateSources(_, generatorSettings))
     val metaSources = generateMetaSources(modules, generatorSettings)
     sources ++ metaSources

@@ -33,14 +33,14 @@ public interface Module {
 	 * The written file path used to reference this module in its parent project
 	 * file.
 	 * 
-	 * @return The written file path to this module.
+	 * @return The written file path to this module. Returns null if not applicable.
 	 */
 	String filePath();
 
 	/**
 	 * The absolute file path calculated from \filePath().
 	 * 
-	 * @return The absolute file path to this module
+	 * @return The absolute file path to this module. Returns null if not applicable.
 	 */
 	String absoluteFilePath();
 

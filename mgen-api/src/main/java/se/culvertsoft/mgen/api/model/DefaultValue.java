@@ -11,14 +11,9 @@ public interface DefaultValue {
 	Type expectedType();
 
 	/**
-	 * The actual written default value string in the IDL
-	 */
-	String writtenString();
-
-	/**
-	 * If the compiler has yet linked this default values. Linking means the 
-	 * compiler running its second pass where custom class and enum types 
-	 * are linked to fields (going from being just names/strings).
+	 * If the compiler has yet linked this default values. Linking means the
+	 * compiler running its second pass where custom class and enum types are
+	 * linked to fields (going from being just names/strings).
 	 */
 	boolean isLinked();
 

@@ -3,7 +3,7 @@ require.config({
     paths: {
         mocks: EnvJasmine.mocksDir,
         specs: EnvJasmine.specsDir,
-        mGen: 'src/main/javascript/mgen-lib',
+        mGen: '../../../mgen-javascriptlib/src/main/javascript/mgen-lib',
         se_culvertsoft: 'src_generated/test/javascript/mgen-data'
     }
 });

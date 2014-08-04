@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.api.model;
 
 import java.util.List;
-import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.impl.GeneratorDescriptorImpl;
 
@@ -11,7 +10,7 @@ import se.culvertsoft.mgen.api.model.impl.GeneratorDescriptorImpl;
  * 
  * @author GiGurra
  */
-public interface Project {
+public interface Project extends ParsedSources {
 
 	/**
 	 * The given name of this project. This name is the same as the project.xml
@@ -20,14 +19,6 @@ public interface Project {
 	 * @return The name of this project.
 	 */
 	String name();
-
-	/**
-	 * Retrieves the settings map for this project. The settings are created
-	 * from: <command line args> + <project file settings>.
-	 * 
-	 * @return The settings for this project
-	 */
-	Map<String, String> settings();
 
 	/**
 	 * The file search path of this project's definition file, as written as
@@ -40,20 +31,6 @@ public interface Project {
 	 * The file absolute search path of this project's definition file.
 	 */
 	String absoluteFilePath();
-
-	/**
-	 * Returns the modules contained within this project.
-	 * 
-	 * @return The modules contained within this project.
-	 */
-	List<Module> modules();
-
-	/**
-	 * Returns the projects that this project depends on.
-	 * 
-	 * @return The projects that this project depends on.
-	 */
-	List<Project> dependencies();
 
 	/**
 	 * Returns the generators that were specified for this project.
@@ -76,10 +53,12 @@ public interface Project {
 	 * @return The found type, or null if none found
 	 */
 	Type findType(final String name);
-	
+
 	/**
-	 * Gets the parent project of this project (if it's a dependency), otherwise it returns null.
+	 * Gets the parent project of this project (if it's a dependency), otherwise
+	 * it returns null.
 	 */
 	Project parent();
+
 
 }

@@ -31,7 +31,8 @@ import ModelConversion.VdGenerator
 import ModelConversion.VdModule
 import ModelConversion.VdProject
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
+import se.culvertsoft.mgen.compiler.components.Project2Xml
+import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 
@@ -222,7 +223,7 @@ object Api2Vd {
     parent.getFields().add(fld)
     fld.setType(cvtFieldType(apiField, state))
     fld.setId16Bit(apiField.id())
-    fld.setDefaultValue(apiField.defaultValue().writtenString())
+    fld.setDefaultValue(Project2Xml.defaultVal2String(apiField.defaultValue))
     fld
   }
 
@@ -235,7 +236,7 @@ object Api2Vd {
     out.setOutputFolder(apiGenerator.getGeneratorSettings().get("output_path"))
     val settings = new java.util.HashMap[String, String]
     settings.putAll(apiGenerator.getGeneratorSettings())
-    settings.remove("generator_class_path")
+    settings.remove("class_path")
     settings.remove("output_path")
     settings.remove("classregistry_path")
     out.setSettings(settings)

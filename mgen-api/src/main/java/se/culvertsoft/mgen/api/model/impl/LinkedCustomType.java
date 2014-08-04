@@ -24,13 +24,14 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	private final Module m_module;
 	private final short m_id16Bit;
 	private CustomType m_superType;
-	private List<CustomType> m_superTypeHierarchy;
+	private List<CustomType> m_typeHierarchy;
 	private List<CustomType> m_subTypes;
 	private ArrayList<Field> m_fields;
 
 	private ArrayList<Field> m_fieldsInclSuper;
 	private Set<CustomType> m_referencedClasses;
 	private Set<EnumType> m_referencedEnums;
+    private String m_typeId16BitBase64Heirarchy;
 
 	public LinkedCustomType(
 			final String name,
@@ -40,11 +41,12 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 		super(TypeEnum.CUSTOM);
 		m_name = name;
 		m_fullName = module.path() + "." + m_name;
+        m_typeId16BitBase64Heirarchy = null;
 		m_id16Bit = id16Bit;
 		m_module = module;
 		m_superType = superType;
 		m_fields = new ArrayList<Field>();
-		m_superTypeHierarchy = null;
+		m_typeHierarchy = null;
 		m_subTypes = new ArrayList<CustomType>();
 		m_fieldsInclSuper = null;
 		m_referencedClasses = null;
@@ -127,6 +129,22 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 		return m_fieldsInclSuper;
 	}
 
+    @Override
+    public String typeId16BitBase64Hierarchy() {
+
+        if (m_typeId16BitBase64Heirarchy == null) {
+
+            String s = "";
+
+            for (CustomType customType : typeHierarchy())
+                s += customType.typeId16BitBase64();
+
+            m_typeId16BitBase64Heirarchy = s;
+        }
+
+        return  m_typeId16BitBase64Heirarchy;
+    }
+
 	@Override
 	public Set<CustomType> referencedClasses() {
 		if (m_referencedClasses == null)
@@ -135,22 +153,22 @@ public class LinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public List<CustomType> superTypeHierarchy() {
+	public List<CustomType> typeHierarchy() {
 
-		if (m_superTypeHierarchy == null) {
+		if (m_typeHierarchy == null) {
 
 			final List<CustomType> l = new ArrayList<CustomType>();
 
 			if (hasSuperType())
-				l.addAll(superType().superTypeHierarchy());
+				l.addAll(superType().typeHierarchy());
 
 			l.add(this);
 
-			m_superTypeHierarchy = l;
+			m_typeHierarchy = l;
 
 		}
 
-		return m_superTypeHierarchy;
+		return m_typeHierarchy;
 	}
 
 	@Override

@@ -11,10 +11,9 @@ import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
-import se.culvertsoft.mgen.compiler.Output
+import se.culvertsoft.mgen.compiler.components.Project2Xml
 import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
-import se.culvertsoft.mgen.compiler.defaultparser.FileUtils
-import se.culvertsoft.mgen.compiler.defaultparser.Project2Xml
+import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.visualdesigner.ClassRegistry
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.model.FilePath
@@ -248,7 +247,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
 
         val sources = Project2Xml(apiProject)
 
-        Output.write(sources)
+        FileUtils.writeIfChanged(sources)
 
         _currentSavedModel = Some(controller.model.deepCopy())
         updateWindowTitle()

@@ -112,7 +112,7 @@ Before passing this file to the MGen compiler, we probably want to specify which
     <Project>
     
       <Generator name="Java">
-        <generator_class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</generator_class_path>
+        <class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
         <output_path>src_generated/main/java</output_path>
         <classregistry_path>se.culvertsoft.mymodule</classregistry_path>
       </Generator>
