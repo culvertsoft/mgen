@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.compiler.defaultparser
+package se.culvertsoft.mgen.idlparser
 
 import scala.collection.JavaConversions.seqAsJavaList
 

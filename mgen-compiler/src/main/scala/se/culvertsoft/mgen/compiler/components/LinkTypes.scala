@@ -16,19 +16,11 @@ import se.culvertsoft.mgen.api.model.impl.ListTypeImpl
 import se.culvertsoft.mgen.api.model.impl.MapTypeImpl
 import se.culvertsoft.mgen.api.model.impl.ProjectImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
-import se.culvertsoft.mgen.compiler.defaultparser.ParseDefaultValue
 
 object LinkTypes {
 
   def apply(project: ProjectImpl) {
-    new Linkage(project).link()
-  }
-}
-
-private class Linkage(root: ProjectImpl) {
-
-  def link() {
-    link(root)
+    link(project)
   }
 
   private def replace(t: Type, owner: LinkedCustomType)(implicit lkup: TypeLookup): Type = {
@@ -85,7 +77,7 @@ private class Linkage(root: ProjectImpl) {
 
       val newFields = t.fields.map { f =>
         f.defaultValue match {
-          case d: UnlinkedDefaultValue => f.transform(ParseDefaultValue(f.typ, d.writtenString, t.module))
+          case d: UnlinkedDefaultValue => f.transform(d.parse(f.typ, t.module))
           case _ => f
         }
       }

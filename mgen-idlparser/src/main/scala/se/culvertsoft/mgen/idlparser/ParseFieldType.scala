@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.compiler.defaultparser
+package se.culvertsoft.mgen.idlparser
 
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.impl.ArrayTypeImpl

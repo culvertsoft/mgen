@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.compiler.defaultparser
+package se.culvertsoft.mgen.idlparser
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.seqAsJavaList
@@ -9,7 +9,7 @@ import se.culvertsoft.mgen.api.model.impl.LinkedCustomType
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
 import se.culvertsoft.mgen.api.util.CRC16
-import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
+import se.culvertsoft.mgen.idlparser.util.XmlUtils.RichXmlNode
 
 object ParseType {
 

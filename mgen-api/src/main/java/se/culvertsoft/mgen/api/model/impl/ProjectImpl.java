@@ -14,13 +14,13 @@ public class ProjectImpl extends ParsedSourcesImpl implements Project {
 	private String m_filePath;
 	private String m_absoluteFilePath;
 	private List<GeneratorDescriptorImpl> m_generators;
-	private final ProjectImpl m_parent;
+	private final Project m_parent;
 
 	public ProjectImpl(
 			final String name,
 			final String filePath,
 			final String absoluteFilePath,
-			final ProjectImpl parent) {
+			final Project parent) {
 		m_name = name;
 		m_filePath = filePath;
 		m_absoluteFilePath = absoluteFilePath;

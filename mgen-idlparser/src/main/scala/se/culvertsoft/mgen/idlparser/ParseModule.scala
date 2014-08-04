@@ -1,4 +1,6 @@
-package se.culvertsoft.mgen.compiler.defaultparser
+package se.culvertsoft.mgen.idlparser
+
+import java.io.File
 
 import scala.collection.JavaConversions.mapAsJavaMap
 import scala.collection.JavaConversions.seqAsJavaList
@@ -6,32 +8,26 @@ import scala.xml.XML.loadFile
 
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.model.impl.ModuleImpl
-import se.culvertsoft.mgen.compiler.util.FileUtils
-import se.culvertsoft.mgen.compiler.util.ThrowRTE
-import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
+import se.culvertsoft.mgen.idlparser.util.XmlUtils.RichXmlNode
 
 object ParseModule {
 
   def apply(
-    filePath: String,
+    file: File,
     settings0: Map[String, String],
-    searchPaths0: Seq[String],
     parent: Project): ModuleImpl = {
-
-    val file = FileUtils.findFile(filePath, searchPaths0)
-      .getOrElse(ThrowRTE(s"Could not find referenced module file: ${filePath}"))
 
     val absoluteFilePath = file.getCanonicalPath()
 
     println(s"parsing module: ${absoluteFilePath}")
 
     // Calculate module path
-    val modulePath = FileUtils.removeFileEnding(FileUtils.nameOf(filePath))
+    val modulePath = file.getName.split('.').dropRight(1).mkString(".")
 
     // Read in module xml source code 
     val moduleXml = scala.xml.Utility.trim(loadFile(file))
     if (moduleXml.label.toLowerCase() != "module") {
-      throw new RuntimeException(s"Tried to load $filePath as module, but it was not a module file!")
+      throw new RuntimeException(s"Tried to load ${file.getPath} as module, but it was not a module file!")
     }
 
     // Parse settings
@@ -40,7 +36,7 @@ object ParseModule {
     // Create the module
     val module = new ModuleImpl(
       modulePath,
-      filePath,
+      file.getPath,
       absoluteFilePath,
       settings,
       parent)

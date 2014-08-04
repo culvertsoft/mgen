@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.compiler.defaultparser
+package se.culvertsoft.mgen.compiler.projectparser
 
 import scala.collection.JavaConversions.mapAsJavaMap
 

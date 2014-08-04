@@ -4,7 +4,6 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsScalaMap
 import scala.xml.PrettyPrinter
 import scala.xml.Text
-
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
@@ -36,6 +35,7 @@ import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
 import se.culvertsoft.mgen.api.util.CRC16
+import se.culvertsoft.mgen.idlparser.IdlParser
 
 object Project2Xml {
 
@@ -47,7 +47,9 @@ object Project2Xml {
       <Project>
         { project.generators map generator2xml }
         { project.dependencies map dependency2xmlReference }
-        { project.modules.filter(_.types.nonEmpty) map { x => <Module>{ x.filePath() }</Module> } }
+        <Sources parser={ s"${classOf[IdlParser].getName}" }>
+          { project.modules.filter(_.types.nonEmpty) map { x => <Source>{ x.filePath }</Source> } }
+        </Sources>
       </Project>
 
     val sources = Nil ++

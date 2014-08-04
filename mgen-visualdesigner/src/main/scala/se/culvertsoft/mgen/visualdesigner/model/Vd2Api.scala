@@ -4,6 +4,7 @@ import java.io.File
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
+import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 
@@ -53,9 +54,9 @@ import ModelConversion.VdProject
 import ModelConversion.VdStringType
 import ModelConversion.VdUserTypeRef
 import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
-import se.culvertsoft.mgen.api.model.impl.UnlinkedDefaultValueImpl
 import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.compiler.components.LinkTypes
+import se.culvertsoft.mgen.idlparser.IdlDefaultValue
 import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
 
 class Vd2ApiConversionState(val srcModel: Model) {
@@ -126,7 +127,7 @@ object Vd2Api {
       cvtFieldType(vdField.getType()),
       vdField.getFlags(),
       getId16Bit(vdField),
-      if (vdField.hasDefaultValue()) new UnlinkedDefaultValueImpl(vdField.getDefaultValue()) else null)
+      if (vdField.hasDefaultValue()) new IdlDefaultValue(vdField.getDefaultValue()) else null)
   }
 
   private def cvtEnumEntry(vdEntry: VdEnumEntry, parentEnum: ApiEnum)(implicit cvState: Vd2ApiConversionState): ApiEnumEntryImpl = {

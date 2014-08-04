@@ -6,8 +6,9 @@ package se.culvertsoft.mgen.api.model;
 public interface UnlinkedDefaultValue extends DefaultValue {
 
 	/**
-	 * The actual written default value string in the IDL used 
+	 * Used for delayed parsing of the default value. This will be called after
+	 * the compiler has linked together types in a project.
 	 */
-	String writtenString();
+	DefaultValue parse(final Type fieldType, final Module parentModule);
 
 }

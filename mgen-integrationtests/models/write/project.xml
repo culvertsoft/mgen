@@ -23,6 +23,8 @@
 		<classregistry_path>se.culvertsoft.testmodule</classregistry_path>
 	</Generator>
 
-	<Module>se.culvertsoft.testmodule.xml</Module>
+	<Sources>
+		<Source>se.culvertsoft.testmodule.xml</Source>
+	</Sources>
 
 </Project>

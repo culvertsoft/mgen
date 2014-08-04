@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <Project>
-	<Module>se.culvertsoft.depmodule.xml</Module>
+	<Sources>
+		<Source>se.culvertsoft.depmodule.xml</Source>
+	</Sources>
 </Project>

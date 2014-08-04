@@ -2,18 +2,34 @@
 
 <Project>
 
+	<!-- = = = -->
+	<!-- INPUT -->
+	<!-- = = = -->
+
+	<Dependency>dependencies/project.xml</Dependency>
+
+	<Sources parser="se.culvertsoft.mgen.idlparser.IdlParser">
+		<Source>gameworld.types.basemodule1.xml</Source>
+		<Source>gameworld.types.basemodule2.xml</Source>
+		<Source>gameworld.types.basemodule3.xml</Source>
+	</Sources>
+
+	<!-- = == = -->
+	<!-- OUTPUT -->
+	<!-- = == = -->
+
 	<Generator name="Java">
 		<class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
 		<output_path>src_generated/test/java</output_path>
 		<classregistry_path>gameworld.types</classregistry_path>
 	</Generator>
 
-    <Generator name="Javascript">
-        <class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </class_path>
-        <output_path>src_generated/test/javascript</output_path>
-        <output_filename>mgen-data.js</output_filename>
-        <classregistryblueprint>mgen_classreg</classregistryblueprint>
-    </Generator>
+	<Generator name="Javascript">
+		<class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator</class_path>
+		<output_path>src_generated/test/javascript</output_path>
+		<output_filename>mgen-data.js</output_filename>
+		<classregistryblueprint>mgen_classreg</classregistryblueprint>
+	</Generator>
 
 	<Generator name="C++">
 		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</class_path>
@@ -21,11 +37,5 @@
 		<classregistry_path>gameworld.types</classregistry_path>
 		<generate_unity_build>true</generate_unity_build>
 	</Generator>
-
-	<Depend>dependencies/project.xml</Depend>
-
-	<Module>gameworld.types.basemodule1.xml</Module>
-	<Module>gameworld.types.basemodule2.xml</Module>
-	<Module>gameworld.types.basemodule3.xml</Module>
 
 </Project>

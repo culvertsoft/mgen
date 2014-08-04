@@ -6,7 +6,6 @@ import scala.collection.mutable.HashMap
 import se.culvertsoft.mgen.api.exceptions.TypeConflictException
 import se.culvertsoft.mgen.api.model.CustomType
 import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Project
 
 object CheckConflicts {
@@ -27,10 +26,6 @@ object CheckConflicts {
 
     val allModules = project.allModulesRecursively
     val allTypes = allModules.flatMap(_.types)
-
-    assertNoDuplicates(allModules, (m: Module) => m.path) { (m1, m2) =>
-      throw new TypeConflictException(s"Module defined twice with same path: ${m1.path} ")
-    }
 
     assertNoDuplicates(allTypes, (t: CustomType) => t.fullName) { (t1, t2) =>
       throw new TypeConflictException(s"Type defined twice with same class path: ${t1.fullName}")

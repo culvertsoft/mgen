@@ -3,25 +3,30 @@
 <Project>
 
 	<Generator name="Java">
-		<class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
+		<class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator
+		</class_path>
 		<output_path>src_generated/test/java</output_path>
 		<classregistry_path>trans.testmodel</classregistry_path>
 	</Generator>
 
-    <Generator name="Javascript">
-        <class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </class_path>
-        <output_path>src_generated/test/javascript</output_path>
-        <output_filename>mgen-data.trans.testmodel.js</output_filename>
-        <classregistryblueprint>mgen_classreg</classregistryblueprint>
-    </Generator>
+	<Generator name="Javascript">
+		<class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator
+		</class_path>
+		<output_path>src_generated/test/javascript</output_path>
+		<output_filename>mgen-data.trans.testmodel.js</output_filename>
+		<classregistryblueprint>mgen_classreg</classregistryblueprint>
+	</Generator>
 
 	<Generator name="C++">
-		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</class_path>
+		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator
+		</class_path>
 		<output_path>src_generated/test/cpp</output_path>
 		<classregistry_path>trans.testmodel</classregistry_path>
 		<generate_unity_build>true</generate_unity_build>
 	</Generator>
 
-	<Module>trans.testmodel.xml</Module>
+	<Sources>
+		<Source>trans.testmodel.xml</Source>
+	</Sources>
 
 </Project>

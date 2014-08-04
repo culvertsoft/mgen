@@ -13,8 +13,6 @@ crossPaths := false
 
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
-libraryDependencies += "se.culvertsoft" % "mgen-compiler" % version.value
-
 retrieveManaged := true
 
 libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
