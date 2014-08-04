@@ -180,7 +180,7 @@ Example: Here is how we generate [one of the data models for testing MGen](https
       parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule1.xml
       parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule2.xml
       parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule3.xml
-ok
+    ok
 
     Linking types...ok
 
