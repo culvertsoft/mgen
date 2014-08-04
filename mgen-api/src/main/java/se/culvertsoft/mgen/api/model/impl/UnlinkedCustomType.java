@@ -74,7 +74,10 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 		throw new MGenException("Type details unknown: Cannot call typeId16BitBase64()");
 	}
 
-	@Override
+    @Override
+    public String typeId16BitBase64Hierarchy() { throw new MGenException("Type details unknown: Cannot call typeId16BitBase64()"); }
+
+    @Override
 	public short typeId16Bit() {
 		throw new MGenException("Type details unknown: Cannot call typeId16Bit()");
 	}
@@ -105,8 +108,8 @@ public class UnlinkedCustomType extends TypeImpl implements CustomType {
 	}
 
 	@Override
-	public List<CustomType> superTypeHierarchy() {
-		throw new MGenException("Type details unknown: Cannot call superTypeHierarchy()");
+	public List<CustomType> typeHierarchy() {
+		throw new MGenException("Type details unknown: Cannot call typeHierarchy()");
 	}
 
 	@Override

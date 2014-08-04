@@ -16,10 +16,13 @@ object MkModuleClassRegistry {
       ln("blueprint.classes = {};")
       allTypes.foreach({ t =>
         scopeExt("blueprint.classes[\"" + t.fullName + "\"] = ", ";") {
-          ln("\"__t\": \"" + t.superTypeHierarchy().map(x => x.typeId16BitBase64()).mkString("") + "\",")
+          ln("\"__t\": \"" + t.typeHierarchy().map(x => x.typeId16BitBase64()).mkString("") + "\",")
           for (field <- t.fieldsInclSuper) {
             ln("\"" + field.name + "\": {")
             txtBuffer {
+              if(field.hasDefaultValue){
+                ln("\"default\": \"" + MkDefaultValue(field.defaultValue()) + "\",")
+              }
               ln("\"flags\": [" + field.flags().map(x => "\"" + x + "\"").mkString(",") + "],")
               ln("\"type\": \"" + getTypeName(field.typ()) + "\",")
               ln("\"hash\": \"" + field.idBase64() + "\"")
