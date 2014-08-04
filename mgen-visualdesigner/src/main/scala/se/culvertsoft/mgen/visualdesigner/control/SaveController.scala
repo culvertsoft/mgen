@@ -1,15 +1,20 @@
 package se.culvertsoft.mgen.visualdesigner.control
 
 import java.io.File
+
 import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.mutable.HashMap
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
+
 import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
+import se.culvertsoft.mgen.compiler.components.ParseProject
 import se.culvertsoft.mgen.compiler.components.Project2Xml
+import se.culvertsoft.mgen.compiler.plugins.PluginFinder
 import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.visualdesigner.ClassRegistry
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
@@ -17,10 +22,6 @@ import se.culvertsoft.mgen.visualdesigner.model.FilePath
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.ModelConversion
 import se.culvertsoft.mgen.visualdesigner.model.Module
-import se.culvertsoft.mgen.idlparser.IdlParser
-import se.culvertsoft.mgen.compiler.projectparser.ParseProject
-import se.culvertsoft.mgen.compiler.plugins.PluginFinder
-import scala.collection.mutable.HashMap
 
 class SaveController(controller: Controller, window: JFrame) extends SubController(controller) {
 
@@ -329,7 +330,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
 
       val settings = new HashMap[String, String]
       settings.put("project", file.getPath())
-      
+
       val pluginFinder = new PluginFinder(Nil)
       val project = ParseProject(settings.toMap, pluginFinder)
 
