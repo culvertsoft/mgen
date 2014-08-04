@@ -159,7 +159,8 @@ Here we run the compiler with two arguments, project and plugin_paths.
 
 Example: Here is how we generate [one of the data models for testing MGen](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources):
 
-                                           
+    java -jar MgenCompiler.jar -project="src/test/resources/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
+
     ***************************************
     **                                   **
     **                                   **
@@ -190,6 +191,7 @@ Example: Here is how we generate [one of the data models for testing MGen](https
       WARNING: Could not find specified generator 'se.culvertsoft.mgen.javapack.generator.JavaGenerator', skipping
       WARNING: Could not find specified generator 'se.culvertsoft.mgen.jspack.generator.JavascriptGenerator', skipping
       Created generator: se.culvertsoft.mgen.cpppack.generator.CppGenerator
+    ok
 
     Generating code...ok
 
