@@ -8,7 +8,7 @@ import se.culvertsoft.mgen.api.model.UserDefinedType
 
 class TypeLookup(
   val project: Project) {
-  val modules = project.modules
+  val modules = project.allModulesRecursively
 
   val classes = modules.flatMap(_.types)
   val enums = modules.flatMap(_.enums)

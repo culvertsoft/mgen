@@ -48,7 +48,13 @@ private class Linkage(root: ProjectImpl) {
         } else if (found.size == 1) {
           found.head
         } else {
-          throw new AnalysisException(s"Ambigously referenced type ${t.writtenType} in type ${owner}")
+
+          found.find(_.module == owner.module) match {
+            case Some(x) => x
+            case _ =>
+              throw new AnalysisException(s"Ambigously referenced type ${t.writtenType} in type ${owner}")
+          }
+
         }
 
       case _ => t
@@ -60,7 +66,7 @@ private class Linkage(root: ProjectImpl) {
   private def link(project: ProjectImpl) {
 
     implicit val typeLkup = new TypeLookup(project)
-    val classes = project.modules.flatMap(_.types).collect { case t: LinkedCustomType => t }
+    val classes = project.allModulesRecursively.flatMap(_.types).collect { case t: LinkedCustomType => t }
 
     // Link fields and super types
     for (t <- classes) {

@@ -7,7 +7,6 @@ import scala.collection.JavaConversions.mapAsJavaMap
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.plugins.Generator
@@ -16,6 +15,12 @@ import se.culvertsoft.mgen.compiler.components.GenerateCode
 import se.culvertsoft.mgen.compiler.defaultparser.DefaultParser
 import se.culvertsoft.mgen.compiler.plugins.PluginFinder
 import se.culvertsoft.mgen.compiler.util.FileUtils
+import se.culvertsoft.mgen.compiler.components.LinkTypes
+import se.culvertsoft.mgen.api.model.impl.ProjectImpl
+import se.culvertsoft.mgen.api.model.impl.ProjectImpl
+import se.culvertsoft.mgen.api.model.impl.ProjectImpl
+import se.culvertsoft.mgen.api.exceptions.AnalysisException
+import se.culvertsoft.mgen.compiler.components.CheckConflicts
 
 object MGen {
 
@@ -66,8 +71,20 @@ object MGen {
       println("ok\n")
 
       // Run the parsers
+      // TODO: Run a project parser instead, which merges modules from different sources,
+      // but does not allow duplicate type definitions
       println("Executing parser...")
-      val project = parser.parse(settings)
+      val project = parser.parse(settings).asInstanceOf[ProjectImpl]
+      println("ok\n")
+
+      // Link custom types and enums
+      println("Linking types...")
+      LinkTypes(project)
+      println("ok\n")
+
+      // Check for type conflicts (ids, names, hashes etc)
+      println("Checking for type conflicts...")
+      CheckConflicts(project)
       println("ok\n")
 
       // Find our selected generators
