@@ -1,13 +1,11 @@
 package se.culvertsoft.mgen.visualdesigner.control
 
 import java.io.File
-
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.HashMap
 import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
-
 import javax.swing.JFileChooser
 import javax.swing.JFrame
 import javax.swing.JOptionPane
@@ -22,6 +20,7 @@ import se.culvertsoft.mgen.visualdesigner.model.FilePath
 import se.culvertsoft.mgen.visualdesigner.model.Model
 import se.culvertsoft.mgen.visualdesigner.model.ModelConversion
 import se.culvertsoft.mgen.visualdesigner.model.Module
+import se.culvertsoft.mgen.compiler.components.LinkTypes
 
 class SaveController(controller: Controller, window: JFrame) extends SubController(controller) {
 
@@ -333,6 +332,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
 
       val pluginFinder = new PluginFinder(Nil)
       val project = ParseProject(settings.toMap, pluginFinder)
+      LinkTypes(project)
 
       println(s"Loading xml project: ${project.name}")
 
