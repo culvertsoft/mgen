@@ -21,11 +21,11 @@ lazy val mgen_api = project in file("mgen-api")
 
 lazy val mgen_idlparser = (project in file("mgen-idlparser")).dependsOn(mgen_api)
 
-lazy val mgen_jsonschemaparser = (project in file("mgen-jsonschemaparser")).dependsOn(mgen_api, mgen_compiler)
+lazy val mgen_jsonschemaparser = (project in file("mgen-jsonschemaparser")).dependsOn(mgen_api)
 
-lazy val mgen_protobufparser = (project in file("mgen-protobufparser")).dependsOn(mgen_api, mgen_compiler)
+lazy val mgen_protobufparser = (project in file("mgen-protobufparser")).dependsOn(mgen_api)
 
-lazy val mgen_xmlschemaparser = (project in file("mgen-xmlschemaparser")).dependsOn(mgen_api, mgen_compiler)
+lazy val mgen_xmlschemaparser = (project in file("mgen-xmlschemaparser")).dependsOn(mgen_api)
 
 lazy val mgen_compiler = (project in file("mgen-compiler")).dependsOn(mgen_api, mgen_idlparser)
 
