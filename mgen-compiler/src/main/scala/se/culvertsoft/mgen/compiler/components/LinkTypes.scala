@@ -2,18 +2,16 @@ package se.culvertsoft.mgen.compiler.components
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
+
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
-import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.ListType
-import se.culvertsoft.mgen.api.model.ListType
-import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.model.UnlinkedType
 import se.culvertsoft.mgen.api.model.UnlinkedDefaultValue
+import se.culvertsoft.mgen.api.model.UnlinkedType
 
 object LinkTypes {
 
@@ -61,11 +59,9 @@ object LinkTypes {
     // Link fields and super types
     for (t <- classes) {
       if (t.hasSuperType()) {
-        t.setSuperType(replace(t.superType, t).asInstanceOf[ClassType])
-        t.superType() match {
-          case s: ClassType => s.addSubType(t);
-          case _ =>
-        }
+        val newSuperType = replace(t.superType, t).asInstanceOf[ClassType]
+        t.setSuperType(newSuperType)
+        newSuperType.addSubType(t)
       }
       t.setFields(t.fields.map { f => f.transform(replace(f.typ, t)) })
     }

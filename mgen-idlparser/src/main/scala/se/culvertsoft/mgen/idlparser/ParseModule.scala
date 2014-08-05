@@ -7,7 +7,6 @@ import scala.collection.JavaConversions.seqAsJavaList
 import scala.xml.XML.loadFile
 
 import se.culvertsoft.mgen.api.model.Project
-import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.idlparser.util.XmlUtils.RichXmlNode
 
 object ParseModule {
@@ -15,7 +14,7 @@ object ParseModule {
   def apply(
     file: File,
     settings0: Map[String, String],
-    parent: Project): Module = {
+    project: Project) {
 
     val absoluteFilePath = file.getCanonicalPath()
 
@@ -34,24 +33,17 @@ object ParseModule {
     val settings = settings0 ++ moduleXml.getSettings()
 
     // Create the module
-    val module = new Module(
-      modulePath,
-      file.getPath,
-      absoluteFilePath,
-      settings,
-      parent)
+    val module = project.getOrCreateModule(modulePath, file.getPath, absoluteFilePath, settings);
 
     // Parse enumerations
     val enumsXml = moduleXml.getAllNodeContents("Enums")
     val enums = enumsXml.map { ParseEnum(_, module) }
-    module.setEnums(enums)
+    module.addEnums(enums)
 
     // Parse types
     val typesXml = moduleXml.getAllNodeContents("Types")
     val types = typesXml.map { ParseType(_, module) }
-    module.setTypes(types)
-
-    module
+    module.addClasses(types)
 
   }
 

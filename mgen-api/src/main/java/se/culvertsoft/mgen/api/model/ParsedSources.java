@@ -55,10 +55,24 @@ public class ParsedSources {
 	}
 
 	/**
+	 * Adds a new module
+	 */
+	public void addModule(Module module) {
+		m_modules.add(module);
+	}
+
+	/**
 	 * Replaces all dependencies
 	 */
 	public void setDependencies(List<Project> dependencies) {
 		m_dependencies = dependencies;
+	}
+
+	/**
+	 * Replaces all modules
+	 */
+	public void addDependency(Project dependency) {
+		m_dependencies.add(dependency);
 	}
 
 	/**
@@ -128,5 +142,30 @@ public class ParsedSources {
 		}
 		return null;
 	}
+	
 
+	/**
+	 * Convenience methods for finding a Module
+	 */
+	protected Module findModule(
+			final String name,
+			final HashSet<ParsedSources> alreadySearched) {
+
+		if (alreadySearched.contains(this))
+			return null;
+
+		alreadySearched.add(this);
+
+		for (final Module m : modules()) {
+			if (m.path().equals(name))
+				return m;
+		}
+
+		for (final Project d : m_dependencies) {
+			final Module m = d.findModule(name, alreadySearched);
+			if (m != null)
+				return m;
+		}
+		return null;
+	}
 }

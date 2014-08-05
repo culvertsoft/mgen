@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import se.culvertsoft.mgen.api.exceptions.AnalysisException;
+
 /**
  * A project represents a set of modules (see Module) parsed by the MGen
  * Compiler through a Parser.
@@ -71,6 +73,18 @@ public class Project extends ParsedSources {
 	}
 
 	/**
+	 * Searches the modules of this project and its dependencies for a module
+	 * with a specific fully qualified package name.
+	 */
+	public Module findModule(final String name) {
+		if (isRoot()) {
+			return findModule(name, new HashSet<ParsedSources>());
+		} else {
+			return m_parent.findModule(name);
+		}
+	}
+
+	/**
 	 * Gets the parent project of this project (if it's a dependency), otherwise
 	 * it returns null.
 	 */
@@ -104,6 +118,43 @@ public class Project extends ParsedSources {
 	 */
 	public void setGenerators(List<GeneratorDescriptor> generators) {
 		m_generators = generators;
+	}
+
+	/**
+	 * Convenience method for parsers.
+	 * 
+	 * Returns an existing module with the given module path or creates a new
+	 * one and adds it to this Project.
+	 * 
+	 * Both file paths must be supplied (cannot be null).
+	 * 
+	 * @Throws AnalysisException if a module with the given module path already
+	 *         exists but is in a different project that this.
+	 */
+	public Module getOrCreateModule(
+			final String modulePath,
+			final String filePath,
+			final String absoluteFilePath,
+			final java.util.Map<String, String> settings) {
+
+		final Module existingModule = findModule(modulePath);
+		if (existingModule != null) {
+			if (existingModule.parent() != this)
+				throw new AnalysisException(
+						"Types for module "
+								+ modulePath
+								+ " are defined in multiple projects. This is not (yet) allowed");
+			return existingModule;
+		} else {
+			final Module newModule = new Module(
+					modulePath,
+					filePath,
+					absoluteFilePath,
+					settings,
+					this);
+			addModule(newModule);
+			return newModule;
+		}
 	}
 
 	public Project(

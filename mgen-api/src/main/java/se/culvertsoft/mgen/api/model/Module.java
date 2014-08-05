@@ -82,8 +82,15 @@ public class Module {
 	/**
 	 * Replaces the classes of this module.
 	 */
-	public void setTypes(final List<ClassType> classes) {
+	public void setClasses(final List<ClassType> classes) {
 		m_classes.clear();
+		addClasses(classes);
+	}
+
+	/**
+	 * Replaces the classes of this module.
+	 */
+	public void addClasses(final List<ClassType> classes) {
 		m_classes.addAll(classes);
 	}
 
@@ -92,6 +99,13 @@ public class Module {
 	 */
 	public void setEnums(final List<EnumType> enums) {
 		m_enums.clear();
+		addEnums(enums);
+	}
+
+	/**
+	 * Replaces the enums of this module.
+	 */
+	public void addEnums(final List<EnumType> enums) {
 		m_enums.addAll(enums);
 	}
 

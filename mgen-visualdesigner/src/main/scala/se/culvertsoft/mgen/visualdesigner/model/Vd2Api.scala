@@ -196,7 +196,7 @@ object Vd2Api {
     cvState.apiObjLkup.put(fullModuleName, apiModule)
 
     apiModule.setEnums(vdModule.getEnums().map(cvtEnum(_, apiModule)))
-    apiModule.setTypes(vdModule.getTypes().map(cvtType(_, apiModule)))
+    apiModule.setClasses(vdModule.getTypes().map(cvtType(_, apiModule)))
 
     out += apiModule
     out ++= vdModule.getSubmodules().flatMap(cvtModule(_, apiProject, fullModuleName))
