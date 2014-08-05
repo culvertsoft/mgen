@@ -15,5 +15,5 @@ public interface BinaryTypeTag {
 	public static final byte TAG_STRING = (byte) 7;
 	public static final byte TAG_LIST = (byte) 8;
 	public static final byte TAG_MAP = (byte) 9;
-	public static final byte TAG_CUSTOM = (byte) 10;
+	public static final byte TAG_CLASS = (byte) 10;
 }

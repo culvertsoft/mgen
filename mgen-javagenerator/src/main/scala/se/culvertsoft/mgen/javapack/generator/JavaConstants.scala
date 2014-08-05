@@ -1,6 +1,9 @@
 package se.culvertsoft.mgen.javapack.generator
 
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
+import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.RuntimeEnumType
+import se.culvertsoft.mgen.api.model.RuntimeClassType
 
 object JavaConstants {
 
@@ -12,7 +15,6 @@ object JavaConstants {
   val metadataPkg = "se.culvertsoft.mgen.javapack.metadata"
   val apiPkg = "se.culvertsoft.mgen.api"
   val modelPkg = s"${apiPkg}.model"
-  val modelImplPkg = s"${modelPkg}.impl"
   val javapackPkg = "se.culvertsoft.mgen.javapack"
 
   val validatorClsString = s"Validator"
@@ -41,16 +43,16 @@ object JavaConstants {
   val eqTesterClsString = s"EqualityTester"
   val eqTesterClsStringQ = s"${javapackPkg}.util.${eqTesterClsString}"
 
-  val enumImplClsString = "EnumTypeImpl"
-  val enumImplClsStringQ = s"se.culvertsoft.mgen.api.model.impl.${enumImplClsString}"
-  
   val fieldIfcClsString = s"Field"
-  val fieldImplClsString = s"FieldImpl"
   val readerClsString = s"Reader"
   val fieldVisitorClsString = s"FieldVisitor"
+  
+  val runtimeEnumClsString = classOf[RuntimeEnumType].getSimpleName
+  val runtimeEnumClsStringQ = classOf[RuntimeEnumType].getName
+  val runtimeClassClsString = classOf[RuntimeClassType].getSimpleName
+  val runtimeClassClsStringQ = classOf[RuntimeClassType].getName
 
   val fieldIfcClsStringQ = s"${modelPkg}.${fieldIfcClsString}"
-  val fieldImplClsStringQ = s"${modelImplPkg}.${fieldImplClsString}"
   val readerClsStringQ = s"${javapackPkg}.serialization.${readerClsString}"
   val fieldVisitorClsStringQ = s"${javapackPkg}.serialization.${fieldVisitorClsString}"
 

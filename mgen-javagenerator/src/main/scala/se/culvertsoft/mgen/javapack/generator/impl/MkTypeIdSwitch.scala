@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
@@ -14,9 +14,9 @@ object MkTypeIdSwitch {
     addBreak: Boolean,
     nTabs: Int,
     defaultValue: String,
-    possibleTypes: Seq[CustomType],
-    caser: CustomType => String,
-    returner: CustomType => String,
+    possibleTypes: Seq[ClassType],
+    caser: ClassType => String,
+    returner: ClassType => String,
     depth: Int = 0)(implicit txtBuffer: SuperStringBuffer) {
 
     ln(nTabs, s"switch((i < ids.length ? ${transform("ids[i++]")} : $outOfBoundsCase)) {")

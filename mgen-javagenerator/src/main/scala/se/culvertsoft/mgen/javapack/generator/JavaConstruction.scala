@@ -1,13 +1,12 @@
 package se.culvertsoft.mgen.javapack.generator
 
-import scala.collection.mutable.HashMap
 import JavaTypeNames.getTypeName
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
+import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
-import se.culvertsoft.mgen.api.model.Field
 
 object JavaConstruction {
 
@@ -30,7 +29,7 @@ object JavaConstruction {
         val t = typ.asInstanceOf[ArrayType]
         s"new ${getTypeName(t.elementType(), false, true)}[0]"
       case TypeEnum.ENUM => s"${getTypeName(typ)}.UNKNOWN"
-      case TypeEnum.CUSTOM => s"new ${getTypeName(typ, isGenericArg)}()"
+      case TypeEnum.CLASS => s"new ${getTypeName(typ, isGenericArg)}()"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }
 
@@ -57,7 +56,7 @@ object JavaConstruction {
       case TypeEnum.MAP => "null"
       case TypeEnum.LIST => "null"
       case TypeEnum.ARRAY => "null"
-      case TypeEnum.CUSTOM => "null"
+      case TypeEnum.CLASS => "null"
       case TypeEnum.ENUM => "null"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }

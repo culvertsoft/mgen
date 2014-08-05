@@ -68,13 +68,17 @@ public class Marker {
 			return;
 		case ARRAY:
 			setArray(a, (ArrayType) type);
+			break;
 		case LIST:
 			setEntries((List<?>) a, ((ListType) type).elementType());
+			break;
 		case MAP:
 			setMap((Map<?, ?>) a, (MapType) type);
-		case CUSTOM:
+			break;
+		case CLASS:
 		case UNKNOWN:
 			setFieldSetDeep((MGenBase) a, null);
+			break;
 		}
 
 	}
@@ -102,6 +106,7 @@ public class Marker {
 			return;
 		default:
 			setArrayDeep((Object[]) a, arrayType);
+			break;
 		}
 	}
 

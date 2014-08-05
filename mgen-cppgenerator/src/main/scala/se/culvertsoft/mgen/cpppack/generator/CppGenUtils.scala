@@ -1,10 +1,9 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.api.model.TypeEnum
+import se.culvertsoft.mgen.api.model.ClassType
+import se.culvertsoft.mgen.api.model.UserDefinedType
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.api.model.UserDefinedType
 
 object CppGenUtils {
 
@@ -17,12 +16,12 @@ object CppGenUtils {
   def include(path: String)(implicit txtBuffer: SuperStringBuffer) {
     txtBuffer.textln("#include \"" + path + "\"")
   }
-  
+
   def includeT(path: String)(implicit txtBuffer: SuperStringBuffer) {
     txtBuffer.textln("#include <" + path + ">")
   }
 
-  def getSuperTypeString(t: CustomType): String = {
+  def getSuperTypeString(t: ClassType): String = {
     if (!t.hasSuperType())
       "mgen::MGenBase"
     else {

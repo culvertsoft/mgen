@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.javapack.generator.impl
 import scala.collection.JavaConversions.asScalaBuffer
 
 import Alias.fieldId
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
@@ -14,7 +14,7 @@ import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
 
 object MkReadField {
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val m = module
 

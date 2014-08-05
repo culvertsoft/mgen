@@ -12,8 +12,8 @@ object MkDispatcher {
 
   def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
 
-    val allTypes = referencedModules.flatMap(_.types)
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
+    val allClasses = referencedModules.flatMap(_.classes)
+    val topLevelClasses = allClasses.filterNot(_.hasSuperType)
 
     txtBuffer.clear()
 
@@ -37,7 +37,7 @@ object MkDispatcher {
       ln(2, "final short[] ids = o._typeIds16Bit();")
       ln(2, "int i = 0;")
 
-      MkTypeIdSwitch.apply(s => s"(int)$s", "0xFFFFFFFF", true, 2, "handler.handleUnknown(o);", topLevelTypes, typeIdStr16bit, t => s"handler.handle((${t.fullName()})o);")
+      MkTypeIdSwitch.apply(s => s"(int)$s", "0xFFFFFFFF", true, 2, "handler.handleUnknown(o);", topLevelClasses, typeIdStr16bit, t => s"handler.handle((${t.fullName()})o);")
 
       ln(1, "}").endl()
 

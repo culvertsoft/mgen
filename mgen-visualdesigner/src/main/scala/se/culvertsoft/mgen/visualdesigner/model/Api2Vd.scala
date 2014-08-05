@@ -172,7 +172,7 @@ object Api2Vd {
         }
         vdModule.setSaveDir(getSaveDir(apiModule))
         vdModule.setSettings(toJava(apiModule.settings()))
-        vdModule.setTypes(toJava(apiModule.types.map(cvtClass(_, vdModule, state))))
+        vdModule.setTypes(toJava(apiModule.classes.map(cvtClass(_, vdModule, state))))
         vdModule.setEnums(toJava(apiModule.enums.map(cvtEnum(_, vdModule, state))))
         vdModule
     }
@@ -198,7 +198,7 @@ object Api2Vd {
   }
 
   def cvtClass(apiClass: ApiCustomType, parent: VdModule, state: Api2VdConversionState): VdClass = {
-    val cls = EntityFactory.mkClass(apiClass.name)
+    val cls = EntityFactory.mkClass(apiClass.shortName)
     state.markConverted(apiClass, cls)
 
     if (apiClass.hasSuperType) {

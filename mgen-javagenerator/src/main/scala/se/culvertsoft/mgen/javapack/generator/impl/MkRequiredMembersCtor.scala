@@ -4,7 +4,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 
 import Alias.isSetName
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
@@ -14,7 +14,7 @@ import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.fieldTypeName
 
 object MkRequiredMembersCtor {
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val m = module
 
@@ -22,7 +22,7 @@ object MkRequiredMembersCtor {
     val reqFields = t.fieldsInclSuper().filter(_.isRequired())
 
     if (reqFields.nonEmpty && reqAndOptFields != reqFields) {
-      txt(1, s"public ${t.name()}(")
+      txt(1, s"public ${t.shortName}(")
       for (i <- 0 until reqFields.size()) {
         val field = reqFields.get(i)
         val isLastField = i + 1 == reqFields.size()

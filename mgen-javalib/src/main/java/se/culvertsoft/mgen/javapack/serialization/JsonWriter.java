@@ -8,10 +8,10 @@ import java.util.List;
 import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
-import se.culvertsoft.mgen.api.model.CustomType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
+import se.culvertsoft.mgen.api.model.RuntimeClassType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
@@ -57,7 +57,9 @@ public class JsonWriter extends TextFormatWriter {
 		this(outputStream, classRegistry, compact, DEFAULT_MAX_DEPTH);
 	}
 
-	public JsonWriter(final OutputStream outputStream, final ClassRegistryBase classRegistry) {
+	public JsonWriter(
+			final OutputStream outputStream,
+			final ClassRegistryBase classRegistry) {
 		this(outputStream, classRegistry, DEFAULT_COMPACT);
 	}
 
@@ -69,13 +71,15 @@ public class JsonWriter extends TextFormatWriter {
 	}
 
 	@Override
-	public void writeMGenObjectField(MGenBase o, Field field) throws IOException {
+	public void writeMGenObjectField(MGenBase o, Field field)
+			throws IOException {
 		beginWritePair(field.name());
-		writeMGenObject(o, (CustomType) field.typ());
+		writeMGenObject(o, (RuntimeClassType) field.typ());
 	}
 
 	@Override
-	public void beginWrite(final MGenBase o, final int nFields) throws IOException {
+	public void beginWrite(final MGenBase o, final int nFields)
+			throws IOException {
 	}
 
 	@Override
@@ -83,61 +87,71 @@ public class JsonWriter extends TextFormatWriter {
 	}
 
 	@Override
-	public void writeBooleanField(final boolean b, final Field field) throws IOException {
+	public void writeBooleanField(final boolean b, final Field field)
+			throws IOException {
 		beginWritePair(field.name());
 		write(b);
 	}
 
 	@Override
-	public void writeInt8Field(final byte b, final Field field) throws IOException {
+	public void writeInt8Field(final byte b, final Field field)
+			throws IOException {
 		beginWritePair(field.name());
 		write(b);
 	}
 
 	@Override
-	public void writeInt16Field(final short s, final Field field) throws IOException {
+	public void writeInt16Field(final short s, final Field field)
+			throws IOException {
 		beginWritePair(field.name());
 		write(s);
 	}
 
 	@Override
-	public void writeInt32Field(final int i, final Field field) throws IOException {
+	public void writeInt32Field(final int i, final Field field)
+			throws IOException {
 		beginWritePair(field.name());
 		write(i);
 	}
 
 	@Override
-	public void writeInt64Field(final long l, final Field field) throws IOException {
+	public void writeInt64Field(final long l, final Field field)
+			throws IOException {
 		beginWritePair(field.name());
 		write(l);
 	}
 
 	@Override
-	public void writeFloat32Field(final float f, final Field field) throws IOException {
+	public void writeFloat32Field(final float f, final Field field)
+			throws IOException {
 		beginWritePair(field.name());
 		write(f);
 	}
 
 	@Override
-	public void writeFloat64Field(final double d, final Field field) throws IOException {
+	public void writeFloat64Field(final double d, final Field field)
+			throws IOException {
 		beginWritePair(field.name());
 		write(d);
 	}
 
 	@Override
-	public void writeStringField(final String s, final Field f) throws IOException {
+	public void writeStringField(final String s, final Field f)
+			throws IOException {
 		beginWritePair(f.name());
 		writeQuoteEscaped(s);
 	}
 
 	@Override
-	public void writeListField(final ArrayList<Object> list, final Field f) throws IOException {
+	public void writeListField(final ArrayList<Object> list, final Field f)
+			throws IOException {
 		beginWritePair(f.name());
 		writeList(list, (ListType) f.typ());
 	}
 
 	@Override
-	public void writeMapField(final HashMap<Object, Object> m, final Field f) throws IOException {
+	public void writeMapField(final HashMap<Object, Object> m, final Field f)
+			throws IOException {
 		beginWritePair(f.name());
 		writeMap(m, (MapType) f.typ());
 	}
@@ -183,12 +197,14 @@ public class JsonWriter extends TextFormatWriter {
 		m_iEntry[m_depth]++;
 	}
 
-	protected void endBlock(final String endString, final boolean hasContents) throws IOException {
+	protected void endBlock(final String endString, final boolean hasContents)
+			throws IOException {
 		m_depth--;
 		write(endString);
 	}
 
-	private void writeMGenObject(MGenBase o, CustomType expectType) throws IOException {
+	private void writeMGenObject(MGenBase o, RuntimeClassType expectType)
+			throws IOException {
 		if (o == null) {
 			write("null");
 		} else {
@@ -245,9 +261,8 @@ public class JsonWriter extends TextFormatWriter {
 		case MAP:
 			writeMap((Map<Object, Object>) o, (MapType) typ);
 			break;
-		case UNKNOWN:
-		case CUSTOM:
-			writeMGenObject((MGenBase) o, (CustomType) typ);
+		case CLASS:
+			writeMGenObject((MGenBase) o, (RuntimeClassType) typ);
 			break;
 		default:
 			throw new SerializationException("Unknown type for writeObject");
@@ -255,7 +270,8 @@ public class JsonWriter extends TextFormatWriter {
 
 	}
 
-	private void writeList(List<Object> objects, ListType typ) throws IOException {
+	private void writeList(List<Object> objects, ListType typ)
+			throws IOException {
 		if (objects == null) {
 			write("null");
 		} else {
@@ -268,7 +284,8 @@ public class JsonWriter extends TextFormatWriter {
 		}
 	}
 
-	private void writeMap(Map<Object, Object> m, MapType typ) throws IOException {
+	private void writeMap(Map<Object, Object> m, MapType typ)
+			throws IOException {
 		if (m == null) {
 			write("null");
 		} else {
@@ -316,12 +333,12 @@ public class JsonWriter extends TextFormatWriter {
 			case ARRAY:
 			case LIST:
 			case MAP:
-			case UNKNOWN:
-			case CUSTOM:
+			case CLASS:
 				writeObjectArray((Object[]) o, typ);
 				break;
 			default:
-				throw new SerializationException("Don't know how to write array of type " + typ);
+				throw new SerializationException(
+						"Don't know how to write array of type " + typ);
 			}
 		}
 	}
@@ -461,7 +478,8 @@ public class JsonWriter extends TextFormatWriter {
 		endBlock("]", o.length != 0);
 	}
 
-	private void writeObjectArray(final Object[] objects, final ArrayType typ) throws IOException {
+	private void writeObjectArray(final Object[] objects, final ArrayType typ)
+			throws IOException {
 
 		if (objects == null) {
 			write("null");
@@ -485,7 +503,9 @@ public class JsonWriter extends TextFormatWriter {
 		m_iEntry[m_depth] = 0;
 	}
 
-	private boolean needWriteTypeId(final MGenBase o, final CustomType expectType) {
+	private boolean needWriteTypeId(
+			final MGenBase o,
+			final RuntimeClassType expectType) {
 		if (expectType == null || !m_compact)
 			return true;
 		return o._typeId() != expectType.typeId();
@@ -541,7 +561,8 @@ public class JsonWriter extends TextFormatWriter {
 				break;
 			default:
 				// Reference: http://www.unicode.org/versions/Unicode5.1.0/
-				if ((ch >= '\u0000' && ch <= '\u001F') || (ch >= '\u007F' && ch <= '\u009F')
+				if ((ch >= '\u0000' && ch <= '\u001F')
+						|| (ch >= '\u007F' && ch <= '\u009F')
 						|| (ch >= '\u2000' && ch <= '\u20FF')) {
 					String ss = Integer.toHexString(ch);
 					write("\\u");

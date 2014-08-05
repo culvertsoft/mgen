@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.cpppack.generator.impl.utilh
 
 import scala.collection.JavaConversions.asScalaBuffer
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
@@ -13,9 +13,9 @@ object MkTypeIdSwitch {
     addBreak: Boolean,
     nTabs: Int,
     defaultValue: String,
-    possibleTypes: Seq[CustomType],
-    caser: CustomType => String,
-    returner: CustomType => String)(implicit txtBuffer: SuperStringBuffer) {
+    possibleTypes: Seq[ClassType],
+    caser: ClassType => String,
+    returner: ClassType => String)(implicit txtBuffer: SuperStringBuffer) {
 
     ln(nTabs, s"switch(i < ids.size() ? ${transform("ids[i++]")} : mgen::ClassRegistryBase::INVALID_16BIT_ID) {")
 

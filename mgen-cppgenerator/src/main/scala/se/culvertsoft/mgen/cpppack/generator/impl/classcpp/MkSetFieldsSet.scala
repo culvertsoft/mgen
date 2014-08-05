@@ -1,24 +1,24 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 
-import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator._
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
-import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.cpppack.generator.CppConstruction
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
-import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
-import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
-import se.culvertsoft.mgen.cpppack.generator.CppGenerator
-import se.culvertsoft.mgen.api.model.MapType
-import se.culvertsoft.mgen.api.model.ListType
+import scala.collection.JavaConversions.asScalaBuffer
+
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.ListOrArrayType
+import se.culvertsoft.mgen.api.model.MapType
+import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.cpppack.generator.CppConstruction
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isFieldSet
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.setFieldSet
 
 object MkSetFieldsSet {
 
   def apply(
-    t: CustomType,
+    t: ClassType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module
@@ -43,7 +43,7 @@ object MkSetFieldsSet {
         def setGeneric() {
           ln(1, "if (!state)")
           ln(2, s"m_${field.name}.clear();")
-          if (t.containsCustomType()) {
+          if (t.containsUserDefinedType()) {
             ln(1, s"else if (depth == mgen::DEEP)")
             ln(2, s"mgen::validation::setFieldSetDeep(m_${field.name()});")
           }
@@ -62,7 +62,7 @@ object MkSetFieldsSet {
         field.typ() match {
           case t: MapType => setGeneric()
           case t: ListOrArrayType => setGeneric()
-          case t: CustomType => setCustom()
+          case t: ClassType => setCustom()
           case _ => setByDefCtor()
         }
 

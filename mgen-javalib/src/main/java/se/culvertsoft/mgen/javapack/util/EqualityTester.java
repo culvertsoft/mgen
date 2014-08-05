@@ -204,8 +204,8 @@ public class EqualityTester {
 			return areListsEqual((List<?>) a, (List<?>) b, (ListType) type);
 		case MAP:
 			return areMapsEqual((Map<?, ?>) a, (Map<?, ?>) b, (MapType) type);
-		case CUSTOM:
 		case UNKNOWN:
+		case CLASS:
 			return areEqual((MGenBase) a, (MGenBase) b, type);
 		}
 

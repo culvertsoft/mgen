@@ -6,7 +6,7 @@ import Alias.name
 import Alias.typeIdStr
 import Alias.typeIdStr16BitBase64
 import Alias.typeIdStr16bit
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
@@ -14,7 +14,7 @@ import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 object MkTypeIdFields {
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val m = module
 

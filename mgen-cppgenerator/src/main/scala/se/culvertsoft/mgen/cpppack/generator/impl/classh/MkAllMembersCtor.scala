@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.cpppack.generator.impl.classh
 
 import scala.collection.JavaConversions.asScalaBuffer
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
@@ -10,14 +10,14 @@ import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
 object MkAllMembersCtor {
 
   def apply(
-    t: CustomType,
+    t: ClassType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module
 
     val allFields = t.fieldsInclSuper();
     if (allFields.nonEmpty) {
-      txtBuffer.tabs(1).text(s"${t.name()}(")
+      txtBuffer.tabs(1).text(s"${t.shortName}(")
       for (i <- 0 until allFields.size()) {
         val field = allFields.get(i)
         val isLastField = i + 1 == allFields.size()

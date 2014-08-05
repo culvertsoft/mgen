@@ -4,14 +4,13 @@ import java.io.File
 
 import scala.collection.JavaConversions.seqAsJavaList
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.PrimitiveType
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
@@ -73,19 +72,19 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     def mkClasReg(): GeneratedSourceFile = {
       val fileName = "ClassRegistry" + ".java"
       val sourceCode = MkClassRegistry(referencedModules, packagePath)
-      new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
+      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
     def mkDispatcher(): GeneratedSourceFile = {
       val fileName = "Dispatcher" + ".java"
       val sourceCode = MkDispatcher(referencedModules, packagePath)
-      new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
+      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
     def mkHandler(): GeneratedSourceFile = {
       val fileName = "Handler" + ".java"
       val sourceCode = MkHandler(referencedModules, packagePath)
-      new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
+      new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
     val clsRegistry = mkClasReg()
@@ -96,21 +95,21 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
 
   }
 
-  override def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+  override def generateClassSources(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     val folder = getModuleFolderPath(module, generatorSettings)
-    val fileName = t.name() + ".java"
+    val fileName = t.shortName + ".java"
     val sourceCode = generateClassSourceCode(t)
-    List(new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode))
+    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
   }
 
   override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     val folder = getModuleFolderPath(module, generatorSettings)
     val fileName = t.shortName() + ".java"
     val sourceCode = generateEnumSourceCode(t)
-    List(new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode))
+    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
   }
 
-  def generateClassSourceCode(t: CustomType): String = {
+  def generateClassSourceCode(t: ClassType): String = {
     txtBuffer.clear()
     mkPublicSection(t)
     mkMetadataMethodsSection(t)
@@ -122,7 +121,7 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkEnum(t, t.module.path)
   }
 
-  def mkPublicSection(t: CustomType) {
+  def mkPublicSection(t: ClassType) {
     MkFancyHeader(t)
     MkPackage(currentModule)
     MkImports(t, currentModule)
@@ -139,7 +138,7 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkDeepCopy(t, currentModule)
   }
 
-  def mkMetadataMethodsSection(t: CustomType) {
+  def mkMetadataMethodsSection(t: ClassType) {
     MkMetadataMethodsComment(t)
     MkTypeIdMethods(t, currentModule)
     MkAcceptVisitor(t, currentModule)
@@ -152,7 +151,7 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkFieldById(t, currentModule)
   }
 
-  def mkMetadataFieldsSection(t: CustomType) {
+  def mkMetadataFieldsSection(t: ClassType) {
     MkMetadataComment(t)
     MkTypeIdFields(t, currentModule)
     MkFieldMetaData(t, currentModule)

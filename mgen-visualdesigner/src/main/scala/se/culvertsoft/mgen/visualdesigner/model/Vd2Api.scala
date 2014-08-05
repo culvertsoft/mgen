@@ -4,33 +4,31 @@ import java.io.File
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
-import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.ArrayBuffer
 import scala.collection.mutable.HashMap
 
-import ModelConversion.ApiArrayTypeImpl
+import ModelConversion.ApiArrayType
 import ModelConversion.ApiBoolTypeInstance
-import ModelConversion.ApiClassImpl
-import ModelConversion.ApiCustomType
+import ModelConversion.ApiClass
 import ModelConversion.ApiEntity
 import ModelConversion.ApiEnum
-import ModelConversion.ApiEnumEntryImpl
-import ModelConversion.ApiEnumTypeImpl
+import ModelConversion.ApiEnumEntry
+import ModelConversion.ApiEnumType
 import ModelConversion.ApiField
-import ModelConversion.ApiFieldImpl
 import ModelConversion.ApiFloat32TypeInstance
 import ModelConversion.ApiFloat64TypeInstance
-import ModelConversion.ApiGeneratorImpl
+import ModelConversion.ApiGenerator
 import ModelConversion.ApiInt16TypeInstance
 import ModelConversion.ApiInt32TypeInstance
 import ModelConversion.ApiInt64TypeInstance
 import ModelConversion.ApiInt8TypeInstance
-import ModelConversion.ApiListTypeImpl
-import ModelConversion.ApiMapTypeImpl
-import ModelConversion.ApiModuleImpl
-import ModelConversion.ApiProjectImpl
+import ModelConversion.ApiListType
+import ModelConversion.ApiMapType
+import ModelConversion.ApiModule
+import ModelConversion.ApiProject
 import ModelConversion.ApiStringTypeInstance
 import ModelConversion.ApiType
+import ModelConversion.ApiUserDefinedType
 import ModelConversion.VdArrayType
 import ModelConversion.VdBoolType
 import ModelConversion.VdClass
@@ -53,7 +51,7 @@ import ModelConversion.VdModule
 import ModelConversion.VdProject
 import ModelConversion.VdStringType
 import ModelConversion.VdUserTypeRef
-import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType
+import se.culvertsoft.mgen.api.model.UnlinkedType
 import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.compiler.components.LinkTypes
 import se.culvertsoft.mgen.idlparser.IdlDefaultValue
@@ -67,24 +65,24 @@ class Vd2ApiConversionState(val srcModel: Model) {
 object Vd2Api {
   import ModelConversion._
 
-  private def cvtGenerator(vdGenerator: VdGenerator)(implicit cvState: Vd2ApiConversionState): ApiGeneratorImpl = {
+  private def cvtGenerator(vdGenerator: VdGenerator)(implicit cvState: Vd2ApiConversionState): ApiGenerator = {
     val settings = new java.util.HashMap[String, String](vdGenerator.getSettings())
     settings.put("jar_file_folder", vdGenerator.getGeneratorJarFileFolder())
     settings.put("class_path", vdGenerator.getGeneratorClassName())
     settings.put("output_path", vdGenerator.getOutputFolder())
     settings.put("classregistry_path", vdGenerator.getClassRegistryPath())
-    new ApiGeneratorImpl(vdGenerator.getName(), vdGenerator.getGeneratorClassName(), settings)
+    new ApiGenerator(vdGenerator.getName(), vdGenerator.getGeneratorClassName(), settings)
   }
 
-  private def getApiCustomType(fullClassPath: String)(implicit cvState: Vd2ApiConversionState): ApiCustomType = {
-    cvState.apiObjLkup.getOrElseUpdate(fullClassPath, new UnlinkedCustomType(fullClassPath, -1)).asInstanceOf[ApiCustomType]
+  private def getApiCustomType(fullClassPath: String)(implicit cvState: Vd2ApiConversionState): ApiUserDefinedType = {
+    cvState.apiObjLkup.getOrElseUpdate(fullClassPath, new UnlinkedType(fullClassPath)).asInstanceOf[ApiUserDefinedType]
   }
 
-  private def getApiCustomType(vdType: VdClass)(implicit cvState: Vd2ApiConversionState): ApiCustomType = {
+  private def getApiCustomType(vdType: VdClass)(implicit cvState: Vd2ApiConversionState): ApiUserDefinedType = {
     getApiCustomType(Type2String.getClassPath(vdType)(cvState.srcModel))
   }
 
-  private def getApiCustomType(vdType: UserTypeRef)(implicit cvState: Vd2ApiConversionState): ApiType = {
+  private def getApiCustomType(vdType: UserTypeRef)(implicit cvState: Vd2ApiConversionState): ApiUserDefinedType = {
     getApiCustomType(cvState.srcModel.getEntity(vdType.getId()).get.asInstanceOf[VdClass])
   }
 
@@ -98,9 +96,9 @@ object Vd2Api {
       case t: VdFloat32Type => ApiFloat32TypeInstance
       case t: VdFloat64Type => ApiFloat64TypeInstance
       case t: VdStringType => ApiStringTypeInstance
-      case t: VdListType => new ApiListTypeImpl(cvtFieldType(t.getElementType()))
-      case t: VdArrayType => new ApiArrayTypeImpl(cvtFieldType(t.getElementType()))
-      case t: VdMapType => new ApiMapTypeImpl(cvtFieldType(t.getKeyType), cvtFieldType(t.getValueType))
+      case t: VdListType => new ApiListType(cvtFieldType(t.getElementType()))
+      case t: VdArrayType => new ApiArrayType(cvtFieldType(t.getElementType()))
+      case t: VdMapType => new ApiMapType(cvtFieldType(t.getKeyType), cvtFieldType(t.getValueType))
       case t: VdUserTypeRef => getApiCustomType(t)
       case _ => throw new RuntimeException(s"Unknown field type: ${t}")
     }
@@ -121,7 +119,7 @@ object Vd2Api {
   }
 
   private def cvtField(vdField: VdField, parentClass: ApiType)(implicit cvState: Vd2ApiConversionState): ApiField = {
-    new ApiFieldImpl(
+    new ApiField(
       parentClass.fullName(),
       vdField.getName(),
       cvtFieldType(vdField.getType()),
@@ -130,15 +128,15 @@ object Vd2Api {
       if (vdField.hasDefaultValue()) new IdlDefaultValue(vdField.getDefaultValue()) else null)
   }
 
-  private def cvtEnumEntry(vdEntry: VdEnumEntry, parentEnum: ApiEnum)(implicit cvState: Vd2ApiConversionState): ApiEnumEntryImpl = {
-    new ApiEnumEntryImpl(vdEntry.getName(), vdEntry.getConstant())
+  private def cvtEnumEntry(vdEntry: VdEnumEntry, parentEnum: ApiEnum)(implicit cvState: Vd2ApiConversionState): ApiEnumEntry = {
+    new ApiEnumEntry(vdEntry.getName(), vdEntry.getConstant())
   }
 
-  private def cvtEnum(vdEnum: VdEnum, parentModule: ApiModuleImpl)(implicit cvState: Vd2ApiConversionState): ApiEnumTypeImpl = {
+  private def cvtEnum(vdEnum: VdEnum, parentModule: ApiModule)(implicit cvState: Vd2ApiConversionState): ApiEnumType = {
 
     implicit val model = cvState.srcModel
 
-    val t = new ApiEnumTypeImpl(vdEnum.getName(), Type2String.getClassPath(vdEnum), parentModule)
+    val t = new ApiEnumType(vdEnum.getName(), Type2String.getClassPath(vdEnum), parentModule)
 
     cvState.apiObjLkup.put(Type2String.getClassPath(vdEnum), t)
 
@@ -147,7 +145,7 @@ object Vd2Api {
     t
   }
 
-  private def cvtType(vdClass: VdClass, parentModule: ApiModuleImpl)(implicit cvState: Vd2ApiConversionState): ApiClassImpl = {
+  private def cvtType(vdClass: VdClass, parentModule: ApiModule)(implicit cvState: Vd2ApiConversionState): ApiClass = {
 
     implicit val model = cvState.srcModel
 
@@ -157,7 +155,7 @@ object Vd2Api {
       else
         null
 
-    val t = new ApiClassImpl(vdClass.getName(), parentModule, getId16Bit(vdClass), apiSuperType)
+    val t = new ApiClass(vdClass.getName(), parentModule, getId16Bit(vdClass), apiSuperType)
 
     cvState.apiObjLkup.put(Type2String.getClassPath(vdClass), t)
 
@@ -181,14 +179,14 @@ object Vd2Api {
       absolutePrepend + fullModuleName + ".xml")
   }
 
-  private def cvtModule(vdModule: VdModule, apiProject: ApiProjectImpl, parentPath: String = "")(implicit cvState: Vd2ApiConversionState): Seq[ApiModuleImpl] = {
+  private def cvtModule(vdModule: VdModule, apiProject: ApiProject, parentPath: String = "")(implicit cvState: Vd2ApiConversionState): Seq[ApiModule] = {
 
-    val out = new ArrayBuffer[ApiModuleImpl]
+    val out = new ArrayBuffer[ApiModule]
 
     val fullModuleName = if (parentPath.nonEmpty) s"${parentPath}.${vdModule.getName()}" else vdModule.getName
     val savePath = getSavePath(vdModule, fullModuleName)
 
-    val apiModule = new ApiModuleImpl(
+    val apiModule = new ApiModule(
       fullModuleName,
       savePath.getWritten(),
       savePath.getAbsolute(),
@@ -206,11 +204,11 @@ object Vd2Api {
     out
   }
 
-  private def cvtProject(vdProject: VdProject, isRoot: Boolean, apiParent: ApiProjectImpl = null)(implicit cvState: Vd2ApiConversionState): ApiProjectImpl = {
+  private def cvtProject(vdProject: VdProject, isRoot: Boolean, apiParent: ApiProject = null)(implicit cvState: Vd2ApiConversionState): ApiProject = {
 
     cvState.apiObjLkup.getOrElse(vdProject.getFilePath().getAbsolute(), {
 
-      val apiProject = new ApiProjectImpl(
+      val apiProject = new ApiProject(
         vdProject.getName(),
         vdProject.getFilePath().getWritten(),
         vdProject.getFilePath().getAbsolute(),
@@ -232,15 +230,15 @@ object Vd2Api {
 
       apiProject
 
-    }).asInstanceOf[ApiProjectImpl]
+    }).asInstanceOf[ApiProject]
 
   }
 
-  private def linkTypes(apiProject: ApiProjectImpl) {
+  private def linkTypes(apiProject: ApiProject) {
     LinkTypes(apiProject)
   }
 
-  def apply(model: VdModel): ApiProjectImpl = {
+  def apply(model: VdModel): ApiProject = {
 
     implicit val cvState = new Vd2ApiConversionState(model)
 

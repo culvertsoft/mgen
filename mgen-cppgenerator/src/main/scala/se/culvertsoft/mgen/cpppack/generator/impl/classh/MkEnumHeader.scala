@@ -3,12 +3,11 @@ package se.culvertsoft.mgen.cpppack.generator.impl.classh
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
 
+import se.culvertsoft.mgen.api.model.EnumEntry
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.impl.EnumEntryImpl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
@@ -23,7 +22,7 @@ object MkEnumHeader {
     val fullname = _e.fullName().replaceAllLiterally(".", "::")
 
     val name = _e.shortName()
-    val entries = _e.entries() ++ List(new EnumEntryImpl("UNKNOWN", null))
+    val entries = _e.entries() ++ List(new EnumEntry("UNKNOWN", null))
 
     txtBuffer.clear()
 
@@ -67,7 +66,7 @@ object MkEnumHeader {
     ln(s"const std::vector<std::string>& get_enum_names(const $fullname /* type_evidence */);")
     ln(s"const std::string& get_enum_name(const $fullname enumValue);");
     ln()
-/*
+    /*
     ln(s"inline Type::TAG TAG_OF(const $fullname * /* type_evidence */) { return Type::TAG_STRING; }")
     ln()*/
 

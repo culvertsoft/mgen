@@ -5,17 +5,34 @@ import java.util.List;
 /**
  * Represents a default value for a list or array field/type.
  */
-public interface ListOrArrayDefaultValue extends DefaultValue {
+public class ListOrArrayDefaultValue extends DefaultValue {
 
 	/**
 	 * The type of this default value
 	 */
 	@Override
-	ListOrArrayType expectedType();
+	public ListOrArrayType expectedType() {
+		return (ListOrArrayType) super.expectedType();
+	}
 
 	/**
 	 * The list values of this default value
 	 */
-	List<DefaultValue> values();
+	public List<DefaultValue> values() {
+		return m_values;
+	}
+
+	/**
+	 * The list values of this default value
+	 */
+
+	public ListOrArrayDefaultValue(
+			final ListOrArrayType typ,
+			final List<DefaultValue> values) {
+		super(typ);
+		m_values = values;
+	}
+
+	private final List<DefaultValue> m_values;
 
 }

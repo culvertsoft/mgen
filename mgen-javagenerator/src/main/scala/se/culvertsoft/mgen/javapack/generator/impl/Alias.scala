@@ -1,8 +1,8 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.UserDefinedType
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 
 object Alias {
@@ -42,23 +42,23 @@ object Alias {
     s"_${field.name()}_METADATA"
   }
 
-  def typeIdStr16bit(t: CustomType): String = {
+  def typeIdStr16bit(t: UserDefinedType): String = {
     s"${t.fullName()}._TYPE_ID_16BIT"
   }
 
-  def name(t: CustomType): String = {
+  def name(t: UserDefinedType): String = {
     s"${t.fullName()}._TYPE_NAME"
   }
 
-  def typeIdStr16BitBase64(t: CustomType): String = {
+  def typeIdStr16BitBase64(t: UserDefinedType): String = {
     s"${t.fullName()}._TYPE_ID_16BIT_BASE64"
   }
 
-  def typeIdStr(t: CustomType): String = {
+  def typeIdStr(t: UserDefinedType): String = {
     s"${t.fullName()}._TYPE_ID"
   }
 
-  def instantiate(t: CustomType): String = {
+  def instantiate(t: UserDefinedType): String = {
     s"new ${t.fullName()}()"
   }
 

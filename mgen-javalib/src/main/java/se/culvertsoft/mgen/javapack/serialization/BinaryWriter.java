@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_BOOL;
-import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_CUSTOM;
+import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_CLASS;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_FLOAT32;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_FLOAT64;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_INT16;
@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
-import se.culvertsoft.mgen.api.model.CustomType;
+import se.culvertsoft.mgen.api.model.RuntimeClassType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
@@ -161,8 +161,8 @@ public class BinaryWriter extends BuiltInWriter {
 
 	@Override
 	public void writeMGenObjectField(final MGenBase o, final Field field) throws IOException {
-		writeFieldStart(field.id(), TAG_CUSTOM);
-		writeMGenObject(o, false, (CustomType) field.typ());
+		writeFieldStart(field.id(), TAG_CLASS);
+		writeMGenObject(o, false, (RuntimeClassType) field.typ());
 	}
 
 	/*******************************************************************
@@ -172,11 +172,11 @@ public class BinaryWriter extends BuiltInWriter {
 	 * 
 	 ******************************************************************/
 
-	private void writeMGenObject(final MGenBase o, final boolean tag, final CustomType typ)
+	private void writeMGenObject(final MGenBase o, final boolean tag, final RuntimeClassType typ)
 			throws IOException {
 
 		if (tag)
-			writeTypeTag(TAG_CUSTOM);
+			writeTypeTag(TAG_CLASS);
 
 		if (o != null) {
 			m_expectType = typ != null ? typ.typeId() : 0;
@@ -734,9 +734,8 @@ public class BinaryWriter extends BuiltInWriter {
 		case MAP:
 			writeMap((HashMap<Object, Object>) o, (MapType) typ, tag);
 			break;
-		case CUSTOM:
-		case UNKNOWN:
-			writeMGenObject((MGenBase) o, tag, (CustomType) typ);
+		case CLASS:
+			writeMGenObject((MGenBase) o, tag, (RuntimeClassType) typ);
 			break;
 		default:
 			throw new SerializationException("Unknown type tag for writeObject");

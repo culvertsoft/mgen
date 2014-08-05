@@ -3,17 +3,19 @@ package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.cpppack.generator.CppGenerator._
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator.canBeNull
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator.writeInitializerList
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
 
 object MkRequiredMembersCtor {
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module
 
@@ -42,7 +44,7 @@ object MkRequiredMembersCtor {
     }
 
     if (reqFields.nonEmpty && reqAndOptFields != reqFields) {
-      txt(s"${t.name()}::${t.name()}(")
+      txt(s"${t.shortName}::${t.shortName}(")
       mkArgumentList()
       txt(")")
       mkInitializerList()

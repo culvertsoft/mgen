@@ -1,20 +1,18 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 
-import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
-import se.culvertsoft.mgen.cpppack.generator.CppConstruction
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
-import se.culvertsoft.mgen.cpppack.generator.CppGenerator._
+import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator.canBeNull
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
 import se.culvertsoft.mgen.cpppack.generator.impl.HasDefaultCtor
 
 object MkCtorHelper {
 
   def mkPassToSuper(
     fieldsToSuper: Seq[Field],
-    t: CustomType,
+    t: ClassType,
     module: Module): String = {
 
     var passToSuperString = ""

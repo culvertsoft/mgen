@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.api.model;
 
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_BOOL;
-import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_CUSTOM;
+import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_CLASS;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_FLOAT32;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_FLOAT64;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_INT16;
@@ -28,8 +28,8 @@ public enum TypeEnum {
 	ARRAY(TAG_LIST),
 	LIST(TAG_LIST),
 	MAP(TAG_MAP),
-	CUSTOM(TAG_CUSTOM),
-	UNKNOWN(TAG_CUSTOM);
+	CLASS(TAG_CLASS),
+	UNKNOWN(TAG_CLASS);
 
 	TypeEnum(final byte binaryMetadatTag) {
 		m_binaryMetadatTag = binaryMetadatTag;

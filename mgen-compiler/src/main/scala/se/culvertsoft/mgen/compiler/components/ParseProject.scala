@@ -6,7 +6,7 @@ import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.HashMap
 import scala.xml.XML.loadFile
 
-import se.culvertsoft.mgen.api.model.impl.ProjectImpl
+import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.Parser
 import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
@@ -16,7 +16,7 @@ object ParseProject {
 
   def apply(
     settings: Map[String, String],
-    pluginFinder: PluginFinder): ProjectImpl = {
+    pluginFinder: PluginFinder): Project = {
 
     val projectPath =
       settings
@@ -25,7 +25,7 @@ object ParseProject {
 
     FileUtils.checkiSsFileOrThrow(projectPath)
 
-    ParseProject(projectPath, settings, Nil, null, new HashMap[String, ProjectImpl], pluginFinder)
+    ParseProject(projectPath, settings, Nil, null, new HashMap[String, Project], pluginFinder)
 
   }
 
@@ -33,9 +33,9 @@ object ParseProject {
     filePath: String,
     settings0: Map[String, String],
     searchPaths0: Seq[String],
-    parent: ProjectImpl,
-    alreadyParsed: HashMap[String, ProjectImpl],
-    pluginFinder: PluginFinder): ProjectImpl = {
+    parent: Project,
+    alreadyParsed: HashMap[String, Project],
+    pluginFinder: PluginFinder): Project = {
 
     val file = FileUtils.findFile(filePath, searchPaths0)
       .getOrElse(throw new RuntimeException(s"Could not find referenced project file: ${filePath}"))
@@ -49,7 +49,7 @@ object ParseProject {
 
         val projectName = FileUtils.removeFileEnding(FileUtils.nameOf(absoluteFilePath))
         val projectDir = FileUtils.directoryOf(absoluteFilePath)
-        val project = new ProjectImpl(projectName, filePath, file.getAbsolutePath(), parent)
+        val project = new Project(projectName, filePath, file.getAbsolutePath(), parent)
         alreadyParsed.put(absoluteFilePath, project)
 
         val searchPaths: Seq[String] = searchPaths0 ++ Seq(projectDir)

@@ -7,7 +7,6 @@ import scala.collection.mutable.HashSet
 import ModelConversion.ApiModule
 import ModelConversion.ApiProject
 import ModelConversion.ApiUserDefinedType
-import ModelConversion.VdClass
 import ModelConversion.VdModule
 import ModelConversion.VdProject
 import ModelConversion.VdUserDefinedType

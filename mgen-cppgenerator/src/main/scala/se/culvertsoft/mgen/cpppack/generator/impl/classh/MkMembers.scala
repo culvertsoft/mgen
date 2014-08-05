@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classh
 
 import scala.collection.JavaConversions.asScalaBuffer
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
@@ -11,7 +11,7 @@ import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 object MkMembers {
 
   def apply(
-    t: CustomType,
+    t: ClassType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module

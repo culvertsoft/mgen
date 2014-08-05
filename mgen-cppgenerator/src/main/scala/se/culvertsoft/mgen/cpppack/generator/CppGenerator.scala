@@ -4,12 +4,11 @@ import java.io.File
 
 import scala.collection.JavaConversions.seqAsJavaList
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
@@ -20,7 +19,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEnumHeader
 object CppGenerator {
 
   def canBeNull(f: Field): Boolean = {
-    f.typ.isInstanceOf[CustomType] && f.isPolymorphic()
+    f.typ.isInstanceOf[ClassType] && f.isPolymorphic()
   }
 
   def writeInitializerList(list: Seq[String])(implicit txtBuffer: SuperStringBuffer) {
@@ -67,7 +66,7 @@ class CppGenerator extends BuiltInStaticLangGenerator {
 
   }
 
-  override def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+  override def generateClassSources(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     List(CppHeader.generate(module, t, generatorSettings),
       CppSrcFile.generate(module, t, generatorSettings))
   }
@@ -79,8 +78,8 @@ class CppGenerator extends BuiltInStaticLangGenerator {
     val cppFileName = t.shortName + ".cpp"
     val cppSourceCode = MkEnumCpp(module, t, generatorSettings)
     List(
-      new GeneratedSourceFileImpl(folder + File.separator + hFileName, hSourceCode),
-      new GeneratedSourceFileImpl(folder + File.separator + cppFileName, cppSourceCode))
+      new GeneratedSourceFile(folder + File.separator + hFileName, hSourceCode),
+      new GeneratedSourceFile(folder + File.separator + cppFileName, cppSourceCode))
   }
 
 }

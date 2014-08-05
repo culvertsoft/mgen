@@ -1,15 +1,15 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.utilh
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 
 object MkLongTypeName {
-  def underscore(t: CustomType): String = {
+  def underscore(t: ClassType): String = {
     t.fullName().replaceAllLiterally(".", "_")
   }
-  def cpp(t: CustomType): String = {
+  def cpp(t: ClassType): String = {
     t.fullName().replaceAllLiterally(".", "::")
   }
-  def staticClassRegEntry(t: CustomType): String = {
+  def staticClassRegEntry(t: ClassType): String = {
     val underscoreName = underscore(t)
     val cppName = cpp(t)
     val typeIds = s"$cppName::_type_ids()"

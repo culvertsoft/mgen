@@ -7,7 +7,7 @@ import scala.collection.JavaConversions.seqAsJavaList
 import scala.xml.XML.loadFile
 
 import se.culvertsoft.mgen.api.model.Project
-import se.culvertsoft.mgen.api.model.impl.ModuleImpl
+import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.idlparser.util.XmlUtils.RichXmlNode
 
 object ParseModule {
@@ -15,7 +15,7 @@ object ParseModule {
   def apply(
     file: File,
     settings0: Map[String, String],
-    parent: Project): ModuleImpl = {
+    parent: Project): Module = {
 
     val absoluteFilePath = file.getCanonicalPath()
 
@@ -34,7 +34,7 @@ object ParseModule {
     val settings = settings0 ++ moduleXml.getSettings()
 
     // Create the module
-    val module = new ModuleImpl(
+    val module = new Module(
       modulePath,
       file.getPath,
       absoluteFilePath,

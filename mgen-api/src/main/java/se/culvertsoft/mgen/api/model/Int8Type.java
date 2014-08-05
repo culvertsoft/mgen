@@ -1,11 +1,13 @@
 package se.culvertsoft.mgen.api.model;
 
-import se.culvertsoft.mgen.api.model.impl.Int8TypeImpl;
-
 /**
  * Represents an 8 bit fixed point number type (= a byte)
  */
-public interface Int8Type extends PrimitiveType {
+public class Int8Type extends PrimitiveType {
 
-	public final static Int8Type INSTANCE = Int8TypeImpl.INSTANCE;
+	private Int8Type() {
+		super(TypeEnum.INT8, byte.class, "int8");
+	}
+
+	public final static Int8Type INSTANCE = new Int8Type();
 }

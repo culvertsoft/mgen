@@ -4,11 +4,12 @@ import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsScalaMap
 import scala.xml.PrettyPrinter
 import scala.xml.Text
+
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
 import se.culvertsoft.mgen.api.model.BoolType
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.DefaultValue
 import se.culvertsoft.mgen.api.model.EnumDefaultValue
 import se.culvertsoft.mgen.api.model.EnumEntry
@@ -33,7 +34,7 @@ import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.model.StringDefaultValue
 import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
+import se.culvertsoft.mgen.api.model.UserDefinedType
 import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.idlparser.IdlParser
 
@@ -48,13 +49,13 @@ object Project2Xml {
         { project.generators map generator2xml }
         { project.dependencies map dependency2xmlReference }
         <Sources parser={ s"${classOf[IdlParser].getName}" }>
-          { project.modules.filter(_.types.nonEmpty) map { x => <Source>{ x.filePath }</Source> } }
+          { project.modules.filter(_.classes.nonEmpty) map { x => <Source>{ x.filePath }</Source> } }
         </Sources>
       </Project>
 
     val sources = Nil ++
       Seq(XmlSourceFile(project.absoluteFilePath, projectXml)) ++
-      (project.modules.filter(_.types.nonEmpty) map module2xmlSource)
+      (project.modules.filter(_.classes.nonEmpty) map module2xmlSource)
 
     convert(sources)
 
@@ -67,7 +68,7 @@ object Project2Xml {
     sources.map { source =>
 
       val sourceCode = printer.format(source.xml)
-      new GeneratedSourceFileImpl(source.path, sourceCode)
+      new GeneratedSourceFile(source.path, sourceCode)
 
     }
 
@@ -95,7 +96,7 @@ object Project2Xml {
           { module.enums map enum2xml }
         </Enums>
         <Types>
-          { module.types map type2xml }
+          { module.classes map type2xml }
         </Types>
       </Module>
 
@@ -110,7 +111,7 @@ object Project2Xml {
     <entry>{ entry.constant } </entry>.copy(label = entry.name)
   }
 
-  def type2xml(typ: CustomType)(implicit currentModule: Module): scala.xml.Node = {
+  def type2xml(typ: ClassType)(implicit currentModule: Module): scala.xml.Node = {
 
     val autoId = CRC16.calc(typ.fullName)
     val idString = if (typ.typeId16Bit != autoId) typ.typeId16Bit.toString else null
@@ -120,7 +121,7 @@ object Project2Xml {
         <CustomType extends={ type2string(typ.superType()) } id={ idString }>{ typ.fields map field2xml } </CustomType>
       else
         <CustomType id={ idString }>{ typ.fields map field2xml } </CustomType>)
-        .copy(label = typ.name)
+        .copy(label = typ.shortName)
 
     xml
 
@@ -139,7 +140,7 @@ object Project2Xml {
       case t: ListType => s"list[${type2string(t.elementType)}]"
       case t: ArrayType => s"array[${type2string(t.elementType)}]"
       case t: MapType => s"map[${type2string(t.keyType)}, ${type2string(t.valueType)}]"
-      case t: CustomType => if (t.module == currentModule) t.shortName else t.fullName
+      case t: UserDefinedType => if (t.module == currentModule) t.shortName else t.fullName
     }
   }
 

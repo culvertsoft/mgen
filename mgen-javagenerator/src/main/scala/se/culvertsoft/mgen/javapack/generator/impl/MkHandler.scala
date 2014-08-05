@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
@@ -12,8 +12,7 @@ object MkHandler {
 
   def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
 
-    val allTypes = referencedModules.flatMap(_.types)
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
+    val allClasses = referencedModules.flatMap(_.classes)
 
     txtBuffer.clear()
 
@@ -31,7 +30,7 @@ object MkHandler {
       ln(1, s"protected void handleUnknown(MGenBase o) { handleDiscard(o); }").endl()
     }
 
-    def mkHandler(t: CustomType) {
+    def mkHandler(t: ClassType) {
       ln(1, s"protected void handle(${t.fullName} o) {")
       if (t.hasSuperType) {
         ln(2, s"handle((${t.superType.fullName})o);")
@@ -42,7 +41,7 @@ object MkHandler {
     }
 
     def mkHandlers() {
-      allTypes foreach mkHandler
+      allClasses foreach mkHandler
     }
 
     mkDefaultHandlers()

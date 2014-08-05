@@ -1,19 +1,22 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.mutable.ArrayBuffer
+
+import se.culvertsoft.mgen.api.model.EnumEntry
 import se.culvertsoft.mgen.api.model.EnumType
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants
-import se.culvertsoft.mgen.api.model.impl.EnumEntryImpl
-import scala.collection.mutable.ArrayBuffer
 
 object MkEnum {
 
   def apply(_e: EnumType, packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
 
     val name = _e.shortName()
-    val entries = _e.entries() ++ List(new EnumEntryImpl("UNKNOWN", null))
+    val entries = _e.entries() ++ List(new EnumEntry("UNKNOWN", null))
 
     txtBuffer.clear()
 
@@ -21,14 +24,14 @@ object MkEnum {
 
     MkPackage(packagePath)
 
-    ln(s"import ${JavaConstants.enumImplClsStringQ};")
+    ln(s"import ${JavaConstants.runtimeEnumClsStringQ};")
     ln(s"import ${JavaConstants.mgenEnumClsString};")
     ln()
 
     ln(s"public enum $name implements MGenEnum {")
 
     val values = new ArrayBuffer[Int]
-    
+
     var curVal = -1
 
     for (entry <- entries) {
@@ -66,7 +69,7 @@ object MkEnum {
     ln(1, "}")
     ln()
 
-    ln(1, s"public static final ${JavaConstants.enumImplClsString} _TYPE = new ${JavaConstants.enumImplClsString}(${quote(_e.shortName)}, ${quote(_e.fullName)}) {")
+    ln(1, s"public static final ${JavaConstants.runtimeEnumClsString} _TYPE = new ${JavaConstants.runtimeEnumClsString}(${quote(_e.shortName)}, ${quote(_e.fullName)}) {")
     ln()
 
     ln(2, s"@Override")

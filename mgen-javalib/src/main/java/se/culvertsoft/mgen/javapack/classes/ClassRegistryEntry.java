@@ -1,7 +1,6 @@
 package se.culvertsoft.mgen.javapack.classes;
 
-import se.culvertsoft.mgen.api.model.CustomType;
-import se.culvertsoft.mgen.api.model.impl.UnlinkedCustomType;
+import se.culvertsoft.mgen.api.model.RuntimeClassType;
 
 public class ClassRegistryEntry {
 
@@ -15,7 +14,7 @@ public class ClassRegistryEntry {
 		m_typeIds = typeIds;
 		m_clsName = className;
 		m_ctor = ctor;
-		m_type = new UnlinkedCustomType(m_clsName, typeId);
+		m_type = new RuntimeClassType(m_clsName, typeId);
 	}
 
 	private static Class<?> lkupClass(final String className) {
@@ -50,7 +49,7 @@ public class ClassRegistryEntry {
 		return m_cls;
 	}
 
-	public CustomType typ() {
+	public RuntimeClassType typ() {
 		return m_type;
 	}
 
@@ -68,6 +67,6 @@ public class ClassRegistryEntry {
 	private final long[] m_typeIds;
 	private final String m_clsName;
 	private final Ctor m_ctor;
-	private final CustomType m_type;
+	private final RuntimeClassType m_type;
 
 }

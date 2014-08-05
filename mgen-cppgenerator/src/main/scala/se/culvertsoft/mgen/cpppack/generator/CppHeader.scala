@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkAcceptVisitor
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkAllMembersCtor
@@ -11,6 +11,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEqOperator
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEquals
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkFieldById
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkGetters
+import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkHasers
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkIncludes
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkIsFieldSet
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkMembers
@@ -24,15 +25,14 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkSetFieldsSet
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkSetters
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkUsingStatements
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkValidate
-import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkHasers
 
 object CppHeader extends CppSrcFileOrHeader(".h") {
 
-  override def mkIncludes(t: CustomType) {
+  override def mkIncludes(t: ClassType) {
     MkIncludes(t, currentModule)
   }
 
-  override def mkIncludeGuardStart(module: Module, t: CustomType) {
+  override def mkIncludeGuardStart(module: Module, t: ClassType) {
     CppGenUtils.mkIncludeGuardStart(t.fullName())
   }
 
@@ -40,11 +40,11 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
     CppGenUtils.mkIncludeGuardEnd()
   }
 
-  override def mkEqOperator(t: CustomType) {
+  override def mkEqOperator(t: ClassType) {
     MkEqOperator(t, currentModule)
   }
 
-  override def mkClassStart(t: CustomType) {
+  override def mkClassStart(t: ClassType) {
     CppGenUtils.mkClassStart(t.shortName(), getSuperTypeNameString(t))
   }
 
@@ -56,91 +56,91 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
     txtBuffer.textln("public:")
   }
 
-  override def mkDefaultCtor(t: CustomType) {
+  override def mkDefaultCtor(t: ClassType) {
     MkDefaultCtor(t, currentModule)
   }
 
-  override def mkAllMembersCtor(t: CustomType) {
+  override def mkAllMembersCtor(t: ClassType) {
     MkAllMembersCtor(t, currentModule)
   }
 
-  override def mkDestructor(t: CustomType) {
+  override def mkDestructor(t: ClassType) {
     MkDestructor(t, currentModule)
   }
 
-  override def mkGetters(t: CustomType) {
+  override def mkGetters(t: ClassType) {
     MkGetters(t, currentModule)
   }
 
-  override def mkSetters(t: CustomType) {
+  override def mkSetters(t: ClassType) {
     MkSetters(t, currentModule)
   }
 
-  override def mkHasers(t: CustomType) {
+  override def mkHasers(t: ClassType) {
     MkHasers(t, currentModule)
   }
-  
-  override def mkMembers(t: CustomType) {
+
+  override def mkMembers(t: ClassType) {
     MkMembers(t, currentModule)
   }
 
-  override def mkEquals(t: CustomType) {
+  override def mkEquals(t: ClassType) {
     MkEquals(t, currentModule)
   }
 
-  override def mkMetaDataFields(t: CustomType) {
+  override def mkMetaDataFields(t: ClassType) {
     MkMetadataFields(t, currentModule)
   }
 
-  override def mkReadField(t: CustomType) {
+  override def mkReadField(t: ClassType) {
     MkReadField(t, currentModule)
   }
 
-  override def mkAcceptVisitor(t: CustomType) {
+  override def mkAcceptVisitor(t: ClassType) {
     MkAcceptVisitor(t, currentModule)
   }
 
-  override def mkFieldById(t: CustomType) {
+  override def mkFieldById(t: ClassType) {
     MkFieldById(t, currentModule)
   }
 
-  override def mkMetadataGetters(t: CustomType) {
+  override def mkMetadataGetters(t: ClassType) {
     MkMetadataGetters(t, currentModule)
   }
 
-  override def mkNewInstance(t: CustomType) {
+  override def mkNewInstance(t: ClassType) {
     MkNewInstance(t, currentModule)
   }
 
-  override def mkDeepCopy(t: CustomType) {
+  override def mkDeepCopy(t: ClassType) {
     MkDeepCopy(t, currentModule)
   }
 
-  override def mkUsingStatements(t: CustomType) {
+  override def mkUsingStatements(t: ClassType) {
     MkUsingStatements(t, currentModule)
   }
 
-  override def mkSetFieldsSet(t: CustomType) {
+  override def mkSetFieldsSet(t: ClassType) {
     MkSetFieldsSet(t, currentModule)
   }
 
-  override def mkValidate(t: CustomType) {
+  override def mkValidate(t: ClassType) {
     MkValidate(t, currentModule)
   }
 
-  override def mkRequiredMembersCtor(t: CustomType) {
+  override def mkRequiredMembersCtor(t: ClassType) {
     MkRequiredMembersCtor(t, currentModule)
   }
 
-  override def mkNumFieldsSet(t: CustomType) {
+  override def mkNumFieldsSet(t: ClassType) {
     MkNumFieldsSet(t, currentModule)
   }
 
-  override def mkClassEnd(t: CustomType) {
+  override def mkClassEnd(t: ClassType) {
     CppGenUtils.mkClassEnd(t.shortName())
   }
 
-  override def mkIsFieldSet(t: CustomType) {
+  override def mkIsFieldSet(t: ClassType) {
     MkIsFieldSet(t, currentModule)
   }
 

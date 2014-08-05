@@ -1,9 +1,10 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil
-import se.culvertsoft.mgen.api.model.CustomType
+import scala.collection.JavaConversions.asScalaBuffer
+
+import se.culvertsoft.mgen.api.model.ClassType
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkLongTypeName
 
 object CppHandlerHeaderGenerator extends CppHandlerGenerator(Header) {
@@ -18,8 +19,8 @@ object CppHandlerHeaderGenerator extends CppHandlerGenerator(Header) {
     ln(1, "public:")
     endl()
 
-    val allTypes = param.modules.flatMap(_.types)
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType())
+    val allClasses = param.modules.flatMap(_.classes)
+    val topLevelClasses = allClasses.filterNot(_.hasSuperType())
 
     ln(1, s"Handler();")
     ln(1, s"virtual ~Handler();")
@@ -29,12 +30,12 @@ object CppHandlerHeaderGenerator extends CppHandlerGenerator(Header) {
       ln(1, s"virtual void handleUnknown(mgen::MGenBase& o);")
     }
 
-    def mkHandler(t: CustomType) {
+    def mkHandler(t: ClassType) {
       ln(1, s"virtual void handle(${MkLongTypeName.cpp(t)}& o);")
     }
 
     def mkHandlers() {
-      allTypes foreach mkHandler
+      allClasses foreach mkHandler
     }
 
     mkDefaultHandlers()

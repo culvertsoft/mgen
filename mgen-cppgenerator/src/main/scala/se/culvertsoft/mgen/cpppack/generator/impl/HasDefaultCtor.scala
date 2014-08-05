@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.cpppack.generator.impl
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListOrArrayType
 import se.culvertsoft.mgen.api.model.MapType
@@ -12,7 +12,7 @@ object HasDefaultCtor {
     field.typ match {
       case _: ListOrArrayType => true
       case _: MapType => true
-      case _: CustomType => !field.isPolymorphic
+      case _: ClassType => !field.isPolymorphic
       case _: StringType => true
       case _ => false
     }

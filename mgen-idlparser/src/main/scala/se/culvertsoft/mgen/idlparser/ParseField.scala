@@ -4,7 +4,7 @@ import scala.Array.canBuildFrom
 import scala.collection.JavaConversions.seqAsJavaList
 
 import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.api.model.impl.FieldImpl
+import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.util.CRC16
 import se.culvertsoft.mgen.idlparser.util.XmlUtils.RichXmlNode
 
@@ -24,7 +24,7 @@ object ParseField {
       case _ => null
     }
 
-    new FieldImpl(
+    new Field(
       ownerClassName,
       name,
       typ,

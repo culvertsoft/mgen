@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.cpppack.generator.impl.classh
 
 import scala.collection.JavaConversions.asScalaBuffer
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
@@ -16,7 +16,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
 object MkAcceptVisitor {
 
   def apply(
-    t: CustomType,
+    t: ClassType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module

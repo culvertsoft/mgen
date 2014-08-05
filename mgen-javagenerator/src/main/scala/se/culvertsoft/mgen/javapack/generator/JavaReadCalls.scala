@@ -22,7 +22,7 @@ object JavaReadCalls {
       case TypeEnum.MAP => "readMapField"
       case TypeEnum.LIST => "readListField"
       case TypeEnum.ARRAY => "readArrayField"
-      case TypeEnum.CUSTOM => "readMgenObjectField"
+      case TypeEnum.CLASS => "readMgenObjectField"
       case TypeEnum.ENUM => "readEnumField"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }

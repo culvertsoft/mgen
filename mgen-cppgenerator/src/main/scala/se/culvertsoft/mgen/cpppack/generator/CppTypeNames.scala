@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListType
@@ -35,11 +35,11 @@ object CppTypeNames {
       case TypeEnum.LIST =>
         val t = typ.asInstanceOf[ListType]
         s"std::vector<${getTypeName(t.elementType(), isPolymorphicField)}> "
-      case TypeEnum.CUSTOM =>
-        val t = typ.asInstanceOf[CustomType]
+      case TypeEnum.CLASS =>
+        val t = typ.asInstanceOf[ClassType]
         val name =
           if (t.module() == currentModule) {
-            t.name()
+            t.shortName()
           } else {
             t.fullName().replaceAllLiterally(".", "::")
           }

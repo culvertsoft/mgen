@@ -6,7 +6,7 @@ import Alias.fieldId
 import Alias.fieldMetadata
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Module
@@ -15,13 +15,11 @@ import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldIfcClsString
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldImplClsString
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.modelPkg
+import se.culvertsoft.mgen.javapack.generator.JavaConstants._
 
 object MkFieldMetaData {
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val m = module
 
@@ -37,7 +35,7 @@ object MkFieldMetaData {
             s"java.util.Arrays.asList(${field.flags().map(s => '"' + s + '"').mkString(",")})"
         txtBuffer.tabs(1)
           .text(s"public static final ${fieldIfcClsString} ")
-          .text(s"${fieldMetadata(field)} = new ${fieldImplClsString}(")
+          .text(s"${fieldMetadata(field)} = new ${fieldIfcClsString}(")
           .text(quote(t.fullName())).commaSpace()
           .text(quote(field.name())).commaSpace()
           .text(mkMetaData(field.typ())).commaSpace()
@@ -73,16 +71,16 @@ object MkFieldMetaData {
       case TypeEnum.STRING => s"${modelPkg}.StringType.INSTANCE"
       case TypeEnum.MAP =>
         val tm = t.asInstanceOf[MapType]
-        s"new ${modelPkg}.impl.MapTypeImpl(${mkMetaData(tm.keyType())}, ${mkMetaData(tm.valueType())})"
+        s"new ${modelPkg}.MapType(${mkMetaData(tm.keyType())}, ${mkMetaData(tm.valueType())})"
       case TypeEnum.LIST =>
         val tl = t.asInstanceOf[ListType]
-        s"new ${modelPkg}.impl.ListTypeImpl(${mkMetaData(tl.elementType())})"
+        s"new ${modelPkg}.ListType(${mkMetaData(tl.elementType())})"
       case TypeEnum.ARRAY =>
         val ta = t.asInstanceOf[ArrayType]
-        s"new ${modelPkg}.impl.ArrayTypeImpl(${mkMetaData(ta.elementType())})"
-      case TypeEnum.CUSTOM =>
-        val tc = t.asInstanceOf[CustomType]
-        s"new ${modelPkg}.impl.UnlinkedCustomType(${quote(tc.fullName())}, ${tc.typeId()}L)"
+        s"new ${modelPkg}.ArrayType(${mkMetaData(ta.elementType())})"
+      case TypeEnum.CLASS =>
+        val tc = t.asInstanceOf[ClassType]
+        s"new ${runtimeClassClsStringQ}(${quote(tc.fullName())}, ${tc.typeId()}L)"
       case TypeEnum.ENUM => s"${t.fullName}._TYPE"
       case x => throw new GenerationException(s"Don't know how to handle type $x")
     }

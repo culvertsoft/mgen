@@ -7,7 +7,7 @@ import Alias.get
 import Alias.isFieldSet
 import Alias.set
 import Alias.setFieldSet
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsString
@@ -15,7 +15,7 @@ import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsStri
 
 object MkDeepCopy {
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val m = module
 

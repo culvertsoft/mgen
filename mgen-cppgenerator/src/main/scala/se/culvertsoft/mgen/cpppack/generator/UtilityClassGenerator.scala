@@ -6,7 +6,6 @@ import scala.collection.JavaConversions.mapAsScalaMap
 
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 abstract class CppArtifactType
@@ -36,7 +35,7 @@ abstract class UtilityClassGenerator(
     generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {
     val sourceCode = generateSourceCode(packagePath, referencedModules, generatorSettings)
     val fileName = className + (if (isHeader) ".h" else ".cpp")
-    new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
+    new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
   }
 
   final def generateSourceCode(

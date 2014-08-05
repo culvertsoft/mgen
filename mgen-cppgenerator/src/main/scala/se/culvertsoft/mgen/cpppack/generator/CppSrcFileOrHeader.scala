@@ -2,10 +2,9 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import java.io.File
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.impl.GeneratedSourceFileImpl
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
@@ -16,15 +15,15 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
   implicit val txtBuffer = SuperStringBuffer.getCached()
   implicit var currentModule: Module = null
 
-  def generate(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {
+  def generate(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {
     currentModule = module
     val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, generatorSettings)
     val fileName = t.shortName() + fileEnding
     val sourceCode = generateSourceCode(module, t, generatorSettings)
-    new GeneratedSourceFileImpl(folder + File.separator + fileName, sourceCode)
+    new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
   }
 
-  def generateSourceCode(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): String = {
+  def generateSourceCode(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): String = {
 
     val namespaces = currentModule.path().split("\\.")
 
@@ -36,8 +35,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     mkIncludes(t)
     CppGenUtils.mkNameSpaces(namespaces)
     mkUsingStatements(t)
-    
-    
+
     // Class Begin
     mkClassStart(t)
 
@@ -58,7 +56,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
     // Metadata methods section
     mkMetadataMethodsComment(t)
-        
+
     mkPublic()
     mkReadField(t)
     mkAcceptVisitor(t)
@@ -85,9 +83,9 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
   }
 
-  def mkIncludeGuardStart(module: Module, t: CustomType) {}
+  def mkIncludeGuardStart(module: Module, t: ClassType) {}
 
-  def getSuperTypeNameString(t: CustomType): String = {
+  def getSuperTypeNameString(t: ClassType): String = {
     if (t.hasSuperType()) {
       if (t.superType.module == t.module)
         t.superType.shortName
@@ -98,63 +96,63 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     }
   }
 
-  def mkIncludes(t: CustomType) {}
+  def mkIncludes(t: ClassType) {}
 
-  def mkNumFieldsSet(t: CustomType) {}
+  def mkNumFieldsSet(t: ClassType) {}
 
-  def mkClassStart(t: CustomType) {}
+  def mkClassStart(t: ClassType) {}
   def mkPrivate() {}
-  def mkMembers(t: CustomType) {}
+  def mkMembers(t: ClassType) {}
   def mkPublic() {}
-  def mkDefaultCtor(t: CustomType) {}
-  def mkRequiredMembersCtor(t: CustomType) {}
-  def mkAllMembersCtor(t: CustomType) {}
-  def mkDestructor(t: CustomType) {}
-  def mkGetters(t: CustomType) {}
-  def mkSetters(t: CustomType) {}
-  def mkHasers(t: CustomType) {}
-  def mkToString(t: CustomType) {}
-  def mkHashCode(t: CustomType) {}
-  def mkDeepCopy(t: CustomType) {}
-  def mkEquals(t: CustomType) {}
-  def mkMetadataMethodsComment(t: CustomType) {
+  def mkDefaultCtor(t: ClassType) {}
+  def mkRequiredMembersCtor(t: ClassType) {}
+  def mkAllMembersCtor(t: ClassType) {}
+  def mkDestructor(t: ClassType) {}
+  def mkGetters(t: ClassType) {}
+  def mkSetters(t: ClassType) {}
+  def mkHasers(t: ClassType) {}
+  def mkToString(t: ClassType) {}
+  def mkHashCode(t: ClassType) {}
+  def mkDeepCopy(t: ClassType) {}
+  def mkEquals(t: ClassType) {}
+  def mkMetadataMethodsComment(t: ClassType) {
     txtBuffer.textln(FancyHeaders.serializationSectionHeader);
   }
 
-  def mkEqOperator(t: CustomType) {}
-  def mkTypeName(t: CustomType) {}
-  def mkTypeHashes(t: CustomType) {}
-  def mkAcceptVisitor(t: CustomType) {}
-  def mkDefaultConstructField(t: CustomType) {}
-  def mkReadFields(t: CustomType) {}
-  def mkReadField(t: CustomType) {}
-  def mkGetFields(t: CustomType) {}
-  def mkFieldById(t: CustomType) {}
-  def mkTypeHierarchyMethods(t: CustomType) {}
-  def mkNewInstance(t: CustomType) {}
-  def mkMetadataComment(t: CustomType) {
+  def mkEqOperator(t: ClassType) {}
+  def mkTypeName(t: ClassType) {}
+  def mkTypeHashes(t: ClassType) {}
+  def mkAcceptVisitor(t: ClassType) {}
+  def mkDefaultConstructField(t: ClassType) {}
+  def mkReadFields(t: ClassType) {}
+  def mkReadField(t: ClassType) {}
+  def mkGetFields(t: ClassType) {}
+  def mkFieldById(t: ClassType) {}
+  def mkTypeHierarchyMethods(t: ClassType) {}
+  def mkNewInstance(t: ClassType) {}
+  def mkMetadataComment(t: ClassType) {
     txtBuffer.textln(FancyHeaders.metadataSectionHeader);
   }
-  def mkMetaDataFields(t: CustomType) {}
-  def mkClassEnd(t: CustomType) {}
+  def mkMetaDataFields(t: ClassType) {}
+  def mkClassEnd(t: ClassType) {}
 
-  def mkUsingStatements(t: CustomType) {
+  def mkUsingStatements(t: ClassType) {
   }
 
-  def mkSetFieldsSet(t: CustomType) {
+  def mkSetFieldsSet(t: ClassType) {
   }
 
-  def mkValidate(t: CustomType) {
+  def mkValidate(t: ClassType) {
   }
 
-  def mkIsFieldSet(t: CustomType) {
+  def mkIsFieldSet(t: ClassType) {
   }
 
   def mkNamespaceEnd(namespaces: Array[String]) {
     CppGenUtils.mkNameSpacesEnd(namespaces)
   }
 
-  def mkMetadataGetters(t: CustomType) {
+  def mkMetadataGetters(t: ClassType) {
 
   }
 

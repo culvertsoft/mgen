@@ -1,19 +1,20 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 
 import scala.collection.JavaConversions.asScalaBuffer
-import se.culvertsoft.mgen.api.model.CustomType
+
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldIdString
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldMetaString
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 
 object MkFieldById {
 
   def apply(
-    t: CustomType,
+    t: ClassType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module
@@ -33,11 +34,6 @@ object MkFieldById {
     ln(1, s"}")
     ln(0, s"}")
     endl()
-
-    /*
-     *     for (field <- t.fieldsInclSuper())
-      ln(1, s"out[${quote(field.name)}] = &${t.shortName}::${fieldMetaString(field)};")
-     */
 
     val lkup = t.fieldsInclSuper.map(f => s"(${quote(f.name)}, &${t.shortName}::${fieldMetaString(f)})")
     val lkupString =

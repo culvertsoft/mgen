@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
@@ -14,8 +14,8 @@ object MkClassStart {
       txtBuffer.text(s"public class $clsName {").endl2()
   }
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
-    apply(t.name(), getTypeName(t.superType())(module))
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+    apply(t.shortName, getTypeName(t.superType())(module))
   }
 
 }

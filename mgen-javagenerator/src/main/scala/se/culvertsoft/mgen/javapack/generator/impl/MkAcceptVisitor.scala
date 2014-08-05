@@ -5,7 +5,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 import Alias.fieldMetadata
 import Alias.get
 import Alias.isFieldSet
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
@@ -13,7 +13,7 @@ import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldVisitorClsStrin
 
 object MkAcceptVisitor {
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val m = module
 

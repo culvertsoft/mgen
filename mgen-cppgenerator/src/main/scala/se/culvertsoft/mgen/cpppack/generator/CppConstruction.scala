@@ -27,7 +27,7 @@ object CppConstruction {
       case TypeEnum.MAP => s"${getTypeName(typ, isPolymorphicField)}()"
       case TypeEnum.LIST => s"${getTypeName(typ, isPolymorphicField)}()"
       case TypeEnum.ARRAY => s"${getTypeName(typ, isPolymorphicField)}()"
-      case TypeEnum.CUSTOM =>
+      case TypeEnum.CLASS =>
         if (isPolymorphicField)
           s"new ${getTypeName(typ, false)}"
         else
@@ -50,7 +50,7 @@ object CppConstruction {
       case TypeEnum.MAP => s"${getTypeName(typ, isPolymorphicField)}()"
       case TypeEnum.LIST => s"${getTypeName(typ, isPolymorphicField)}()"
       case TypeEnum.ARRAY => s"${getTypeName(typ, isPolymorphicField)}()"
-      case TypeEnum.CUSTOM => if (isPolymorphicField) "0" else defaultConstruct(typ, false)
+      case TypeEnum.CLASS => if (isPolymorphicField) "0" else defaultConstruct(typ, false)
       case TypeEnum.ENUM =>
         if (typ.asInstanceOf[EnumType].module == currentModule)
           s"${typ.shortName}_UNKNOWN"

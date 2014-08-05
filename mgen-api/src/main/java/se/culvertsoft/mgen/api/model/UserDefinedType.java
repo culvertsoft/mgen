@@ -1,13 +1,20 @@
 package se.culvertsoft.mgen.api.model;
 
-public interface UserDefinedType extends Type {
+public abstract class UserDefinedType extends Type {
 
 	/**
-	 * The that this type is defined within
-	 * 
-	 * @throws RuntimeException
-	 *             If called outside the compiler
+	 * The parent Module that this type is defined within. Returns null if
+	 * called from outside the compiler.
 	 */
-	Module module();
+	public Module module() {
+		return m_module;
+	}
+
+	protected UserDefinedType(final TypeEnum enm, final Module module) {
+		super(enm);
+		m_module = module;
+	}
+
+	private final Module m_module;
 
 }

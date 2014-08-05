@@ -2,14 +2,14 @@ package se.culvertsoft.mgen.javapack.generator
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
+import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
-import se.culvertsoft.mgen.api.model.EnumType
 
 object JavaTypeNames {
 
@@ -49,12 +49,12 @@ object JavaTypeNames {
           s"${getTypeName(t.elementType(), false)}[0]"
         else
           s"${getTypeName(t.elementType(), false)}[]"
-      case TypeEnum.CUSTOM =>
-        val t = typ.asInstanceOf[CustomType]
+      case TypeEnum.CLASS =>
+        val t = typ.asInstanceOf[ClassType]
         if (t.module() == currentModule) {
-          t.name()
+          t.shortName
         } else {
-          t.fullName()
+          t.fullName
         }
       case TypeEnum.UNKNOWN =>
         throw new GenerationException("Cannot call getTypeName on an UnlinkedCustomType: " + typ.fullName)

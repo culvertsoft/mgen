@@ -3,14 +3,14 @@ package se.culvertsoft.mgen.javapack.generator.impl
 import scala.collection.JavaConversions.asScalaBuffer
 
 import Alias.isFieldSet
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
 
 object MkValidate {
 
-  def apply(t: CustomType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val m = module
 
@@ -25,7 +25,7 @@ object MkValidate {
     for (field <- t.fieldsInclSuper()) {
       if (field.isRequired())
         txtBuffer.endl().tabs(4).text(s"&& ${isFieldSet(field, s"${fieldSetDepthClsString}.DEEP")}")
-      else if (field.typ().containsCustomType())
+      else if (field.typ.containsUserDefinedType)
         txtBuffer.endl().tabs(4).text(s"&& (!${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")} || ${isFieldSet(field, s"${fieldSetDepthClsString}.DEEP")})")
     }
     txtBuffer.textln(s";")

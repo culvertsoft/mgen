@@ -3,13 +3,11 @@ package se.culvertsoft.mgen.cpppack.generator.impl.classh
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
 
+import se.culvertsoft.mgen.api.model.EnumEntry
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.impl.EnumEntryImpl
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 
@@ -23,7 +21,7 @@ object MkEnumCpp {
 
     val name = _e.shortName()
     val fullname = _e.fullName().replaceAllLiterally(".", "::")
-    val entries = _e.entries() ++ List(new EnumEntryImpl("UNKNOWN", null))
+    val entries = _e.entries() ++ List(new EnumEntry("UNKNOWN", null))
     val ns = namespaces.mkString("::")
 
     txtBuffer.clear()
@@ -55,7 +53,7 @@ object MkEnumCpp {
     ln(1, s"return out;")
     ln(s"}")
     ln()
-    
+
     ln(s"static std::vector<$name> _mk_${name}_enum_values() {")
     ln(1, s"std::vector<$name> out;")
     for (e <- entries) {
@@ -64,7 +62,7 @@ object MkEnumCpp {
     ln(1, s"return out;")
     ln(s"}")
     ln()
-    
+
     ln(s"static std::vector<std::string> _mk_${name}_enum_names() {")
     ln(1, s"std::vector<std::string> out;")
     for (e <- entries) {
@@ -73,16 +71,16 @@ object MkEnumCpp {
     ln(1, s"return out;")
     ln(s"}")
     ln()
-    
+
     CppGenUtils.mkNameSpacesEnd(namespaces)
-    
+
     CppGenUtils.mkNameSpaces(List("mgen"))
 
     ln(s"const std::vector<$fullname>& get_enum_values(const $fullname /* type_evidence */) {")
     ln(1, s"static const std::vector<$fullname> out = ${ns}::_mk_${name}_enum_values();")
     ln(1, s"return out;")
     ln("}")
-    ln()    
+    ln()
 
     ln(s"$fullname get_enum_value(const $fullname /* type_evidence */, const std::string& enumName) {")
     ln(1, s"static const std::map<std::string, $fullname> lkup = ${ns}::_mk_${name}_enum_lkup_map();")
@@ -95,8 +93,8 @@ object MkEnumCpp {
     ln(1, s"static const std::vector<std::string> out = ${ns}::_mk_${name}_enum_names();")
     ln(1, s"return out;")
     ln("}")
-    ln()    
-    
+    ln()
+
     ln(s"const std::string& get_enum_name(const $fullname enumValue) {");
     for (e <- entries)
       ln(1, s"const static std::string ${e.name}_name(${quote(e.name)});")
@@ -113,7 +111,7 @@ object MkEnumCpp {
     ln()
 
     CppGenUtils.mkNameSpacesEnd(List("mgen"))
-    
+
     txtBuffer.toString()
 
   }

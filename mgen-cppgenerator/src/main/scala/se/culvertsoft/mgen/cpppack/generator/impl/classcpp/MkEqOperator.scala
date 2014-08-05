@@ -1,20 +1,20 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 
+import scala.collection.JavaConversions.asScalaBuffer
+
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator._
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
-import se.culvertsoft.mgen.api.model.CustomType
-import se.culvertsoft.mgen.cpppack.generator.CppConstruction
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
-import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
-import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.get
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isFieldSet
 
 object MkEqOperator {
 
   def apply(
-    t: CustomType,
+    t: ClassType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module

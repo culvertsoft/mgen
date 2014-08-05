@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.cpppack.generator.impl
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
 
@@ -18,15 +18,15 @@ object Alias {
     s"set${upFirst(field.name())}($input)"
   }
 
-  def typeIdString(t: CustomType): String = {
+  def typeIdString(t: ClassType): String = {
     "_type_id"
   }
 
-  def typeId16BitString(t: CustomType): String = {
+  def typeId16BitString(t: ClassType): String = {
     "_type_id_16bit"
   }
 
-  def typeId16BitBase64String(t: CustomType): String = {
+  def typeId16BitBase64String(t: ClassType): String = {
     "_type_id_16bit_base64"
   }
 

@@ -74,7 +74,7 @@ public class Validator {
 			return validateEntries((List<?>) a, ((ListType) type).elementType());
 		case MAP:
 			return validateMap((Map<?, ?>) a, (MapType) type);
-		case CUSTOM:
+		case CLASS:
 		case UNKNOWN:
 			return validateFieldDeep((MGenBase) a, null);
 		}

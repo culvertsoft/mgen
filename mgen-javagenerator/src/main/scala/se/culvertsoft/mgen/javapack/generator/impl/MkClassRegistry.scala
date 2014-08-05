@@ -4,8 +4,9 @@ import scala.collection.JavaConversions.asScalaBuffer
 
 import Alias.typeIdStr16BitBase64
 import Alias.typeIdStr16bit
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.UserDefinedType
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
@@ -16,22 +17,22 @@ import se.culvertsoft.mgen.javapack.generator.JavaConstants.clsRegistryEntryClsS
 
 object MkClassRegistry {
 
-  def getEntryName(t: CustomType): String = {
+  def getEntryName(t: UserDefinedType): String = {
     t.fullName().replaceAllLiterally(".", "_")
   }
 
-  def mkEntry(t: CustomType): String = {
+  def mkEntry(t: UserDefinedType): String = {
     s"new $clsRegistryEntryClsString()"
   }
 
-  def getId(t: CustomType): String = {
+  def getId(t: ClassType): String = {
     s"${t.typeId()}L"
   }
 
   def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
 
-    val allTypes = referencedModules.flatMap(_.types)
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
+    val allClasses = referencedModules.flatMap(_.classes)
+    val topLevelClasses = allClasses.filterNot(_.hasSuperType)
 
     txtBuffer.clear()
 
@@ -45,7 +46,7 @@ object MkClassRegistry {
     endl()
 
     MkClassStart("ClassRegistry", clsRegistryClsString)
-    for (t <- allTypes) {
+    for (t <- allClasses) {
       val id = getId(t)
       val ids = s"${t.fullName()}._TYPE_IDS"
       val name = s"${quote(t.fullName())}"
@@ -55,7 +56,7 @@ object MkClassRegistry {
     endl()
 
     txtBuffer.tabs(1).textln("public ClassRegistry() {")
-    for (t <- allTypes) {
+    for (t <- allClasses) {
       ln(2, s"add(${getEntryName(t)});")
     }
     txtBuffer.tabs(1).textln("}")
@@ -68,18 +69,18 @@ object MkClassRegistry {
       returnType: String,
       funcName: String,
       inpTypeStr: String,
-      caser: CustomType => String,
-      returner: CustomType => String) {
+      caser: ClassType => String,
+      returner: ClassType => String) {
       txtBuffer.tabs(1).textln(s"@Override")
       txtBuffer.tabs(1).textln(s"public $returnType $funcName(final $inpTypeStr[] ids) {")
       txtBuffer.tabs(2).textln("int i = 0;")
 
-      MkTypeIdSwitch(transform, oobString, false, 2, defaultVal, topLevelTypes, caser, returner)
+      MkTypeIdSwitch(transform, oobString, false, 2, defaultVal, topLevelClasses, caser, returner)
 
       txtBuffer.tabs(1).textln("}").endl()
     }
 
-    def mkInstantiateFunc(transform: String => String, oobString: String, funcName: String, inpTypeStr: String, caser: CustomType => String) {
+    def mkInstantiateFunc(transform: String => String, oobString: String, funcName: String, inpTypeStr: String, caser: ClassType => String) {
       mkFunc(transform, oobString, "return null;", clsRegistryEntryClsString, funcName, inpTypeStr, caser, t => s"return ${getEntryName(t)};")
     }
 

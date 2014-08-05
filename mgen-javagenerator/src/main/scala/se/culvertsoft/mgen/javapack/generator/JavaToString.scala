@@ -26,7 +26,7 @@ object JavaToString {
           else
             s"java.util.Arrays.toString($membName)"
         case TypeEnum.ENUM => membName
-        case TypeEnum.CUSTOM => membName
+        case TypeEnum.CLASS => membName
         case x => throw new GenerationException(s"Don't know how to handle type $x")
       }
   }

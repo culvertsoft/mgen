@@ -1,12 +1,14 @@
 package se.culvertsoft.mgen.api.model;
 
-import se.culvertsoft.mgen.api.model.impl.Float64TypeImpl;
-
 /**
  * Represents a 64 bit floating point number type
  */
-public interface Float64Type extends PrimitiveType {
+public class Float64Type extends PrimitiveType {
 
-	public final static Float64Type INSTANCE = Float64TypeImpl.INSTANCE;
+	private Float64Type() {
+		super(TypeEnum.FLOAT64, double.class, "float64");
+	}
+
+	public final static Float64Type INSTANCE = new Float64Type();
 
 }

@@ -1,12 +1,14 @@
 package se.culvertsoft.mgen.api.model;
 
-import se.culvertsoft.mgen.api.model.impl.BoolTypeImpl;
-
 /**
  * Represents a boolean type
  */
-public interface BoolType extends PrimitiveType {
+public class BoolType extends PrimitiveType {
 
-	public final static BoolType INSTANCE = BoolTypeImpl.INSTANCE;
+	private BoolType() {
+		super(TypeEnum.BOOL, boolean.class, "bool");
+	}
+
+	public final static BoolType INSTANCE = new BoolType();
 
 }

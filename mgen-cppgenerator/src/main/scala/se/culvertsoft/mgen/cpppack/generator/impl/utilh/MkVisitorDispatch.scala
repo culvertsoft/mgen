@@ -1,25 +1,25 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.utilh
 
+import scala.collection.JavaConversions.asScalaBuffer
+
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import scala.collection.JavaConversions._
-import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator._
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
-import se.culvertsoft.mgen.api.model.CustomType
 
 object MkVisitorDispatch {
 
-  def fullName(t: CustomType): String = {
+  def fullName(t: ClassType): String = {
     MkLongTypeName.cpp(t)
   }
-  
+
   def apply(
     referencedModules: Seq[Module],
     generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
 
     val nTabs = 1
-    val allTypes = referencedModules.flatMap(_.types)
-    val topLevelTypes = allTypes.filterNot(_.hasSuperType)
+    val allClasses = referencedModules.flatMap(_.classes)
+    val topLevelClasses = allClasses.filterNot(_.hasSuperType)
 
     for (constString <- List("", "const ")) {
 
@@ -36,7 +36,7 @@ object MkVisitorDispatch {
         true,
         nTabs + 1,
         "return;",
-        topLevelTypes,
+        topLevelClasses,
         t => s"${MkLongTypeName.cpp(t)}::_type_id_16bit",
         t => s"static_cast<${constString}${fullName(t)}&>(o)._accept<VisitorType>(visitor, selection);")
 

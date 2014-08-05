@@ -122,8 +122,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 		case MAP:
 			writeMapField((HashMap<Object, Object>) o, field);
 			break;
-		case UNKNOWN:
-		case CUSTOM:
+		case CLASS:
 			writeMGenObjectField((MGenBase) o, field);
 			break;
 		default:

@@ -5,14 +5,10 @@ object ModelConversion {
   type ApiEntity = Object
   type ApiProject = se.culvertsoft.mgen.api.model.Project
   type ApiModule = se.culvertsoft.mgen.api.model.Module
-  type ApiClass = se.culvertsoft.mgen.api.model.CustomType
+  type ApiClass = se.culvertsoft.mgen.api.model.ClassType
   type ApiField = se.culvertsoft.mgen.api.model.Field
-  type ApiFieldImpl = se.culvertsoft.mgen.api.model.impl.FieldImpl
   type ApiGenerator = se.culvertsoft.mgen.api.model.GeneratorDescriptor
-  type ApiGeneratorImpl = se.culvertsoft.mgen.api.model.impl.GeneratorDescriptorImpl
-  type ApiProjectImpl = se.culvertsoft.mgen.api.model.impl.ProjectImpl
-  type ApiModuleImpl = se.culvertsoft.mgen.api.model.impl.ModuleImpl
-  type ApiClassImpl = se.culvertsoft.mgen.api.model.impl.LinkedCustomType
+  type ApiUserDefinedType = se.culvertsoft.mgen.api.model.UserDefinedType
   type ApiType = se.culvertsoft.mgen.api.model.Type
   type ApiEnum = se.culvertsoft.mgen.api.model.EnumType
   type ApiEnumEntry = se.culvertsoft.mgen.api.model.EnumEntry
@@ -55,23 +51,7 @@ object ModelConversion {
   type ApiListType = se.culvertsoft.mgen.api.model.ListType
   type ApiArrayType = se.culvertsoft.mgen.api.model.ArrayType
   type ApiMapType = se.culvertsoft.mgen.api.model.MapType
-  type ApiCustomType = se.culvertsoft.mgen.api.model.CustomType
-  type ApiUserDefinedType = se.culvertsoft.mgen.api.model.UserDefinedType
-
-  type ApiEnumEntryImpl = se.culvertsoft.mgen.api.model.impl.EnumEntryImpl
-  type ApiEnumTypeImpl = se.culvertsoft.mgen.api.model.impl.EnumTypeImpl
-  type ApiBoolTypeImpl = se.culvertsoft.mgen.api.model.impl.BoolTypeImpl
-  type ApiInt8TypeImpl = se.culvertsoft.mgen.api.model.impl.Int8TypeImpl
-  type ApiInt16TypeImpl = se.culvertsoft.mgen.api.model.impl.Int16TypeImpl
-  type ApiInt32TypeImpl = se.culvertsoft.mgen.api.model.impl.Int32TypeImpl
-  type ApiInt64TypeImpl = se.culvertsoft.mgen.api.model.impl.Int64TypeImpl
-  type ApiFloat32TypeImpl = se.culvertsoft.mgen.api.model.impl.Float32TypeImpl
-  type ApiFloat64TypeImpl = se.culvertsoft.mgen.api.model.impl.Float64TypeImpl
-  type ApiStringTypeImpl = se.culvertsoft.mgen.api.model.impl.StringTypeImpl
-  type ApiListTypeImpl = se.culvertsoft.mgen.api.model.impl.ListTypeImpl
-  type ApiArrayTypeImpl = se.culvertsoft.mgen.api.model.impl.ArrayTypeImpl
-  type ApiMapTypeImpl = se.culvertsoft.mgen.api.model.impl.MapTypeImpl
-  type ApiLinkedCustomType = se.culvertsoft.mgen.api.model.impl.LinkedCustomType
+  type ApiCustomType = se.culvertsoft.mgen.api.model.ClassType
 
   val ApiBoolTypeInstance = se.culvertsoft.mgen.api.model.BoolType.INSTANCE
   val ApiInt8TypeInstance = se.culvertsoft.mgen.api.model.Int8Type.INSTANCE
@@ -81,8 +61,8 @@ object ModelConversion {
   val ApiFloat32TypeInstance = se.culvertsoft.mgen.api.model.Float32Type.INSTANCE
   val ApiFloat64TypeInstance = se.culvertsoft.mgen.api.model.Float64Type.INSTANCE
   val ApiStringTypeInstance = se.culvertsoft.mgen.api.model.StringType.INSTANCE
-  
-  def vd2Api(model: VdModel): ApiProjectImpl = {
+
+  def vd2Api(model: VdModel): ApiProject = {
     Vd2Api(model)
   }
 

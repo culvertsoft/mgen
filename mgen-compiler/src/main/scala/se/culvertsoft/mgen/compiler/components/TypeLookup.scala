@@ -10,7 +10,7 @@ class TypeLookup(
   val project: Project) {
   val modules = project.allModulesRecursively
 
-  val classes = modules.flatMap(_.types)
+  val classes = modules.flatMap(_.classes)
   val enums = modules.flatMap(_.enums)
   val userDefined = classes ++ enums
 

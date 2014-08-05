@@ -8,7 +8,7 @@ import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.JavaConverters.mapAsScalaMapConverter
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
@@ -40,7 +40,7 @@ abstract class BuiltInStaticLangGenerator extends Generator {
   def generateSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.List[GeneratedSourceFile] = {
     currentModule = module
     val enumSources = module.enums.flatMap(e => generateEnumSources(module, e, generatorSettings))
-    val typesSources = module.types.flatMap(t => generateClassSources(module, t, generatorSettings))
+    val typesSources = module.classes.flatMap(t => generateClassSources(module, t, generatorSettings))
     enumSources ++ typesSources
   }
 
@@ -55,7 +55,7 @@ abstract class BuiltInStaticLangGenerator extends Generator {
   }
 
   def generateMetaSources(folder: String, packagePath: String, referencedModules: Seq[Module], generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = { Nil }
-  def generateClassSources(module: Module, t: CustomType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = { Nil }
+  def generateClassSources(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = { Nil }
   def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = { Nil }
 
 }

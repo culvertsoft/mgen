@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
@@ -16,7 +16,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
 object MkAllMembersCtor {
 
   def apply(
-    t: CustomType,
+    t: ClassType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
     implicit val currentModule = module
     val allFields = t.fieldsInclSuper()
@@ -53,7 +53,7 @@ object MkAllMembersCtor {
 
     if (allFields.nonEmpty) {
 
-      txt(s"${t.name()}::${t.name()}(")
+      txt(s"${t.shortName}::${t.shortName}(")
       mkArgumentList()
       txt(")")
       mkInitializerList()

@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classh
 
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
@@ -8,7 +8,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 object MkFieldById {
 
   def apply(
-    t: CustomType,
+    t: ClassType,
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     

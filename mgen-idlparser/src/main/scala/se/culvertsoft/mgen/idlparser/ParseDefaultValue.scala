@@ -10,7 +10,7 @@ import org.json.simple.JSONValue
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
 import se.culvertsoft.mgen.api.model.BoolType
-import se.culvertsoft.mgen.api.model.CustomType
+import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.DefaultValue
 import se.culvertsoft.mgen.api.model.EnumDefaultValue
 import se.culvertsoft.mgen.api.model.EnumType
@@ -26,13 +26,7 @@ import se.culvertsoft.mgen.api.model.PrimitiveType
 import se.culvertsoft.mgen.api.model.StringDefaultValue
 import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.api.model.impl.BoolDefaultValueImpl
-import se.culvertsoft.mgen.api.model.impl.EnumDefaultValueImpl
-import se.culvertsoft.mgen.api.model.impl.ListOrArrayDefaultValueImpl
-import se.culvertsoft.mgen.api.model.impl.MapDefaultValueImpl
-import se.culvertsoft.mgen.api.model.impl.NumericDefaultValueImpl
-import se.culvertsoft.mgen.api.model.impl.ObjectDefaultValueImpl
-import se.culvertsoft.mgen.api.model.impl.StringDefaultValueImpl
+import se.culvertsoft.mgen.api.model.UserDefinedType
 
 object ParseDefaultValue {
 
@@ -61,7 +55,7 @@ object ParseDefaultValue {
         mkListOrArray(expectedType, writtenString, currentModule)
       case expectedType: MapType =>
         mkMap(expectedType, writtenString, currentModule)
-      case expectedType: CustomType if (expectedType.isLinked) =>
+      case expectedType: ClassType if (expectedType.isLinked) =>
         mkObject(expectedType, writtenString, currentModule)
       case _ =>
         throw new AnalysisException("Unexpected type enum: " + expectedType.typeEnum())
@@ -69,7 +63,7 @@ object ParseDefaultValue {
   }
 
   def mkBool(txt: String): BoolDefaultValue = {
-    new BoolDefaultValueImpl(txt.toBoolean)
+    new BoolDefaultValue(txt.toBoolean)
   }
 
   def mkEnum(txt: String, typ: EnumType, module: Module): EnumDefaultValue = {
@@ -78,11 +72,11 @@ object ParseDefaultValue {
         .find(_.name == txt.trim)
         .getOrElse(throw new AnalysisException(s"Don't know any enum value named $txt for enum type $typ"))
 
-    new EnumDefaultValueImpl(typ, entry, module)
+    new EnumDefaultValue(typ, entry, module)
   }
 
   def mkString(txt: String): StringDefaultValue = {
-    new StringDefaultValueImpl(txt)
+    new StringDefaultValue(txt)
   }
 
   def mkNumber(txt: String, expectedType: PrimitiveType): NumericDefaultValue = {
@@ -100,7 +94,7 @@ object ParseDefaultValue {
               + txt, e2);
         }
     }
-    new NumericDefaultValueImpl(expectedType, v)
+    new NumericDefaultValue(expectedType, v)
   }
 
   def mkListOrArray(
@@ -118,7 +112,7 @@ object ParseDefaultValue {
               getString(o),
               currentModule));
           }
-          new ListOrArrayDefaultValueImpl(typ, items)
+          new ListOrArrayDefaultValue(typ, items)
         case _ =>
           throw new AnalysisException("Failed to parse default value '" + writtenString
             + "' as a JSON array.");
@@ -142,7 +136,7 @@ object ParseDefaultValue {
             val value = apply(typ.valueType, getString(e.getValue), currentModule);
             items.put(key, value);
           }
-          new MapDefaultValueImpl(typ, items)
+          new MapDefaultValue(typ, items)
         case _ =>
           throw new AnalysisException("Failed to parse default value '" + writtenString
             + "' as a JSON object.");
@@ -153,12 +147,12 @@ object ParseDefaultValue {
   }
 
   def mkObject(
-    expectedType: CustomType,
+    expectedType: ClassType,
     writtenString: String,
     currentModule: Module): ObjectDefaultValue = {
 
     val ovrdDefValues = new java.util.LinkedHashMap[Field, DefaultValue]();
-    var actualType: CustomType = null
+    var actualType: ClassType = null
 
     try {
 
@@ -170,7 +164,7 @@ object ParseDefaultValue {
 
           if (optActualTypeName != "null") {
 
-            actualType = findType(optActualTypeName, currentModule);
+            actualType = findType(optActualTypeName, currentModule).asInstanceOf[ClassType];
 
             if (actualType == null) {
               throw new AnalysisException("Could not find specified default value type "
@@ -205,7 +199,7 @@ object ParseDefaultValue {
             ovrdDefValues.put(f, value);
           }
 
-          new ObjectDefaultValueImpl(expectedType, actualType, currentModule, ovrdDefValues)
+          new ObjectDefaultValue(expectedType, actualType, currentModule, ovrdDefValues)
 
         case _ =>
           throw new AnalysisException("Failed to parse default value '" + writtenString
@@ -218,9 +212,9 @@ object ParseDefaultValue {
 
   }
 
-  def findType(name: String, currentModule: Module): CustomType = {
-    val t = currentModule.findType(name).asInstanceOf[CustomType]
-    if (t != null) t else currentModule.parent().findType(name).asInstanceOf[CustomType]
+  def findType(name: String, currentModule: Module): UserDefinedType = {
+    val t = currentModule.findType(name).asInstanceOf[UserDefinedType]
+    if (t != null) t else currentModule.parent().findType(name)
   }
 
   def getString(o: Any): String = {

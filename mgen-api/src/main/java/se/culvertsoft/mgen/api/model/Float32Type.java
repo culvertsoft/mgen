@@ -1,11 +1,13 @@
 package se.culvertsoft.mgen.api.model;
 
-import se.culvertsoft.mgen.api.model.impl.Float32TypeImpl;
-
 /**
  * Represents a 32 bit floating point number type
  */
-public interface Float32Type extends PrimitiveType {
+public class Float32Type extends PrimitiveType {
 
-	public final static Float32Type INSTANCE = Float32TypeImpl.INSTANCE;
+	private Float32Type() {
+		super(TypeEnum.FLOAT32, float.class, "float32");
+	}
+
+	public final static Float32Type INSTANCE = new Float32Type();
 }
