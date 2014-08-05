@@ -126,20 +126,7 @@ Before passing this file to the MGen compiler, we probably want to specify which
       
     </Project>
     
-Here we have specified one code generator, one project dependency and two modules:
-* Generator
-  * generator_class_path
-    * The class path of the source code generator (Here the default MGen java generator).
-  * output_path
-    * specifies the output folder where generated code will be placed
-  * classregistry_path
-    * The namespace/package where the genrated class registry will be placed
-  * name
-    * Simply a name identifier for debugging purposes. Can be anything.
-* Depend
-  * Specifies another project file to depend on
-* Module
-  * Specifies a module file to include in this project
+Here we specified one project dependency, two source modules and one code generator.
 
 The file structure of the above project will look something like:
 * ..../se.culvertsoft.mymodule.xml (the module file for se.culvertsoft.mymodule)
