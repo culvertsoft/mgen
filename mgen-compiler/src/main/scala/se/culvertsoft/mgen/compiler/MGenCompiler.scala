@@ -16,8 +16,9 @@ import se.culvertsoft.mgen.compiler.components.LinkTypes
 import se.culvertsoft.mgen.compiler.components.ParseProject
 import se.culvertsoft.mgen.compiler.components.PluginFinder
 import se.culvertsoft.mgen.compiler.util.FileUtils
+import se.culvertsoft.mgen.compiler.util.ParseKeyValuePairs
 
-object MGen {
+object MGenCompiler {
 
   val VERSION = "0.x"
 
@@ -36,7 +37,7 @@ object MGen {
       }
 
       // Parse cmd line args      
-      val settings = parseKeyValuePairs(params)
+      val settings = ParseKeyValuePairs(params)
       val failOnMissingGenerator = settings.getOrElse("fail_on_missing_generator", "false").toBoolean
       val checkForConflicts = settings.get("check_conflicts").map(_.toBoolean).getOrElse(true)
 
@@ -138,39 +139,6 @@ object MGen {
     println("  -output_path=\"specify output path (Optional) ")
     println("  -fail_on_missing_generator=true/false: Default false (Optional)")
     println("  -check_conflicts=\"true/false\" (default=true): If false: the compiler will ignore any type name/id/hash conflicts (Optional). Useful for IDL<->IDL translation")
-  }
-
-  def trimKeyVal(in: String): String = {
-
-    if (in == null)
-      return ""
-
-    val out = in.trim
-    if (out.startsWith("\"") && out.endsWith("\""))
-      out.substring(1, out.length() - 1)
-    else
-      out
-  }
-
-  def parseKeyValuePairs(params: Seq[String]): Map[String, String] = {
-
-    print("Parsing command line args...")
-    try {
-      val settings = params.map(_.split("="))
-        .map(arr => (
-          trimKeyVal(arr(0).filter(_ != '-').toLowerCase()),
-          trimKeyVal(arr(1))))
-        .toMap
-      println("ok")
-      for ((key, value) <- settings) {
-        println(s"  $key: $value")
-      }
-      println("")
-      settings
-    } catch {
-      case t: Exception =>
-        throw new RuntimeException("Failed parsing key-value pairs from command line arguments", t)
-    }
   }
 
 }

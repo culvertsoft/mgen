@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities
 import javax.swing.ToolTipManager
 import javax.swing.UIManager
 import net.miginfocom.swing.MigLayout
+import se.culvertsoft.mgen.compiler.util.ParseKeyValuePairs
 import se.culvertsoft.mgen.visualdesigner.control.Controller
 import se.culvertsoft.mgen.visualdesigner.images.MkImgIcon
 import se.culvertsoft.mgen.visualdesigner.uiInit.MainMenuInit
@@ -39,7 +40,7 @@ object VisualDesigner {
     msgConsole.redirectErr(Color.RED, System.err)
 
     // Parse cmd line arguments
-    val cmdLineArgs = se.culvertsoft.mgen.compiler.MGen.parseKeyValuePairs(args)
+    val cmdLineArgs = ParseKeyValuePairs(args)
 
     // This will be required for a later gui call
     var controller: Controller = null

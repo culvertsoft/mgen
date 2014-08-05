@@ -27,25 +27,5 @@ object XmlOps {
   implicit class TrimNodesOps(nodes: NodeSeq) {
     def trim(): NodeSeq = nodes.map(_.trim)
   }
-  /**
-   *
-   * def textElem(name: String, text: String) = Elem(null, name, Null, TopScope, Text(text))
-   *
-   * /*
-   * var prev: scala.xml.MetaData = None
-   * val attribs = mkAttribsMap() map { pair =>
-   * prev = Attribute(null, pair._1, pair._2, prev)
-   * prev
-   * }
-   * val meta = attribs.fold(Null)((soFar, attr) => soFar append attr)*/    /*
-   * val elem = new scala.xml.Elem(
-   * null,
-   * typ.shortName,
-   * null,
-   * scala.xml.TopScope,
-   * false,
-   * types)
-   * */
-   *
-   */
+
 }

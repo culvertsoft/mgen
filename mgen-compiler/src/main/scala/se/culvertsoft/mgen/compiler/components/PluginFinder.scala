@@ -4,16 +4,16 @@ import java.io.File
 import java.net.URL
 import java.net.URLClassLoader
 
-import scala.collection.JavaConversions.asScalaSet
 import scala.collection.mutable.HashMap
+import scala.collection.mutable.TreeSet
 
-import se.culvertsoft.mgen.api.util.internal.ListFiles
+import se.culvertsoft.mgen.api.exceptions.MGenException
 
 class PluginFinder(pluginPaths_in: Seq[String]) {
 
   val DEFAULT_PATH = "plugins/"
   val pluginPaths = getPaths()
-  val fileNames = pluginPaths.flatMap(path => ListFiles.list(path, ".jar", false))
+  val fileNames = pluginPaths.flatMap(listFiles(_, ".jar", false))
   val jarUrls = fileNames.map(fileName => new URL("jar:file:" + fileName + "!/")).toArray
   val classLoader = URLClassLoader.newInstance(jarUrls)
 
@@ -56,6 +56,32 @@ class PluginFinder(pluginPaths_in: Seq[String]) {
         }
     }
 
+  }
+
+  def listFiles(dir: String, ending: String, recurse: Boolean) = {
+    val out = new TreeSet[String];
+    def listFiles(
+      directory: String,
+      fileEnding: String,
+      result: TreeSet[String],
+      recurse: Boolean) {
+      val pluginFolder = new File(directory);
+      if (!pluginFolder.exists())
+        throw new MGenException("Missing directory: " + directory);
+      if (!pluginFolder.isDirectory())
+        throw new MGenException("Not a directory: " + directory);
+      val curFiles = pluginFolder.listFiles();
+      for (file <- curFiles) {
+        if (file.isDirectory()) {
+          if (recurse)
+            listFiles(file.getAbsolutePath(), fileEnding, result, recurse);
+        } else if (file.getName().endsWith(fileEnding)) {
+          result.add(file.getAbsolutePath());
+        }
+      }
+    }
+    listFiles(dir, ending, out, recurse);
+    out;
   }
 
 }

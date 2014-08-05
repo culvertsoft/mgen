@@ -7,11 +7,8 @@ import se.culvertsoft.mgen.api.model.GeneratedSourceFile;
 import se.culvertsoft.mgen.api.model.Project;
 
 /**
- * Base interface for all source code generators. Users can derive from this
- * class to generate code in their own language and/or format.
- * 
- * @author GiGurra
- * 
+ * Interface for all source code generators. Users can derive from this class to
+ * generate code in their own language and/or format.
  */
 public interface Generator {
 

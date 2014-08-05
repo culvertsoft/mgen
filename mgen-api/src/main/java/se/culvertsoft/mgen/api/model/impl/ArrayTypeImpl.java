@@ -8,7 +8,7 @@ import se.culvertsoft.mgen.api.model.TypeEnum;
 
 public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 
-	private Type m_elementType;
+	private final Type m_elementType;
 
 	public ArrayTypeImpl(final Type elementType) {
 		super(TypeEnum.ARRAY);
@@ -22,10 +22,6 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 
 	public Type elementType() {
 		return m_elementType;
-	}
-
-	protected void setElemType(final Type elemType) {
-		m_elementType = elemType;
 	}
 
 	@Override
@@ -64,7 +60,8 @@ public class ArrayTypeImpl extends TypeImpl implements ArrayType {
 			case STRING:
 				return String[].class;
 			default:
-				return Class.forName("[L" + m_elementType.classOf().getName() + ";");
+				return Class.forName("[L" + m_elementType.classOf().getName()
+						+ ";");
 			}
 		} catch (ClassNotFoundException e) {
 			throw new RuntimeException(e);
