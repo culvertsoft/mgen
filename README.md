@@ -458,10 +458,9 @@ Key features for the compiler, standard parser and standard generators are:
  * Support for generic types 
  * Heterogeneous containers
  * Support for polymorphic types (maps directly to c++/java class hierarchies)
- * Customizable generators (generated code contents and functionality)
- * Customizable parsers
  * Plug-in architecture for loading custom parsers and generators
- * Ability to extend to new languages
+   * Ability to extend to new generated languages
+   * Ability to extend to new idl languages
 
 #### The MGen Code Generators
 
@@ -546,7 +545,7 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 
 Development is a few months from an initial beta release. 
 
-All the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
+Most of the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
  - We've not yet started on configuring test boxes for multiple dev platforms
  - Our build scripts for C++ tests currently do not build with Visual Studio.
  - Documentation is somewhat lacking.
