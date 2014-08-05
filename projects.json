@@ -46,6 +46,21 @@
 		"mgen-api": {
 			"def_files": "java"
 		},
+		"mgen-idlparser": {
+			"def_files": [ "java" ]
+		},
+		"mgen-idlgenerator": {
+			"def_files": [ "java" ]
+		},
+		"mgen-xmlschemaparser": {
+			"def_files": [ "java" ]
+		},
+		"mgen-jsonschemaparser": {
+			"def_files": [ "java" ]
+		},
+		"mgen-protobufparser": {
+			"def_files": [ "java" ]
+		},
 		"mgen-compiler": {
 			"def_files": [ "java", "java-assembly" ]
 		},

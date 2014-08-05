@@ -110,34 +110,23 @@ Compiling the type above with the MGen compiler will produce source code for a c
 Before passing this file to the MGen compiler, we probably want to specify which code generators to run, and if there is more than one module to generate code for. We do this by creating a project file. Here is an example of what a project file may look like:
     
     <Project>
-    
+      
+      <Dependency>../models/libX/libX.xml</Dependency>
+      
+      <Sources>
+          <Source>se.culvertsoft.mymodule.xml</Source>
+          <Source>se.culvertsoft.mymodule2.xml</Source>
+      </Sources>
+      
       <Generator name="Java">
         <class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
         <output_path>src_generated/main/java</output_path>
         <classregistry_path>se.culvertsoft.mymodule</classregistry_path>
       </Generator>
       
-      <Depend>../models/libX/libX.xml</Depend>
-      
-      <Module>se.culvertsoft.mymodule.xml</Module>
-      <Module>se.culvertsoft.mymodule2.xml</Module>
-      
     </Project>
     
-Here we have specified one code generator, one project dependency and two modules:
-* Generator
-  * generator_class_path
-    * The class path of the source code generator (Here the default MGen java generator).
-  * output_path
-    * specifies the output folder where generated code will be placed
-  * classregistry_path
-    * The namespace/package where the genrated class registry will be placed
-  * name
-    * Simply a name identifier for debugging purposes. Can be anything.
-* Depend
-  * Specifies another project file to depend on
-* Module
-  * Specifies a module file to include in this project
+Here we specified one project dependency, two source modules and one code generator.
 
 The file structure of the above project will look something like:
 * ..../se.culvertsoft.mymodule.xml (the module file for se.culvertsoft.mymodule)
@@ -469,10 +458,9 @@ Key features for the compiler, standard parser and standard generators are:
  * Support for generic types 
  * Heterogeneous containers
  * Support for polymorphic types (maps directly to c++/java class hierarchies)
- * Customizable generators (generated code contents and functionality)
- * Customizable parsers
  * Plug-in architecture for loading custom parsers and generators
- * Ability to extend to new languages
+   * Ability to extend to new generated languages
+   * Ability to extend to new idl languages
 
 #### The MGen Code Generators
 
@@ -557,7 +545,7 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 
 Development is a few months from an initial beta release. 
 
-All the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
+Most of the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
  - We've not yet started on configuring test boxes for multiple dev platforms
  - Our build scripts for C++ tests currently do not build with Visual Studio.
  - Documentation is somewhat lacking.
