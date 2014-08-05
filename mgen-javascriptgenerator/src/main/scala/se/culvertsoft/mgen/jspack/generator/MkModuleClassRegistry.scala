@@ -34,8 +34,8 @@ object MkModuleClassRegistry {
           for (field <- t.fieldsInclSuper) {
             ln("\"" + field.name + "\": {")
             txtBuffer {
-              if (field.hasDefaultValue) {
-                ln("\"default\": \"" + MkDefaultValue(field.defaultValue()) + "\",")
+              if(field.hasDefaultValue){
+                ln("\"default\": " + MkDefaultValue(field.defaultValue()) + ",")
               }
               ln("\"flags\": [" + field.flags().map(x => "\"" + x + "\"").mkString(",") + "],")
               ln("\"type\": \"" + getTypeName(field.typ()) + "\",")

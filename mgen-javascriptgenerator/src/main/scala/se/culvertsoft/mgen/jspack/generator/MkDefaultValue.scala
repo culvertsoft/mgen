@@ -15,7 +15,7 @@ object MkDefaultValue {
       return null
 
     v match {
-      case v: EnumDefaultValue => getString(v.value.name)
+      case v: EnumDefaultValue => getQuotedStringOrNull(v.value.name)
       case v: BoolDefaultValue => getString(v.value)
       case v: StringDefaultValue => getQuotedStringOrNull(v.value)
       case v: NumericDefaultValue =>
@@ -34,7 +34,11 @@ object MkDefaultValue {
         s"{$entriesString}"
 
       case v: ObjectDefaultValue =>
-        val entries = v.overriddenDefaultValues.map(e => (getQuotedStringOrNull(e._1.name), apply(e._2)))
+        val defaultDefaultValues = v.actualType().fields().map(x => (x, x.defaultValue())).toMap
+        val overridenDefaultValues = v.overriddenDefaultValues()
+
+        val allDefaultValues = defaultDefaultValues ++ overridenDefaultValues
+        val entries = allDefaultValues.map(e => (getQuotedStringOrNull(e._1.name), apply(e._2)))
         val entriesString = entries.map(e => s"${e._1}: ${e._2}").mkString(", ")
 
         if (v.isDefaultTypeOverriden) {

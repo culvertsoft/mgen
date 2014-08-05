@@ -9,13 +9,12 @@
 		<classregistry_path>trans.testmodel</classregistry_path>
 	</Generator>
 
-	<Generator name="Javascript">
-		<class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator
-		</class_path>
-		<output_path>src_generated/test/javascript</output_path>
-		<output_filename>mgen-data.trans.testmodel.js</output_filename>
-		<classregistryblueprint>mgen_classreg</classregistryblueprint>
-	</Generator>
+    <Generator name="Javascript">
+        <class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </class_path>
+        <output_path>src_generated/test/javascript</output_path>
+        <output_filename>transient_blueprint.js</output_filename>
+        <classregistryblueprint>transient_blueprint</classregistryblueprint>
+    </Generator>
 
 	<Generator name="C++">
 		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator
