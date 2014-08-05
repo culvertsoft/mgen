@@ -21,7 +21,7 @@ object MkModuleClassRegistry {
             ln("\"" + field.name + "\": {")
             txtBuffer {
               if(field.hasDefaultValue){
-                ln("\"default\": \"" + MkDefaultValue(field.defaultValue()) + "\",")
+                ln("\"default\": " + MkDefaultValue(field.defaultValue()) + ",")
               }
               ln("\"flags\": [" + field.flags().map(x => "\"" + x + "\"").mkString(",") + "],")
               ln("\"type\": \"" + getTypeName(field.typ()) + "\",")
