@@ -110,17 +110,19 @@ Compiling the type above with the MGen compiler will produce source code for a c
 Before passing this file to the MGen compiler, we probably want to specify which code generators to run, and if there is more than one module to generate code for. We do this by creating a project file. Here is an example of what a project file may look like:
     
     <Project>
-    
+      
+      <Dependency>../models/libX/libX.xml</Dependency>
+      
+      <Sources>
+          <Source>se.culvertsoft.mymodule.xml</Source>
+          <Source>se.culvertsoft.mymodule2.xml</Source>
+      </Sources>
+      
       <Generator name="Java">
         <class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
         <output_path>src_generated/main/java</output_path>
         <classregistry_path>se.culvertsoft.mymodule</classregistry_path>
       </Generator>
-      
-      <Depend>../models/libX/libX.xml</Depend>
-      
-      <Module>se.culvertsoft.mymodule.xml</Module>
-      <Module>se.culvertsoft.mymodule2.xml</Module>
       
     </Project>
     
