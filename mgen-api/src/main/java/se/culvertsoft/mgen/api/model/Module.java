@@ -20,7 +20,7 @@ public class Module {
 	public Map<String, String> settings() {
 		return m_settings;
 	}
-
+	
 	/**
 	 * Returns the path of this module, i.e. the java package or c++ namespace
 	 * of this module.
@@ -88,12 +88,19 @@ public class Module {
 	}
 
 	/**
-	 * Replaces the classes of this module.
+	 * Adds classes to this module.
 	 */
 	public void addClasses(final List<ClassType> classes) {
 		m_classes.addAll(classes);
 	}
 
+	/**
+	 * Adds a class to this module.
+	 */
+	public void addClass(final ClassType c) {
+		m_classes.add(c);
+	}
+	
 	/**
 	 * Replaces the enums of this module.
 	 */
@@ -103,12 +110,19 @@ public class Module {
 	}
 
 	/**
-	 * Replaces the enums of this module.
+	 * Adds new enums to this module.
 	 */
 	public void addEnums(final List<EnumType> enums) {
 		m_enums.addAll(enums);
 	}
-
+	
+	/**
+	 * Add a new enum to this module.
+	 */
+	public void addEnum(final EnumType e){
+		m_enums.add(e);
+	}
+	
 	/**
 	 * Searches the types of this module for a type with a given name
 	 * 

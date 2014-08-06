@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import se.culvertsoft.mgen.api.util.Base64;
+import se.culvertsoft.mgen.api.util.CRC16;
 import se.culvertsoft.mgen.api.util.CRC64;
 
 /**
@@ -221,6 +222,10 @@ public class ClassType extends UserDefinedType {
 		return true;
 	}
 
+	/**
+	 * Add a derived type (for internal compiler linkage).
+	 * Do not use this. It will be called by the compiler.
+	 */
 	public ClassType addSubType(final ClassType t) {
 		m_subTypes.add(t);
 		return this;
@@ -282,6 +287,13 @@ public class ClassType extends UserDefinedType {
 	private Set<EnumType> m_referencedEnums;
 	private String m_typeId16BitBase64Heirarchy;
 
+	public ClassType(
+			final String name,
+			final Module module,
+			final UserDefinedType superType) {
+		this(name, module, CRC16.calc(module.path() + "." + name), superType);
+	}
+	
 	public ClassType(
 			final String name,
 			final Module module,
