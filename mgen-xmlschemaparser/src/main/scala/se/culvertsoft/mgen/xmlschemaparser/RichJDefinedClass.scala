@@ -1,6 +1,5 @@
 package se.culvertsoft.mgen.xmlschemaparser
 
-import com.sun.codemodel.ClassType
 import com.sun.codemodel.JClass
 import com.sun.codemodel.JClassContainer
 import com.sun.codemodel.JDefinedClass
@@ -46,14 +45,6 @@ object RichJDefinedClass {
 
     def getInnerClasses() = {
       get[JDefinedClass]("classes")
-    }
-
-    def isClass() = {
-      base.getClassType() == ClassType.CLASS
-    }
-
-    def isEnum() = {
-      base.getClassType() == ClassType.ENUM
     }
 
   }

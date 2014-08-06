@@ -18,7 +18,6 @@ import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.Parser
-import se.culvertsoft.mgen.xmlschemaparser.RichJDefinedClass.rdclass
 
 class XmlSchemaParser extends Parser {
 
@@ -58,10 +57,13 @@ class XmlSchemaParser extends Parser {
         val module = parent.getOrCreateModule(pkg.name(), fileName, dir + "/" + fileName, settings);
 
         for (typ <- pkg.classes) {
-          if (typ.isClass) {
-            module.addClass(cvtClass(typ, module, pkg))
-          } else if (typ.isEnum) {
-            module.addEnum(cvtEnum(typ, module, pkg))
+
+          typ.getClassType match {
+            case com.sun.codemodel.ClassType.CLASS =>
+              module.addClass(cvtClass(typ, module, pkg))
+            case com.sun.codemodel.ClassType.ENUM =>
+              module.addEnum(cvtEnum(typ, module, pkg))
+            case _ =>
           }
         }
       }
