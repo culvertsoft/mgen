@@ -184,6 +184,14 @@ public class Field {
 			final short id) {
 		this(ownerClassName, name, type, flags, id, null);
 	}
+	
+	public Field(
+			final String ownerClassName,
+			final String name,
+			final Type type,
+			final List<String> flags) {
+		this(ownerClassName, name, type, flags, CRC16.calc(name), null);
+	}
 
 	private final String m_ownerClassName;
 	private final String m_name;

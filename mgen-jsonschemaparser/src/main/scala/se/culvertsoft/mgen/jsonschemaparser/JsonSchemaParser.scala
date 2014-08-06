@@ -21,6 +21,10 @@ import se.culvertsoft.mgen.api.model.EnumType
 import com.sun.codemodel.JPackage
 import com.sun.codemodel.JDefinedClass
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.api.model.EnumEntry
+import com.sun.codemodel.JFieldVar
+import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.Type
 
 /**
  * Contains several snippets extracted from the class Jsonschema2Pojo from the github apache2 project with the same name
@@ -53,20 +57,14 @@ class JsonSchemaParser extends Parser {
       mapper.generate(codeModel, getNodeName(source), defaultString(config.getTargetPackage()), source.toURI().toURL());
     }
 
-    val absoluteDir = new File(parent.absoluteFilePath()).getParent();
-    //
-    //    	public EnumType(
-    //			final String shortName,
-    //			final String fullName,
-    //			final Module module) {
-    //		super(TypeEnum.ENUM, module)
+    val absoluteDir = new File(parent.absoluteFilePath()).getParent()
 
     for (pkg <- codeModel.packages()) {
       val fileName = pkg.name() + ".xml"
       val module = parent.getOrCreateModule(pkg.name(), fileName, absoluteDir + fileName, settings);
       for (typ <- pkg.classes()) {
         if (typ.getClassType() == com.sun.codemodel.ClassType.ENUM) {
-          module.addEnum(createEnum(typ, module, pkg));
+          module.addEnum(createEnum(typ, module, pkg))
         } else {
           module.addClass(createClass(typ, module, pkg))
         }
@@ -77,13 +75,31 @@ class JsonSchemaParser extends Parser {
 
   def createEnum(typ: JDefinedClass, module: Module, pkg: JPackage): EnumType = {
     val e = new EnumType(typ.name(), pkg.name() + "." + typ.name(), module)
-    
+    e.setEntries(typ.getEnumConstantsByName().map( x=> new EnumEntry(x._1, null)).toSeq);
     e
   }
+  
+//	final String ownerClassName,
+//	final String name,
+//	final Type type,
+//	final List<String> flags,
+//	final short id,
+//	final DefaultValue defaultValue
 
   def createClass(typ: JDefinedClass, module: Module, pkg: JPackage): ClassType = {
-	val c = new ClassType(typ.name(), module, null)
-	c
+    val c = new ClassType(typ.name(), module, null)
+    for(f <- typ.fields()){
+      val fromField = f._2;
+      val t = createType(fromField);
+      //val toField = new Field(typ.name(), fromField.name(), , null)
+      //c.addField()
+      //field.`type`().fullName()
+    }
+    c
+  }
+  
+  def createType(field: JFieldVar){
+    
   }
 
 }

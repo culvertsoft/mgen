@@ -36,6 +36,10 @@ public class EnumType extends UserDefinedType {
 		m_entries.clear();
 		m_entries.addAll(entries);
 	}
+	
+	public void setEntry(final EnumEntry e){
+		m_entries.add(e);
+	}
 
 	@Override
 	public boolean isLinked() {
