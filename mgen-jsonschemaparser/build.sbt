@@ -13,6 +13,10 @@ crossPaths := false
 
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
+libraryDependencies += "org.jsonschema2pojo" % "jsonschema2pojo-core" % "0.4.5"
+
+libraryDependencies += "org.jsonschema2pojo" % "jsonschema2pojo-cli" % "0.4.5"
+
 retrieveManaged := true
 
 EclipseKeys.withSource := true
