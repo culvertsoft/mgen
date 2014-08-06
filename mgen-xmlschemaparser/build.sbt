@@ -13,6 +13,12 @@ crossPaths := false
 
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
+libraryDependencies += "javax.xml" % "jaxb-api" % "2.1" exclude("sources", "doc")
+
+libraryDependencies += "com.sun.xml.bind" % "jaxb-impl" % "2.2.7"
+
+libraryDependencies += "com.sun.xml.bind" % "jaxb-xjc" % "2.2.7"
+
 retrieveManaged := true
 
 EclipseKeys.withSource := true
