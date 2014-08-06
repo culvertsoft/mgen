@@ -21,7 +21,7 @@ object ParseModule {
     println(s"  parsing module: ${absoluteFilePath}")
 
     // Calculate module path
-    val modulePath = file.getName.split('.').dropRight(1).mkString(".")
+    val modulePath = file.getName.stripSuffix(".xml")
 
     // Read in module xml source code 
     val moduleXml = scala.xml.Utility.trim(loadFile(file))
