@@ -114,8 +114,30 @@ public class Field {
 	 * 
 	 */
 	public boolean isLinked() {
-		return m_type.isLinked()
-				&& (!hasDefaultValue() || m_defaultValue.isLinked());
+		return m_type.isLinked() && (!hasDefaultValue() || m_defaultValue.isLinked());
+	}
+
+	/**
+	 * Returns if this field is static. Static fields are also automatically
+	 * constant. These fields are automatically converted into Constant objects
+	 * by the compiler, and moved to the ClassType.constants() instead of
+	 * ClassType.felds().
+	 * 
+	 * @return if this field is flagged static.
+	 */
+	public boolean isStatic() {
+		return m_static;
+	}
+
+	/**
+	 * Returns if this field is constant. Constants get no "set"-methods
+	 * generated. If this field is also marked static special conditions apply,
+	 * see Field.isStatic().
+	 * 
+	 * @return if this field is constant.
+	 */
+	public boolean isConstant() {
+		return m_constant;
 	}
 
 	/**
@@ -133,13 +155,7 @@ public class Field {
 	 * type.
 	 */
 	public Field transform(final Type type) {
-		return new Field(
-				m_ownerClassName,
-				m_name,
-				type,
-				m_flags,
-				m_id,
-				m_defaultValue);
+		return new Field(m_ownerClassName, m_name, type, m_flags, m_id, m_defaultValue);
 	}
 
 	/**
@@ -174,6 +190,8 @@ public class Field {
 		m_polymorphic = m_flags.contains("polymorphic");
 		m_parked = m_flags.contains("parked");
 		m_transient = m_flags.contains("transient");
+		m_constant = m_flags.contains("constant");
+		m_static = m_flags.contains("static");
 	}
 
 	public Field(
@@ -184,7 +202,7 @@ public class Field {
 			final short id) {
 		this(ownerClassName, name, type, flags, id, null);
 	}
-	
+
 	public Field(
 			final String ownerClassName,
 			final String name,
@@ -206,5 +224,7 @@ public class Field {
 	private final boolean m_polymorphic;
 	private final boolean m_parked;
 	private final boolean m_transient;
+	private final boolean m_constant;
+	private final boolean m_static;
 
 }

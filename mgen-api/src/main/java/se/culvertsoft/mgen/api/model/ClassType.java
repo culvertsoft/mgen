@@ -1,6 +1,7 @@
 package se.culvertsoft.mgen.api.model;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -137,8 +138,7 @@ public class ClassType extends UserDefinedType {
 			m_fieldsInclSuper = new ArrayList<Field>();
 
 			if (hasSuperType()) {
-				m_fieldsInclSuper.addAll(((ClassType) superType())
-						.fieldsInclSuper());
+				m_fieldsInclSuper.addAll(((ClassType) superType()).fieldsInclSuper());
 			}
 
 			m_fieldsInclSuper.addAll(m_fields);
@@ -146,6 +146,45 @@ public class ClassType extends UserDefinedType {
 		}
 
 		return m_fieldsInclSuper;
+	}
+
+	/**
+	 * Returns the constants defined within this class.
+	 * 
+	 * @return the constants defined within this class.
+	 */
+	public List<Constant> constants() {
+		return m_constants;
+	}
+
+	/**
+	 * Adds a constant to this class.
+	 * 
+	 * @param c
+	 *            the constant to add.
+	 */
+	public void addConstant(final Constant c) {
+		m_constants.add(c);
+	}
+
+	/**
+	 * Sets the constants of this class.
+	 * 
+	 * @param constants
+	 *            the constants of this class.
+	 */
+	public void setConstants(final List<Constant> constants) {
+		m_constants = constants;
+	}
+
+	/**
+	 * Adds constants to this class.
+	 * 
+	 * @param constants
+	 *            the constants to add.
+	 */
+	public void addConstants(final Collection<Constant> constants) {
+		m_constants.addAll(constants);
 	}
 
 	/**
@@ -176,6 +215,20 @@ public class ClassType extends UserDefinedType {
 		for (final Field f : fieldsInclSuper()) {
 			if (f.name().equals(name)) {
 				return f;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Finds/Gets a constant by name. Returns null if no such field is found.
+	 * The search checks both the short and full name of all constants within
+	 * this class.
+	 */
+	public Constant findConstant(final String name) {
+		for (final Constant c : m_constants) {
+			if (c.shortName().equals(name) || c.fullName().equals(name)) {
+				return c;
 			}
 		}
 		return null;
@@ -223,8 +276,8 @@ public class ClassType extends UserDefinedType {
 	}
 
 	/**
-	 * Add a derived type (for internal compiler linkage).
-	 * Do not use this. It will be called by the compiler.
+	 * Add a derived type (for internal compiler linkage). Do not use this. It
+	 * will be called by the compiler.
 	 */
 	public ClassType addSubType(final ClassType t) {
 		m_subTypes.add(t);
@@ -241,6 +294,9 @@ public class ClassType extends UserDefinedType {
 
 		for (final Field f : m_fields)
 			findReferences(f.typ(), classes, enums);
+
+		for (final Constant c : m_constants)
+			findReferences(c.typ(), classes, enums);
 
 		m_referencedEnums = enums;
 		m_referencedClasses = classes;
@@ -281,19 +337,17 @@ public class ClassType extends UserDefinedType {
 	private List<ClassType> m_typeHierarchy;
 	private List<ClassType> m_subTypes;
 	private List<Field> m_fields;
+	private List<Constant> m_constants;
 
 	private ArrayList<Field> m_fieldsInclSuper;
 	private Set<ClassType> m_referencedClasses;
 	private Set<EnumType> m_referencedEnums;
 	private String m_typeId16BitBase64Heirarchy;
 
-	public ClassType(
-			final String name,
-			final Module module,
-			final UserDefinedType superType) {
+	public ClassType(final String name, final Module module, final UserDefinedType superType) {
 		this(name, module, CRC16.calc(module.path() + "." + name), superType);
 	}
-	
+
 	public ClassType(
 			final String name,
 			final Module module,
@@ -306,6 +360,7 @@ public class ClassType extends UserDefinedType {
 		m_id16Bit = id16Bit;
 		m_superType = superType;
 		m_fields = new ArrayList<Field>();
+		m_constants = new ArrayList<Constant>();
 		m_typeHierarchy = null;
 		m_subTypes = new ArrayList<ClassType>();
 		m_fieldsInclSuper = null;

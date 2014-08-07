@@ -6,6 +6,7 @@ import scala.collection.JavaConversions.bufferAsJavaList
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.ClassType
+import se.culvertsoft.mgen.api.model.Constant
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Project
@@ -77,6 +78,20 @@ object LinkTypes {
       }
 
       t.setFields(newFields)
+
+    }
+
+    // Move static constants -> constants list
+    for (t <- classes) {
+
+      val (statics, newFields) = t.fields().partition(_.isStatic())
+      t.setFields(newFields)
+
+      for (s <- statics) {
+        if (!s.hasDefaultValue)
+          throw new AnalysisException(s"Field $s was specified as a static constant but lacks value")
+        t.addConstant(new Constant(s.name, t, s.typ, s.defaultValue))
+      }
 
     }
 
