@@ -5,6 +5,7 @@ import scala.util.Failure
 import scala.util.Success
 import scala.util.Try
 
+import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.compiler.components.CreateProject
 import se.culvertsoft.mgen.compiler.components.GenerateCode
 import se.culvertsoft.mgen.compiler.components.PluginFinder
@@ -32,14 +33,7 @@ object MGenCompiler {
       // Parse cmd line args      
       val settings = ParseKeyValuePairs(params)
 
-      // Load plugins
-      val pluginFinder = new PluginFinder(settings.getOrElse("plugin_paths", ""))
-
-      // Parse sources and link together types, fields, super types and default values
-      val project = CreateProject(settings, pluginFinder)
-
-      // Generate code
-      val code = GenerateCode(project, settings, pluginFinder)
+      val code = run(settings)
 
       // Output the code to disk
       FileUtils.writeIfChanged(code, settings.get("output_path"))
@@ -60,6 +54,12 @@ object MGenCompiler {
         throw err
     }
 
+  }
+
+  def run(settings: Map[String, String]): Seq[GeneratedSourceFile] = {
+    val pluginFinder = new PluginFinder(settings.getOrElse("plugin_paths", ""))
+    val project = CreateProject(settings, pluginFinder)
+    GenerateCode(project, settings, pluginFinder)
   }
 
 }
