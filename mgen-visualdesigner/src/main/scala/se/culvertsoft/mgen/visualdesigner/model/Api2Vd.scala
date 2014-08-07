@@ -31,8 +31,8 @@ import ModelConversion.VdGenerator
 import ModelConversion.VdModule
 import ModelConversion.VdProject
 import se.culvertsoft.mgen.api.model.Type
-import se.culvertsoft.mgen.compiler.components.Project2Xml
 import se.culvertsoft.mgen.compiler.util.FileUtils
+import se.culvertsoft.mgen.idlgenerator.util.IdlGenUtil
 import se.culvertsoft.mgen.visualdesigner.EntityFactory
 import se.culvertsoft.mgen.visualdesigner.util.LayOutEntities
 
@@ -223,7 +223,7 @@ object Api2Vd {
     parent.getFields().add(fld)
     fld.setType(cvtFieldType(apiField, state))
     fld.setId16Bit(apiField.id())
-    fld.setDefaultValue(Project2Xml.defaultVal2String(apiField.defaultValue))
+    fld.setDefaultValue(IdlGenUtil.defaultVal2String(apiField.defaultValue))
     fld
   }
 

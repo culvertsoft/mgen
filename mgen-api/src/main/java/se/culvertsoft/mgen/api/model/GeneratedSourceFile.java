@@ -20,6 +20,14 @@ public class GeneratedSourceFile {
 		return m_filePath;
 	}
 
+	/**
+	 * Creates a new GeneratedSourceFile with the same source code but prepends
+	 * a path to the file path
+	 */
+	public GeneratedSourceFile transformPrependPath(final String prefix) {
+		return new GeneratedSourceFile(prefix + m_filePath, m_sourceCode);
+	}
+
 	public GeneratedSourceFile(final String filePath, final String sourceCode) {
 		m_filePath = filePath;
 		m_sourceCode = sourceCode;

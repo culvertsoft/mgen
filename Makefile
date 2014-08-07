@@ -8,15 +8,15 @@ all: check
 	#                                                       #
 	#########################################################
 	cd mgen-api && make all
-	cd mgen-idlparser && make all
 	cd mgen-jsonschemaparser && make all
 	cd mgen-protobufparser && make all
 	cd mgen-xmlschemaparser && make all
-	cd mgen-compiler && make all
+	cd mgen-idlparser && make all
 	cd mgen-idlgenerator && make all
 	cd mgen-cppgenerator && make all
 	cd mgen-javagenerator && make all
 	cd mgen-javascriptgenerator && make all
+	cd mgen-compiler && make all
 	cd mgen-javascriptlib && make all
 	cd mgen-javalib && make all
 	cd mgen-visualdesigner && make all
@@ -26,7 +26,7 @@ all: check
 	#                                                       #
 	#########################################################
 
-fast: check
+all-fast: check
 	#########################################################
 	#                                                       #
 	#           BUILDING MGEN (FAST)                        #
@@ -53,15 +53,15 @@ clean:
 	#########################################################
 	cd mgen-integrationtests && make clean
 	cd mgen-api && make clean
-	cd mgen-idlparser && make clean
 	cd mgen-jsonschemaparser && make clean
 	cd mgen-protobufparser && make clean
 	cd mgen-xmlschemaparser && make clean
-	cd mgen-compiler && make clean
+	cd mgen-idlparser && make clean
 	cd mgen-idlgenerator && make clean
 	cd mgen-cppgenerator && make clean
 	cd mgen-javagenerator && make clean
 	cd mgen-javascriptgenerator && make clean
+	cd mgen-compiler && make clean
 	cd mgen-javascriptlib && make clean
 	cd mgen-cpplib && make clean
 	cd mgen-javalib && make clean
