@@ -17,6 +17,8 @@ unmanagedSourceDirectories in Test += baseDirectory.value / "src_generated/test/
 
 autoScalaLibrary := false
 
+compileOrder := CompileOrder.JavaThenScala
+
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
 libraryDependencies += "org.scala-lang" % "scala-library" % scalaVersion.value % Test
