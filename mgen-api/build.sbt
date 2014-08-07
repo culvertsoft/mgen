@@ -15,6 +15,8 @@ retrieveManaged := true
 
 autoScalaLibrary := false
 
+EclipseKeys.projectFlavor := EclipseProjectFlavor.Java
+
 libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
 
 EclipseKeys.withSource := true
