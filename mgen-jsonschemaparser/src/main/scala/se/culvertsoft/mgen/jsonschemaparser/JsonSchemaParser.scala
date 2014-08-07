@@ -25,6 +25,19 @@ import se.culvertsoft.mgen.api.model.EnumEntry
 import com.sun.codemodel.JFieldVar
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Type
+import com.sun.codemodel.JPrimitiveType
+import com.sun.codemodel.JType
+import se.culvertsoft.mgen.api.model.BoolType
+import se.culvertsoft.mgen.api.model.Int8Type
+import se.culvertsoft.mgen.api.model.Int16Type
+import se.culvertsoft.mgen.api.model.Int32Type
+import se.culvertsoft.mgen.api.model.Float32Type
+import se.culvertsoft.mgen.api.model.Float64Type
+import se.culvertsoft.mgen.api.model.Int64Type
+import se.culvertsoft.mgen.api.model.ArrayType
+import se.culvertsoft.mgen.api.model.StringType
+import se.culvertsoft.mgen.api.model.UserDefinedType
+import se.culvertsoft.mgen.api.model.UnlinkedType
 
 /**
  * Contains several snippets extracted from the class Jsonschema2Pojo from the github apache2 project with the same name
@@ -61,12 +74,14 @@ class JsonSchemaParser extends Parser {
 
     for (pkg <- codeModel.packages()) {
       val fileName = pkg.name() + ".xml"
-      val module = parent.getOrCreateModule(pkg.name(), fileName, absoluteDir + fileName, settings);
+      val module = parent.getOrCreateModule(pkg.name(), fileName, absoluteDir + "/" + fileName, settings);
       for (typ <- pkg.classes()) {
         if (typ.getClassType() == com.sun.codemodel.ClassType.ENUM) {
           module.addEnum(createEnum(typ, module, pkg))
-        } else {
+        } else if (typ.getClassType() == com.sun.codemodel.ClassType.CLASS) {
           module.addClass(createClass(typ, module, pkg))
+        } else {
+          println("Warning, Mgen does not support " + typ.getClassType());
         }
       }
     }
@@ -74,32 +89,61 @@ class JsonSchemaParser extends Parser {
   }
 
   def createEnum(typ: JDefinedClass, module: Module, pkg: JPackage): EnumType = {
-    val e = new EnumType(typ.name(), pkg.name() + "." + typ.name(), module)
-    e.setEntries(typ.getEnumConstantsByName().map( x=> new EnumEntry(x._1, null)).toSeq);
-    e
+    val mgenEnum = new EnumType(typ.name(), pkg.name() + "." + typ.name(), module)
+    mgenEnum.setEntries(typ.getEnumConstantsByName().map( x=> new EnumEntry(x._1, null)).toSeq);
+    mgenEnum
   }
-  
-//	final String ownerClassName,
-//	final String name,
-//	final Type type,
-//	final List<String> flags,
-//	final short id,
-//	final DefaultValue defaultValue
 
   def createClass(typ: JDefinedClass, module: Module, pkg: JPackage): ClassType = {
-    val c = new ClassType(typ.name(), module, null)
-    for(f <- typ.fields()){
-      val fromField = f._2;
-      val t = createType(fromField);
-      //val toField = new Field(typ.name(), fromField.name(), , null)
-      //c.addField()
-      //field.`type`().fullName()
+    val mgenClass = new ClassType(typ.name(), module, null)
+    for(jField <- typ.fields()){
+      val jType = jField._2.`type`()
+      val mgenType = createType(jType);
+      val mgenField = new Field(typ.name(), jType.name(), mgenType, null)
+      mgenClass.addField(mgenField)
     }
-    c
+    mgenClass
   }
   
-  def createType(field: JFieldVar){
+  def createType(jType: JType) : Type = {
     
+    if(jType.isPrimitive()) {
+    	createPrimitiveType(jType);
+    } else if(jType.isArray()){
+    	createArrayType(jType)
+    } else if(jType.isReference()){
+    	createReferenceType(jType)
+    } else {
+      throw new TypeNotPresentException(jType.name(), null)
+    }
+    
+  }
+  
+  def createArrayType(jType: JType): Type = {
+    new ArrayType(createType(jType.elementType()))
+  }
+  
+  def createReferenceType(jType: JType): Type = {
+    if(jType.fullName() == "java.lang.String"){
+    	StringType.INSTANCE
+    } else {
+      new UnlinkedType(jType.fullName());
+    }
+  }
+  
+  def createPrimitiveType(jType: JType): Type = {
+	val typeName = jType.name();
+	typeName match {
+	  case "boolean" => BoolType.INSTANCE
+	  case "byte" => Int8Type.INSTANCE
+	  case "short" => Int16Type.INSTANCE
+	  case "char" => Int16Type.INSTANCE
+	  case "int" => Int32Type.INSTANCE
+	  case "long" => Int64Type.INSTANCE
+	  case "float" => Float32Type.INSTANCE
+	  case "double" => Float64Type.INSTANCE
+	  case x :String => throw new TypeNotPresentException(x, null);
+	}
   }
 
 }
