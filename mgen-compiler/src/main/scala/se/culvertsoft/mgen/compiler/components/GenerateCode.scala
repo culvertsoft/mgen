@@ -1,12 +1,12 @@
 package se.culvertsoft.mgen.compiler.components
 
 import java.util.ArrayList
-
 import scala.collection.JavaConversions.asScalaBuffer
-
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.Generator
+import se.culvertsoft.mgen.api.exceptions.AnalysisException
+import se.culvertsoft.mgen.api.exceptions.GenerationException
 
 object GenerateCode {
 
@@ -36,4 +36,44 @@ object GenerateCode {
 
   }
 
+  def apply(project: Project, settings: Map[String, String], pluginFinder: PluginFinder): Seq[GeneratedSourceFile] = {
+
+    val failOnMissingGenerator = settings.getOrElse("fail_on_missing_generator", "false").toBoolean
+
+    // Find our selected generators
+    val selectedGenerators = project.generators()
+    if (selectedGenerators.isEmpty)
+      throw new AnalysisException(s"No generator specified, check your project file")
+
+    println("Instantiating generators...")
+    val generators = selectedGenerators.flatMap { selected =>
+      val clsName = selected.getGeneratorClassPath
+      pluginFinder.find[Generator](clsName) match {
+        case Some(cls) =>
+          println(s"Created generator: ${clsName}")
+          Some(cls.newInstance())
+        case None =>
+          if (failOnMissingGenerator)
+            throw new GenerationException(s"Could not find specified generator '${clsName}'")
+          println(s"WARNING: Could not find specified generator '${clsName}', skipping")
+          None
+      }
+    }
+    println()
+
+    // Verify we were able to create some generators
+    if (generators.isEmpty)
+      throw new AnalysisException(s"Failed to instantiate any of the specified generators (${selectedGenerators})")
+
+    // Run the generators
+    val generatedSources = GenerateCode(project, generators)
+
+    // Check that we actually generated some code
+    if (generatedSources.isEmpty)
+      throw new AnalysisException(s"Generators generated no code...")
+
+    generatedSources
+
+  }
+  
 }

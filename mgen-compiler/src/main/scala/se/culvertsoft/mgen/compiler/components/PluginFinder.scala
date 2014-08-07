@@ -8,8 +8,10 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.TreeSet
 
 import se.culvertsoft.mgen.api.exceptions.MGenException
+import se.culvertsoft.mgen.compiler.util.SplitCommaSeparated
 
 class PluginFinder(pluginPaths_in: Seq[String]) {
+  def this(commaSeparatedPaths: String) = this(SplitCommaSeparated(commaSeparatedPaths))
 
   val DEFAULT_PATH = "plugins/"
   val pluginPaths = getPaths()

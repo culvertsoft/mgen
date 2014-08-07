@@ -1,6 +1,5 @@
 package se.culvertsoft.mgen.compiler.components
 
-import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsJavaMap
 import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.HashMap
@@ -23,9 +22,11 @@ object ParseProject {
         .get("project")
         .getOrElse(throw new RuntimeException("Missing '-project' cmd line argument"))
 
+    val includePaths = settings.get("include_paths").getOrElse("").split(",")
+
     FileUtils.checkiSsFileOrThrow(projectPath)
 
-    ParseProject(projectPath, settings, Nil, null, new HashMap[String, Project], pluginFinder)
+    ParseProject(projectPath, settings, includePaths, null, new HashMap[String, Project], pluginFinder)
 
   }
 
