@@ -49,7 +49,8 @@ class JsonSchemaParser extends Parser {
     settings: java.util.Map[String, String],
     parent: Project) {
 
-    val config = new Arguments().parse(Array[String]());
+	  // this code was made for a cli interface, that's why we give it some strange arguments.
+    val config = new Arguments().parse(Array[String]("-s","","-t",""));
 
     val annotator = getAnnotator(config);
 

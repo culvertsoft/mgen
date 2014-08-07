@@ -11,6 +11,10 @@ isSnapshot := version.value.contains("SNAPSHOT")
 
 crossPaths := false
 
+libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % Test
+
+libraryDependencies += "se.culvertsoft" % "mgen-compiler" % version.value % Test
+
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
 libraryDependencies += "org.jsonschema2pojo" % "jsonschema2pojo-core" % "0.4.5"
