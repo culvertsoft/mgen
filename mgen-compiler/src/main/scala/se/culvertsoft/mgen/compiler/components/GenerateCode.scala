@@ -1,12 +1,15 @@
 package se.culvertsoft.mgen.compiler.components
 
 import java.util.ArrayList
+
+import scala.Option.option2Iterable
 import scala.collection.JavaConversions.asScalaBuffer
+
+import se.culvertsoft.mgen.api.exceptions.AnalysisException
+import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.Generator
-import se.culvertsoft.mgen.api.exceptions.AnalysisException
-import se.culvertsoft.mgen.api.exceptions.GenerationException
 
 object GenerateCode {
 
@@ -23,7 +26,7 @@ object GenerateCode {
 
       if (optGenerator.isDefined) {
         val generator = optGenerator.get
-        val generatorSettings = genSpec.getGeneratorSettings()        
+        val generatorSettings = genSpec.getGeneratorSettings()
         val generated = generator.generate(project, generatorSettings)
         out.addAll(generated)
       }
@@ -75,5 +78,5 @@ object GenerateCode {
     generatedSources
 
   }
-  
+
 }
