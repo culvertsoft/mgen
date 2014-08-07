@@ -16,18 +16,5 @@ clean:
 	#########################################
 	sbt clean
 
-
 run:	all
 	java -jar target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
-
-doc:
-	#########################################
-	#     DOCUMENTATION MGEN-COMPILER       #
-	#########################################
-	sbt doc
-    
-run-tests:
-	###################################
-	#      TESTING MGEN-COMPILER      #
-	####################################
-    #NOT_YET_IMPLEMENTED#

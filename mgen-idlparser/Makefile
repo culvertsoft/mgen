@@ -6,8 +6,3 @@ eclipse:
 
 clean:
 	sbt clean
-
-doc:
-	sbt doc
-    
-run-tests:

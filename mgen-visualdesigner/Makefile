@@ -31,15 +31,4 @@ run:	all
 	#########################################
 	java -jar target/mgen-visualdesigner-assembly-$(MGEN_BUILD_VERSION).jar
 
-doc:
-	#########################################
-	#  DOCUMENTATION MGEN-VISUALDESIGNER    #
-	#########################################
-	sbt doc
-    
-run-tests:
-	#####################################
-	#     TESTING MGEN-VISUALDESIGNER   #
-	#####################################
-    #NOT_YET_IMPLEMENTED#
 	

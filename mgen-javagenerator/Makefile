@@ -15,15 +15,3 @@ clean:
 	#   CLEANING MGEN-JAVAGENERATOR         #
 	#########################################
 	sbt clean
-
-doc:
-	#########################################
-	#  DOCUMENTATION MGEN-JAVAGENERATOR     #
-	#########################################
-	sbt doc
-        
-run-tests:
-	#######################################
-	#      TESTING MGEN-JAVAGENERATOR     #
-	#######################################
-    #NOT_YET_IMPLEMENTED#

@@ -1,11 +1,6 @@
 
 MGEN_COMPILER_JAR = ../mgen-compiler/target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 
-all:
-	##################################################
-	#   NO BUILD REQUIRED FOR MGEN-CPPLIB (.h-only)  #
-	##################################################
-
 eclipse: generate-test-models
 	#################################################
 	# CREATING ECLIPSE PROJECT FOR MGEN-CPPLIB-TEST #
@@ -21,12 +16,6 @@ clean:
 	#########################################
 	rm -rf src_generated/*
 	rm -rf target/*
-
-doc:
-	#########################################
-	#   DOCUMENTAION MGEN-CPPLIB            #
-	#########################################
-    #NOT_YET_IMPLEMENTED#
 
 generate-test-models:
 	##########################################

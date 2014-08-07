@@ -18,7 +18,6 @@ all: check
 	cd mgen-javagenerator && make all
 	cd mgen-javascriptgenerator && make all
 	cd mgen-javascriptlib && make all
-	cd mgen-cpplib && make all
 	cd mgen-javalib && make all
 	cd mgen-visualdesigner && make all
 	#########################################################
@@ -26,6 +25,20 @@ all: check
 	#         DONE BUILDING MGEN                            #
 	#                                                       #
 	#########################################################
+
+fast: check
+	#########################################################
+	#                                                       #
+	#           BUILDING MGEN (FAST)                        #
+	#                                                       #
+	#########################################################
+	
+	sbt compile package publish-local
+
+	cd mgen-compiler && make
+	cd mgen-javascriptlib && make all
+	cd mgen-javalib && make all
+	cd mgen-visualdesigner && make all
 
 check: sbt-check
 
@@ -49,6 +62,24 @@ clean:
 	cd mgen-cppgenerator && make clean
 	cd mgen-javagenerator && make clean
 	cd mgen-javascriptgenerator && make clean
+	cd mgen-javascriptlib && make clean
+	cd mgen-cpplib && make clean
+	cd mgen-javalib && make clean
+	cd mgen-visualdesigner && make clean
+	#########################################################
+	#                                                       #
+	#         DONE CLEANING MGEN                            #
+	#                                                       #
+	#########################################################
+
+clean-fast:
+	#########################################################
+	#                                                       #
+	#           CLEANING MGEN                               #
+	#                                                       #
+	#########################################################
+	sbt clean
+	cd mgen-integrationtests && make clean
 	cd mgen-javascriptlib && make clean
 	cd mgen-cpplib && make clean
 	cd mgen-javalib && make clean
@@ -89,22 +120,14 @@ run-tests: run-integrationtests
 	#       RUNNING ALL TESTS                               #
 	#                                                       #
 	#########################################################
-	cd mgen-api && make run-tests
-	cd mgen-idlparser && make run-tests
-	cd mgen-jsonschemaparser && make run-tests
-	cd mgen-protobufparser && make run-tests
-	cd mgen-xmlschemaparser && make run-tests
-	cd mgen-compiler && make run-tests
-	cd mgen-idlgenerator && make run-tests
-	cd mgen-cppgenerator && make run-tests
-	cd mgen-javagenerator && make run-tests
-	cd mgen-javascriptgenerator && make run-tests
 	cd mgen-javascriptlib && make run-tests
 	cd mgen-cpplib && make run-tests
 	cd mgen-javalib && make run-tests
-	cd mgen-visualdesigner && make run-tests
 	#########################################################
 	#                                                       #
 	#        DONE RUNNING ALL TEST                          #
 	#                                                       #
 	#########################################################
+
+run-tests-fast:
+	sbt test

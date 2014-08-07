@@ -15,16 +15,3 @@ clean:
 	#   CLEANING MGEN-JAVASCRIPTGENERATOR  #
 	########################################
 	sbt clean
-
-doc:
-	#############################################
-	#  DOCUMENTATION MGEN-JAVASCRIPTGENERATOR   #
-	#############################################
-	sbt doc	
-
-run-tests:
-	##########################################
-	#     TESTING MGEN-JAVASCRIPTGENERATOR   #
-	##########################################
-    #NOT_YET_IMPLEMENTED#
-	
