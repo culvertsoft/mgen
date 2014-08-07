@@ -45,6 +45,11 @@ public class ObjectDefaultValue extends DefaultValue {
 		return m_overriddenDefaultValues;
 	}
 
+	@Override
+	public String toString() {
+		return m_actualType.fullName() + ": {" + m_overriddenDefaultValues + "}";
+	}
+
 	public ObjectDefaultValue(
 			final ClassType expectedType,
 			final ClassType actualType,

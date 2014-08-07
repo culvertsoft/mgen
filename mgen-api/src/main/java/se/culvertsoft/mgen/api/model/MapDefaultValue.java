@@ -22,9 +22,12 @@ public class MapDefaultValue extends DefaultValue {
 		return m_values;
 	}
 
-	public MapDefaultValue(
-			final MapType typ,
-			final Map<DefaultValue, DefaultValue> values) {
+	@Override
+	public String toString() {
+		return "{" + m_values + "}";
+	}
+
+	public MapDefaultValue(final MapType typ, final Map<DefaultValue, DefaultValue> values) {
 		super(typ);
 		m_values = values;
 	}

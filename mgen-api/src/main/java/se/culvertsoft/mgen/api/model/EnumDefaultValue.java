@@ -28,10 +28,12 @@ public class EnumDefaultValue extends DefaultValue {
 		return m_isCurrentModule;
 	}
 
-	public EnumDefaultValue(
-			final EnumType typ,
-			final EnumEntry entry,
-			final Module currentModule) {
+	@Override
+	public String toString() {
+		return m_value.toString();
+	}
+
+	public EnumDefaultValue(final EnumType typ, final EnumEntry entry, final Module currentModule) {
 		super(typ);
 		m_isCurrentModule = typ.module() == currentModule;
 		m_value = entry;

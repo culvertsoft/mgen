@@ -26,6 +26,11 @@ public class EnumEntry {
 		return m_constant;
 	}
 
+	@Override
+	public String toString() {
+		return m_constant;
+	}
+
 	public EnumEntry(final String name, final String constant) {
 		m_name = name;
 		m_constant = constant;

@@ -19,10 +19,15 @@ public class BoolDefaultValue extends DefaultValue {
 	public BoolType expectedType() {
 		return (BoolType) super.expectedType();
 	}
-	
+
 	public BoolDefaultValue(final boolean value) {
 		super(BoolType.INSTANCE);
 		m_value = value;
+	}
+
+	@Override
+	public String toString() {
+		return String.valueOf(m_value);
 	}
 
 	private final boolean m_value;

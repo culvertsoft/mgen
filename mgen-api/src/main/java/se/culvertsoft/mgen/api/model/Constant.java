@@ -90,6 +90,12 @@ public class Constant {
 		return m_type != null && m_type.isLinked() && m_value != null && m_value.isLinked();
 	}
 
+	@Override
+	public String toString() {
+		return "Constant [m_fullName=" + m_fullName + ", m_type=" + m_type + ", m_value=" + m_value
+				+ "]";
+	}
+
 	public Constant(
 			final String name,
 			final ClassType parent,

@@ -27,9 +27,12 @@ public class NumericDefaultValue extends DefaultValue {
 		return m_value.longValue();
 	}
 
-	public NumericDefaultValue(
-			final PrimitiveType expectedType,
-			final Number value) {
+	@Override
+	public String toString() {
+		return m_value.toString();
+	}
+
+	public NumericDefaultValue(final PrimitiveType expectedType, final Number value) {
 		super(expectedType);
 		m_value = value;
 	}

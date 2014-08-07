@@ -20,6 +20,11 @@ public class StringDefaultValue extends DefaultValue {
 		return m_value;
 	}
 
+	@Override
+	public String toString() {
+		return '"' + m_value + '"';
+	}
+
 	public StringDefaultValue(final String value) {
 		super(StringType.INSTANCE);
 		m_value = value;
