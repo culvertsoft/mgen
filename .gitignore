@@ -1,5 +1,6 @@
 *.class
 *.log
+*.jar
 README.md~
 .gitignore~
 LICENSE~
