@@ -23,6 +23,8 @@ libraryDependencies += "se.culvertsoft" % "mgen-javalib" % version.value
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 
+libraryDependencies += "com.miglayout" % "miglayout-swing" % "4.2"
+
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false
