@@ -1,10 +1,10 @@
-package se.culvertsoft.mgen.compiler.components
+package se.culvertsoft.mgen.idlgenerator
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsScalaMap
+import scala.collection.JavaConversions.seqAsJavaList
 import scala.xml.PrettyPrinter
 import scala.xml.Text
-
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
@@ -35,20 +35,54 @@ import se.culvertsoft.mgen.api.model.StringDefaultValue
 import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.UserDefinedType
+import se.culvertsoft.mgen.api.plugins.Generator
 import se.culvertsoft.mgen.api.util.CRC16
-import se.culvertsoft.mgen.idlparser.IdlParser
+import se.culvertsoft.mgen.idlgenerator.util.IdlGenUtil
 
-object Project2Xml {
+class IdlGenerator extends Generator {
 
-  case class XmlSourceFile(path: String, xml: scala.xml.Node)
+  override def generate(
+    project: Project,
+    generatorSettings: java.util.Map[String, String]): java.util.List[GeneratedSourceFile] = {
 
-  def apply(project: Project): Seq[GeneratedSourceFile] = {
+    generate(project, generatorSettings.get("output_path"))
+
+  }
+
+  def generate(
+    project: Project,
+    prependPath: String): java.util.List[GeneratedSourceFile] = {
+
+    val prefix = prependPath match {
+      case p if (p.trim.nonEmpty) => p + "/"
+      case _ => ""
+    }
+
+    generate(project).map(_.transformPrependPath(prefix))
+
+  }
+
+  def generate(project: Project): java.util.List[GeneratedSourceFile] = {
+    generateImpl(project)
+  }
+
+  /**
+   * ********************************
+   *
+   * 		IMPLEMENTATION
+   *
+   * *******************************
+   */
+
+  private case class XmlSourceFile(path: String, xml: scala.xml.Node)
+
+  private def generateImpl(project: Project): Seq[GeneratedSourceFile] = {
 
     val projectXml =
       <Project>
         { project.generators map generator2xml }
         { project.dependencies map dependency2xmlReference }
-        <Sources parser={ s"${classOf[IdlParser].getName}" }>
+        <Sources>
           { project.modules.filter(_.classes.nonEmpty) map { x => <Source>{ x.filePath }</Source> } }
         </Sources>
       </Project>
@@ -61,7 +95,7 @@ object Project2Xml {
 
   }
 
-  def convert(sources: Seq[XmlSourceFile]): Seq[GeneratedSourceFile] = {
+  private def convert(sources: Seq[XmlSourceFile]): Seq[GeneratedSourceFile] = {
 
     val printer = new PrettyPrinter(120, 4)
 
@@ -74,7 +108,7 @@ object Project2Xml {
 
   }
 
-  def generator2xml(generator: GeneratorDescriptor): Seq[scala.xml.Node] = {
+  private def generator2xml(generator: GeneratorDescriptor): Seq[scala.xml.Node] = {
     <Generator name={ generator.getGeneratorName }>
       <class_path>{ generator.getGeneratorClassPath }</class_path>
       <output_path>{ generator.getGeneratorSettings().get("output_path") }</output_path>
@@ -82,11 +116,11 @@ object Project2Xml {
     </Generator>
   }
 
-  def dependency2xmlReference(dependency: Project): scala.xml.Node = {
+  private def dependency2xmlReference(dependency: Project): scala.xml.Node = {
     <Depend>{ dependency.filePath }</Depend>
   }
 
-  def module2xmlSource(module: Module): XmlSourceFile = {
+  private def module2xmlSource(module: Module): XmlSourceFile = {
 
     implicit val _module = module
 
@@ -103,15 +137,15 @@ object Project2Xml {
     XmlSourceFile(module.absoluteFilePath(), xml)
   }
 
-  def enum2xml(typ: EnumType)(implicit currentModule: Module): scala.xml.Node = {
+  private def enum2xml(typ: EnumType)(implicit currentModule: Module): scala.xml.Node = {
     <EnumType>{ typ.entries map enumentry2xml }</EnumType>.copy(label = typ.shortName)
   }
 
-  def enumentry2xml(entry: EnumEntry)(implicit currentModule: Module): scala.xml.Node = {
+  private def enumentry2xml(entry: EnumEntry)(implicit currentModule: Module): scala.xml.Node = {
     <entry>{ entry.constant } </entry>.copy(label = entry.name)
   }
 
-  def type2xml(typ: ClassType)(implicit currentModule: Module): scala.xml.Node = {
+  private def type2xml(typ: ClassType)(implicit currentModule: Module): scala.xml.Node = {
 
     val autoId = CRC16.calc(typ.fullName)
     val idString = if (typ.typeId16Bit != autoId) typ.typeId16Bit.toString else null
@@ -127,7 +161,7 @@ object Project2Xml {
 
   }
 
-  def type2string(t: Type)(implicit currentModule: Module): String = {
+  private def type2string(t: Type)(implicit currentModule: Module): String = {
     t match {
       case t: BoolType => "bool"
       case t: Int8Type => "int8"
@@ -144,7 +178,7 @@ object Project2Xml {
     }
   }
 
-  def field2xml(field: Field)(implicit currentModule: Module): scala.xml.Node = {
+  private def field2xml(field: Field)(implicit currentModule: Module): scala.xml.Node = {
 
     val flags = field.flags().map(_.trim).filter(_.nonEmpty)
     val typeString = type2string(field.typ)
@@ -159,7 +193,7 @@ object Project2Xml {
 
     val xml =
       if (field.hasDefaultValue) {
-        xmlT.copy(label = field.name, child = Text(defaultVal2String(field.defaultValue)))
+        xmlT.copy(label = field.name, child = Text(IdlGenUtil.defaultVal2String(field.defaultValue)))
       } else {
         xmlT.copy(label = field.name)
       }
@@ -167,62 +201,5 @@ object Project2Xml {
     xml
   }
 
-  def defaultVal2String(v: DefaultValue): String = {
-
-    if (v == null)
-      return null
-
-    v match {
-      case v: EnumDefaultValue => getQuotedStringOrNull(v.value.name)
-      case v: BoolDefaultValue => getString(v.value)
-      case v: StringDefaultValue => getQuotedStringOrNull(v.value)
-      case v: NumericDefaultValue =>
-        v.expectedType match {
-          case _: Int8Type => getString(v.fixedPtValue)
-          case _: Int16Type => getString(v.fixedPtValue)
-          case _: Int32Type => getString(v.fixedPtValue)
-          case _: Int64Type => getString(v.fixedPtValue)
-          case _: Float32Type => getString(v.floatingPtValue)
-          case _: Float64Type => getString(v.floatingPtValue)
-        }
-      case v: ListOrArrayDefaultValue => s"[${v.values.map(defaultVal2String).mkString(", ")}]"
-      case v: MapDefaultValue =>
-        val entries = v.values.map(e => (getQuotedStringOrNull(defaultVal2String(e._1)), defaultVal2String(e._2)))
-        val entriesString = entries.map(e => s"${e._1}: ${e._2}").mkString(", ")
-        s"{$entriesString}"
-
-      case v: ObjectDefaultValue =>
-        val entries = v.overriddenDefaultValues.map(e => (getQuotedStringOrNull(e._1.name), defaultVal2String(e._2)))
-        val entriesString = entries.map(e => s"${e._1}: ${e._2}").mkString(", ")
-
-        if (v.isDefaultTypeOverriden) {
-          if (v.isCurrentModule) {
-            s"{ ${quote("__TYPE")}: ${quote(v.actualType.shortName)}, $entriesString}"
-          } else {
-            s"{ ${quote("__TYPE")}: ${quote(v.actualType.fullName)}, $entriesString}"
-          }
-        } else {
-          s"{$entriesString}"
-        }
-
-      case _ => throw new GenerationException(s"Don't know how to handle default value $v")
-    }
-  }
-
-  def quote(s: String): String = {
-    '"' + s + '"'
-  }
-
-  def getQuotedStringOrNull(o: String): String = {
-
-    if (o != null && o.startsWith("\""))
-      return o
-
-    if (o != null) ('"' + o.toString + '"') else null
-  }
-
-  def getString(o: Any): String = {
-    if (o != null) o.toString else null
-  }
 
 }

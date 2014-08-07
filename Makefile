@@ -8,15 +8,15 @@ all: check
 	#                                                       #
 	#########################################################
 	cd mgen-api && make all
-	cd mgen-idlparser && make all
 	cd mgen-jsonschemaparser && make all
 	cd mgen-protobufparser && make all
 	cd mgen-xmlschemaparser && make all
-	cd mgen-compiler && make all
+	cd mgen-idlparser && make all
 	cd mgen-idlgenerator && make all
 	cd mgen-cppgenerator && make all
 	cd mgen-javagenerator && make all
 	cd mgen-javascriptgenerator && make all
+	cd mgen-compiler && make all
 	cd mgen-javascriptlib && make all
 	cd mgen-cpplib && make all
 	cd mgen-javalib && make all
@@ -40,15 +40,15 @@ clean:
 	#########################################################
 	cd mgen-integrationtests && make clean
 	cd mgen-api && make clean
-	cd mgen-idlparser && make clean
 	cd mgen-jsonschemaparser && make clean
 	cd mgen-protobufparser && make clean
 	cd mgen-xmlschemaparser && make clean
-	cd mgen-compiler && make clean
+	cd mgen-idlparser && make clean
 	cd mgen-idlgenerator && make clean
 	cd mgen-cppgenerator && make clean
 	cd mgen-javagenerator && make clean
 	cd mgen-javascriptgenerator && make clean
+	cd mgen-compiler && make clean
 	cd mgen-javascriptlib && make clean
 	cd mgen-cpplib && make clean
 	cd mgen-javalib && make clean
@@ -89,16 +89,17 @@ run-tests: run-integrationtests
 	#       RUNNING ALL TESTS                               #
 	#                                                       #
 	#########################################################
+	cd mgen-integrationtests && make run-tests
 	cd mgen-api && make run-tests
-	cd mgen-idlparser && make run-tests
 	cd mgen-jsonschemaparser && make run-tests
 	cd mgen-protobufparser && make run-tests
 	cd mgen-xmlschemaparser && make run-tests
-	cd mgen-compiler && make run-tests
+	cd mgen-idlparser && make run-tests
 	cd mgen-idlgenerator && make run-tests
 	cd mgen-cppgenerator && make run-tests
 	cd mgen-javagenerator && make run-tests
 	cd mgen-javascriptgenerator && make run-tests
+	cd mgen-compiler && make run-tests
 	cd mgen-javascriptlib && make run-tests
 	cd mgen-cpplib && make run-tests
 	cd mgen-javalib && make run-tests
