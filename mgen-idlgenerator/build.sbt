@@ -11,9 +11,9 @@ isSnapshot := version.value.contains("SNAPSHOT")
 
 crossPaths := false
 
-libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
-
 retrieveManaged := true
+
+libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
 EclipseKeys.withSource := true
 

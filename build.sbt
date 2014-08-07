@@ -41,9 +41,9 @@ lazy val mgen_javascriptgenerator = (project in file("mgen-javascriptgenerator")
 
 lazy val mgen_visualdesigner = (project in file("mgen-visualdesigner")).dependsOn(mgen_compiler, mgen_javalib)
 
-lazy val mgen_javacheck_depends = (project in file("mgen-integrationtests/javacheck/depends")).dependsOn(mgen_javalib)
+//lazy val mgen_javacheck_depends = (project in file("mgen-integrationtests/javacheck/depends")).dependsOn(mgen_javalib)
 
-lazy val mgen_javacheck_write = (project in file("mgen-integrationtests/javacheck/write")).dependsOn(mgen_javalib)
+//lazy val mgen_javacheck_write = (project in file("mgen-integrationtests/javacheck/write")).dependsOn(mgen_javalib)
 
-lazy val mgen_javacheck_read = (project in file("mgen-integrationtests/javacheck/read")).dependsOn(mgen_javalib)
+//lazy val mgen_javacheck_read = (project in file("mgen-integrationtests/javacheck/read")).dependsOn(mgen_javalib)
 

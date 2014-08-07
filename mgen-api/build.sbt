@@ -13,6 +13,8 @@ crossPaths := false
 
 retrieveManaged := true
 
+autoScalaLibrary := false
+
 libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
 
 EclipseKeys.withSource := true

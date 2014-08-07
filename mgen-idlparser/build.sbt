@@ -11,11 +11,9 @@ isSnapshot := version.value.contains("SNAPSHOT")
 
 crossPaths := false
 
-libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
-
 retrieveManaged := true
 
-libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
+libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
 EclipseKeys.withSource := true
 

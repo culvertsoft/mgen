@@ -13,13 +13,9 @@ crossPaths := false
 
 retrieveManaged := true
 
-libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
-
 libraryDependencies += "se.culvertsoft" % "mgen-idlparser" % version.value
 
 libraryDependencies += "se.culvertsoft" % "mgen-idlgenerator" % version.value
-
-libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
 
 libraryDependencies += "org.scala-lang" % "scala-reflect" % scalaVersion.value
 

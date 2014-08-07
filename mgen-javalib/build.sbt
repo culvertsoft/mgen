@@ -15,11 +15,13 @@ retrieveManaged := true
 
 unmanagedSourceDirectories in Test += baseDirectory.value / "src_generated/test/java"
 
+autoScalaLibrary := false
+
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
-libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
+libraryDependencies += "org.scala-lang" % "scala-library" % scalaVersion.value % Test
 
-libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % "test"
+libraryDependencies += "com.novocode" % "junit-interface" % "0.10" % Test
 
 EclipseKeys.withSource := true
 
