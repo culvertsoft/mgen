@@ -77,6 +77,7 @@ object ParseProject {
         // Parse sources
         val sourcesNodes = (projectXml \ "Sources")
         sourcesNodes foreach { sourcesNode =>
+          val sourcesSettings = settings ++ sourcesNode.getStringStringMap()
           val parserName = sourcesNode.getAttribString("parser").getOrElse(classOf[IdlParser].getName())
           val parser = pluginFinder.getCached[Parser](parserName).getOrElse(throw new RuntimeException(s"Parser not found: Unknown parser $parserName in project file $absoluteFilePath"))
           val sourceFileNames = (sourcesNode \ "Source") map (_.text)
@@ -85,7 +86,7 @@ object ParseProject {
               .getOrElse(throw new RuntimeException(s"Could not find source file: ${fileName} specified for parser ${parserName} in project ${absoluteFilePath}"))
           }
 
-          parser.parse(files, settings, project)
+          parser.parse(files, sourcesSettings, project)
         }
 
         project
