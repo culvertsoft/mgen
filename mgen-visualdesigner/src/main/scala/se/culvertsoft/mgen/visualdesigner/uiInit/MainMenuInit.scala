@@ -80,9 +80,6 @@ object MainMenuInit {
     toolsMenu.addSeparator()
     toolsMenu.add(Actions.MainMenu.Tools.LAY_OUT)
     toolsMenu.add(Actions.MainMenu.Tools.LAY_OUT_AND_RESIZE)
-    toolsMenu.addSeparator()
-    toolsMenu.addSeparator()
-    toolsMenu.add(Actions.MainMenu.Tools.GENERATE)
 
     // Settings menu
     val settingsMenu = new JMenu("Settings")

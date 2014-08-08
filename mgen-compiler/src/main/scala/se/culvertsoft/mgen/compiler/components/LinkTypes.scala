@@ -7,6 +7,7 @@ import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Constant
+import se.culvertsoft.mgen.api.model.DefaultValue
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Project
@@ -46,6 +47,8 @@ object LinkTypes {
 
         }
 
+      case null => throw new AnalysisException("Cannot provide null type to type")
+
       case _ => t
 
     }
@@ -57,7 +60,7 @@ object LinkTypes {
     implicit val typeLkup = new TypeLookup(project)
     val classes = project.allModulesRecursively.flatMap(_.classes)
 
-    // Link fields and super types
+    // Link types
     for (t <- classes) {
       if (t.hasSuperType()) {
         val newSuperType = replace(t.superType, t).asInstanceOf[ClassType]
@@ -65,36 +68,41 @@ object LinkTypes {
         newSuperType.addSubType(t)
       }
       t.setFields(t.fields.map { f => f.transform(replace(f.typ, t)) })
-    }
-
-    // Link default values
-    for (t <- classes) {
-
-      val newFields = t.fields.map { f =>
-        f.defaultValue match {
-          case d: UnlinkedDefaultValue => f.transform(d.parse(f.typ, t.module))
-          case _ => f
-        }
+      for (c <- t.constants) {
+        if (c.typ == null)
+          throw new AnalysisException(s"Provided no type for parsed constant $c in type $t")
+        c.setType(replace(c.typ, t))
       }
-
-      t.setFields(newFields)
-
     }
 
-    // Move static constants -> constants list
+    // Move constants to the constants list
     for (t <- classes) {
-
-      val (statics, newFields) = t.fields().partition(_.isStatic())
-      t.setFields(newFields)
+      val (statics, fields) = t.fields.partition(_.isStatic)
 
       for (s <- statics) {
         if (!s.hasDefaultValue)
           throw new AnalysisException(s"Field $s specified as static constant but is missing a value")
         t.addConstant(new Constant(s.name, t, s.typ, s.defaultValue))
       }
-
+      t.setFields(fields)
     }
 
+    // Link default values
+    for (t <- classes) {
+
+      for (c <- t.constants)
+        c.setValue(replaceUnlinkedDefaultValue(c.value, c.typ, t))
+
+      t.setFields(t.fields.map(f => f.transform(replaceUnlinkedDefaultValue(f.defaultValue, f.typ, t))))
+    }
+
+  }
+
+  private def replaceUnlinkedDefaultValue(d: DefaultValue, expectedType: Type, t: ClassType): DefaultValue = {
+    d match {
+      case d: UnlinkedDefaultValue => d.parse(expectedType, t.module)
+      case d => d
+    }
   }
 
 }

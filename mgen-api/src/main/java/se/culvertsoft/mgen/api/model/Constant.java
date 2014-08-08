@@ -20,7 +20,7 @@ public class Constant {
 	 * @param m_type
 	 *            the new type of this constant.
 	 */
-	public void setType(Type m_type) {
+	public void setType(final Type m_type) {
 		this.m_type = m_type;
 	}
 
@@ -30,17 +30,8 @@ public class Constant {
 	 * @param m_value
 	 *            the value of this constant
 	 */
-	public void setValue(DefaultValue m_value) {
+	public void setValue(final DefaultValue m_value) {
 		this.m_value = m_value;
-	}
-
-	/**
-	 * Gets the type of this constant.
-	 * 
-	 * @return the type of this constant.
-	 */
-	public Type ty() {
-		return m_type;
 	}
 
 	/**

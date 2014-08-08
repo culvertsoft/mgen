@@ -2,11 +2,9 @@ package se.culvertsoft.mgen.idlparser
 
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.asScalaSet
-
 import org.json.simple.JSONArray
 import org.json.simple.JSONObject
 import org.json.simple.JSONValue
-
 import se.culvertsoft.mgen.api.exceptions.AnalysisException
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
 import se.culvertsoft.mgen.api.model.BoolType
@@ -27,6 +25,7 @@ import se.culvertsoft.mgen.api.model.StringDefaultValue
 import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.UserDefinedType
+import se.culvertsoft.mgen.api.model.Constant
 
 object ParseDefaultValue {
 
@@ -219,6 +218,10 @@ object ParseDefaultValue {
 
   def getString(o: Any): String = {
     if (o != null) o.toString() else null
+  }
+  
+  def findConstant(name: String, currentModule: Module): Constant = {
+    ???
   }
 
 }
