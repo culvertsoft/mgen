@@ -130,17 +130,6 @@ public class Field {
 	}
 
 	/**
-	 * Returns if this field is constant. Constants get no "set"-methods
-	 * generated. If this field is also marked static special conditions apply,
-	 * see Field.isStatic().
-	 * 
-	 * @return if this field is constant.
-	 */
-	public boolean isConstant() {
-		return m_constant;
-	}
-
-	/**
 	 * Returns true if this field has a default value specified in the IDL.
 	 * 
 	 * Calling this function on generated code (outside the compiler) always
@@ -190,7 +179,6 @@ public class Field {
 		m_polymorphic = m_flags.contains("polymorphic");
 		m_parked = m_flags.contains("parked");
 		m_transient = m_flags.contains("transient");
-		m_constant = m_flags.contains("constant");
 		m_static = m_flags.contains("static");
 	}
 
@@ -224,7 +212,6 @@ public class Field {
 	private final boolean m_polymorphic;
 	private final boolean m_parked;
 	private final boolean m_transient;
-	private final boolean m_constant;
 	private final boolean m_static;
 
 }
