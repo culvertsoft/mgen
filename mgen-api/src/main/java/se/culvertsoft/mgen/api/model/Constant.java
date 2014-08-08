@@ -73,6 +73,15 @@ public class Constant {
 	}
 
 	/**
+	 * Returns the field which originally specified this static constant.
+	 * 
+	 * @return the field which originally specified this static constant.
+	 */
+	public Field source() {
+		return m_source;
+	}
+
+	/**
 	 * Returns if this constant has been linked (both its type and value).
 	 * 
 	 * @return if this constant has been linked.
@@ -91,12 +100,14 @@ public class Constant {
 			final String name,
 			final ClassType parent,
 			final Type type,
-			final DefaultValue value) {
+			final DefaultValue value,
+			final Field source) {
 		m_shortName = name;
 		m_fullName = parent.fullName() + "." + name;
 		m_parent = parent;
 		m_type = type;
 		m_value = value;
+		m_source = source;
 	}
 
 	private final String m_shortName;
@@ -104,5 +115,6 @@ public class Constant {
 	private final ClassType m_parent;
 	private Type m_type;
 	private DefaultValue m_value;
+	private final Field m_source;
 
 }

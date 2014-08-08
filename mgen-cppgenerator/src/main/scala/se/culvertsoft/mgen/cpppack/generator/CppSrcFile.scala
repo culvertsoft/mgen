@@ -2,6 +2,7 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkAllMembersCtor
+import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkConstants
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkDeepCopy
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkDefaultCtor
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkDestructor
@@ -25,6 +26,10 @@ object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
   override def mkIncludes(t: ClassType) {
     MkIncludes(t, currentModule)
+  }
+
+  override def mkConstants(t: ClassType) {
+    MkConstants(t, currentModule)
   }
 
   override def mkDefaultCtor(t: ClassType) {

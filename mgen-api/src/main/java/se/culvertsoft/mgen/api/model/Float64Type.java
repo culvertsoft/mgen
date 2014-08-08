@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.api.model;
 /**
  * Represents a 64 bit floating point number type
  */
-public class Float64Type extends PrimitiveType {
+public class Float64Type extends FloatingPointType {
 
 	private Float64Type() {
 		super(TypeEnum.FLOAT64, double.class, "float64");

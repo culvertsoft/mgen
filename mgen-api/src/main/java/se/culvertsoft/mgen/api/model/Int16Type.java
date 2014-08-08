@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.api.model;
 /**
  * Represents a 16 bit fixed point number type
  */
-public class Int16Type extends PrimitiveType {
+public class Int16Type extends FixedPointType {
 
 	private Int16Type() {
 		super(TypeEnum.INT16, short.class, "int16");

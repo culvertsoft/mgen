@@ -17,9 +17,8 @@ object MkMembers {
 
     implicit val m = module
 
-    for (c <- t.constants) {
+    for (c <- t.constants)
       ln(1, s"public static final ${getTypeName(c.typ)} ${c.shortName} = ${MkDefaultValue(c.value, true)};")
-    }
     if (t.constants.nonEmpty)
       ln()
 

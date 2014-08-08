@@ -4,6 +4,7 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkAcceptVisitor
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkAllMembersCtor
+import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkConstants
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkDeepCopy
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkDefaultCtor
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkDestructor
@@ -38,6 +39,10 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
 
   override def mkIncludeGuardEnd() {
     CppGenUtils.mkIncludeGuardEnd()
+  }
+
+  override def mkConstants(t: ClassType) {
+    MkConstants(t, currentModule)
   }
 
   override def mkEqOperator(t: ClassType) {

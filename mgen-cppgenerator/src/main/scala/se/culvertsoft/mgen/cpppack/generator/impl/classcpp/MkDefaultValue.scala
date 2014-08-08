@@ -1,28 +1,28 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 
-import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.cpppack.generator.CppConstruction
-import se.culvertsoft.mgen.api.model.ListOrArrayDefaultValue
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConversions.mapAsScalaMap
+
 import se.culvertsoft.mgen.api.exceptions.GenerationException
-import se.culvertsoft.mgen.api.model.EnumDefaultValue
-import se.culvertsoft.mgen.api.model.MapDefaultValue
-import se.culvertsoft.mgen.api.model.Int16Type
-import se.culvertsoft.mgen.api.model.Float64Type
-import se.culvertsoft.mgen.api.model.Int8Type
-import se.culvertsoft.mgen.api.model.Int32Type
-import se.culvertsoft.mgen.api.model.ObjectDefaultValue
-import se.culvertsoft.mgen.api.model.Float32Type
-import se.culvertsoft.mgen.api.model.DefaultValue
-import se.culvertsoft.mgen.api.model.NumericDefaultValue
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
-import se.culvertsoft.mgen.api.model.StringDefaultValue
+import se.culvertsoft.mgen.api.model.DefaultValue
+import se.culvertsoft.mgen.api.model.EnumDefaultValue
+import se.culvertsoft.mgen.api.model.Field
+import se.culvertsoft.mgen.api.model.Float32Type
+import se.culvertsoft.mgen.api.model.Float64Type
+import se.culvertsoft.mgen.api.model.Int16Type
+import se.culvertsoft.mgen.api.model.Int32Type
 import se.culvertsoft.mgen.api.model.Int64Type
-import se.culvertsoft.mgen.api.model.ListType
-import se.culvertsoft.mgen.api.model.ArrayType
-import scala.collection.JavaConversions._
+import se.culvertsoft.mgen.api.model.Int8Type
+import se.culvertsoft.mgen.api.model.ListOrArrayDefaultValue
+import se.culvertsoft.mgen.api.model.MapDefaultValue
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias
+import se.culvertsoft.mgen.api.model.NumericDefaultValue
+import se.culvertsoft.mgen.api.model.ObjectDefaultValue
+import se.culvertsoft.mgen.api.model.StringDefaultValue
+import se.culvertsoft.mgen.cpppack.generator.CppConstruction
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias
 
 object MkDefaultValue {
 

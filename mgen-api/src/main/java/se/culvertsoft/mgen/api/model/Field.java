@@ -144,7 +144,13 @@ public class Field {
 	 * type.
 	 */
 	public Field transform(final Type type) {
-		return new Field(m_ownerClassName, m_name, type, m_flags, m_id, m_defaultValue);
+		return type != m_type ? new Field(
+				m_ownerClassName,
+				m_name,
+				type,
+				m_flags,
+				m_id,
+				m_defaultValue) : this;
 	}
 
 	/**
@@ -152,7 +158,8 @@ public class Field {
 	 * default value.
 	 */
 	public Field transform(final DefaultValue v) {
-		return new Field(m_ownerClassName, m_name, m_type, m_flags, m_id, v);
+		return v != m_defaultValue ? new Field(m_ownerClassName, m_name, m_type, m_flags, m_id, v)
+				: this;
 	}
 
 	@Override

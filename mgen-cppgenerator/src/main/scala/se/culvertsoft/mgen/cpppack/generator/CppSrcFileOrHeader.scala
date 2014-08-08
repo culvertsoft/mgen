@@ -40,6 +40,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     mkClassStart(t)
 
     // Normal class api section
+    mkConstants(t)
     mkPrivate()
     mkMembers(t)
     mkPublic()
@@ -102,6 +103,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
   def mkClassStart(t: ClassType) {}
   def mkPrivate() {}
+  def mkConstants(t: ClassType) {}
   def mkMembers(t: ClassType) {}
   def mkPublic() {}
   def mkDefaultCtor(t: ClassType) {}

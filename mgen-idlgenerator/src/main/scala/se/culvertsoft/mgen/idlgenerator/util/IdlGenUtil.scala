@@ -7,12 +7,8 @@ import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
 import se.culvertsoft.mgen.api.model.DefaultValue
 import se.culvertsoft.mgen.api.model.EnumDefaultValue
-import se.culvertsoft.mgen.api.model.Float32Type
-import se.culvertsoft.mgen.api.model.Float64Type
-import se.culvertsoft.mgen.api.model.Int16Type
-import se.culvertsoft.mgen.api.model.Int32Type
-import se.culvertsoft.mgen.api.model.Int64Type
-import se.culvertsoft.mgen.api.model.Int8Type
+import se.culvertsoft.mgen.api.model.FixedPointType
+import se.culvertsoft.mgen.api.model.FloatingPointType
 import se.culvertsoft.mgen.api.model.ListOrArrayDefaultValue
 import se.culvertsoft.mgen.api.model.MapDefaultValue
 import se.culvertsoft.mgen.api.model.NumericDefaultValue
@@ -32,12 +28,8 @@ object IdlGenUtil {
       case v: StringDefaultValue => getQuotedStringOrNull(v.value)
       case v: NumericDefaultValue =>
         v.expectedType match {
-          case _: Int8Type => getString(v.fixedPtValue)
-          case _: Int16Type => getString(v.fixedPtValue)
-          case _: Int32Type => getString(v.fixedPtValue)
-          case _: Int64Type => getString(v.fixedPtValue)
-          case _: Float32Type => getString(v.floatingPtValue)
-          case _: Float64Type => getString(v.floatingPtValue)
+          case _: FixedPointType => getString(v.fixedPtValue)
+          case _: FloatingPointType => getString(v.floatingPtValue)
         }
       case v: ListOrArrayDefaultValue => s"[${v.values.map(defaultVal2String).mkString(", ")}]"
       case v: MapDefaultValue =>

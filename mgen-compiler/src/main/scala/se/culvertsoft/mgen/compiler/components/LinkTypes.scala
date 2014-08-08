@@ -82,7 +82,7 @@ object LinkTypes {
       for (s <- statics) {
         if (!s.hasDefaultValue)
           throw new AnalysisException(s"Field $s specified as static constant but is missing a value")
-        t.addConstant(new Constant(s.name, t, s.typ, s.defaultValue))
+        t.addConstant(new Constant(s.name, t, s.typ, s.defaultValue, s))
       }
       t.setFields(fields)
     }
