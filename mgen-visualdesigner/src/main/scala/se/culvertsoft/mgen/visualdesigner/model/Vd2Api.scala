@@ -118,14 +118,14 @@ object Vd2Api {
 
   }
 
-  private def cvtField(vdField: VdField, parentClass: ApiType)(implicit cvState: Vd2ApiConversionState): ApiField = {
+  private def cvtField(vdField: VdField, parentClass: ApiClass)(implicit cvState: Vd2ApiConversionState): ApiField = {
     new ApiField(
       parentClass.fullName(),
       vdField.getName(),
       cvtFieldType(vdField.getType()),
       vdField.getFlags(),
       getId16Bit(vdField),
-      if (vdField.hasDefaultValue()) new IdlDefaultValue(vdField.getDefaultValue()) else null)
+      if (vdField.hasDefaultValue()) new IdlDefaultValue(vdField.getDefaultValue, parentClass) else null)
   }
 
   private def cvtEnumEntry(vdEntry: VdEnumEntry, parentEnum: ApiEnum)(implicit cvState: Vd2ApiConversionState): ApiEnumEntry = {

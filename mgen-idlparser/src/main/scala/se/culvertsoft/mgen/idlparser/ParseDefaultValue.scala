@@ -45,11 +45,11 @@ object ParseDefaultValue {
       case expectedType: EnumType =>
         mkEnum(writtenString, expectedType, referencedFrom)
       case expectedType: BoolType =>
-        mkBool(writtenString)
+        mkBool(writtenString, referencedFrom)
       case expectedType: StringType =>
-        mkString(writtenString)
+        mkString(writtenString, referencedFrom)
       case expectedType: PrimitiveType =>
-        mkNumber(writtenString, expectedType)
+        mkNumber(writtenString, expectedType, referencedFrom)
       case expectedType: ListOrArrayType =>
         mkListOrArray(expectedType, writtenString, referencedFrom)
       case expectedType: MapType =>
@@ -61,8 +61,8 @@ object ParseDefaultValue {
     }
   }
 
-  def mkBool(txt: String): BoolDefaultValue = {
-    new BoolDefaultValue(txt.toBoolean)
+  def mkBool(txt: String, referencedFrom: ClassType): BoolDefaultValue = {
+    new BoolDefaultValue(txt.toBoolean, referencedFrom)
   }
 
   def mkEnum(txt: String, typ: EnumType, referencedFrom: ClassType)(implicit lkup: ItemLookup): EnumDefaultValue = {
@@ -71,14 +71,14 @@ object ParseDefaultValue {
         .find(_.name == txt.trim)
         .getOrElse(throw new AnalysisException(s"Don't know any enum value named $txt for enum type $typ"))
 
-    new EnumDefaultValue(typ, entry, referencedFrom.module())
+    new EnumDefaultValue(typ, entry, referencedFrom)
   }
 
-  def mkString(txt: String): StringDefaultValue = {
-    new StringDefaultValue(txt)
+  def mkString(txt: String, referencedFrom: ClassType): StringDefaultValue = {
+    new StringDefaultValue(txt, referencedFrom)
   }
 
-  def mkNumber(txt: String, expectedType: PrimitiveType): NumericDefaultValue = {
+  def mkNumber(txt: String, expectedType: PrimitiveType, referencedFrom: ClassType): NumericDefaultValue = {
 
     var v: java.lang.Number = null;
     try {
@@ -93,7 +93,7 @@ object ParseDefaultValue {
               + txt, e2);
         }
     }
-    new NumericDefaultValue(expectedType, v)
+    new NumericDefaultValue(expectedType, v, referencedFrom)
   }
 
   def mkListOrArray(
@@ -111,7 +111,7 @@ object ParseDefaultValue {
               getString(o),
               referencedFrom));
           }
-          new ListOrArrayDefaultValue(typ, items)
+          new ListOrArrayDefaultValue(typ, items, referencedFrom)
         case _ =>
           throw new AnalysisException("Failed to parse default value '" + writtenString
             + "' as a JSON array.");
@@ -135,7 +135,7 @@ object ParseDefaultValue {
             val value = apply(typ.valueType, getString(e.getValue), referencedFrom);
             items.put(key, value);
           }
-          new MapDefaultValue(typ, items)
+          new MapDefaultValue(typ, items, referencedFrom)
         case _ =>
           throw new AnalysisException("Failed to parse default value '" + writtenString
             + "' as a JSON object.");
@@ -198,7 +198,7 @@ object ParseDefaultValue {
             ovrdDefValues.put(f, value);
           }
 
-          new ObjectDefaultValue(expectedType, actualType, referencedFrom.module(), ovrdDefValues)
+          new ObjectDefaultValue(expectedType, actualType, ovrdDefValues, referencedFrom)
 
         case _ =>
           throw new AnalysisException("Failed to parse default value '" + writtenString

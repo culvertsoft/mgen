@@ -52,7 +52,7 @@ object MkDefaultValue {
 
     d match {
       case v: EnumDefaultValue =>
-        if (v.isCurrentModule)
+        if (v.isLocalDefinition)
           s"${v.expectedType.shortName}.${v.value.name}"
         else {
           s"${v.expectedType.fullName}.${v.value.name}"

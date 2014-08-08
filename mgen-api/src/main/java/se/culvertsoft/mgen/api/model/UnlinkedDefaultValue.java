@@ -10,12 +10,11 @@ public abstract class UnlinkedDefaultValue extends DefaultValue {
 	 * the compiler has linked together types in a project.
 	 */
 	public abstract DefaultValue parse(
-			final Type fieldType,
-			final ClassType referencedFrom,
+			final Type expectedType,
 			final ItemLookup lookup);
 
-	public UnlinkedDefaultValue() {
-		super(null);
+	public UnlinkedDefaultValue(final ClassType referencedFrom) {
+		super(null, referencedFrom);
 	}
 
 }

@@ -32,8 +32,11 @@ public class NumericDefaultValue extends DefaultValue {
 		return m_value.toString();
 	}
 
-	public NumericDefaultValue(final PrimitiveType expectedType, final Number value) {
-		super(expectedType);
+	public NumericDefaultValue(
+			final PrimitiveType expectedType,
+			final Number value,
+			final ClassType referencedFrom) {
+		super(expectedType, referencedFrom);
 		m_value = value;
 	}
 

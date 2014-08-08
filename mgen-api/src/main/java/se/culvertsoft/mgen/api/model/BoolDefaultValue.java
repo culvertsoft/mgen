@@ -20,8 +20,8 @@ public class BoolDefaultValue extends DefaultValue {
 		return (BoolType) super.expectedType();
 	}
 
-	public BoolDefaultValue(final boolean value) {
-		super(BoolType.INSTANCE);
+	public BoolDefaultValue(final boolean value, final ClassType referencedFrom) {
+		super(BoolType.INSTANCE, referencedFrom);
 		m_value = value;
 	}
 

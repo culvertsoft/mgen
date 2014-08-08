@@ -25,8 +25,11 @@ public class ListOrArrayDefaultValue extends DefaultValue {
 	/**
 	 * The list values of this default value
 	 */
-	public ListOrArrayDefaultValue(final ListOrArrayType typ, final List<DefaultValue> values) {
-		super(typ);
+	public ListOrArrayDefaultValue(
+			final ListOrArrayType typ,
+			final List<DefaultValue> values,
+			final ClassType referencedFrom) {
+		super(typ, referencedFrom);
 		m_values = values;
 	}
 

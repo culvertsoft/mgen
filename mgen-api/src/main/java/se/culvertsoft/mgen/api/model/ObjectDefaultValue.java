@@ -24,11 +24,11 @@ public class ObjectDefaultValue extends DefaultValue {
 	}
 
 	/**
-	 * Returns if the type of this default value is defined in the same module
-	 * as where it's now referenced.
+	 * Returns if the type of this default value is defined in the same scope as
+	 * where it's now referenced.
 	 */
-	public boolean isCurrentModule() {
-		return m_isCurrentModule;
+	public boolean isLocalDefinition() {
+		return m_isLocalDefinition;
 	}
 
 	/**
@@ -53,15 +53,15 @@ public class ObjectDefaultValue extends DefaultValue {
 	public ObjectDefaultValue(
 			final ClassType expectedType,
 			final ClassType actualType,
-			final Module currentModule,
-			final Map<Field, DefaultValue> overriddenDefaultValues) {
-		super(expectedType);
+			final Map<Field, DefaultValue> overriddenDefaultValues,
+			final ClassType referencedFrom) {
+		super(expectedType, referencedFrom);
 		m_actualType = actualType;
-		m_isCurrentModule = m_actualType.module() == currentModule;
+		m_isLocalDefinition = m_actualType.module() == referencedFrom.module();
 		m_overriddenDefaultValues = overriddenDefaultValues;
 	}
 
 	private final ClassType m_actualType;
-	private final boolean m_isCurrentModule;
+	private final boolean m_isLocalDefinition;
 	private final Map<Field, DefaultValue> m_overriddenDefaultValues;
 }

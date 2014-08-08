@@ -25,8 +25,10 @@ public class StringDefaultValue extends DefaultValue {
 		return '"' + m_value + '"';
 	}
 
-	public StringDefaultValue(final String value) {
-		super(StringType.INSTANCE);
+	public StringDefaultValue(
+			final String value,
+			final ClassType referencedFrom) {
+		super(StringType.INSTANCE, referencedFrom);
 		m_value = value;
 	}
 

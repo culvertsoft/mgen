@@ -42,7 +42,7 @@ object IdlGenUtil {
         val entriesString = entries.map(e => s"${e._1}: ${e._2}").mkString(", ")
 
         if (v.isDefaultTypeOverriden) {
-          if (v.isCurrentModule) {
+          if (v.isLocalDefinition) {
             s"{ ${quote("__TYPE")}: ${quote(v.actualType.shortName)}, $entriesString}"
           } else {
             s"{ ${quote("__TYPE")}: ${quote(v.actualType.fullName)}, $entriesString}"

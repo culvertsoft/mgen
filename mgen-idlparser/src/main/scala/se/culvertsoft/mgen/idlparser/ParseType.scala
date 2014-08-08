@@ -29,7 +29,7 @@ object ParseType {
 
     val clas = new ClassType(name, module, id16Bit, superType)
 
-    val fields = node.child.map { ParseField(_, clas.fullName) }
+    val fields = node.child.map { ParseField(_, clas) }
     clas.setFields(fields)
 
     clas

@@ -21,11 +21,11 @@ public class EnumDefaultValue extends DefaultValue {
 	}
 
 	/**
-	 * Returns if the type of this default value is defined in the same module
-	 * as where it's now referenced.
+	 * Returns if the type of this default value is defined in the same scope it
+	 * is referenced from.
 	 */
-	public boolean isCurrentModule() {
-		return m_isCurrentModule;
+	public boolean isLocalDefinition() {
+		return m_isLocalDefinition;
 	}
 
 	@Override
@@ -33,13 +33,16 @@ public class EnumDefaultValue extends DefaultValue {
 		return m_value.toString();
 	}
 
-	public EnumDefaultValue(final EnumType typ, final EnumEntry entry, final Module currentModule) {
-		super(typ);
-		m_isCurrentModule = typ.module() == currentModule;
+	public EnumDefaultValue(
+			final EnumType typ,
+			final EnumEntry entry,
+			final ClassType referencedFrom) {
+		super(typ, referencedFrom);
+		m_isLocalDefinition = typ.module() == referencedFrom.module();
 		m_value = entry;
 	}
 
 	private final EnumEntry m_value;
-	private final boolean m_isCurrentModule;
+	private final boolean m_isLocalDefinition;
 
 }

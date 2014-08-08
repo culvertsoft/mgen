@@ -86,7 +86,7 @@ object LinkTypes {
 
   private def replaceUnlinkedDefaultValue(d: DefaultValue, expectedType: Type, t: ClassType)(implicit typeLkup: ItemLookup): DefaultValue = {
     d match {
-      case d: UnlinkedDefaultValue => d.parse(expectedType, t, typeLkup)
+      case d: UnlinkedDefaultValue => d.parse(expectedType, typeLkup)
       case d => d
     }
   }

@@ -12,8 +12,11 @@ public class ConstantReferenceDefaultValue extends DefaultValue {
 		return m_constant;
 	}
 
-	public ConstantReferenceDefaultValue(final Type expectedType, final Constant constant) {
-		super(expectedType);
+	public ConstantReferenceDefaultValue(
+			final Type expectedType,
+			final Constant constant,
+			final ClassType referencedFrom) {
+		super(expectedType, referencedFrom);
 		m_constant = constant;
 	}
 

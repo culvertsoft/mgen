@@ -44,7 +44,7 @@ object MkDefaultValue {
 
     d match {
       case v: EnumDefaultValue =>
-        if (v.isCurrentModule)
+        if (v.isLocalDefinition)
           s"${v.expectedType.shortName}_${v.value.name}"
         else {
           s"${v.expectedType.module.path.replaceAllLiterally(".", "::")}::${v.expectedType.shortName}_${v.value.name}"
@@ -84,7 +84,7 @@ object MkDefaultValue {
         val values = v.overriddenDefaultValues
         if (values.nonEmpty) {
           val setCalls = values.map(e => s"${Alias.set(e._1, apply(e._2, isPolymorphicField))}").mkString(".")
-          val tName = if (v.isCurrentModule) v.actualType.shortName else v.actualType.fullName
+          val tName = if (v.isLocalDefinition) v.actualType.shortName else v.actualType.fullName
           if (isPolymorphicField) {
             s"&((${CppConstruction.defaultConstruct(v.actualType, isPolymorphicField)})->${setCalls})"
           } else {

@@ -27,8 +27,11 @@ public class MapDefaultValue extends DefaultValue {
 		return "{" + m_values + "}";
 	}
 
-	public MapDefaultValue(final MapType typ, final Map<DefaultValue, DefaultValue> values) {
-		super(typ);
+	public MapDefaultValue(
+			final MapType typ,
+			final Map<DefaultValue, DefaultValue> values,
+			final ClassType referencedFrom) {
+		super(typ, referencedFrom);
 		m_values = values;
 	}
 
