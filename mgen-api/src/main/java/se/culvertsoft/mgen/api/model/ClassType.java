@@ -227,7 +227,8 @@ public class ClassType extends UserDefinedType {
 	 */
 	public Constant findConstant(final String name) {
 		for (final Constant c : m_constants) {
-			if (c.shortName().equals(name) || c.fullName().equals(name)) {
+			if (c.shortName().equals(name) || c.qualifiedShortName().equals(name)
+					|| c.fullName().equals(name)) {
 				return c;
 			}
 		}

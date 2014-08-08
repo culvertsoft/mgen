@@ -53,6 +53,15 @@ public class Constant {
 	}
 
 	/**
+	 * Returns the short name of this constant concatenated with the short name
+	 * of the parent class. E.g. If the parent class is se.culvertsoft.MyCLass
+	 * and the constant is named Foo, the returned string would be MyClass.Foo.
+	 */
+	public String qualifiedShortName() {
+		return m_qualifiedShortName;
+	}
+
+	/**
 	 * Gets the full name of this constant (with package.class path prepended).
 	 * For example a class se.culvertsoft.Foo with constant Bar would return
 	 * se.culvertsoft.Foo.Bar.
@@ -103,6 +112,7 @@ public class Constant {
 			final DefaultValue value,
 			final Field source) {
 		m_shortName = name;
+		m_qualifiedShortName = parent.shortName() + "." + name;
 		m_fullName = parent.fullName() + "." + name;
 		m_parent = parent;
 		m_type = type;
@@ -111,6 +121,7 @@ public class Constant {
 	}
 
 	private final String m_shortName;
+	private final String m_qualifiedShortName;
 	private final String m_fullName;
 	private final ClassType m_parent;
 	private Type m_type;
