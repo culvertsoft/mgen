@@ -20,7 +20,7 @@ public class Module {
 	public Map<String, String> settings() {
 		return m_settings;
 	}
-	
+
 	/**
 	 * Returns the path of this module, i.e. the java package or c++ namespace
 	 * of this module.
@@ -100,7 +100,7 @@ public class Module {
 	public void addClass(final ClassType c) {
 		m_classes.add(c);
 	}
-	
+
 	/**
 	 * Replaces the enums of this module.
 	 */
@@ -115,33 +115,12 @@ public class Module {
 	public void addEnums(final List<EnumType> enums) {
 		m_enums.addAll(enums);
 	}
-	
+
 	/**
 	 * Add a new enum to this module.
 	 */
-	public void addEnum(final EnumType e){
+	public void addEnum(final EnumType e) {
 		m_enums.add(e);
-	}
-	
-	/**
-	 * Searches the types of this module for a type with a given name
-	 * 
-	 * @param name
-	 *            The short or full class name of the type to find
-	 * @return The found type, or null if none found
-	 */
-	public UserDefinedType findType(final String name) {
-		for (final ClassType t : classes()) {
-			if (t.shortName().equals(name) || t.fullName().equals(name)) {
-				return t;
-			}
-		}
-		for (final EnumType t : enums()) {
-			if (t.shortName().equals(name) || t.fullName().equals(name)) {
-				return t;
-			}
-		}
-		return null;
 	}
 
 	public Module(

@@ -8,6 +8,7 @@ import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Constant
 import se.culvertsoft.mgen.api.model.DefaultValue
+import se.culvertsoft.mgen.api.model.ItemLookup
 import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Project
@@ -21,32 +22,17 @@ object LinkTypes {
     link(project)
   }
 
-  private def replace(t: Type, owner: ClassType)(implicit lkup: TypeLookup): Type = {
+  private def replace(t: Type, referencedFrom: ClassType)(implicit lkup: ItemLookup): Type = {
 
     t match {
       case t: ArrayType =>
-        new ArrayType(replace(t.elementType, owner))
+        new ArrayType(replace(t.elementType, referencedFrom))
       case t: ListType =>
-        new ListType(replace(t.elementType, owner))
+        new ListType(replace(t.elementType, referencedFrom))
       case t: MapType =>
-        new MapType(replace(t.keyType, owner), replace(t.valueType, owner))
+        new MapType(replace(t.keyType, referencedFrom), replace(t.valueType, referencedFrom))
       case t: UnlinkedType =>
-
-        val found = lkup.find(t.name)
-        if (found.isEmpty) {
-          throw new AnalysisException(s"Could not find any matching types for type ${t.name} referenced in parent ${owner}")
-        } else if (found.size == 1) {
-          found.head
-        } else {
-
-          found.find(_.module == owner.module) match {
-            case Some(x) => x
-            case _ =>
-              throw new AnalysisException(s"Ambigously referenced type ${t.name} in type ${owner}")
-          }
-
-        }
-
+        lkup.getType(t.name(), referencedFrom)
       case null => throw new AnalysisException("Cannot provide null type to type")
 
       case _ => t
@@ -57,8 +43,8 @@ object LinkTypes {
 
   private def link(project: Project) {
 
-    implicit val typeLkup = new TypeLookup(project)
-    val classes = project.allModulesRecursively.flatMap(_.classes)
+    implicit val typeLkup = CreateTypeLookup(project)
+    val classes = typeLkup.getClasses
 
     // Link types
     for (t <- classes) {
@@ -98,9 +84,9 @@ object LinkTypes {
 
   }
 
-  private def replaceUnlinkedDefaultValue(d: DefaultValue, expectedType: Type, t: ClassType): DefaultValue = {
+  private def replaceUnlinkedDefaultValue(d: DefaultValue, expectedType: Type, t: ClassType)(implicit typeLkup: ItemLookup): DefaultValue = {
     d match {
-      case d: UnlinkedDefaultValue => d.parse(expectedType, t.module)
+      case d: UnlinkedDefaultValue => d.parse(expectedType, t, typeLkup)
       case d => d
     }
   }

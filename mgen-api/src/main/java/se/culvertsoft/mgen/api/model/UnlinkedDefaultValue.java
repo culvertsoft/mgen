@@ -9,7 +9,10 @@ public abstract class UnlinkedDefaultValue extends DefaultValue {
 	 * Used for delayed parsing of the default value. This will be called after
 	 * the compiler has linked together types in a project.
 	 */
-	public abstract DefaultValue parse(final Type fieldType, final Module parentModule);
+	public abstract DefaultValue parse(
+			final Type fieldType,
+			final ClassType referencedFrom,
+			final ItemLookup lookup);
 
 	public UnlinkedDefaultValue() {
 		super(null);

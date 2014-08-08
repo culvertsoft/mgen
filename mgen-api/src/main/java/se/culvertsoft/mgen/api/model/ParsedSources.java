@@ -118,38 +118,9 @@ public class ParsedSources {
 	}
 
 	/**
-	 * Convenience methods for finding a UserDefinedType
-	 */
-	protected UserDefinedType findType(
-			final String name,
-			final HashSet<ParsedSources> alreadySearched) {
-
-		if (alreadySearched.contains(this))
-			return null;
-
-		alreadySearched.add(this);
-
-		for (final Module m : modules()) {
-			final UserDefinedType foundType = m.findType(name);
-			if (foundType != null)
-				return foundType;
-		}
-
-		for (final Project d : m_dependencies) {
-			final UserDefinedType foundType = d.findType(name, alreadySearched);
-			if (foundType != null)
-				return foundType;
-		}
-		return null;
-	}
-	
-
-	/**
 	 * Convenience methods for finding a Module
 	 */
-	protected Module findModule(
-			final String name,
-			final HashSet<ParsedSources> alreadySearched) {
+	protected Module findModule(final String name, final HashSet<ParsedSources> alreadySearched) {
 
 		if (alreadySearched.contains(this))
 			return null;

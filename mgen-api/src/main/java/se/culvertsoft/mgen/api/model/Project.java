@@ -57,34 +57,6 @@ public class Project extends ParsedSources {
 	}
 
 	/**
-	 * Searches the types of this project and its dependencies for a type with a
-	 * given name
-	 * 
-	 * @param name
-	 *            The short or full class name of the type to find
-	 * @return The found type, or null if none found
-	 */
-	public UserDefinedType findType(final String name) {
-		if (isRoot()) {
-			return findType(name, new HashSet<ParsedSources>());
-		} else {
-			return m_parent.findType(name);
-		}
-	}
-
-	/**
-	 * Searches the modules of this project and its dependencies for a module
-	 * with a specific fully qualified package name.
-	 */
-	public Module findModule(final String name) {
-		if (isRoot()) {
-			return findModule(name, new HashSet<ParsedSources>());
-		} else {
-			return m_parent.findModule(name);
-		}
-	}
-
-	/**
 	 * Gets the parent project of this project (if it's a dependency), otherwise
 	 * it returns null.
 	 */
@@ -140,10 +112,8 @@ public class Project extends ParsedSources {
 		final Module existingModule = findModule(modulePath);
 		if (existingModule != null) {
 			if (existingModule.parent() != this)
-				throw new AnalysisException(
-						"Types for module "
-								+ modulePath
-								+ " are defined in multiple projects. This is not (yet) allowed");
+				throw new AnalysisException("Types for module " + modulePath
+						+ " are defined in multiple projects. This is not (yet) allowed");
 			return existingModule;
 		} else {
 			final Module newModule = new Module(
@@ -154,6 +124,18 @@ public class Project extends ParsedSources {
 					this);
 			addModule(newModule);
 			return newModule;
+		}
+	}
+
+	/**
+	 * Searches the modules of this project and its dependencies for a module
+	 * with a specific fully qualified package name.
+	 */
+	private Module findModule(final String name) {
+		if (isRoot()) {
+			return findModule(name, new HashSet<ParsedSources>());
+		} else {
+			return m_parent.findModule(name);
 		}
 	}
 
