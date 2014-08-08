@@ -549,7 +549,7 @@ Most of the core functionality is implemented and we've built about half the cro
  - We've not yet started on configuring test boxes for multiple dev platforms
  - Our build scripts for C++ tests currently do not build with Visual Studio.
  - Documentation is somewhat lacking.
- - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-t-have-list"
+ - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"
 
 
 ## License
