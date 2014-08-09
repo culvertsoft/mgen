@@ -7,6 +7,9 @@ import java.util.Map;
 
 import se.culvertsoft.mgen.api.exceptions.AnalysisException;
 
+/**
+ * Created by the compiler to simplify linking project types and default values.
+ */
 public class ItemLookup {
 
 	/**
