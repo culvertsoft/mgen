@@ -32,6 +32,16 @@ public class CustomCodeSection {
 		m_endKey = endKey;
 	}
 
+	/**
+	 * Returns getBeginKey() + getEndKey()
+	 * 
+	 * @return getBeginKey() + getEndKey()
+	 */
+	@Override
+	public String toString() {
+		return m_beginKey + m_endKey;
+	}
+
 	private final String m_beginKey;
 	private final String m_endKey;
 

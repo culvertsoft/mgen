@@ -1,10 +1,9 @@
 package se.culvertsoft.mgen.javapack.generator
 
 import java.io.File
-
 import scala.collection.JavaConversions.seqAsJavaList
-
 import se.culvertsoft.mgen.api.model.ClassType
+import se.culvertsoft.mgen.api.model.CustomCodeSection
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
@@ -13,6 +12,7 @@ import se.culvertsoft.mgen.api.model.PrimitiveType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
+import se.culvertsoft.mgen.compiler.util.SettingsUtils.RichSettings
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.impl.MkAcceptVisitor
 import se.culvertsoft.mgen.javapack.generator.impl.MkAllMembersCtor
@@ -46,8 +46,10 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkToString
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdFields
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdMethods
 import se.culvertsoft.mgen.javapack.generator.impl.MkValidate
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 
 object JavaGenerator {
+
   def canBeNull(f: Field): Boolean = {
     canBeNull(f.typ())
   }
@@ -57,6 +59,21 @@ object JavaGenerator {
       case _ => true
     }
   }
+
+  def mkCustomCodeSection(name: String): CustomCodeSection = {
+    def mkKey(ending: String) = s"/*${name}_${ending}*/"
+    new CustomCodeSection(mkKey("begin"), mkKey("end"))
+  }
+
+  val custom_imports_section = mkCustomCodeSection("custom_imports")
+  val custom_interfaces_section = mkCustomCodeSection("custom_ifcs")
+  val custom_methods_section = mkCustomCodeSection("custom_methods")
+
+  val customClassCodeSections = List(
+    custom_imports_section,
+    custom_interfaces_section,
+    custom_methods_section)
+
 }
 
 class JavaGenerator extends BuiltInStaticLangGenerator {
@@ -95,23 +112,24 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
 
   }
 
-  override def generateClassSources(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    val folder = getModuleFolderPath(module, generatorSettings)
+  override def generateClassSources(module: Module, t: ClassType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+    val folder = getModuleFolderPath(module, settings)
     val fileName = t.shortName + ".java"
-    val sourceCode = generateClassSourceCode(t)
+    val genCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(false)
+    val sourceCode = generateClassSourceCode(t, genCustomCodeSections)
     List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
   }
 
-  override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    val folder = getModuleFolderPath(module, generatorSettings)
+  override def generateEnumSources(module: Module, t: EnumType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+    val folder = getModuleFolderPath(module, settings)
     val fileName = t.shortName() + ".java"
     val sourceCode = generateEnumSourceCode(t)
     List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
   }
 
-  def generateClassSourceCode(t: ClassType): String = {
+  def generateClassSourceCode(t: ClassType, genCustomCodeSections: Boolean): String = {
     txtBuffer.clear()
-    mkPublicSection(t)
+    mkPublicSection(t, genCustomCodeSections)
     mkMetadataMethodsSection(t)
     mkMetadataFieldsSection(t)
     txtBuffer.toString()
@@ -121,17 +139,23 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkEnum(t, t.module.path)
   }
 
-  def mkPublicSection(t: ClassType) {
+  def mkPublicSection(t: ClassType, genCustomCodeSections: Boolean) {
     MkFancyHeader(t)
     MkPackage(currentModule)
-    MkImports(t, currentModule)
-    MkClassStart(t, currentModule)
+    MkImports(t, currentModule, genCustomCodeSections)
+    MkClassStart(t, currentModule, genCustomCodeSections)
     MkMembers(t, currentModule)
     MkDefaultCtor(t, currentModule)
     MkRequiredMembersCtor(t, currentModule)
     MkAllMembersCtor(t, currentModule)
     MkGetters(t, currentModule)
     MkSetters(t, currentModule)
+    
+    if (genCustomCodeSections) {
+      ln(1, JavaGenerator.custom_methods_section.toString)
+      endl()
+    }
+    
     MkToString(t, currentModule)
     MkHashCode(t, currentModule)
     MkEquals(t, currentModule)

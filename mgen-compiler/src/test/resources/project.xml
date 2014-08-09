@@ -2,40 +2,42 @@
 
 <Project>
 
-	<!-- = = = -->
-	<!-- INPUT -->
-	<!-- = = = -->
+    <!-- = = = -->
+    <!-- INPUT -->
+    <!-- = = = -->
 
-	<Dependency>dependencies/project.xml</Dependency>
+    <Dependency>dependencies/project.xml</Dependency>
 
-	<Sources parser="se.culvertsoft.mgen.idlparser.IdlParser">
-		<Source>gameworld.types.basemodule1.xml</Source>
-		<Source>gameworld.types.basemodule2.xml</Source>
-		<Source>gameworld.types.basemodule3.xml</Source>
-	</Sources>
+    <Sources parser="se.culvertsoft.mgen.idlparser.IdlParser">
+        <Source>gameworld.types.basemodule1.xml</Source>
+        <Source>gameworld.types.basemodule2.xml</Source>
+        <Source>gameworld.types.basemodule3.xml</Source>
+    </Sources>
 
-	<!-- = == = -->
-	<!-- OUTPUT -->
-	<!-- = == = -->
+    <!-- = == = -->
+    <!-- OUTPUT -->
+    <!-- = == = -->
 
-	<Generator name="Java">
-		<class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
-		<output_path>src_generated/test/java</output_path>
-		<classregistry_path>gameworld.types</classregistry_path>
-	</Generator>
+    <Generator name="Java">
+        <generate_custom_code_sections>true</generate_custom_code_sections>
+        <class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
+        <output_path>src_generated/test/java</output_path>
+        <classregistry_path>gameworld.types</classregistry_path>
+    </Generator>
 
     <Generator name="Javascript">
-        <class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator </class_path>
+        <class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator</class_path>
         <output_path>src_generated/test/javascript</output_path>
         <output_filename>standard_blueprint.js</output_filename>
         <classregistryblueprint>standard_blueprint</classregistryblueprint>
     </Generator>
 
-	<Generator name="C++">
-		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</class_path>
-		<output_path>src_generated/test/cpp</output_path>
-		<classregistry_path>gameworld.types</classregistry_path>
-		<generate_unity_build>true</generate_unity_build>
-	</Generator>
+    <Generator name="C++">
+        <generate_custom_code_sections>true</generate_custom_code_sections>
+        <class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</class_path>
+        <output_path>src_generated/test/cpp</output_path>
+        <classregistry_path>gameworld.types</classregistry_path>
+        <generate_unity_build>true</generate_unity_build>
+    </Generator>
 
 </Project>

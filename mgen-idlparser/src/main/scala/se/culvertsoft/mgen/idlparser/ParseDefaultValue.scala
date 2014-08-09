@@ -54,10 +54,10 @@ object ParseDefaultValue {
         mkListOrArray(expectedType, writtenString, referencedFrom)
       case expectedType: MapType =>
         mkMap(expectedType, writtenString, referencedFrom)
-      case expectedType: ClassType if (expectedType.isLinked) =>
+      case expectedType: ClassType =>
         mkObject(expectedType, writtenString, referencedFrom)
       case _ =>
-        throw new AnalysisException("Unexpected type enum: " + expectedType.typeEnum())
+        throw new AnalysisException("Unexpected field type provided to ParseDefaultValue(..): " + expectedType)
     }
   }
 
