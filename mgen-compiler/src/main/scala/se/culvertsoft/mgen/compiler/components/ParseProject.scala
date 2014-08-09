@@ -1,5 +1,6 @@
 package se.culvertsoft.mgen.compiler.components
 
+import scala.Array.canBuildFrom
 import scala.collection.JavaConversions.mapAsJavaMap
 import scala.collection.JavaConversions.seqAsJavaList
 import scala.collection.mutable.HashMap
@@ -7,6 +8,7 @@ import scala.xml.XML.loadFile
 
 import se.culvertsoft.mgen.api.model.Project
 import se.culvertsoft.mgen.api.plugins.Parser
+import se.culvertsoft.mgen.compiler.util.EnvVarUtils
 import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.compiler.util.XmlUtils.RichXmlNode
 import se.culvertsoft.mgen.idlparser.IdlParser
@@ -22,7 +24,9 @@ object ParseProject {
         .get("project")
         .getOrElse(throw new RuntimeException("Missing '-project' cmd line argument"))
 
-    val includePaths = settings.get("include_paths").getOrElse("").split(",")
+    val includePaths =
+      (settings.get("include_paths").getOrElse("").split(",") ++
+        EnvVarUtils.getCommaSeparated("MGEN_INCLUDE_PATHS")).distinct
 
     FileUtils.checkiSsFileOrThrow(projectPath)
 

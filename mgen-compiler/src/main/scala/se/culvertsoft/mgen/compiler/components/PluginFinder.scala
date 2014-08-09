@@ -8,6 +8,7 @@ import scala.collection.mutable.HashMap
 import scala.collection.mutable.TreeSet
 
 import se.culvertsoft.mgen.api.exceptions.MGenException
+import se.culvertsoft.mgen.compiler.util.EnvVarUtils
 import se.culvertsoft.mgen.compiler.util.SplitCommaSeparated
 
 class PluginFinder(pluginPaths_in: Seq[String]) {
@@ -32,11 +33,13 @@ class PluginFinder(pluginPaths_in: Seq[String]) {
 
   def getPaths(): Seq[String] = {
     val custom = pluginPaths_in.toList.filter(_.nonEmpty)
-    if (defaultFolderExists) {
-      DEFAULT_PATH :: custom
-    } else {
-      custom
-    }
+    val out =
+      if (defaultFolderExists) {
+        DEFAULT_PATH :: custom
+      } else {
+        custom
+      }
+    (out ++ EnvVarUtils.getCommaSeparated("MGEN_PLUGIN_PATHS")).distinct
   }
 
   def defaultFolderExists(): Boolean = {
@@ -60,7 +63,7 @@ class PluginFinder(pluginPaths_in: Seq[String]) {
 
   }
 
-  def listFiles(dir: String, ending: String, recurse: Boolean) = {
+  def listFiles(dir: String, ending: String, recurse: Boolean): TreeSet[String] = {
     val out = new TreeSet[String];
     def listFiles(
       directory: String,
@@ -69,7 +72,7 @@ class PluginFinder(pluginPaths_in: Seq[String]) {
       recurse: Boolean) {
       val pluginFolder = new File(directory);
       if (!pluginFolder.exists())
-        throw new MGenException("Missing directory: " + directory);
+        return
       if (!pluginFolder.isDirectory())
         throw new MGenException("Not a directory: " + directory);
       val curFiles = pluginFolder.listFiles();
