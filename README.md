@@ -15,8 +15,8 @@ Why is MGen interesting? - MGen can help you with the following, cross-language 
  - Simplify the process of sharing the state of your application over network
  - Make sure the data model in software you build today is as accessible as possible for future projects
  - Build scalable, accessible, compatible data models that you come back to later and understand.
- - Use native language objects with external services and interfaces requiring text formats such as JSON.
- - Combine multiple IDLs to define your data models, and even have dependencies between them.
+ - Use native objects with external services and interfaces requiring text formats such as JSON.
+ - Combine definitions in multiple IDLs for your data models, and have dependencies between them.
  - Much much more..
 
 MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/protobuf/ "sometimes called protobuf"), [Thrift](http://thrift.apache.org/), [Avro](http://avro.apache.org/), [ICE](http://www.zeroc.com/ice.html "Internet Communications Engine"), [HLA](http://en.wikipedia.org/wiki/High-level_architecture_(simulation) "High level architecture"), [WtDbo](http://www.webtoolkit.eu/wt/), [Flat Buffers](http://google.github.io/flatbuffers/), [Cap'n Proto](http://kentonv.github.io/capnproto/), [Simple Binary Encoding](https://github.com/real-logic/simple-binary-encoding). 
