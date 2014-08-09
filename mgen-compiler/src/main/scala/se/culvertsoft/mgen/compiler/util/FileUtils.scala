@@ -8,6 +8,7 @@ import java.nio.file.Paths
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.LinkedHashMap
 import scala.collection.mutable.Map
+import scala.reflect.io.Path
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.CustomCodeSection
@@ -100,6 +101,8 @@ object FileUtils {
       }
 
       if (!FileUtils.exists(filePath)) {
+        val dir = FileUtils.directoryOf(filePath)
+        Path(dir).createDirectory(true, false)
         println(s"  writing: ${filePath}")
         writeToFile(filePath, output.sourceCode)
       } else {
