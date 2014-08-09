@@ -126,7 +126,7 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
   override def generateClassSources(module: Module, t: ClassType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     val folder = getModuleFolderPath(module, settings)
     val fileName = t.shortName + ".java"
-    val generateCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(false)
+    val generateCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(true)
     val sourceCode = generateClassSourceCode(t, generateCustomCodeSections)
     List(new GeneratedSourceFile(
       folder + File.separator + fileName,

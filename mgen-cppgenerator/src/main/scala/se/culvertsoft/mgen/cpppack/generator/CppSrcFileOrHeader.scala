@@ -21,7 +21,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     currentModule = module
     val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, settings)
     val fileName = t.shortName() + fileEnding
-    val genCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(false)
+    val genCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(true)
     val sourceCode = generateSourceCode(module, t, genCustomCodeSections)
     new GeneratedSourceFile(folder + File.separator + fileName, sourceCode, CppGenerator.getCustomCodeSections(genCustomCodeSections))
   }
