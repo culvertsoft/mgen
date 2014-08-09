@@ -2,6 +2,7 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkAcceptVisitor
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkAllMembersCtor
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkConstants
@@ -29,8 +30,8 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkValidate
 
 object CppHeader extends CppSrcFileOrHeader(".h") {
 
-  override def mkIncludes(t: ClassType) {
-    MkIncludes(t, currentModule)
+  override def mkIncludes(t: ClassType, genCustomCodeSections: Boolean) {
+    MkIncludes(t, currentModule, genCustomCodeSections)
   }
 
   override def mkIncludeGuardStart(module: Module, t: ClassType) {
@@ -49,16 +50,16 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
     MkEqOperator(t, currentModule)
   }
 
-  override def mkClassStart(t: ClassType) {
-    CppGenUtils.mkClassStart(t.shortName(), getSuperTypeNameString(t))
+  override def mkClassStart(t: ClassType, genCustomCodeSections: Boolean) {
+    CppGenUtils.mkClassStart(t.shortName(), getSuperTypeNameString(t), genCustomCodeSections)
   }
 
   override def mkPrivate() {
-    txtBuffer.textln("private:")
+    ln("private:")
   }
 
   override def mkPublic() {
-    txtBuffer.textln("public:")
+    ln("public:")
   }
 
   override def mkDefaultCtor(t: ClassType) {
@@ -79,6 +80,11 @@ object CppHeader extends CppSrcFileOrHeader(".h") {
 
   override def mkSetters(t: ClassType) {
     MkSetters(t, currentModule)
+  }
+
+  override def mkCustomPublicMethodsSection(t: ClassType) {
+    ln(1, CppGenerator.custom_methods_section.toString)
+    ln()
   }
 
   override def mkHasers(t: ClassType) {

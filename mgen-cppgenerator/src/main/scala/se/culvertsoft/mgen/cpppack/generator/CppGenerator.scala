@@ -5,6 +5,7 @@ import java.io.File
 import scala.collection.JavaConversions.seqAsJavaList
 
 import se.culvertsoft.mgen.api.model.ClassType
+import se.culvertsoft.mgen.api.model.CustomCodeSection
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
@@ -32,6 +33,27 @@ object CppGenerator {
           txt(2, s)
       }
     }
+  }
+
+  def mkCustomCodeSection(name: String): CustomCodeSection = {
+    def mkKey(ending: String) = s"/*${name}_${ending}*/"
+    new CustomCodeSection(mkKey("begin"), mkKey("end"))
+  }
+
+  val custom_includes_section = mkCustomCodeSection("custom_includes")
+  val custom_interfaces_section = mkCustomCodeSection("custom_ifcs")
+  val custom_methods_section = mkCustomCodeSection("custom_methods")
+
+  val customClassCodeSections = List(
+    custom_includes_section,
+    custom_interfaces_section,
+    custom_methods_section)
+
+  def getCustomCodeSections(genCustomCodeSections: Boolean): Seq[CustomCodeSection] = {
+    if (genCustomCodeSections)
+      customClassCodeSections
+    else
+      Nil
   }
 
 }
@@ -66,9 +88,9 @@ class CppGenerator extends BuiltInStaticLangGenerator {
 
   }
 
-  override def generateClassSources(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    List(CppHeader.generate(module, t, generatorSettings),
-      CppSrcFile.generate(module, t, generatorSettings))
+  override def generateClassSources(module: Module, t: ClassType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+    List(CppHeader.generate(module, t, settings),
+      CppSrcFile.generate(module, t, settings))
   }
 
   override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {

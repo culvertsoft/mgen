@@ -1,7 +1,9 @@
 package se.culvertsoft.mgen.javapack.generator
 
 import java.io.File
+
 import scala.collection.JavaConversions.seqAsJavaList
+
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.CustomCodeSection
 import se.culvertsoft.mgen.api.model.EnumType
@@ -10,6 +12,8 @@ import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.PrimitiveType
 import se.culvertsoft.mgen.api.model.Type
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
 import se.culvertsoft.mgen.compiler.util.SettingsUtils.RichSettings
@@ -46,7 +50,6 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkToString
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdFields
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdMethods
 import se.culvertsoft.mgen.javapack.generator.impl.MkValidate
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 
 object JavaGenerator {
 
@@ -74,9 +77,17 @@ object JavaGenerator {
     custom_interfaces_section,
     custom_methods_section)
 
+  def getCustomCodeSections(getCustomCodeSections: Boolean): Seq[CustomCodeSection] = {
+    if (getCustomCodeSections)
+      customClassCodeSections
+    else
+      Nil
+  }
+
 }
 
 class JavaGenerator extends BuiltInStaticLangGenerator {
+  import JavaGenerator.getCustomCodeSections
 
   implicit val txtBuffer = SuperStringBuffer.getCached()
 
@@ -115,9 +126,12 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
   override def generateClassSources(module: Module, t: ClassType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     val folder = getModuleFolderPath(module, settings)
     val fileName = t.shortName + ".java"
-    val genCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(false)
-    val sourceCode = generateClassSourceCode(t, genCustomCodeSections)
-    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
+    val generateCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(false)
+    val sourceCode = generateClassSourceCode(t, generateCustomCodeSections)
+    List(new GeneratedSourceFile(
+      folder + File.separator + fileName,
+      sourceCode,
+      getCustomCodeSections(generateCustomCodeSections)))
   }
 
   override def generateEnumSources(module: Module, t: EnumType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
@@ -150,12 +164,12 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkAllMembersCtor(t, currentModule)
     MkGetters(t, currentModule)
     MkSetters(t, currentModule)
-    
+
     if (genCustomCodeSections) {
       ln(1, JavaGenerator.custom_methods_section.toString)
       endl()
     }
-    
+
     MkToString(t, currentModule)
     MkHashCode(t, currentModule)
     MkEquals(t, currentModule)

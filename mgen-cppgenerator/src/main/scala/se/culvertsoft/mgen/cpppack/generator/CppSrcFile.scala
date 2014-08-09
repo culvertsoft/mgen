@@ -24,7 +24,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkValidate
 
 object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
-  override def mkIncludes(t: ClassType) {
+  override def mkIncludes(t: ClassType, generateCustomCodeSection: Boolean) {
     MkIncludes(t, currentModule)
   }
 

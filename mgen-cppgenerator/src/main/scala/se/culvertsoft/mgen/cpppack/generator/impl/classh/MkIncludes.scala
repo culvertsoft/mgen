@@ -4,14 +4,18 @@ import scala.collection.JavaConversions.asScalaSet
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
+import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 
 object MkIncludes {
 
   def apply(
     t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
+    module: Module,
+    genCustomCodeSections: Boolean)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module
 
@@ -24,7 +28,10 @@ object MkIncludes {
     for (tRef <- referenced)
       CppGenUtils.include(tRef)
 
-    txtBuffer.endl()
+    if (genCustomCodeSections)
+      ln(CppGenerator.custom_includes_section.toString)
+
+    endl()
 
   }
 

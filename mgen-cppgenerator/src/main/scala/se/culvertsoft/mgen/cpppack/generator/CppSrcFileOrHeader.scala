@@ -2,28 +2,31 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import java.io.File
 
+import scala.collection.JavaConversions.seqAsJavaList
+
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
+import se.culvertsoft.mgen.compiler.util.SettingsUtils.RichSettings
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 
 abstract class CppSrcFileOrHeader(val fileEnding: String) {
-  import CppTypeNames._
 
   implicit val txtBuffer = SuperStringBuffer.getCached()
   implicit var currentModule: Module = null
 
-  def generate(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {
+  def generate(module: Module, t: ClassType, settings: java.util.Map[String, String]): GeneratedSourceFile = {
     currentModule = module
-    val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, generatorSettings)
+    val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, settings)
     val fileName = t.shortName() + fileEnding
-    val sourceCode = generateSourceCode(module, t, generatorSettings)
-    new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
+    val genCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(false)
+    val sourceCode = generateSourceCode(module, t, genCustomCodeSections)
+    new GeneratedSourceFile(folder + File.separator + fileName, sourceCode, CppGenerator.getCustomCodeSections(genCustomCodeSections))
   }
 
-  def generateSourceCode(module: Module, t: ClassType, generatorSettings: java.util.Map[String, String]): String = {
+  def generateSourceCode(module: Module, t: ClassType, genCustomCodeSections: Boolean): String = {
 
     val namespaces = currentModule.path().split("\\.")
 
@@ -32,12 +35,12 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     // Header
     CppGenUtils.mkFancyHeader()
     mkIncludeGuardStart(module, t)
-    mkIncludes(t)
+    mkIncludes(t, genCustomCodeSections)
     CppGenUtils.mkNameSpaces(namespaces)
     mkUsingStatements(t)
 
     // Class Begin
-    mkClassStart(t)
+    mkClassStart(t, genCustomCodeSections)
 
     // Normal class api section
     mkConstants(t)
@@ -50,6 +53,8 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     mkDestructor(t)
     mkGetters(t)
     mkSetters(t)
+    if (genCustomCodeSections)
+      mkCustomPublicMethodsSection(t)
     mkHasers(t)
     mkEqOperator(t)
     mkToString(t)
@@ -97,11 +102,12 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     }
   }
 
-  def mkIncludes(t: ClassType) {}
+  def mkIncludes(t: ClassType, genCustomCodeSections: Boolean = false) {}
 
   def mkNumFieldsSet(t: ClassType) {}
 
-  def mkClassStart(t: ClassType) {}
+  def mkCustomPublicMethodsSection(t: ClassType) {}
+  def mkClassStart(t: ClassType, genCustomCodeSections: Boolean = false) {}
   def mkPrivate() {}
   def mkConstants(t: ClassType) {}
   def mkMembers(t: ClassType) {}

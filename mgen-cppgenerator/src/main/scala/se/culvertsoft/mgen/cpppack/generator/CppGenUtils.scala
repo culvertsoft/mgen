@@ -62,11 +62,14 @@ object CppGenUtils {
     txtBuffer.textln(s"#endif")
   }
 
-  def mkClassStart(thisClsName: String, superClsName: String = "")(implicit txtBuffer: SuperStringBuffer) {
+  def mkClassStart(thisClsName: String, superClsName: String = "", genCustomCodeSections: Boolean = false)(implicit txtBuffer: SuperStringBuffer) {
+
+    val customCodeSection = if (genCustomCodeSections) CppGenerator.custom_interfaces_section else ""
+
     if (superClsName != null && superClsName.nonEmpty)
-      txtBuffer.textln(s"class $thisClsName : public $superClsName {")
+      txtBuffer.textln(s"class $thisClsName : public $superClsName $customCodeSection {")
     else
-      txtBuffer.textln(s"class $thisClsName {")
+      txtBuffer.textln(s"class $thisClsName $customCodeSection {")
   }
 
   def mkClassEnd(thisClsName: String)(implicit txtBuffer: SuperStringBuffer) {
