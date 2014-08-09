@@ -28,6 +28,7 @@ MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/p
   * [Defining a data model](#defining-a-data-model)
   * [Generating source code](#generating-source-code)
   * [Using generated code](#using-generated-code)
+  * [Customizing generated code](#customizing-generated-code)
 * [Download links](#download-links)
   * [Stable](#stable)
   * [Nightly](#nightly)
@@ -350,6 +351,19 @@ Now we can read these objects back from the buffer in the following manner:
       // }
 
 Additionally, MGen supports reading and writing data types from external non-MGen sources, such as json APIs to existing services, and can easily be further extended to custom binary and text formats by implementing new or extending existing Reader and Writer classes - Entirely separate of generated source code through a simple visitor interface (for example, see our [C++ JsonWriter](https://github.com/culvertsoft/mgen/blob/master/mgen-cpplib/src/main/cpp/mgen/serialization/JsonWriterBase.h)).
+
+
+### Customizing generated code
+
+One of the most powerful features of MGen is its ability to customize generated code.
+ 
+MGen offers two ways of customizing generated code
+ - Using MGen's plug-in architecture: Providing your own code parser and generator plug-ins
+ - Editing the generated code direct: Using custom code sections in generated code
+
+MGen can be configured to generate sections in generated code intended for manual edits. This means you can generate code and then launch your favirote IDE and start hacking away at that generated code, and MGen will respect your edits. When you later extend your model, run the compiler and generate code again, your custom code will be preserved in the newly generated file - your custom code will be picked up from the file you previously generated on disk, so no need to tell MGen where to fetch it from or deal with any extra included files.
+
+The MGen compiler is also intelligent enough to only write new files to disk if there is an actual difference between newly assembled code and the one that already exists on disk.
 
 
 ## Download links
