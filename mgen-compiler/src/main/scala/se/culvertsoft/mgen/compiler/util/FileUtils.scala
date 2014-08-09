@@ -101,9 +101,9 @@ object FileUtils {
       }
 
       if (!FileUtils.exists(filePath)) {
+        println(s"  writing: ${filePath}")
         val dir = FileUtils.directoryOf(filePath)
         Path(dir).createDirectory(true, false)
-        println(s"  writing: ${filePath}")
         writeToFile(filePath, output.sourceCode)
       } else {
 
