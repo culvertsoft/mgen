@@ -543,12 +543,13 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 
 ## State of Development
 
-Development is a few months from an initial beta release. 
+Development is a about a month from an initial beta release. 
 
 Most of the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
  - We've not yet started on configuring test boxes for multiple dev platforms
  - Our build scripts for C++ tests currently do not build with Visual Studio.
  - Documentation is somewhat lacking.
+ - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"
 
 
 ## License
