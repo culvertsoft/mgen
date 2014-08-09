@@ -4,8 +4,12 @@ import scala.collection.JavaConversions.asScalaBuffer
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldIdString
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldMetaString
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.getMutable
 
 object MkReadField {
 
@@ -17,19 +21,20 @@ object MkReadField {
 
     val allFields = t.fieldsInclSuper()
 
-    txtBuffer.tabs(1).textln(s"template<typename ReaderType, typename ReadContextType>")
-    txtBuffer.tabs(1).textln(s"void _readField(const short fieldId, ReadContextType& context, ReaderType& reader) {")
-    txtBuffer.tabs(2).textln(s"switch (fieldId) {")
+    ln(1, s"template<typename ReaderType, typename ReadContextType>")
+    ln(1, s"void _readField(const short fieldId, ReadContextType& context, ReaderType& reader) {")
+    ln(2, s"switch (fieldId) {")
     for (field <- allFields) {
-      txtBuffer.tabs(2).textln(s"case ${fieldIdString(field)}:")
-      txtBuffer.tabs(3).textln(s"reader.readField(${fieldMetaString(field)}, context, ${getMutable(field)});")
-      txtBuffer.tabs(3).textln(s"break;")
+      ln(2, s"case ${fieldIdString(field)}:")
+      ln(3, s"reader.readField(${fieldMetaString(field)}, context, ${getMutable(field)});")
+      ln(3, s"break;")
     }
-    txtBuffer.tabs(2).textln(s"default:")
-    txtBuffer.tabs(3).textln(s"reader.handleUnknownField(fieldId, context);");
-    txtBuffer.tabs(2).textln(s"}")
-    txtBuffer.tabs(1).textln(s"}")
-    txtBuffer.endl()
+    ln(2, s"default:")
+    ln(3, s"reader.handleUnknownField(fieldId, context);");
+    ln(3, s"break;");
+    ln(2, s"}")
+    ln(1, s"}")
+    endl()
 
   }
 
