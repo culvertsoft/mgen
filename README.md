@@ -406,8 +406,6 @@ At this early stage installation is manual (there is currently no installer avai
 
 The MGen standalone applications (MGen Compiler and MGen Visual Designer) require Java 7 or later to be installed on your computer, such as OpenJRE/OpenJDK or the [Oracle JRE](http://java.com/en/download/index.jsp). We are currently not planning to support any earlier versions than java7.
 
-If you want to build MGen from source, see [Building MGen](#building-mgen) for build requirements.
-
 
 ### Installing the compiler
 
