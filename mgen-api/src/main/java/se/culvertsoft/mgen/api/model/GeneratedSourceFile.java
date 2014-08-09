@@ -29,6 +29,13 @@ public class GeneratedSourceFile {
 	public List<CustomCodeSection> customCodeSections() {
 		return m_customCodeSections;
 	}
+	
+	/**
+	 * Returns true if this generated source has custom code sections.
+	 */
+	public boolean hasCustomCodeSections() {
+		return m_customCodeSections != null && !m_customCodeSections.isEmpty();
+	}
 
 	/**
 	 * Creates a new GeneratedSourceFile with the same source code but prepends
