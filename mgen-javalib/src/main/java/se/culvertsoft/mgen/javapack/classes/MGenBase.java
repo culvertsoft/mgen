@@ -1,8 +1,6 @@
 package se.culvertsoft.mgen.javapack.classes;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
@@ -65,34 +63,23 @@ public abstract class MGenBase {
 
 	public abstract Field _fieldByName(final String name);
 
-	public abstract int _nFieldsSet(final FieldSetDepth fieldSetDepth, final boolean includeTransient);
+	public abstract int _nFieldsSet(
+			final FieldSetDepth fieldSetDepth,
+			final boolean includeTransient);
 
-	public abstract boolean _isFieldSet(
-			final Field field,
-			final FieldSetDepth depth);
+	public abstract boolean _isFieldSet(final Field field, final FieldSetDepth depth);
 
-	public abstract MGenBase _setAllFieldsSet(
-			final boolean state,
-			final FieldSetDepth depth);
+	public abstract MGenBase _setAllFieldsSet(final boolean state, final FieldSetDepth depth);
 
 	public abstract boolean _validate(final FieldSetDepth depth);
 
-	public abstract void _accept(final FieldVisitor visitor, final FieldVisitSelection fieldSelection) throws IOException;
+	public abstract void _accept(
+			final FieldVisitor visitor,
+			final FieldVisitSelection fieldSelection) throws IOException;
 
 	public abstract boolean _readField(
 			final short fieldId,
 			final Object context,
 			final Reader reader) throws IOException;
-
-	public List<Field> _missingRequiredFields() {
-		final ArrayList<Field> missingFields = new ArrayList<Field>();
-		for (final Field field : _fields()) {
-			if (field.isRequired()
-					&& !_isFieldSet(field, FieldSetDepth.SHALLOW)) {
-				missingFields.add(field);
-			}
-		}
-		return missingFields;
-	}
 
 }
