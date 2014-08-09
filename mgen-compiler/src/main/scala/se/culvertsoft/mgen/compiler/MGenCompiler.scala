@@ -45,9 +45,9 @@ object MGenCompiler {
         println("*** COMPILATION SUCCESS ***")
       case Failure(err) =>
         println
-        println("*** COMPILATION FAILED (see error log below) ***")
+        println(s"*** COMPILATION FAILED (${err.getMessage}), see error log below ***")
         println
-        PrintHelp
+        PrintHelp()
         println
         System.err.flush()
         System.out.flush()
