@@ -47,7 +47,7 @@ class EntityAddController(controller: Controller) extends SubController(controll
   }
 
   def getNewModuleSaveDir(): FilePath = {
-    val writtenDir = FileUtils.directoryOf(controller.model.project.getFilePath().getWritten())
+    val writtenDir = FileUtils.directoryOf("")
     val absoluteDir = FileUtils.directoryOf(controller.model.project.getFilePath().getAbsolute())
     new FilePath(writtenDir, absoluteDir)
   }

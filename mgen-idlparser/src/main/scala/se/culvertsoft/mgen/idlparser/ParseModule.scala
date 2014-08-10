@@ -19,6 +19,9 @@ object ParseModule {
     val absoluteFilePath = file.getCanonicalPath()
 
     println(s"  parsing module: ${absoluteFilePath}")
+    val path = absoluteFilePath
+    val base = new File(project.absoluteFilePath).getParent()
+    val filePath = new File(base).toURI().relativize(new File(path).toURI()).getPath();
 
     // Calculate module path
     val modulePath = file.getName.stripSuffix(".xml")
@@ -33,7 +36,7 @@ object ParseModule {
     val settings = settings0 ++ moduleXml.getSettings()
 
     // Create the module
-    val module = project.getOrCreateModule(modulePath, file.getPath, absoluteFilePath, settings);
+    val module = project.getOrCreateModule(modulePath, if (filePath != null) filePath else file.getPath, absoluteFilePath, settings);
 
     // Parse enumerations
     val enumsXml = moduleXml.getAllNodeContents("Enums")
