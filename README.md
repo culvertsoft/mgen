@@ -72,9 +72,6 @@ MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/p
   * [Tests](#tests)
 * [State of Development](#state-of-development)
 * [Feature road map](#feature-road-map)
-* [Future Plans](#future-plans)
-  * [RPC Interfaces](#rpc-interfaces)
-  * [Transport Layers](#transport-layers)
 * [License](#license)
 * [Final Words](#final-words)
 
