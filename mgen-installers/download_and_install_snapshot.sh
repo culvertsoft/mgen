@@ -20,3 +20,5 @@ rm -rf ${MGEN_INSTALL_PATH}
 mkdir -p ${MGEN_INSTALL_PATH}
 cp -rf temp/mgen-SNAPSHOT/* ${MGEN_INSTALL_PATH}/
 
+mkdir ${MGEN_INSTALL_PATH}/jars
+find temp/ -type f -name "*.jar" -exec mv -i {} -t ${MGEN_INSTALL_PATH}/jars/ \;

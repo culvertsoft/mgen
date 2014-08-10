@@ -2,6 +2,7 @@
 *.log
 *.jar
 *.zip
+*.exe
 README.md~
 .gitignore~
 LICENSE~

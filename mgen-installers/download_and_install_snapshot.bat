@@ -23,3 +23,6 @@ rm -rf %MGEN_INSTALL_PATH%
 mkdir %MGEN_INSTALL_PATH%
 cp -rf temp/mgen-SNAPSHOT/* %MGEN_INSTALL_PATH%/
 
+mkdir %MGEN_INSTALL_PATH%\jars
+for /R temp\ %%f in (*.jar) do copy "%%f" "%MGEN_INSTALL_PATH%\jars\"
+
