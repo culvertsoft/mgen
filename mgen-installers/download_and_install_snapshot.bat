@@ -26,3 +26,5 @@ cp -rf temp/mgen-SNAPSHOT/* %MGEN_INSTALL_PATH%/
 mkdir %MGEN_INSTALL_PATH%\jars
 for /R temp\ %%f in (*.jar) do copy "%%f" "%MGEN_INSTALL_PATH%\jars\"
 
+mkdir %MGEN_INSTALL_PATH%\bin
+cp -rf mgen.ex_ %MGEN_INSTALL_PATH%\bin\mgen.exe
