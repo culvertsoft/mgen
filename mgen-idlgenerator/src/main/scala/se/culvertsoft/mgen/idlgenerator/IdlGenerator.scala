@@ -1,17 +1,14 @@
 package se.culvertsoft.mgen.idlgenerator
 
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.mapAsScalaMap
 import scala.collection.JavaConversions.seqAsJavaList
+import scala.collection.JavaConverters.mapAsScalaMapConverter
 import scala.xml.PrettyPrinter
 import scala.xml.Text
-import se.culvertsoft.mgen.api.exceptions.GenerationException
+
 import se.culvertsoft.mgen.api.model.ArrayType
-import se.culvertsoft.mgen.api.model.BoolDefaultValue
 import se.culvertsoft.mgen.api.model.BoolType
 import se.culvertsoft.mgen.api.model.ClassType
-import se.culvertsoft.mgen.api.model.DefaultValue
-import se.culvertsoft.mgen.api.model.EnumDefaultValue
 import se.culvertsoft.mgen.api.model.EnumEntry
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
@@ -23,15 +20,10 @@ import se.culvertsoft.mgen.api.model.Int16Type
 import se.culvertsoft.mgen.api.model.Int32Type
 import se.culvertsoft.mgen.api.model.Int64Type
 import se.culvertsoft.mgen.api.model.Int8Type
-import se.culvertsoft.mgen.api.model.ListOrArrayDefaultValue
 import se.culvertsoft.mgen.api.model.ListType
-import se.culvertsoft.mgen.api.model.MapDefaultValue
 import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.api.model.NumericDefaultValue
-import se.culvertsoft.mgen.api.model.ObjectDefaultValue
 import se.culvertsoft.mgen.api.model.Project
-import se.culvertsoft.mgen.api.model.StringDefaultValue
 import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.UserDefinedType
@@ -109,15 +101,29 @@ class IdlGenerator extends Generator {
   }
 
   private def generator2xml(generator: GeneratorDescriptor): Seq[scala.xml.Node] = {
+
+    val settings =
+      generator.getGeneratorSettings().asScala -
+        "jar_file_folder" -
+        "class_path" -
+        "output_path" -
+        "classregistry_path"
+
     <Generator name={ generator.getGeneratorName }>
       <class_path>{ generator.getGeneratorClassPath }</class_path>
       <output_path>{ generator.getGeneratorSettings().get("output_path") }</output_path>
       <classregistry_path>{ generator.getGeneratorSettings().get("classregistry_path") }</classregistry_path>
+      { settings.map(x => settingNode2xml(x._1, x._2)) }
     </Generator>
+
   }
 
   private def dependency2xmlReference(dependency: Project): scala.xml.Node = {
     <Depend>{ dependency.filePath }</Depend>
+  }
+
+  private def settingNode2xml(key: String, value: String): scala.xml.Node = {
+    <setting>{ value }</setting>.copy(label = key)
   }
 
   private def module2xmlSource(module: Module): XmlSourceFile = {
@@ -200,6 +206,5 @@ class IdlGenerator extends Generator {
 
     xml
   }
-
 
 }
