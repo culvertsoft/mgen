@@ -1,6 +1,7 @@
 package se.culvertsoft.mgen.cpppack.generator
 
 import se.culvertsoft.mgen.api.model.ClassType
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkAllMembersCtor
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkConstants
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkDeepCopy
@@ -25,11 +26,16 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkValidate
 object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
   override def mkIncludes(t: ClassType, generateCustomCodeSection: Boolean) {
-    MkIncludes(t, currentModule)
+    MkIncludes(t, currentModule, generateCustomCodeSection)
   }
 
   override def mkConstants(t: ClassType) {
     MkConstants(t, currentModule)
+  }
+
+  override def mkCustomPublicMethodsSection(t: ClassType) {
+    ln(CppGenerator.custom_methods_section.toString)
+    ln()
   }
 
   override def mkDefaultCtor(t: ClassType) {
