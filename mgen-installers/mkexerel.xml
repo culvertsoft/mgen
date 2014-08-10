@@ -3,10 +3,10 @@
   <dontWrapJar>true</dontWrapJar>
   <headerType>console</headerType>
   <jar>..\jars\mgen-compiler-assembly-SNAPSHOT.jar</jar>
-  <outfile>mgen.ex_</outfile>
+  <outfile>mgen.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
-  <chdir>.</chdir>
+  <chdir></chdir>
   <priority>normal</priority>
   <downloadUrl>http://java.com/download</downloadUrl>
   <supportUrl></supportUrl>
