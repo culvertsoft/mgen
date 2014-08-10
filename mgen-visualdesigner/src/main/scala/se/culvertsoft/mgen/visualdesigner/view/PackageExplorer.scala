@@ -3,10 +3,12 @@ package se.culvertsoft.mgen.visualdesigner.view;
 import java.awt.BorderLayout
 import java.awt.Component
 import java.awt.Container
+
 import scala.Array.canBuildFrom
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.mutable.HashMap
+import scala.collection.mutable.LinkedHashMap
+
 import javax.swing.InputMap
 import javax.swing.JComponent
 import javax.swing.JPanel
@@ -27,12 +29,12 @@ import se.culvertsoft.mgen.visualdesigner.model.CustomType
 import se.culvertsoft.mgen.visualdesigner.model.CustomTypeField
 import se.culvertsoft.mgen.visualdesigner.model.Entity
 import se.culvertsoft.mgen.visualdesigner.model.EntityIdBase
+import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
+import se.culvertsoft.mgen.visualdesigner.model.EnumType
 import se.culvertsoft.mgen.visualdesigner.model.ModelOps.toRichCustomType
 import se.culvertsoft.mgen.visualdesigner.model.Module
 import se.culvertsoft.mgen.visualdesigner.model.Project
 import se.culvertsoft.mgen.visualdesigner.util.OperationStatus
-import se.culvertsoft.mgen.visualdesigner.model.EnumEntry
-import se.culvertsoft.mgen.visualdesigner.model.EnumType
 
 class PackageExplorer(
 
@@ -42,8 +44,8 @@ class PackageExplorer(
   private val treeModel = new DefaultTreeModel(root);
   private val renderer = new TreeRenderer();
   private val tree = new JTree(treeModel);
-  private val id2node = new HashMap[EntityIdBase, DefaultMutableTreeNode]
-  private val id2entity = new HashMap[EntityIdBase, Entity]
+  private val id2node = new LinkedHashMap[EntityIdBase, DefaultMutableTreeNode]
+  private val id2entity = new LinkedHashMap[EntityIdBase, Entity]
   private val mouseInputStatus = new OperationStatus
 
   javax.swing.ToolTipManager.sharedInstance().registerComponent(tree);

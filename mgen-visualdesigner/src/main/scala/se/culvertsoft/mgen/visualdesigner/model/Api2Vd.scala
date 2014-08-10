@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.visualdesigner.model
 
 import scala.collection.JavaConversions.asJavaCollection
 import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.mutable.HashMap
+import scala.collection.mutable.LinkedHashMap
 
 import ModelConversion.ApiArrayType
 import ModelConversion.ApiBoolType
@@ -113,7 +113,7 @@ object Api2Vd {
     def splitModules(source: Seq[VdModule]): java.util.ArrayList[VdModule] = {
 
       // Storage for this level
-      val lkUp = new HashMap[String, VdModule]
+      val lkUp = new LinkedHashMap[String, VdModule]
 
       val writtenDir = FileUtils.directoryOf(writtenFilePath).trim()
       val absoluteDir = FileUtils.directoryOf(absoluteFilePath).trim()

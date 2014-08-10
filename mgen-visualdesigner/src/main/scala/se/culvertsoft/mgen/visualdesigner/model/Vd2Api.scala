@@ -5,7 +5,7 @@ import java.io.File
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.bufferAsJavaList
 import scala.collection.mutable.ArrayBuffer
-import scala.collection.mutable.HashMap
+import scala.collection.mutable.LinkedHashMap
 
 import ModelConversion.ApiArrayType
 import ModelConversion.ApiBoolTypeInstance
@@ -59,14 +59,14 @@ import se.culvertsoft.mgen.visualdesigner.classlookup.Type2String
 
 class Vd2ApiConversionState(val srcModel: Model) {
   import ModelConversion._
-  val apiObjLkup = new HashMap[String, ApiEntity] // classpath -> Entity
+  val apiObjLkup = new LinkedHashMap[String, ApiEntity] // classpath -> Entity
 }
 
 object Vd2Api {
   import ModelConversion._
 
   private def cvtGenerator(vdGenerator: VdGenerator)(implicit cvState: Vd2ApiConversionState): ApiGenerator = {
-    val settings = new java.util.HashMap[String, String](vdGenerator.getSettings())
+    val settings = new java.util.LinkedHashMap[String, String](vdGenerator.getSettings())
     settings.put("jar_file_folder", vdGenerator.getGeneratorJarFileFolder())
     settings.put("class_path", vdGenerator.getGeneratorClassName())
     settings.put("output_path", vdGenerator.getOutputFolder())
