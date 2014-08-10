@@ -15,3 +15,6 @@ clean:
 	#   CLEANING MGEN-JAVAGENERATOR         #
 	#########################################
 	sbt clean
+
+publish:
+	sbt compile package publish-signed

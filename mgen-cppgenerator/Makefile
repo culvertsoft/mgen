@@ -15,3 +15,6 @@ clean:
 	#   CLEANING MGEN-CPPGENERATOR          #
 	#########################################
 	sbt clean
+
+publish:
+	sbt compile package publish-signed

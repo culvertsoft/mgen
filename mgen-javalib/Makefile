@@ -34,9 +34,6 @@ run-tests: generate-test-models
 	#     TESTING MGEN-JAVALIB        #
 	###################################
 	sbt test
-	
-doc:
-	#########################################
-	#  DOCUMENTATION MGEN-JAVALIB           #
-	#########################################
-	sbt doc
+
+publish:
+	sbt compile package publish-signed

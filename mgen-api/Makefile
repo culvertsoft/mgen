@@ -16,14 +16,5 @@ clean:
 	#########################################
 	sbt clean
 
-doc: 	
-	#########################################
-	#       DOCUMENTATION MGEN-API          #
-	#########################################
-	sbt doc
-    
-run-tests:
-	#######################################
-	#           TESTING MGEN-API          #
-	#######################################
-    #NOT_YET_IMPLEMENTED#
+publish:
+	sbt compile package publish-signed

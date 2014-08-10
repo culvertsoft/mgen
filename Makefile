@@ -26,6 +26,20 @@ all: check
 	#                                                       #
 	#########################################################
 
+publish: check
+	cd mgen-api && make publish
+	cd mgen-jsonschemaparser && make publish
+	cd mgen-protobufparser && make publish
+	cd mgen-xmlschemaparser && make publish
+	cd mgen-idlparser && make publish
+	cd mgen-idlgenerator && make publish
+	cd mgen-compiler && make publish
+	cd mgen-cppgenerator && make publish
+	cd mgen-javagenerator && make publish
+	cd mgen-javascriptgenerator && make publish
+	cd mgen-javalib && make publish
+	cd mgen-visualdesigner && make publish
+
 all-fast: check
 	#########################################################
 	#                                                       #

@@ -15,3 +15,6 @@ clean:
 	#   CLEANING MGEN-JAVASCRIPTGENERATOR  #
 	########################################
 	sbt clean
+
+publish:
+	sbt compile package publish-signed
