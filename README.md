@@ -390,7 +390,8 @@ Represents the latest built development version, built after each git push. You 
 
 ### Maven
 
-We plan on making the MGen tools and libraries available on Maven Central or a similar repository. However at this early stage you will need to download jar files manually or clone this repository and build from source.
+We plan on making the MGen tools and libraries available through Maven. However we haven't reached any formal version numbers yet, so at this point your option is to grab the snapshot, see https://oss.sonatype.org/#nexus-search;quick~mgen for details.
+
 
 ### Sample Projects
 
