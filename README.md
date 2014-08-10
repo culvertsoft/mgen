@@ -355,9 +355,9 @@ Additionally, MGen supports reading and writing data types from external non-MGe
 
 ### Customizing generated code
 
-One of the most powerful features of MGen is its ability to customize generated code.
+One of the most powerful features of MGen is its ability to let you customize generated code.
  
-MGen offers two ways of customizing generated code
+MGen offers two ways of doing this:
  - Using MGen's plug-in architecture: Providing your own code parser and generator plug-ins
  - Editing generated code directly: Using custom code sections in generated code
 
