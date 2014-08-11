@@ -37,7 +37,7 @@ object MkIsFieldSet {
       ln(s"bool ${t.shortName()}::${isFieldSet(field, "const mgen::FieldSetDepth depth")} const {")
       if (field.typ().containsUserDefinedType()) {
 
-        val shallowCall = if (CppGenerator.canBeNull(field)) s"m_${field.name()}.get()" else isSetName(field)
+        val shallowCall = if (CppGenerator.canBeNull(field)) s"m_${field.name()}.get() != 0" else isSetName(field)
 
         ln(1, s"if (depth == mgen::SHALLOW) {")
         ln(2, s"return $shallowCall;")

@@ -14,16 +14,20 @@ template<typename T>
 class Polymorphic {
 public:
 
-    template<typename T2>
-    explicit Polymorphic(T2 * v = 0, const bool managed = true) :
+    explicit Polymorphic(T * v, const bool managed) :
                     m_ptr(v),
                     m_managed(managed) {
     }
 
-    explicit Polymorphic(T * v = 0, const bool managed = true) :
-                    m_ptr(v),
-                    m_managed(managed) {
-    }
+	explicit Polymorphic(T * v) :
+		m_ptr(v),
+		m_managed(true) {
+	}
+
+	explicit Polymorphic() :
+		m_ptr(0),
+		m_managed(true) {
+	}
 
     Polymorphic(const Polymorphic& v) :
                     m_ptr(v.deepCopy()),
