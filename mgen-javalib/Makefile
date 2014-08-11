@@ -36,4 +36,4 @@ run-tests: generate-test-models
 	sbt test
 
 publish:
-	sbt compile package publish-signed
+	sbt publish-signed

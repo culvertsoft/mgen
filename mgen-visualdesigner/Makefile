@@ -32,5 +32,5 @@ run:	all
 	java -jar target/mgen-visualdesigner-assembly-$(MGEN_BUILD_VERSION).jar
 
 publish:
-	sbt compile package publish-signed
+	sbt publish-signed
 	

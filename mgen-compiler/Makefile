@@ -20,4 +20,4 @@ run:	all
 	java -jar target/mgen-compiler-assembly-$(MGEN_BUILD_VERSION).jar
 
 publish:
-	sbt compile package publish-signed
+	sbt publish-signed

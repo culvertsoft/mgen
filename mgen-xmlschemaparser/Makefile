@@ -8,4 +8,4 @@ clean:
 	sbt clean
 
 publish:
-	sbt compile package publish-signed
+	sbt publish-signed
