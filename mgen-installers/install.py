@@ -5,17 +5,24 @@ import subprocess
 import shutil
 import os.path
 import os
-import urllib
 import zipfile
 import fnmatch
 import stat
 from subprocess import check_call
 
-
+# util fcn
 def clearDir(path): 
 	if os.path.exists(path): 
 		shutil.rmtree(path)	
 	os.makedirs(path)
+	
+# Make it work with both python 2 and 3
+if sys.version_info >= (3,0):
+	import urllib.request
+	from urllib.request import urlretrieve
+else:
+	import urllib
+	from urllib import urlretrieve
 
 #Check that we have an install path
 installPath = os.environ.get('MGEN_INSTALL_PATH')
@@ -40,7 +47,7 @@ if not args.nodownload:
 	if os.path.exists(zipFile): 
 		os.remove(zipFile)
 	print("  http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-SNAPSHOT.zip... (this may take a while, and gives no status indication)")
-	urllib.urlretrieve("http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-SNAPSHOT.zip", filename=zipFile)
+	urlretrieve("http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-SNAPSHOT.zip", filename=zipFile)
 else:
 	print("Skipping download")
 
@@ -80,5 +87,4 @@ os.chmod(lnxTrgFile, st.st_mode | stat.S_IEXEC)
 for jarFile in jarFiles:
 	trgFilePath = installPath + "/jars/" + os.path.basename(jarFile)
 	shutil.copyfile(jarFile, trgFilePath)
-
 
