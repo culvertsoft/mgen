@@ -42,6 +42,7 @@ object MGenCompiler {
           settings_keyVal + ("project" -> params_raw(0))
         }
 
+      // Parse input, generate code, ... the work
       val code = run(settings)
 
       // Output the code to disk
