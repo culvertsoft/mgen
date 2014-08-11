@@ -66,6 +66,7 @@ def tests_generate_code(): # Ideally here we'd just generate once, not nLangs ti
 # clean
 if args.clean or args.all:
 	check_call("sbt clean", shell=True)
+	#TODO: Remove all src_generated folders for tests and visualdesigner
 	
 # build
 if args.build or args.all or len(sys.argv) == 1:
