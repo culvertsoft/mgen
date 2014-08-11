@@ -11,8 +11,6 @@ isSnapshot := version.value.contains("SNAPSHOT")
 
 crossPaths := false
 
-retrieveManaged := true
-
 unmanagedSourceDirectories in Test += baseDirectory.value / "src_generated/test/java"
 
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value

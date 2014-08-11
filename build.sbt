@@ -11,8 +11,6 @@ isSnapshot := version.value.contains("SNAPSHOT")
 
 crossPaths := false
 
-retrieveManaged := true
-
 scalacOptions ++= Seq("-unchecked", "-deprecation", "-feature", "-Xfatal-warnings")
 
 javacOptions ++= Seq("-Werror")

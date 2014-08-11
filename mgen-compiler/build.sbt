@@ -49,8 +49,6 @@ pomExtra := (
 
 crossPaths := false
 
-retrieveManaged := true
-
 libraryDependencies += "se.culvertsoft" % "mgen-idlparser" % version.value
 
 libraryDependencies += "se.culvertsoft" % "mgen-idlgenerator" % version.value

@@ -6,8 +6,6 @@ version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
 isSnapshot := version.value.contains("SNAPSHOT")
 
-retrieveManaged := true
-
 seq(jsSettings : _*)
 
 (compile in Compile) <<= compile in Compile dependsOn (JsKeys.js in Compile)

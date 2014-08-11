@@ -57,8 +57,6 @@ libraryDependencies += "com.sun.xml.bind" % "jaxb-impl" % "2.2.7"
 
 libraryDependencies += "com.sun.xml.bind" % "jaxb-xjc" % "2.2.7"
 
-retrieveManaged := true
-
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false

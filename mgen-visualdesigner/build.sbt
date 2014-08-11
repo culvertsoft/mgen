@@ -51,8 +51,6 @@ pomExtra := (
 
 crossPaths := false
 
-retrieveManaged := true
-
 unmanagedSourceDirectories in Compile += baseDirectory.value / "src_generated/main/java"
 
 libraryDependencies += "se.culvertsoft" % "mgen-compiler" % version.value

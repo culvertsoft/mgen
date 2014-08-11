@@ -51,8 +51,6 @@ crossPaths := false
 
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 
-retrieveManaged := true
-
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false

@@ -49,8 +49,6 @@ pomExtra := (
 
 crossPaths := false
 
-retrieveManaged := true
-
 autoScalaLibrary := false
 
 EclipseKeys.projectFlavor := EclipseProjectFlavor.Java

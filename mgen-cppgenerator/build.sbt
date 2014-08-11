@@ -49,8 +49,6 @@ pomExtra := (
 
 crossPaths := false
 
-retrieveManaged := true
-
 libraryDependencies += "se.culvertsoft" % "mgen-compiler" % version.value
 
 EclipseKeys.withSource := true
