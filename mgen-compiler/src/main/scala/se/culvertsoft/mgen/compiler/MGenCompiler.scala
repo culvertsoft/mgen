@@ -24,14 +24,23 @@ object MGenCompiler {
     val compileResult = Try {
 
       // Parse input parameters
-      val params = paramsUntrimmed.map(_.trim()).toBuffer
-      if (params.contains("-help")) {
+      val params_raw = paramsUntrimmed.map(_.trim()).toBuffer
+      if (params_raw.isEmpty || params_raw.contains("-help")) {
         PrintHelp()
         return
       }
 
-      // Parse cmd line args      
-      val settings = ParseKeyValuePairs(params)
+      // Parse explicit key-value arguments
+      val params = params_raw.filter(_.contains("="))
+      val settings_keyVal = ParseKeyValuePairs(params)
+
+      // Grab any implicitly assigned arguments
+      val settings =
+        if (settings_keyVal.contains("project")) {
+          settings_keyVal
+        } else {
+          settings_keyVal + ("project" -> params_raw(0))
+        }
 
       val code = run(settings)
 
