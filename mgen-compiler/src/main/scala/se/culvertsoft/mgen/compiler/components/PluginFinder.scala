@@ -4,8 +4,10 @@ import java.io.File
 import java.net.URL
 import java.net.URLClassLoader
 
+import scala.Option.option2Iterable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.TreeSet
+import scala.util.Properties
 
 import se.culvertsoft.mgen.api.exceptions.MGenException
 import se.culvertsoft.mgen.compiler.util.EnvVarUtils
@@ -39,7 +41,9 @@ class PluginFinder(pluginPaths_in: Seq[String]) {
       } else {
         custom
       }
-    (out ++ EnvVarUtils.getCommaSeparated("MGEN_PLUGIN_PATHS")).distinct
+    (out ++
+      EnvVarUtils.getCommaSeparated("MGEN_PLUGIN_PATHS") ++
+      Properties.envOrNone("MGEN_INSTALL_PATH").map(_ + "/jars")).distinct
   }
 
   def defaultFolderExists(): Boolean = {

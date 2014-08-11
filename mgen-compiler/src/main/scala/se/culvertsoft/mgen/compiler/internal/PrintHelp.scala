@@ -15,6 +15,7 @@ object PrintHelp {
     println("Environmental variables can also be used:")
     println("  MGEN_PLUGIN_PATHS: See command line argument 'plugin_paths'")
     println("  MGEN_INCLUDE_PATHS: See command line argument 'include_paths'")
+    println("  MGEN_INSTALL_PATH: if set, ${MGEN_INSTALL_PATH}/jars will be searched for plugins")
   }
 
 }
