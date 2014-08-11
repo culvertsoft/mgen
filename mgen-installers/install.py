@@ -8,6 +8,7 @@ import os
 import urllib
 import zipfile
 import fnmatch
+import stat
 from subprocess import check_call
 
 
@@ -50,22 +51,32 @@ clearDir("temp")
 fh = open(zipFile, 'rb')
 z = zipfile.ZipFile(fh)
 for name in z.namelist():
-    outpath = "C:\\"
     z.extract(name, "temp/")
 fh.close()
 
 
 #deploying
-print("Installing")
+print("Deploying")
 jarFiles = []
 for root, dirnames, filenames in os.walk('temp'):
   for filename in fnmatch.filter(filenames, '*.jar'):
       jarFiles.append(os.path.join(root, filename))
 
-
+# Clear the install dir
 clearDir(installPath)
 os.makedirs(installPath + "/jars")
 os.makedirs(installPath + "/bin")
+
+# Copy executables
+lnxTrgFile = installPath + "/bin/mgen"
+shutil.copyfile("mgen.sh", lnxTrgFile)
+shutil.copyfile("mgen.ex_", installPath + "/bin/mgen.exe")
+
+# Mark the linux script as executable
+st = os.stat(lnxTrgFile)
+os.chmod(lnxTrgFile, st.st_mode | stat.S_IEXEC)
+
+# Copy all jar files
 for jarFile in jarFiles:
 	trgFilePath = installPath + "/jars/" + os.path.basename(jarFile)
 	shutil.copyfile(jarFile, trgFilePath)
