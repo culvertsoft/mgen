@@ -62,6 +62,12 @@ public class JsonWriter extends TextFormatWriter {
 			final ClassRegistryBase classRegistry) {
 		this(outputStream, classRegistry, DEFAULT_COMPACT);
 	}
+	
+	@Override
+	public JsonWriter setOutput(final OutputStream stream) {
+		super.setOutput(stream);
+		return this;
+	}
 
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {

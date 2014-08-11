@@ -39,7 +39,7 @@ public class BinaryWriter extends BuiltInWriter {
 	public static final int FLUSH_SIZE = 256;
 
 	private final FastByteBuffer m_buffer;
-	private final OutputStream m_streamOut;
+	private OutputStream m_streamOut;
 	private final boolean m_compact;
 	private long m_expectType;
 
@@ -58,6 +58,11 @@ public class BinaryWriter extends BuiltInWriter {
 		this(stream, classRegistry, DEFAULT_COMPACT);
 	}
 
+	public BinaryWriter setOutput(final OutputStream stream) {
+		m_streamOut = stream;
+		return this;
+	}
+	
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
 		m_expectType = -1;

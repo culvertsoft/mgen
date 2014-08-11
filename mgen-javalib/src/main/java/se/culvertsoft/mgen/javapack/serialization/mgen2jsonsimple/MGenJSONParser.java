@@ -5,6 +5,7 @@
 package se.culvertsoft.mgen.javapack.serialization.mgen2jsonsimple;
 
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,31 +41,17 @@ public class MGenJSONParser {
 	public static final int S_END = 6;
 	public static final int S_IN_ERROR = -1;
 
-	private final Reader m_reader;
-
-	public MGenJSONParser(final Reader reader) {
-		m_reader = reader;
-		lexer.yyreset(m_reader);
-	}
-
 	private MGenYylex lexer = new MGenYylex((Reader) null);
 	private Yytoken token = null;
 	private int status = S_INIT;
 
-	private int peekStatus(LinkedList<Object> statusStack) {
-		if (statusStack.size() == 0)
-			return -1;
-		Integer status = (Integer) statusStack.getFirst();
-		return status.intValue();
+	public MGenJSONParser(final Reader reader) {
+		lexer.yyreset(reader);
 	}
 
-	private void reset() {
-		token = null;
-		status = S_INIT;
-	}
-
-	private int getPosition() {
-		return lexer.getPosition();
+	public void setInput(final InputStreamReader inputStreamReader) {
+		reset();
+		lexer.yyreset(inputStreamReader);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -108,8 +95,10 @@ public class MGenJSONParser {
 					if (token.type == Yytoken.TYPE_EOF)
 						return valueStack.removeFirst();
 					else
-						throw new ParseException(getPosition(),
-								ParseException.ERROR_UNEXPECTED_TOKEN, token);
+						throw new ParseException(
+								getPosition(),
+								ParseException.ERROR_UNEXPECTED_TOKEN,
+								token);
 
 				case S_IN_OBJECT:
 					switch (token.type) {
@@ -214,20 +203,23 @@ public class MGenJSONParser {
 					}// inner switch
 					break;
 				case S_IN_ERROR:
-					throw new ParseException(getPosition(),
-							ParseException.ERROR_UNEXPECTED_TOKEN, token);
+					throw new ParseException(
+							getPosition(),
+							ParseException.ERROR_UNEXPECTED_TOKEN,
+							token);
 				}// switch
 				if (status == S_IN_ERROR) {
-					throw new ParseException(getPosition(),
-							ParseException.ERROR_UNEXPECTED_TOKEN, token);
+					throw new ParseException(
+							getPosition(),
+							ParseException.ERROR_UNEXPECTED_TOKEN,
+							token);
 				}
 			} while (token.type != Yytoken.TYPE_EOF);
 		} catch (IOException ie) {
 			throw ie;
 		}
 
-		throw new ParseException(getPosition(),
-				ParseException.ERROR_UNEXPECTED_TOKEN, token);
+		throw new ParseException(getPosition(), ParseException.ERROR_UNEXPECTED_TOKEN, token);
 	}
 
 	private void nextToken() throws ParseException, IOException {
@@ -256,6 +248,22 @@ public class MGenJSONParser {
 		if (l == null)
 			return new JSONArray();
 		return l;
+	}
+
+	private int peekStatus(LinkedList<Object> statusStack) {
+		if (statusStack.size() == 0)
+			return -1;
+		Integer status = (Integer) statusStack.getFirst();
+		return status.intValue();
+	}
+
+	private void reset() {
+		token = null;
+		status = S_INIT;
+	}
+
+	private int getPosition() {
+		return lexer.getPosition();
 	}
 
 }

@@ -9,13 +9,18 @@ public abstract class TextFormatWriter extends BuiltInWriter {
 
 	public static int FLUSH_SIZE = STRING_ENCODE_BUFFER_SIZE / 4;
 
-	private final OutputStream m_stream;
+	private OutputStream m_stream;
 	private final StringBuilder m_buffer;
 
 	public TextFormatWriter(final OutputStream stream, final ClassRegistryBase classRegistry) {
 		super(classRegistry);
 		m_stream = stream;
 		m_buffer = new StringBuilder(FLUSH_SIZE * 2);
+	}
+	
+	protected TextFormatWriter setOutput(final OutputStream stream) {
+		m_stream = stream;
+		return this;
 	}
 
 	protected void write(final boolean b) throws IOException {

@@ -41,7 +41,7 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 
 public class BinaryReader extends BuiltInReader {
 
-	private final InputStream m_stream;
+	private InputStream m_stream;
 	private final byte m_readBuffer64[] = new byte[8];
 
 	public BinaryReader(
@@ -51,6 +51,11 @@ public class BinaryReader extends BuiltInReader {
 		m_stream = stream;
 	}
 
+	public BinaryReader setInput(final InputStream stream) {
+		m_stream = stream;
+		return this;
+	}
+	
 	@Override
 	public final MGenBase readObject() throws IOException {
 		return readMGenObject(true, null);
