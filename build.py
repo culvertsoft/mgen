@@ -38,18 +38,18 @@ def compile(workingDir, project):
 	compile3(workingDir, project, ".")
 
 def fastbuild_step1():
-	check_call(('sbt '
-				'"project mgen_api" publish-local '
-				'"project mgen_idlparser" publish-local '
-				'"project mgen_jsonschemaparser" publish-local '
-				'"project mgen_protobufparser" publish-local '
-				'"project mgen_xmlschemaparser" publish-local '
-				'"project mgen_idlgenerator" publish-local '
-				'"project mgen_javalib" publish-local '
-				'"project mgen_compiler" assembly publish-local '
-				'"project mgen_javagenerator" publish-local '
-				'"project mgen_cppgenerator" publish-local '
-				'"project mgen_javascriptgenerator" publish-local '), shell=True)
+	check_call((	'sbt '
+			'"project mgen_api" publish-local '
+			'"project mgen_idlparser" publish-local '
+			'"project mgen_jsonschemaparser" publish-local '
+			'"project mgen_protobufparser" publish-local '
+			'"project mgen_xmlschemaparser" publish-local '
+			'"project mgen_idlgenerator" publish-local '
+			'"project mgen_javalib" publish-local '
+			'"project mgen_compiler" assembly publish-local '
+			'"project mgen_javagenerator" publish-local '
+			'"project mgen_cppgenerator" publish-local '
+			'"project mgen_javascriptgenerator" publish-local '), shell=True)
 
 def fastbuild_generate_code():
 	check_call(compile_1 + 'model/project.xml plugin_paths="../mgen-javagenerator/target"', cwd="mgen-visualdesigner", shell=True)
