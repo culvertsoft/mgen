@@ -5,6 +5,7 @@ import subprocess
 import shutil
 import os.path
 import platform
+import distutils.dir_util
 from subprocess import check_call
 from subprocess import call
 
@@ -77,6 +78,13 @@ def mkFolder(path):
 	if not os.path.exists(path):
 		os.makedirs(path)
 		
+def rmFolder(path):
+	if os.path.exists(path):
+		shutil.rmtree(path)
+		
+def copyTree(src, dst):
+	distutils.dir_util.copy_tree(src, dst)
+		
 def mkTestData(path, cfg, projname):
 	if platform.system()=="Windows":
 		check_call("msbuild " + projname + ".sln /p:Configuration=" + cfg, cwd=path, shell=True)
@@ -86,7 +94,7 @@ def mkTestData(path, cfg, projname):
 		check_call("./" + projname, cwd=path, shell=True)
 		
 	
-def tests_integration_generate_data():
+def tests_integration_cpp():
 	cfg = "RelwithDebInfo"
 	dGenFolder = "mgen-integrationtests/generated/depends/data_generator"
 	wGenFolder = "mgen-integrationtests/generated/write/data_generator"
@@ -94,6 +102,9 @@ def tests_integration_generate_data():
 	mkFolder(dGenFolder)
 	mkFolder(wGenFolder)
 	mkFolder(rGenFolder)
+	mkFolder("mgen-integrationtests/generated/depends/data_generated")
+	mkFolder("mgen-integrationtests/generated/write/data_generated")
+	mkFolder("mgen-integrationtests/generated/read/data_generated")
 	check_call('cmake -DCMAKE_BUILD_TYPE=' + cfg + ' ../../../build/depends', cwd=dGenFolder, shell=True)
 	check_call('cmake -DCMAKE_BUILD_TYPE=' + cfg + ' ../../../build/write', cwd=wGenFolder, shell=True)
 	check_call('cmake -DCMAKE_BUILD_TYPE=' + cfg + ' ../../../build/read', cwd=rGenFolder, shell=True)
@@ -101,11 +112,45 @@ def tests_integration_generate_data():
 	mkTestData(wGenFolder, cfg, "generate_write_testdata")
 	mkTestData(rGenFolder, cfg, "generate_read_testdata")
 	
+def tests_integration_java():
+	dGenFolder = "mgen-integrationtests/javacheck/depends"
+	wGenFolder = "mgen-integrationtests/javacheck/write"
+	rGenFolder = "mgen-integrationtests/javacheck/read"	
+	copyTree("mgen-integrationtests/generated/depends/src_generated/java", dGenFolder + "/src_generated/test/java")
+	copyTree("mgen-integrationtests/generated/write/src_generated/java", wGenFolder + "/src_generated/test/java")
+	copyTree("mgen-integrationtests/generated/read/src_generated/java", rGenFolder + "/src_generated/test/java")
+	check_call("sbt test", cwd=dGenFolder, shell=True)
+	check_call("sbt test", cwd=wGenFolder, shell=True)
+	check_call("sbt test", cwd=rGenFolder, shell=True)
+
+def tests_integration_js():
+	base = "mgen-integrationtests/javascriptcheck"
+	dGenFolder = base + "/depends"
+	wGenFolder = base + "/write"
+	rGenFolder = base + "/read"
+	copyTree("mgen-integrationtests/generated/depends/src_generated/javascript", dGenFolder + "/src_generated/test/javascript")
+	copyTree("mgen-integrationtests/generated/write/src_generated/javascript", wGenFolder + "/src_generated/test/javascript")
+	copyTree("mgen-integrationtests/generated/read/src_generated/javascript", rGenFolder + "/src_generated/test/javascript")
+	# Can't batch, need sbt root project for that, but then we ouldnt find the resources :S
+	check_call("sbt jasmine", cwd=dGenFolder, shell=True)
+	check_call("sbt jasmine", cwd=wGenFolder, shell=True)
+	check_call("sbt jasmine", cwd=rGenFolder, shell=True)
+	
+def tests_normal():
+	# Can this be done in one batch? Doesn't seem so, 
+	# seems like cwd is wierd when batching test data isnt 
+	# copied over to the test dir
+	check_call("sbt test", cwd="mgen-javalib", shell=True)	
+	# javascriptlib tests depend on mgen compiler....incorrectly. So they cant be run
+	#check_call("sbt test", cwd="mgen-javascriptlib", shell=True)
+	#  TODO: Cpp tests
+
 # clean
 if args.clean or args.all:
 	check_call("sbt clean", shell=True)
-	#TODO: Remove all src_generated folders for tests and visualdesigner
+	#TODO: Remove all src_generated folders for integration tests, tests and visualdesigner
 	#TODO: Remove cpp test applications build folders
+	#TODO: Remove generated root folder in integration tests
 	
 # build
 if args.build or args.all or len(sys.argv) == 1:
@@ -116,12 +161,10 @@ if args.build or args.all or len(sys.argv) == 1:
 # test
 if args.test or args.all:
 	tests_generate_code()
-	tests_integration_generate_data()
-	#tests_integration_run()
-	#tests_normal_run()
-	#run integrationtests
-	#run normal tests
-	print("mgen-python-test: Not yet implemented!")
+	tests_integration_cpp()
+	tests_integration_java()
+	tests_integration_js()
+	tests_normal()
 
 # eclipse
 if args.eclipse or args.all:
