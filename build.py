@@ -11,7 +11,7 @@ parser.add_argument("-e", "--eclipse", action='store_true')
 parser.add_argument("-t", "--test", action='store_true')
 parser.add_argument("-a", "--all", help='all except publish (=cbt)', action='store_true')
 parser.add_argument("-d", "--debugscript", action='store_true')
-parser.add_argument("-v", "--version", default="SNAPSHOT", action='store_true')
+parser.add_argument("-v", "--version", default="SNAPSHOT")
 args = parser.parse_args()
 
 # Buildimpl requires these to be set
