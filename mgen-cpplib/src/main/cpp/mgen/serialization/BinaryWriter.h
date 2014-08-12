@@ -200,30 +200,30 @@ private:
 
     void write16(const unsigned short data) {
         unsigned char buf[2];
-		buf[0] = (unsigned char)(data >> 8);
-		buf[1] = (unsigned char)(data >> 0);
+        buf[0] = (unsigned char)(data >> 8);
+        buf[1] = (unsigned char)(data >> 0);
         m_outputStream.write(buf, 2);
     }
 
     void write32(const unsigned int data) {
         unsigned char buf[4];
-		buf[0] = (unsigned char)(data >> 24);
-		buf[1] = (unsigned char)(data >> 16);
-		buf[2] = (unsigned char)(data >> 8);
-		buf[3] = (unsigned char)(data >> 0);
+        buf[0] = (unsigned char)(data >> 24);
+        buf[1] = (unsigned char)(data >> 16);
+        buf[2] = (unsigned char)(data >> 8);
+        buf[3] = (unsigned char)(data >> 0);
         m_outputStream.write(buf, 4);
     }
 
     void write64(const unsigned long long data) {
         unsigned char buf[8];
         buf[0] = (unsigned char)(data >> 56);
-		buf[1] = (unsigned char)(data >> 48);
-		buf[2] = (unsigned char)(data >> 40);
-		buf[3] = (unsigned char)(data >> 32);
-		buf[4] = (unsigned char)(data >> 24);
-		buf[5] = (unsigned char)(data >> 16);
-		buf[6] = (unsigned char)(data >> 8);
-		buf[7] = (unsigned char)(data >> 0);
+        buf[1] = (unsigned char)(data >> 48);
+        buf[2] = (unsigned char)(data >> 40);
+        buf[3] = (unsigned char)(data >> 32);
+        buf[4] = (unsigned char)(data >> 24);
+        buf[5] = (unsigned char)(data >> 16);
+        buf[6] = (unsigned char)(data >> 8);
+        buf[7] = (unsigned char)(data >> 0);
         m_outputStream.write(buf, 8);
     }
 
