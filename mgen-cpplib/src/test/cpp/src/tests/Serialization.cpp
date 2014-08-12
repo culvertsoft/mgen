@@ -106,7 +106,7 @@ BEGIN_TEST("Can validate")
 
     for (ClassRegistry::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
         mgen::MGenBase * object = it->second.newInstance();
-        ASSERT(object);
+        ASSERT(object != 0);
 
         if (!object->_validate(mgen::SHALLOW)) {
             nInvalidObjects++;
@@ -142,13 +142,13 @@ static void canWriteRead(SerializationTestData& testData, WriterType& writer, Re
 
     for (ClassRegistry::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
         mgen::MGenBase * object = it->second.newInstance();
-        ASSERT(object);
+        ASSERT(object != 0);
 
         object->_setAllFieldsSet(true, mgen::DEEP);
         writer.writeObject(*object);
 
         mgen::MGenBase * objectBack = reader.readObject();
-        ASSERT(objectBack);
+        ASSERT(objectBack != 0);
 
         ASSERT(object->_equals(*objectBack));
 

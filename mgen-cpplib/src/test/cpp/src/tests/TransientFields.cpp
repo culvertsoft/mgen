@@ -97,13 +97,13 @@ static void canWriteRead(TransientTestData& testData, WriterType& writer, Reader
 
     for (ClassRegistry::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
         MGenBase * object = it->second.newInstance();
-        ASSERT(object);
+        ASSERT(object != 0);
 
         object->_setAllFieldsSet(true, DEEP);
         writer.writeObject(*object);
 
         MGenBase * objectBack = reader.readObject();
-        ASSERT(objectBack);
+        ASSERT(objectBack != 0);
 
         delete objectBack;
         delete object;

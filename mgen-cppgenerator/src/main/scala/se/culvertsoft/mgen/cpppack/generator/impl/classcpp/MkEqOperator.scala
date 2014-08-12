@@ -21,16 +21,20 @@ object MkEqOperator {
 
     val allFields = t.fieldsInclSuper()
     ln(s"bool ${t.shortName()}::operator==(const ${t.shortName()}& other) const {")
-    ln(1, "return true")
-    for (field <- allFields) {
-      ln(2, s" && ${isFieldSet(field, "mgen::SHALLOW")} == other.${isFieldSet(field, "mgen::SHALLOW")}")
+    if (allFields.nonEmpty) {
+      ln(1, "return true")
+      for (field <- allFields) {
+        ln(2, s" && ${isFieldSet(field, "mgen::SHALLOW")} == other.${isFieldSet(field, "mgen::SHALLOW")}")
+      }
+      for (field <- allFields) {
+        txt(2, s" && ${get(field)} == other.${get(field)}")
+        if (field != allFields.last)
+          endl()
+      }
+      ln(";")
+    } else {
+      ln(1, "return true;")
     }
-    for (field <- allFields) {
-      txt(2, s" && ${get(field)} == other.${get(field)}")
-      if (field != allFields.last)
-        endl()
-    }
-    ln(";")
     ln(s"}")
     endl()
 

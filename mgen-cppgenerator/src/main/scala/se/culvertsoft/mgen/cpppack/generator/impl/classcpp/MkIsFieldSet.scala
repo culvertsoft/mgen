@@ -20,16 +20,21 @@ object MkIsFieldSet {
     module: Module)(implicit txtBuffer: SuperStringBuffer) {
 
     implicit val currentModule = module
+    val allFields = t.fieldsInclSuper()
 
     ln(s"bool ${t.shortName()}::_isFieldSet(const mgen::Field& field, const mgen::FieldSetDepth depth) const {")
-    ln(1, s"switch(field.id()) {")
-    for (field <- t.fieldsInclSuper()) {
-      ln(2, s"case (${fieldIdString(field)}):")
-      ln(3, s"return ${isFieldSet(field, "depth")};")
+    if (allFields.nonEmpty) {
+      ln(1, s"switch(field.id()) {")
+      for (field <- allFields) {
+        ln(2, s"case (${fieldIdString(field)}):")
+        ln(3, s"return ${isFieldSet(field, "depth")};")
+      }
+      ln(2, s"default:")
+      ln(3, s"return false;")
+      ln(1, s"}")
+    } else {
+      ln(1, s"return false;")
     }
-    ln(2, s"default:")
-    ln(3, s"return false;")
-    ln(1, s"}")
     ln(s"}")
     endl()
 

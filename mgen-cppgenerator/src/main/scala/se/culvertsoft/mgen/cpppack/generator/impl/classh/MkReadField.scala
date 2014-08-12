@@ -23,16 +23,22 @@ object MkReadField {
 
     ln(1, s"template<typename ReaderType, typename ReadContextType>")
     ln(1, s"void _readField(const short fieldId, ReadContextType& context, ReaderType& reader) {")
-    ln(2, s"switch (fieldId) {")
-    for (field <- allFields) {
-      ln(2, s"case ${fieldIdString(field)}:")
-      ln(3, s"reader.readField(${fieldMetaString(field)}, context, ${getMutable(field)});")
-      ln(3, s"break;")
+
+    if (allFields.nonEmpty) {
+      ln(2, s"switch (fieldId) {")
+      for (field <- allFields) {
+        ln(2, s"case ${fieldIdString(field)}:")
+        ln(3, s"reader.readField(${fieldMetaString(field)}, context, ${getMutable(field)});")
+        ln(3, s"break;")
+      }
+      ln(2, s"default:")
+      ln(3, s"reader.handleUnknownField(fieldId, context);");
+      ln(3, s"break;");
+      ln(2, s"}")
+    } else {
+      ln(2, s"reader.handleUnknownField(fieldId, context);");
     }
-    ln(2, s"default:")
-    ln(3, s"reader.handleUnknownField(fieldId, context);");
-    ln(3, s"break;");
-    ln(2, s"}")
+
     ln(1, s"}")
     endl()
 

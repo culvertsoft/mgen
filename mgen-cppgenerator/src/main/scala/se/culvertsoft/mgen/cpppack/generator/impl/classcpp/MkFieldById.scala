@@ -23,16 +23,20 @@ object MkFieldById {
 
     val pfx = s"_${t.shortName}"
 
-    ln(0, s"const mgen::Field * ${t.shortName()}::_fieldById(const short id) const {")
-    ln(1, s"switch (id) {")
-    for (field <- allFields) {
-      ln(1, s"case ${fieldIdString(field)}:")
-      ln(2, s"return &${fieldMetaString(field)};")
+    ln(s"const mgen::Field * ${t.shortName()}::_fieldById(const short id) const {")
+    if (allFields.nonEmpty) {
+      ln(1, s"switch (id) {")
+      for (field <- allFields) {
+        ln(1, s"case ${fieldIdString(field)}:")
+        ln(2, s"return &${fieldMetaString(field)};")
+      }
+      ln(1, s"default:")
+      ln(2, s"return 0;");
+      ln(1, s"}")
+    } else {
+      ln(1, s"return 0;")
     }
-    ln(1, s"default:")
-    ln(2, s"return 0;");
-    ln(1, s"}")
-    ln(0, s"}")
+    ln(s"}")
     endl()
 
     val lkup = t.fieldsInclSuper.map(f => s"(${quote(f.name)}, &${t.shortName}::${fieldMetaString(f)})")

@@ -23,6 +23,10 @@ src_generated/
 data_generator/
 data_generated/
 
+#python
+*.pyc
+__pycache__
+
 # Scala-IDE specific
 .scala_dependencies
 .worksheet

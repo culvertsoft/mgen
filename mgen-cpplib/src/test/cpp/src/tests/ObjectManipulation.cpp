@@ -32,7 +32,7 @@ BEGIN_TEST("Delete some objects")
 
     for (ClassRegistry::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
         mgen::MGenBase * object = it->second.newInstance();
-        ASSERT(object);
+        ASSERT(object != 0);
         delete object;
     }
 
@@ -48,8 +48,8 @@ BEGIN_TEST("Compare some objects")
     for (ClassRegistry::EntryMap::const_iterator it = entries.begin(); it != entries.end(); it++) {
         mgen::MGenBase * object1 = it->second.newInstance();
         mgen::MGenBase * object2 = it->second.newInstance();
-        ASSERT(object1);
-        ASSERT(object2);
+        ASSERT(object1 != 0);
+        ASSERT(object2 != 0);
         ASSERT(object1 != object2);
         ASSERT(object1->_equals(*object2));
         delete object1;

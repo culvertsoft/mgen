@@ -89,7 +89,7 @@ BEGIN_TEST("Binary")
     // Read it
     const TestType * entityBack = reader.readObject<TestType>();
 
-    ASSERT(entityBack);
+    ASSERT(entityBack != 0);
     ASSERT(entity == *entityBack);
 
     // Check typed reading
@@ -134,8 +134,8 @@ BEGIN_TEST("Json")
     const TestType * back1 = reader.readObject<TestType>();
     const TestType * back2 = reader.readObject<TestType>();
 
-    ASSERT(back1);
-    ASSERT(back2);
+    ASSERT(back1 != 0);
+    ASSERT(back2 != 0);
 
     ASSERT(*back1 == entity);
     ASSERT(*back2 == entity);
