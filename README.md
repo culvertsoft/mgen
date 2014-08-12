@@ -551,6 +551,7 @@ Build Requirements (Test):
   * same as above +
   * CMAKE >= 2.8
   * MSVC>=2005 or g++>=4 or Clang. (should work with any c++98 compiler)
+  * msbuild (if using MSVC)
 
 Build Instructions:
   * clone the repo
