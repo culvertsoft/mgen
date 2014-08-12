@@ -110,7 +110,7 @@ def publish_impl():
                 '"project mgen_xmlschemaparser" publish-signed '
                 '"project mgen_idlgenerator" publish-signed '
                 '"project mgen_javalib" publish-signed '
-                '"project mgen_compiler" assembly publish-signed '
+                '"project mgen_compiler" publish-signed '
                 '"project mgen_javagenerator" publish-signed '
                 '"project mgen_cppgenerator" publish-signed '
                 '"project mgen_javascriptgenerator" publish-signed '
