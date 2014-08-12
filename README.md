@@ -67,9 +67,6 @@ MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/p
     * [GPU data types](#gpu-data-types)
     * [Database tables](#database-tables)
 * [Building MGen](#building-mgen)
-  * [Build Time Tools](#build-build-time-tools)
-  * [Runtime Libraries](#build-runtime-libraries)
-  * [Tests](#tests)
 * [State of Development](#state-of-development)
 * [Feature road map](#feature-road-map)
 * [License](#license)
@@ -551,7 +548,7 @@ Build Requirements (Build):
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
 
 Build Requirements (Test):
-  <Same as Build> +
+  * same as above +
   * CMAKE >= 2.8
   * MSVC>=2005 or g++>=4 or Clang. (should work with any c++98 compiler)
 
