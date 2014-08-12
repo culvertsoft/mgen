@@ -538,23 +538,26 @@ We are also working on a visual data model editor.
 
 ### Performance
 
-So far we've only performed some very basic performance tests, but results are promising. We have measured binary serialization performance of polymorphic objects in C++ on a single ivy bridge i7 core to more than 1,5 Gbit/s (g++ 4.8.1 o3). Performance in the other direction was roughly 30% less. Performance is important to us, however it should be made clear that performance is NOT the primary focus of MGen.
+So far we've only run some basic performance tests, but the results are promising. Binary serialization for objects of 'normal' complexity performs around 1-2 GBit/s (Java,C++), depending on compiler and platform. JSON serialization performance is about half of that.
 
 
 ## Building MGen
 
 If you're not satisfied with downloading pre-built libraries (see [the downloads section](#download-links)), this section will explain how you build MGen from source.
 
-Build Requirements:
+Build Requirements (Build):
   * Java JDK >= 1.7
-  * CMAKE >= 2.8
-  * MSVC>=2005/g++,mingw>=4/Clang. (But building the tests is currently not possible on MSVC)
-  * make (on windows: use gnuwin32 or cygwin)
+  * Python 2.x>=2.7 or 3
   * SBT >= 1.3.5 (Use the installer from http://www.scala-sbt.org/download.html)
+
+Build Requirements (Test):
+  <Same as Build> +
+  * CMAKE >= 2.8
+  * MSVC>=2005 or g++>=4 or Clang. (should work with any c++98 compiler)
 
 Build Instructions:
   * clone the repo
-  * make
+  * python build.py --help [example: "python build.py -b" for just building]
 
 Output will be placed inside each mgen-component's target/ directory (e.g. mgen-api/target/).
  
@@ -564,10 +567,9 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 Development is a about a month from an initial beta release. 
 
 Most of the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
- - We've not yet started on configuring test boxes for multiple dev platforms
- - Our build scripts for C++ tests currently do not build with Visual Studio.
- - Documentation is somewhat lacking.
+ - We've configured test boxes for all the platforms we want.
  - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"
+ - Documentation is lacking.
 
 
 ## Feature road map

@@ -19,15 +19,15 @@ public:
                     m_managed(managed) {
     }
 
-	explicit Polymorphic(T * v) :
-		m_ptr(v),
-		m_managed(true) {
-	}
+    explicit Polymorphic(T * v) :
+        m_ptr(v),
+        m_managed(true) {
+    }
 
-	explicit Polymorphic() :
-		m_ptr(0),
-		m_managed(true) {
-	}
+    explicit Polymorphic() :
+        m_ptr(0),
+        m_managed(true) {
+    }
 
     Polymorphic(const Polymorphic& v) :
                     m_ptr(v.deepCopy()),

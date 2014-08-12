@@ -5,16 +5,16 @@ from buildutil import *
 # TARGETS #
 ###########
 
-def build():
-    fastbuild_step1()
-    fastbuild_generate_code()
-    fastbuild_step2()
-
 def clean():
     sbt_clean(".")
     rmFolder("mgen-integrationtests/generated/")
     rmFolders(".", "src_generated")
     rmFolder("mgen-cpplib/target")
+    
+def build():
+    fastbuild_step1()
+    fastbuild_generate_code()
+    fastbuild_step2()
 
 def test():
     tests_generate_code()
@@ -24,10 +24,10 @@ def test():
     tests_normal()
 
 def eclipse():
-    check_call('sbt eclipse', shell=True)
+    sbt_eclipse(".")
 
 def publish():
-    print("mgen-python-publish: Not yet implemented!")
+    publish_impl()
     
 ###########
 # HELPERS #
@@ -101,3 +101,18 @@ def tests_normal():
     mkFolder("mgen-cpplib/target")
     cmake("mgen-cpplib/target", "../src/test/cpp/src", default_cpp_build_cfg)
     cppBuildRun("mgen-cpplib/target", default_cpp_build_cfg, "mgen-cpplib-test")
+
+def publish_impl():
+    sbt(".",   ('"project mgen_api" publish-signed '
+                '"project mgen_idlparser" publish-signed '
+                '"project mgen_jsonschemaparser" publish-signed '
+                '"project mgen_protobufparser" publish-signed '
+                '"project mgen_xmlschemaparser" publish-signed '
+                '"project mgen_idlgenerator" publish-signed '
+                '"project mgen_javalib" publish-signed '
+                '"project mgen_compiler" assembly publish-signed '
+                '"project mgen_javagenerator" publish-signed '
+                '"project mgen_cppgenerator" publish-signed '
+                '"project mgen_javascriptgenerator" publish-signed '
+                '"project mgen_visualdesigner" publish-signed '))
+    
