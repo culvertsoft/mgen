@@ -565,9 +565,9 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 Development is a about a month from an initial beta release. 
 
 Most of the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
+ - Documentation is lacking.
  - We've not yet configured test boxes for all the platforms we want.
  - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"
- - Documentation is lacking.
 
 
 ## Feature road map
