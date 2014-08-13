@@ -138,7 +138,7 @@ In the next section we will explain how to run the MGen compiler.
 
 The MGen Compiler is an executable java JAR. You run it by typing:
 
-_java -jar MGenCompiler.jar -project="MyProject.xml" -plugin_paths="generators/"_
+_java -jar mgen.jar MyProject.xml -plugin_paths="generators/"_
 
 Here we run the compiler with two arguments, project and plugin_paths. 
  - project: which project file to load (see the previous section to learn more about project files).
@@ -146,7 +146,7 @@ Here we run the compiler with two arguments, project and plugin_paths.
 
 Example: Here is how we generate [one of the data models for testing MGen](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources):
 
-    java -jar MgenCompiler.jar -project="src/test/resources/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
+    java -jar mgen.jar src/test/resources/project.xml -plugin_paths="../mgen-cppgenerator/target/"
 
     ***************************************
     **                                   **
