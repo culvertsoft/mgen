@@ -535,7 +535,7 @@ We are also working on a visual data model editor.
 
 ### Performance
 
-So far we've only run some basic performance tests, but the results are promising. Binary serialization for objects of 'normal' complexity performs around 1-2 GBit/s (Java,C++), depending on compiler and platform. JSON serialization performance is about half of that.
+So far we've only run some basic performance tests, but the results are promising. Single threaded binary serialization speed of objects is about 1-2 GBit/s (Java,C++), depending on compiler and platform. JSON serialization performance is about half of that.
 
 
 ## Building MGen
