@@ -136,7 +136,7 @@ In the next section we will explain how to run the MGen compiler.
 
 ### Generating source code
 
-The MGen Compiler is an executable java JAR. You can run it by typing 'java -jar <compiler.jar>' or by using an exe/sh wrapper that does this for you, and then it simply becomes:
+The MGen Compiler is an executable java JAR. You can run it by typing 'java -jar [compiler].jar' or by using an exe/sh wrapper that does this for you, and then it simply becomes:
 
     mgen MyProject.xml
 
