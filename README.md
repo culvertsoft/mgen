@@ -138,7 +138,7 @@ In the next section we will explain how to run the MGen compiler.
 
 The MGen Compiler is an executable java JAR. You can run it by typing 'java -jar [compiler].jar' or by using an exe/sh wrapper that does this for you, and then it simply becomes:
 
-    mgen MyProject.xml
+    mgen MyProject.xml plugin_paths="generators/"
 
 Here we run the compiler with two arguments, project and plugin_paths. 
  - project: which project file to load (see the previous section to learn more about project files).
