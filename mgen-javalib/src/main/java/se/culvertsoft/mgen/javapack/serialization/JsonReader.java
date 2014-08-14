@@ -5,6 +5,7 @@ import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,13 +36,23 @@ public class JsonReader extends BuiltInReader {
 	private final MGenJSONParser m_parser;
 
 	public JsonReader(final InputStream stream, final ClassRegistryBase classRegistry) {
-		super(classRegistry);
-		m_parser = new MGenJSONParser(new InputStreamReader(stream, CHARSET));
+		this(new InputStreamReader(stream, CHARSET_UTF8), classRegistry);
 	}
 
-	public JsonReader setInput(final InputStream stream) {
-		m_parser.setInput(new InputStreamReader(stream, CHARSET));
-		return this;
+	public JsonReader(final StringReader stringReader, final ClassRegistryBase classRegistry) {
+		this((java.io.Reader) stringReader, classRegistry);
+	}
+
+	public JsonReader(final String json, final ClassRegistryBase classRegistry) {
+		this(new StringReader(json), classRegistry);
+	}
+
+	public JsonReader setInput(final InputStream byteStream) {
+		return setInput(new InputStreamReader(byteStream, CHARSET_UTF8));
+	}
+
+	public JsonReader setInput(final String json) {
+		return setInput(new StringReader(json));
 	}
 
 	@Override
@@ -60,6 +71,15 @@ public class JsonReader extends BuiltInReader {
 					+ ", since it is know known by the class registry");
 
 		return (T) readMGenObject(parseRootObject(), entry.typ());
+	}
+
+	public MGenBase readObject(final String object) throws IOException {
+		return setInput(new StringReader(object)).readObject();
+	}
+
+	public <T extends MGenBase> T readObject(final String object, final Class<T> typ)
+			throws IOException {
+		return setInput(new StringReader(object)).readObject(typ);
 	}
 
 	@Override
@@ -139,6 +159,16 @@ public class JsonReader extends BuiltInReader {
 	 * PRIVATE METHODS
 	 * 
 	 ***********************************************/
+
+	private JsonReader(final java.io.Reader utf8Reader, final ClassRegistryBase classRegistry) {
+		super(classRegistry);
+		m_parser = new MGenJSONParser(utf8Reader);
+	}
+
+	private JsonReader setInput(final java.io.Reader utf8Reader) {
+		m_parser.setInput(utf8Reader);
+		return this;
+	}
 
 	private MGenBase readMGenObject(final JSONObject node, final RuntimeClassType constraint)
 			throws IOException {

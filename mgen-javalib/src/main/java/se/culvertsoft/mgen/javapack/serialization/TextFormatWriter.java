@@ -9,16 +9,24 @@ public abstract class TextFormatWriter extends BuiltInWriter {
 
 	public static int FLUSH_SIZE = STRING_ENCODE_BUFFER_SIZE / 4;
 
+	private final StringBuilder m_textBuffer;
 	private OutputStream m_stream;
-	protected final StringBuilder m_textBuffer;
+	private boolean m_writeToStream;
 
-	public TextFormatWriter(final OutputStream stream, final ClassRegistryBase classRegistry) {
+	protected TextFormatWriter(final OutputStream stream, final ClassRegistryBase classRegistry) {
 		super(classRegistry);
-		m_stream = stream;
 		m_textBuffer = new StringBuilder(FLUSH_SIZE * 2);
+		m_stream = stream;
+		m_writeToStream = true;
 	}
-	
+
+	protected TextFormatWriter setWriteToStream(final boolean writeToStream) {
+		m_writeToStream = writeToStream;
+		return this;
+	}
+
 	protected TextFormatWriter setOutput(final OutputStream stream) {
+		m_writeToStream = true;
 		m_stream = stream;
 		return this;
 	}
@@ -64,17 +72,12 @@ public abstract class TextFormatWriter extends BuiltInWriter {
 	}
 
 	protected void write(final String s) throws IOException {
-		for (int i = 0; i < s.length(); i++)
-			write(s.charAt(i));
+		m_textBuffer.append(s);
+		checkflush();
 	}
 
-	/**
-	 * Marked protected to allow writing to non-streams, such as string buffers
-	 * 
-	 * @throws IOException
-	 */
 	protected void flush() throws IOException {
-		if (m_textBuffer.length() > 0) {
+		if (m_writeToStream && m_textBuffer.length() > 0) {
 			m_stringEncoder.encode(m_textBuffer);
 			m_stream.write(m_stringEncoder.data(), 0, m_stringEncoder.size());
 			m_textBuffer.setLength(0);
@@ -82,12 +85,16 @@ public abstract class TextFormatWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Marked protected to allow custom flush conditions
-	 * 
-	 * @throws IOException
+	 * Used when writing to a String instead of a stream
 	 */
-	protected void checkflush() throws IOException {
-		if (m_textBuffer.length() >= FLUSH_SIZE)
+	protected String finish() {
+		final String out = m_textBuffer.toString();
+		m_textBuffer.setLength(0);
+		return out;
+	}
+
+	private void checkflush() throws IOException {
+		if (m_writeToStream && m_textBuffer.length() >= FLUSH_SIZE)
 			flush();
 	}
 

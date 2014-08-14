@@ -7,7 +7,7 @@ import se.culvertsoft.mgen.javapack.util.StringDecoder;
 
 abstract public class BuiltInReader implements Reader {
 
-	public static final Charset CHARSET = Charset.forName("UTF8");
+	public static final Charset CHARSET_UTF8 = Charset.forName("UTF8");
 	public static final int STRING_DECODE_BUFFER_SIZE = 256;
 
 	protected final ClassRegistryBase m_clsReg;
@@ -15,7 +15,7 @@ abstract public class BuiltInReader implements Reader {
 
 	protected BuiltInReader(ClassRegistryBase classRegistry) {
 		m_clsReg = classRegistry;
-		m_stringDecoder = new StringDecoder(STRING_DECODE_BUFFER_SIZE, CHARSET);
+		m_stringDecoder = new StringDecoder(STRING_DECODE_BUFFER_SIZE, CHARSET_UTF8);
 	}
 
 }

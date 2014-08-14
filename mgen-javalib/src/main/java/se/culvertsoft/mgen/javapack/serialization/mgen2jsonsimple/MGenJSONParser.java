@@ -5,7 +5,6 @@
 package se.culvertsoft.mgen.javapack.serialization.mgen2jsonsimple;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.LinkedList;
 import java.util.List;
@@ -45,15 +44,15 @@ public class MGenJSONParser {
 	private Yytoken token = null;
 	private int status = S_INIT;
 
-	public MGenJSONParser(final Reader reader) {
-		lexer.yyreset(reader);
+	public MGenJSONParser(final Reader utf8Reader) {
+		lexer.yyreset(utf8Reader);
 	}
 
-	public void setInput(final InputStreamReader inputStreamReader) {
+	public void setInput(final Reader utf8Reader) {
 		reset();
-		lexer.yyreset(inputStreamReader);
+		lexer.yyreset(utf8Reader);
 	}
-
+	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	public Object parseNext() throws IOException, ParseException {
 		reset();
