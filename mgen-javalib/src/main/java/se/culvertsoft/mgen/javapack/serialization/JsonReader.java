@@ -2,6 +2,7 @@ package se.culvertsoft.mgen.javapack.serialization;
 
 import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -33,7 +34,13 @@ import se.culvertsoft.mgen.javapack.serialization.mgen2jsonsimple.MGenJSONParser
 
 public class JsonReader extends BuiltInReader {
 
+	private final static InputStream EMPTY_INPUT_STREAM = new ByteArrayInputStream(new byte[0]);
+
 	private final MGenJSONParser m_parser;
+
+	public JsonReader(final ClassRegistryBase classRegistry) {
+		this(EMPTY_INPUT_STREAM, classRegistry);
+	}
 
 	public JsonReader(final InputStream stream, final ClassRegistryBase classRegistry) {
 		this(new InputStreamReader(stream, CHARSET_UTF8), classRegistry);

@@ -3,6 +3,7 @@ package se.culvertsoft.mgen.javapack.serialization;
 import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,12 @@ import se.culvertsoft.mgen.javapack.util.StringEncoder;
 
 public abstract class BuiltInWriter implements FieldVisitor {
 
+	public static final OutputStream EMPTY_OUTPUT_STREAM = new OutputStream() {
+		public void write(int b) throws IOException {
+			throw new IOException("Cannot write to empty stream");
+		}
+	};
+	
 	public static final int STRING_ENCODE_BUFFER_SIZE = 256;
 	public static final Charset CHARSET = Charset.forName("UTF8");
 
