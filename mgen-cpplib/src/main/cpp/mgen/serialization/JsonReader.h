@@ -140,8 +140,8 @@ private:
 
     template<typename K, typename V>
     void read(std::map<K, V>& v, const Node& node) {
-		v.clear();
-        if (node.IsObject()) {
+		if (node.IsObject()) {
+			v.clear();
             for (MemberIterator it = node.MemberBegin(); it != node.MemberEnd(); it++) {
                 K key;
                 readMapKey(key, it->name);
