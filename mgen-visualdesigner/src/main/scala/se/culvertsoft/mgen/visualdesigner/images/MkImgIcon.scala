@@ -21,6 +21,12 @@ object MkImgIcon {
       val newimg = img.getScaledInstance(20, 20, java.awt.Image.SCALE_SMOOTH);
       new ImageIcon(newimg);
    }
+   
+   def huge(path: String): ImageIcon = {
+      val img = native(path).getImage();
+      val newimg = img.getScaledInstance(40, 40, java.awt.Image.SCALE_SMOOTH);
+      new ImageIcon(newimg);
+   }
 
 }
 

@@ -97,7 +97,7 @@ object VisualDesigner {
 
         // Finally configure window
         window.setJMenuBar(MainMenuInit.mkMainMenu(controller));
-        window.setIconImage(MkImgIcon.small("drag-mode-16.png").getImage());
+        window.setIconImage(MkImgIcon.huge("logo_concept.png").getImage());
         window.setLocation(50, 50)
         window.addWindowListener(new WindowAdapter() {
           override def windowClosing(e: WindowEvent) {
