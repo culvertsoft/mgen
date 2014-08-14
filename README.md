@@ -136,9 +136,9 @@ In the next section we will explain how to run the MGen compiler.
 
 ### Generating source code
 
-The MGen Compiler is an executable java JAR. You run it by typing:
+The MGen Compiler is an executable java JAR. You can run it by typing 'java -jar [compiler].jar' or by using an exe/sh wrapper that does this for you, and then it simply becomes:
 
-_java -jar MGenCompiler.jar -project="MyProject.xml" -plugin_paths="generators/"_
+    mgen MyProject.xml plugin_paths="generators/"
 
 Here we run the compiler with two arguments, project and plugin_paths. 
  - project: which project file to load (see the previous section to learn more about project files).
@@ -146,7 +146,7 @@ Here we run the compiler with two arguments, project and plugin_paths.
 
 Example: Here is how we generate [one of the data models for testing MGen](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources):
 
-    java -jar MgenCompiler.jar -project="src/test/resources/project.xml" -plugin_paths="../mgen-cppgenerator/target/"
+    mgen src/test/resources/project.xml -plugin_paths="../mgen-cppgenerator/target/"
 
     ***************************************
     **                                   **
@@ -535,7 +535,7 @@ We are also working on a visual data model editor.
 
 ### Performance
 
-So far we've only run some basic performance tests, but the results are promising. Binary serialization for objects of 'normal' complexity performs around 1-2 GBit/s (Java,C++), depending on compiler and platform. JSON serialization performance is about half of that.
+So far we've only run some basic performance tests, but the results are promising. Single threaded binary serialization speed of objects is about 1-2 GBit/s (Java,C++), depending on compiler and platform. JSON serialization performance is about half of that.
 
 
 ## Building MGen
@@ -565,9 +565,9 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 Development is a about a month from an initial beta release. 
 
 Most of the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:
- - We've configured test boxes for all the platforms we want.
- - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"
  - Documentation is lacking.
+ - We've not yet configured test boxes for all the platforms we want.
+ - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"
 
 
 ## Feature road map
