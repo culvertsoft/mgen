@@ -190,6 +190,7 @@ private:
         verifyReadTagIf(BINARY_TAG_MAP, verifyTag);
 
         const int sz = readSize();
+		v.clear();
         if (sz > 0) {
             verifyReadTagIf(BINARY_TAG_OF((K*) 0), true);
             verifyReadTagIf(BINARY_TAG_OF((V*) 0), true);
