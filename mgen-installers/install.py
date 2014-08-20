@@ -8,6 +8,8 @@ import os
 import zipfile
 import fnmatch
 import stat
+import distutils
+import distutils.dir_util
 from subprocess import check_call
 
 # util fcn
@@ -73,11 +75,13 @@ for root, dirnames, filenames in os.walk('temp'):
 clearDir(installPath)
 os.makedirs(installPath + "/jars")
 os.makedirs(installPath + "/bin")
+os.makedirs(installPath + "/include")
 
 # Copy executables
 lnxTrgFile = installPath + "/bin/mgen"
 shutil.copyfile("mgen.sh", lnxTrgFile)
 shutil.copyfile("mgen.ex_", installPath + "/bin/mgen.exe")
+distutils.dir_util.copy_tree("temp/mgen-SNAPSHOT/mgen-cpplib/include", installPath + "/include")
 
 # Mark the linux script as executable
 st = os.stat(lnxTrgFile)
