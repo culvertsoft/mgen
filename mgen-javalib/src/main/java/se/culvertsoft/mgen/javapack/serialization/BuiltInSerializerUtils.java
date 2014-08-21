@@ -34,15 +34,15 @@ public class BuiltInSerializerUtils {
 				+ missingFields + "] on object '" + object + "'");
 	}
 
-	protected static void ensureNoMissingReqFields(final MGenBase object) {
+	public static void ensureNoMissingReqFields(final MGenBase object, final FieldSetDepth depth) {
 
-		if (object != null && !object._validate(FieldSetDepth.SHALLOW)) {
+		if (object != null && !object._validate(depth)) {
 
 			final ArrayList<Field> missingReqFields = new ArrayList<Field>();
 
 			for (final Field f : object._fields()) {
 				if (f.isRequired()
-						&& !object._isFieldSet(f, FieldSetDepth.SHALLOW)) {
+						&& !object._isFieldSet(f, depth)) {
 					missingReqFields.add(f);
 				}
 			}
@@ -51,6 +51,11 @@ public class BuiltInSerializerUtils {
 					"Missing required fields [" + missingReqFields
 							+ "] on object '" + object + "'");
 		}
+	}
+	
+
+	public static void ensureNoMissingReqFields(final MGenBase object) {
+		ensureNoMissingReqFields(object, FieldSetDepth.SHALLOW);
 	}
 
 }
