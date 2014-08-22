@@ -61,7 +61,7 @@ object MkDefaultValue {
           case t: Float64Type => s"${v.floatingPtValue}"
         }
       case v: StringDefaultValue =>
-        '"' + v.value + '"'
+        '"' + escape(v.value) + '"'
       case v: ListOrArrayDefaultValue =>
         val values = v.values
         val typeArg = s"${CppTypeNames.getTypeName(v.expectedType.elementType, isPolymorphicField)}"
@@ -99,4 +99,13 @@ object MkDefaultValue {
     }
 
   }
+
+  def escape(value: String): String = {
+    value
+      .replaceAllLiterally("\\", "\\\\")
+      .replaceAllLiterally("\"", "\\\"")
+      .replaceAllLiterally("\n", "\\\n")
+      .replaceAllLiterally("\r", "\\\r")
+  }
+  
 }

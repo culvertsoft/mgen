@@ -69,7 +69,7 @@ object MkDefaultValue {
           case t: Float64Type => s"${v.floatingPtValue}"
         }
       case v: StringDefaultValue =>
-        '"' + v.value + '"'
+        '"' + escape(v.value) + '"'
       case v: ListOrArrayDefaultValue =>
         val values = v.values
         v.expectedType() match {
@@ -108,6 +108,14 @@ object MkDefaultValue {
         throw new GenerationException(s"Don't know how to generate default value code for $d")
     }
 
+  }
+
+  def escape(value: String): String = {
+    value
+      .replaceAllLiterally("\\", "\\\\")
+      .replaceAllLiterally("\"", "\\\"")
+      .replaceAllLiterally("\n", "\\\n")
+      .replaceAllLiterally("\r", "\\\r")
   }
 
 }

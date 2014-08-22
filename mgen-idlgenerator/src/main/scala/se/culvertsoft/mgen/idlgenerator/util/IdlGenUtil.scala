@@ -3,6 +3,8 @@ package se.culvertsoft.mgen.idlgenerator.util
 import scala.collection.JavaConversions.asScalaBuffer
 import scala.collection.JavaConversions.mapAsScalaMap
 
+import org.json.simple.JSONValue
+
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
 import se.culvertsoft.mgen.api.model.DefaultValue
@@ -25,7 +27,7 @@ object IdlGenUtil {
     v match {
       case v: EnumDefaultValue => getQuotedStringOrNull(v.value.name)
       case v: BoolDefaultValue => getString(v.value)
-      case v: StringDefaultValue => getQuotedStringOrNull(v.value)
+      case v: StringDefaultValue => getQuotedStringOrNull(JSONValue.escape(v.value))
       case v: NumericDefaultValue =>
         v.expectedType match {
           case _: FixedPointType => getString(v.fixedPtValue)
