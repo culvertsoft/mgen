@@ -73,11 +73,14 @@ public class CommandLineArgParser<T extends MGenBase> {
 	}
 
 	private String prune(final String txt) {
-		return removeMinus(unQuote(txt.trim()).trim());
+		return removeMinuses(unQuote(txt.trim()).trim());
 	}
 
-	private String removeMinus(String txt) {
-		return txt.startsWith("-") ? txt.substring(1) : txt;
+	private String removeMinuses(String txt) {
+		while (txt.startsWith("-")) {
+			txt = txt.substring(1);
+		}
+		return txt;
 	}
 
 	private void addField(final Field field, final String value) {
