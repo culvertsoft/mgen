@@ -59,19 +59,25 @@ public class CommandLineArgHelp {
 
 			m_builder.setLength(0);
 
-			// Print all args first
 			m_builder.append("arguments summary:");
-			buildShortArgs(m_required, "", "");
-			buildShortArgs(m_optional, "[", "]");
+			if (m_fields.length == 0) {
+				m_builder.append(" <no arguments available>");
+				return;
+			} else {
+				buildShortArgs(m_required, "", "");
+				buildShortArgs(m_optional, "[", "]");
+			}
 			m_builder.append("\n\n");
 
-			// Now print required arguments
-			m_builder.append("required arguments:\n");
-			buildArgDescr(m_required);
+			if (!m_required.isEmpty()) {
+				m_builder.append("required arguments:\n");
+				buildArgDescr(m_required);
+			}
 
-			// Now print optional arguments
-			m_builder.append("optional arguments:\n");
-			buildArgDescr(m_optional);
+			if (!m_optional.isEmpty()) {
+				m_builder.append("optional arguments:\n");
+				buildArgDescr(m_optional);
+			}
 
 		} catch (final Exception e) {
 			throw new SerializationException(
