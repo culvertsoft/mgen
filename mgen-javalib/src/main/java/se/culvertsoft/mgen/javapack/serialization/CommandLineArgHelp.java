@@ -61,26 +61,17 @@ public class CommandLineArgHelp {
 
 			// Print all args first
 			m_builder.append("arguments summary:");
-			for (final Field field : m_required) {
-				m_builder.append(" ");
-				m_builder.append(key(field));
-				m_builder.append(isBool(field) ? " " + field.name().toUpperCase() : "");
-			}
-			for (final Field field : m_optional) {
-				m_builder.append(" [");
-				m_builder.append(key(field));
-				m_builder.append(isBool(field) ? " " + field.name().toUpperCase() : "");
-				m_builder.append("]");
-			}
+			buildShortArgs(m_required, "", "");
+			buildShortArgs(m_optional, "[", "]");
 			m_builder.append("\n\n");
 
 			// Now print required arguments
 			m_builder.append("required arguments:\n");
-			buildArgSet(m_required);
+			buildArgDescr(m_required);
 
 			// Now print optional arguments
 			m_builder.append("optional arguments:\n");
-			buildArgSet(m_optional);
+			buildArgDescr(m_optional);
 
 		} catch (final Exception e) {
 			throw new SerializationException(
@@ -89,7 +80,17 @@ public class CommandLineArgHelp {
 		}
 	}
 
-	private void buildArgSet(final Collection<Field> set) {
+	private void buildShortArgs(final List<Field> fields, final String begin, final String end) {
+		for (final Field field : fields) {
+			m_builder.append(" ");
+			m_builder.append(begin);
+			m_builder.append(key(field));
+			m_builder.append(isBool(field) ? " " + field.name().toUpperCase() : "");
+			m_builder.append(end);
+		}
+	}
+
+	private void buildArgDescr(final Collection<Field> set) {
 		for (final Field field : set) {
 			m_builder.append("  ");
 			if (hasShortcut(field))
