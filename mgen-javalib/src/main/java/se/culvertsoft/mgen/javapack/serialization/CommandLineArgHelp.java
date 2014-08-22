@@ -61,12 +61,11 @@ public class CommandLineArgHelp {
 
 			m_builder.append("arguments summary:");
 			if (m_fields.length == 0) {
-				m_builder.append(" <no arguments available>");
+				m_builder.append(" <no arguments available>\n");
 				return;
-			} else {
-				buildShortArgs(m_required, "", "");
-				buildShortArgs(m_optional, "[", "]");
 			}
+			buildShortArgs(m_required, "", "");
+			buildShortArgs(m_optional, "[", "]");
 			m_builder.append("\n\n");
 
 			if (!m_required.isEmpty()) {
