@@ -61,11 +61,15 @@ public class CommandLineArgHelp {
 
 			// Print all args first
 			m_builder.append("arguments summary:");
-			for (final Field field : m_fields) {
+			for (final Field field : m_required) {
+				m_builder.append(" ");
+				m_builder.append(key(field));
+				m_builder.append(isBool(field) ? " " + field.name().toUpperCase() : "");
+			}
+			for (final Field field : m_optional) {
 				m_builder.append(" [");
 				m_builder.append(key(field));
-				m_builder.append(expectsValue(field) ? " "
-						+ field.name().toUpperCase() : "");
+				m_builder.append(isBool(field) ? " " + field.name().toUpperCase() : "");
 				m_builder.append("]");
 			}
 			m_builder.append("\n\n");
@@ -80,8 +84,7 @@ public class CommandLineArgHelp {
 
 		} catch (final Exception e) {
 			throw new SerializationException(
-					"Could not generate command line arguments help text for "
-							+ m_cls,
+					"Could not generate command line arguments help text for " + m_cls,
 					e);
 		}
 	}
@@ -92,7 +95,7 @@ public class CommandLineArgHelp {
 			if (hasShortcut(field))
 				m_builder.append(shortKey(field) + ", ");
 			m_builder.append(fullKey(field) + " ");
-			if (expectsValue(field))
+			if (isBool(field))
 				m_builder.append("(" + field.typ() + ")");
 			m_builder.append("\n");
 		}
@@ -108,7 +111,7 @@ public class CommandLineArgHelp {
 		return m_shortCuts.contains(f);
 	}
 
-	boolean expectsValue(final Field field) {
+	boolean isBool(final Field field) {
 		return field.typ() != BoolType.INSTANCE;
 	}
 
@@ -121,17 +124,14 @@ public class CommandLineArgHelp {
 	}
 
 	String key(final Field field) {
-		return m_shortCuts.contains(field) ? "-" + field.name().substring(0, 1)
-				: fullKey(field);
+		return m_shortCuts.contains(field) ? "-" + field.name().substring(0, 1) : fullKey(field);
 	}
 
 	private static MGenBase newInstance(final Class<? extends MGenBase> cls) {
 		try {
 			return cls.newInstance();
 		} catch (final Exception e) {
-			throw new SerializationException(
-					"Could not instantiate object of type " + cls,
-					e);
+			throw new SerializationException("Could not instantiate object of type " + cls, e);
 		}
 	}
 
