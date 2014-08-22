@@ -131,7 +131,7 @@ public class CommandLineArgHelp {
 	}
 
 	String key(final Field field) {
-		return m_shortCuts.contains(field) ? "-" + field.name().substring(0, 1) : fullKey(field);
+		return m_shortCuts.contains(field) ? shortKey(field) : fullKey(field);
 	}
 
 	private static MGenBase newInstance(final Class<? extends MGenBase> cls) {
