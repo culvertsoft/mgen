@@ -96,7 +96,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
       if (t.superType.module == t.module)
         t.superType.shortName
       else
-        t.fullName.replaceAllLiterally(".", "::")
+        t.superType.fullName.replaceAllLiterally(".", "::")
     } else {
       "mgen::MGenBase"
     }
