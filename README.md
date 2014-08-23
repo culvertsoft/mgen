@@ -259,12 +259,12 @@ Read on below, or check some of our tests at:
 
 To access the generated types we include the headers of the types we need, or the generated ClassRegistry.h header file which will let us access all the types that were just generated. We will also include some mgen headers for serialization.
 
+    #include "gameworld/types/ClassRegistry.h"
+    
     #include "mgen/serialization/VectorInputStream.h"
     #include "mgen/serialization/VectorOutputStream.h"
     #include "mgen/serialization/JsonWriter.h"
     #include "mgen/serialization/JsonReader.h"
-    
-    #include "gameworld/types/ClassRegistry.h"
     
     using mgen::VectorOutputStream;
     using mgen::VectorInputStream;
