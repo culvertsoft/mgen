@@ -6,7 +6,6 @@ import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16Bit
-import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16BitBase64
 
 object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFile) {
 
@@ -46,10 +45,6 @@ object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFil
 
   override def mkGetByTypeIds16Bit(param: UtilClassGenParam) {
     MkGetByTypeIds16Bit(0, param.nameSpaceString, param.modules, param.settings)
-  }
-
-  override def mkGetByTypeIds16BitBase64(param: UtilClassGenParam) {
-    MkGetByTypeIds16BitBase64(0, param.nameSpaceString, param.modules, param.settings)
   }
 
 }
