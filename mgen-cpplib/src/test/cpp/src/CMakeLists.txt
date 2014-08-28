@@ -22,5 +22,6 @@ add_executable(
 	tests/ConfigFileTest.cpp
 	tests/UtfTests.cpp
 	tests/TransientFields.cpp
+	tests/MemInputStream.cpp
 )
 
