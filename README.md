@@ -1,6 +1,6 @@
 # MGen
 
--- HEADS UP: This README is Work-In-Progress. It's about 45% finished! -- 
+-- HEADS UP: This README is Work-In-Progress. It's about 50% finished! -- 
 
 MGen is a toolkit for designing cross-langauge data models to which functionality such as serialization and type introspection can easily be attached. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code (classes) in multiple programming languages may be generated using the MGen Compiler.
 
