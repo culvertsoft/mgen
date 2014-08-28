@@ -13,6 +13,9 @@
 
 namespace mgen {
 
+/**
+ * Represents an empty class registry. Used for demo and testing purposes.
+ */
 class EmptyClassRegistry: public ClassRegistryBase {
 public:
     EmptyClassRegistry() {}
