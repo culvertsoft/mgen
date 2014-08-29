@@ -31,7 +31,7 @@
 namespace mgen {
 
 /**
- * A class for reading data streams written in the MGen binary wire format.
+ * A class for reading data streams in the MGen binary wire format.
  * BinaryReader objects are constructed with two type parameters: MGenStreamType
  * and ClassRegistryType. These specify which type of data input stream is to
  * be read from and what classes can be marshalled, respectively.

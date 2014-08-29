@@ -21,10 +21,10 @@ import java.util.List;
 import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
-import se.culvertsoft.mgen.api.model.RuntimeClassType;
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.api.model.ListType;
 import se.culvertsoft.mgen.api.model.MapType;
+import se.culvertsoft.mgen.api.model.RuntimeClassType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
@@ -33,9 +33,30 @@ import se.culvertsoft.mgen.javapack.metadata.FieldVisitSelection;
 import se.culvertsoft.mgen.javapack.util.FastByteBuffer;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
+/**
+ * A class for writing data streams in the MGen binary wire format. BinaryWriter
+ * objects are constructed with two type parameters: MGenStreamType and
+ * ClassRegistryType. These specify which type of data output stream is to be
+ * written to and what classes can be written, respectively.
+ */
 public class BinaryWriter extends BuiltInWriter {
 
+	/**
+	 * All built-in MGen writers and wire-formats support what we call compact
+	 * and standard modes. In standard mode MGen objects are always prepended by
+	 * a series of 16 bit ids which uniquely identify the class of the object
+	 * being written. Compact mode turns off writing of these IDs where they can
+	 * be inferred by the data model/reader (e.g. the field is of a specific
+	 * object type and the object being written is of exactly this type - not a
+	 * sub type).
+	 */
 	public static final boolean DEFAULT_COMPACT = false;
+
+	/**
+	 * BinaryWriter objects maintain internal buffers for fast writing, which is
+	 * flushed after each finished object write. This is the default size of
+	 * that buffer.
+	 */
 	public static final int FLUSH_SIZE = 256;
 
 	private final FastByteBuffer m_buffer;
@@ -43,6 +64,19 @@ public class BinaryWriter extends BuiltInWriter {
 	private final boolean m_compact;
 	private long m_expectType;
 
+	/**
+	 * Creates a new binary writer.
+	 * 
+	 * @param stream
+	 *            The data output stream to write to
+	 * 
+	 * @param classRegistry
+	 *            The class registry to use
+	 * 
+	 * @param compact
+	 *            If objects should be written in compact or standard mode. See
+	 *            DEFAULT_COMPACT.
+	 */
 	public BinaryWriter(
 			final OutputStream stream,
 			final ClassRegistryBase classRegistry,
@@ -54,15 +88,46 @@ public class BinaryWriter extends BuiltInWriter {
 		m_expectType = -1;
 	}
 
+	/**
+	 * Creates a new binary writer.
+	 * 
+	 * @param stream
+	 *            The data output stream to write to
+	 * 
+	 * @param classRegistry
+	 *            The class registry to use
+	 */
 	public BinaryWriter(final OutputStream stream, final ClassRegistryBase classRegistry) {
 		this(stream, classRegistry, DEFAULT_COMPACT);
 	}
 
+	/**
+	 * Method to replace the internal output stream with a new one to write to
+	 * 
+	 * @param stream
+	 *            The new output stream to write to
+	 * 
+	 * @return This writer
+	 */
 	public BinaryWriter setOutput(final OutputStream stream) {
 		m_streamOut = stream;
 		return this;
 	}
-	
+
+	/**
+	 * Writes an MGen object to the underlying output stream. Primary interface
+	 * method for writing MGen objects to this writer. The class of the object
+	 * must be registered in class registry provided to this BinaryWriter when
+	 * it was constructed (this is always the case unless you have multiple data
+	 * models in parallel).
+	 * 
+	 * @param o
+	 *            The object to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
 		m_expectType = -1;
@@ -71,9 +136,24 @@ public class BinaryWriter extends BuiltInWriter {
 		flush();
 	}
 
+	/**
+	 * When this writer is visiting an object it should write, this method will
+	 * be called before starting to visit any fields. The purpose is mainly to
+	 * let this writer know how many fields will follow, so that this value can
+	 * be written to the output stream.
+	 * 
+	 * @param object
+	 *            The object being written
+	 * 
+	 * @param nFields
+	 *            The number of selected fields for writing
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
-	public void beginWrite(final MGenBase object, final int nFields)
-			throws IOException {
+	public void beginWrite(final MGenBase object, final int nFields) throws IOException {
 
 		if (shouldOmitIds(object)) {
 			writeSize((nFields << 2) | 0x02);
@@ -87,64 +167,199 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * Method called when all selected fields of an object have been visited. In
+	 * this writer implementation, it doesn't do anything, but writers for other
+	 * wire formats may use this method.
+	 */
 	@Override
 	public void finishWrite() {
 	}
 
+	/**
+	 * Method for writing a boolean field
+	 * 
+	 * @param b
+	 *            The value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeBooleanField(final boolean b, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_BOOL);
 		writeBoolean(b, false);
 	}
 
+	/**
+	 * Method for writing an int8 field
+	 * 
+	 * @param b
+	 *            The value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeInt8Field(final byte b, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_INT8);
 		writeInt8(b, false);
 	}
 
+	/**
+	 * Method for writing an int16 field
+	 * 
+	 * @param s
+	 *            The value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeInt16Field(final short s, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_INT16);
 		writeInt16(s, false);
 	}
 
+	/**
+	 * Method for writing an int32 field
+	 * 
+	 * @param i
+	 *            The value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeInt32Field(final int i, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_INT32);
 		writeInt32(i, false);
 	}
 
+	/**
+	 * Method for writing an int64 field
+	 * 
+	 * @param l
+	 *            The value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeInt64Field(final long l, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_INT64);
 		writeInt64(l, false);
 	}
 
+	/**
+	 * Method for writing a float32 field
+	 * 
+	 * @param f
+	 *            The value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeFloat32Field(final float f, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_FLOAT32);
 		writeFloat32(f, false);
 	}
 
+	/**
+	 * Method for writing a float64 field
+	 * 
+	 * @param d
+	 *            The value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeFloat64Field(final double d, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_FLOAT64);
 		writeFloat64(d, false);
 	}
 
+	/**
+	 * Method for writing a string field
+	 * 
+	 * @param s
+	 *            The value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeStringField(final String s, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_STRING);
 		writeString(s, false);
 	}
 
+	/**
+	 * Method for writing a list field
+	 * 
+	 * @param list
+	 *            The list to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeListField(final ArrayList<Object> list, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_LIST);
 		writeList(list, (ListType) field.typ(), false);
 	}
 
+	/**
+	 * Method for writing a map field
+	 * 
+	 * @param map
+	 *            The map to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeMapField(final HashMap<Object, Object> map, final Field field)
 			throws IOException {
@@ -152,18 +367,57 @@ public class BinaryWriter extends BuiltInWriter {
 		writeMap(map, (MapType) field.typ(), false);
 	}
 
+	/**
+	 * Method for writing an array field
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
-	public void writeArrayField(final Object arrayObj, final Field field) throws IOException {
+	public void writeArrayField(final Object array, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_LIST);
-		writeArray(arrayObj, (ArrayType) field.typ(), false);
+		writeArray(array, (ArrayType) field.typ(), false);
 	}
 
+	/**
+	 * Method for writing an enum field
+	 * 
+	 * @param e
+	 *            The enum value to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeEnumField(final Enum<?> e, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_STRING);
 		writeEnum(e, false);
 	}
 
+	/**
+	 * Method for writing an MGen object field
+	 * 
+	 * @param o
+	 *            The object to write
+	 * 
+	 * @param field
+	 *            The field to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@Override
 	public void writeMGenObjectField(final MGenBase o, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_CLASS);
@@ -177,6 +431,22 @@ public class BinaryWriter extends BuiltInWriter {
 	 * 
 	 ******************************************************************/
 
+	/**
+	 * Internal method for writing an MGen object
+	 * 
+	 * @param o
+	 *            The object to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @param typ
+	 *            Meta data information on the object to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeMGenObject(final MGenBase o, final boolean tag, final RuntimeClassType typ)
 			throws IOException {
 
@@ -192,59 +462,190 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * Internal method called before writing a field. Writes a field id and
+	 * binary type tag.
+	 * 
+	 * @param id
+	 *            The field id
+	 * 
+	 * @param tag
+	 *            The binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeFieldStart(final short id, final byte tag) throws IOException {
 		writeInt16(id, false);
 		writeTypeTag(tag);
 	}
 
+	/**
+	 * Internal method for writing an enum
+	 * 
+	 * @param e
+	 *            The enum value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeEnum(final Enum<?> e, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_STRING);
 		writeString(String.valueOf(e), tag);
 	}
 
+	/**
+	 * Internal method for writing a boolean
+	 * 
+	 * @param b
+	 *            The value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeBoolean(final boolean b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_BOOL);
 		writeByte(b ? 1 : 0);
 	}
 
+	/**
+	 * Internal method for writing an int8
+	 * 
+	 * @param b
+	 *            The value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeInt8(final int b, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT8);
 		writeByte(b);
 	}
 
+	/**
+	 * Internal method for writing an int16
+	 * 
+	 * @param s
+	 *            The value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeInt16(final short s, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT16);
 		writeRawInt16(s);
 	}
 
+	/**
+	 * Internal method for writing an int32
+	 * 
+	 * @param i
+	 *            The value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeInt32(final int i, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT32);
 		writeSignedVarint32(i);
 	}
 
+	/**
+	 * Internal method for writing an int64
+	 * 
+	 * @param l
+	 *            The value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeInt64(final long l, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_INT64);
 		writeSignedVarint64(l);
 	}
 
+	/**
+	 * Internal method for writing a float32
+	 * 
+	 * @param f
+	 *            The value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeFloat32(final float f, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT32);
 		writeRawInt32(Float.floatToRawIntBits(f));
 	}
 
+	/**
+	 * Internal method for writing a float64
+	 * 
+	 * @param d
+	 *            The value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeFloat64(final double d, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_FLOAT64);
 		writeRawInt64(Double.doubleToRawLongBits(d));
 	}
 
+	/**
+	 * Internal method for writing a string
+	 * 
+	 * @param s
+	 *            The value to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeString(final String s, final boolean tag) throws IOException {
 		if (tag)
 			writeTypeTag(TAG_STRING);
@@ -257,6 +658,22 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
+	/**
+	 * Internal method for writing a list
+	 * 
+	 * @param list
+	 *            The list to write
+	 * 
+	 * @param typ
+	 *            Meta data information about the list
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeList(final List<Object> list, final ListType typ, final boolean tag)
 			throws IOException {
 
@@ -267,6 +684,22 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * Internal method for writing list elements
+	 * 
+	 * @param doWriteListTag
+	 *            If to write a binary type tag
+	 * 
+	 * @param list
+	 *            The list to write
+	 * 
+	 * @param elementType
+	 *            Meta data information on the element types
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	private void writeElements(
 			final boolean doWriteListTag,
@@ -349,6 +782,22 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * Internal method for writing a map
+	 * 
+	 * @param map
+	 *            The map to write
+	 * 
+	 * @param typ
+	 *            Meta data type information on the map to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeMap(final HashMap<Object, Object> map, final MapType typ, final boolean tag)
 			throws IOException {
 
@@ -358,64 +807,80 @@ public class BinaryWriter extends BuiltInWriter {
 		if (map != null && !map.isEmpty()) {
 
 			writeSize(map.size());
-			
+
 			final Type keyType = typ.keyType();
-			final Type valueType = typ.valueType();			
+			final Type valueType = typ.valueType();
 
 			writeTypeTag(keyType.typeTag());
 			writeTypeTag(valueType.typeTag());
-						
+
 			for (Map.Entry<Object, Object> entry : map.entrySet()) {
 				writeObject(entry.getKey(), keyType, false);
 				writeObject(entry.getValue(), valueType, false);
-		    }
-			
+			}
+
 		} else {
 			writeSize(0);
 		}
 
 	}
 
-	private void writeArray(final Object arrayObj, final ArrayType typ, final boolean tag)
+	/**
+	 * Internal method for writing an array
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param typ
+	 *            Meta data type information on the array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
+	private void writeArray(final Object array, final ArrayType typ, final boolean tag)
 			throws IOException {
 
 		if (tag)
 			writeTypeTag(TAG_LIST);
 
-		if (arrayObj != null) {
+		if (array != null) {
 
 			final Type elementType = typ.elementType();
 
 			switch (elementType.typeEnum()) {
 			case ENUM:
-				writeEnumArray((Enum<?>[]) arrayObj, false);
+				writeEnumArray((Enum<?>[]) array, false);
 				break;
 			case BOOL:
-				writeBooleanArray((boolean[]) arrayObj, false);
+				writeBooleanArray((boolean[]) array, false);
 				break;
 			case INT8:
-				writeInt8Array((byte[]) arrayObj, false);
+				writeInt8Array((byte[]) array, false);
 				break;
 			case INT16:
-				writeInt16Array((short[]) arrayObj, false);
+				writeInt16Array((short[]) array, false);
 				break;
 			case INT32:
-				writeInt32Array((int[]) arrayObj, false);
+				writeInt32Array((int[]) array, false);
 				break;
 			case INT64:
-				writeInt64Array((long[]) arrayObj, false);
+				writeInt64Array((long[]) array, false);
 				break;
 			case FLOAT32:
-				writeFloat32Array((float[]) arrayObj, false);
+				writeFloat32Array((float[]) array, false);
 				break;
 			case FLOAT64:
-				writeFloat64Array((double[]) arrayObj, false);
+				writeFloat64Array((double[]) array, false);
 				break;
 			case STRING:
-				writeStringArray((String[]) arrayObj, false);
+				writeStringArray((String[]) array, false);
 				break;
 			default:
-				writeObjectArray((Object[]) arrayObj, elementType, false);
+				writeObjectArray((Object[]) array, elementType, false);
 				break;
 			}
 
@@ -425,6 +890,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for enums
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeEnumArray(final Enum<?>[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -444,6 +922,19 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
+	/**
+	 * High performance array writing method for booleans
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeBooleanArray(final boolean[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -464,6 +955,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for int8s
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeInt8Array(final byte[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -482,6 +986,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for int16s
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeInt16Array(final short[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -502,6 +1019,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for int32s
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeInt32Array(final int[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -522,6 +1052,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for int64s
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeInt64Array(final long[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -542,6 +1085,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for float32s
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeFloat32Array(final float[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -562,6 +1118,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for strings
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeStringArray(final String[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -582,6 +1151,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for float64s
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeFloat64Array(final double[] array, final boolean tag) throws IOException {
 
 		if (tag)
@@ -602,6 +1184,19 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
+	/**
+	 * High performance array writing method for generic objects
+	 * 
+	 * @param array
+	 *            The array to write
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeObjectArray(final Object[] array, final Type elementType, final boolean tag)
 			throws IOException {
 
@@ -622,6 +1217,14 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
+	/**
+	 * Internal methods for flushing the internal buffer and write its data to
+	 * the underlying data output stream
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void flush() throws IOException {
 		if (m_buffer.nonEmpty()) {
 			m_streamOut.write(m_buffer.data(), 0, m_buffer.size());
@@ -629,16 +1232,51 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
+	/**
+	 * Internal method for checking if we need to flush the internal buffer to
+	 * the underlying data output stream. Then performs the flush if the
+	 * condition is met.
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void checkFlush() throws IOException {
 		if (m_buffer.size() >= FLUSH_SIZE)
 			flush();
 	}
 
+	/**
+	 * Internal method for writing a byte
+	 * 
+	 * @param b
+	 *            The byte to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeByte(int b) throws IOException {
 		m_buffer.write(b);
 		checkFlush();
 	}
 
+	/**
+	 * Internal method for writing an array/blob of bytes
+	 * 
+	 * @param data
+	 *            The bytes to write
+	 * 
+	 * @param offset
+	 *            An offset in the bytes to write
+	 * 
+	 * @param sz
+	 *            The number of bytes to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeBytes(final byte[] data, final int offset, final int sz) throws IOException {
 		if (sz >= FLUSH_SIZE) {
 			flush();
@@ -649,19 +1287,62 @@ public class BinaryWriter extends BuiltInWriter {
 		}
 	}
 
+	/**
+	 * Internal method for writing an array/blob of bytes
+	 * 
+	 * @param data
+	 *            The bytes to write
+	 * 
+	 * @param sz
+	 *            The number of bytes to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeBytes(final byte[] data, final int sz) throws IOException {
 		writeBytes(data, 0, sz);
 	}
 
+	/**
+	 * Internal method for writing an array/blob of bytes
+	 * 
+	 * @param data
+	 *            The bytes to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeBytes(final byte[] data) throws IOException {
 		writeBytes(data, 0, data.length);
 	}
 
+	/**
+	 * Internal method for writing a fixed size big-endian 16 bit integer
+	 * 
+	 * @param s
+	 *            The int16 to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeRawInt16(short s) throws IOException {
 		writeByte(s >>> 8);
 		writeByte(s >>> 0);
 	}
 
+	/**
+	 * Internal method for writing a fixed size big-endian 32 bit integer
+	 * 
+	 * @param s
+	 *            The int32 to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeRawInt32(int v) throws IOException {
 		writeByte(v >>> 24);
 		writeByte(v >>> 16);
@@ -669,6 +1350,16 @@ public class BinaryWriter extends BuiltInWriter {
 		writeByte(v >>> 0);
 	}
 
+	/**
+	 * Internal method for writing a fixed size big-endian 64 bit integer
+	 * 
+	 * @param s
+	 *            The int64 to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeRawInt64(long v) throws IOException {
 		writeByte((int) (v >>> 56));
 		writeByte((int) (v >>> 48));
@@ -680,25 +1371,81 @@ public class BinaryWriter extends BuiltInWriter {
 		writeByte((int) (v >>> 0));
 	}
 
+	/**
+	 * Internal method for writing a signed 32bit varint
+	 * 
+	 * @param i
+	 *            The value to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeSignedVarint32(final int i) throws IOException {
 		Varint.writeSignedVarInt(i, m_buffer);
 		checkFlush();
 	}
 
+	/**
+	 * Internal method for writing a signed 64bit varint
+	 * 
+	 * @param i
+	 *            The value to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeSignedVarint64(final long l) throws IOException {
 		Varint.writeSignedVarLong(l, m_buffer);
 		checkFlush();
 	}
 
+	/**
+	 * Internal method for writing an unsigned 32bit varint
+	 * 
+	 * @param i
+	 *            The value to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeUnsignedVarint32(final int i) throws IOException {
 		Varint.writeUnsignedVarInt(i, m_buffer);
 		checkFlush();
 	}
 
+	/**
+	 * Internal method for writing a size value
+	 * 
+	 * @param i
+	 *            The value to write
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeSize(final int i) throws IOException {
 		writeUnsignedVarint32(i);
 	}
 
+	/**
+	 * Internal method for writing a generic object
+	 * 
+	 * @param o
+	 *            The object to write
+	 * 
+	 * @param typ
+	 *            Type metadata information on the object the writ
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	@SuppressWarnings("unchecked")
 	private void writeObject(final Object o, final Type typ, boolean tag) throws IOException {
 
@@ -748,12 +1495,31 @@ public class BinaryWriter extends BuiltInWriter {
 
 	}
 
-	private boolean shouldOmitIds(final MGenBase o) {
-		return m_compact && o._typeId() == m_expectType;
-	}
-
+	/**
+	 * Internal method for writing a binary type tag
+	 * 
+	 * @param tag
+	 *            If to write a binary type tag
+	 * 
+	 * @throws IOException
+	 *             If an IOException occurs when writing to the the underlying
+	 *             output stream
+	 */
 	private void writeTypeTag(byte tag) throws IOException {
 		writeByte(tag);
+	}
+
+	/**
+	 * Internal convenience method for testing if we need to write type id
+	 * metadata for the object which is currently to be written.
+	 * 
+	 * @param o
+	 *            The object that we should or should not write ids for
+	 * 
+	 * @return if we should omit writing ids
+	 */
+	private boolean shouldOmitIds(final MGenBase o) {
+		return m_compact && o._typeId() == m_expectType;
 	}
 
 }

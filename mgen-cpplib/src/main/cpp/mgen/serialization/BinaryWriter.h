@@ -15,7 +15,7 @@
 namespace mgen {
 
 /**
- * A class for writing data streams written in the MGen binary wire format.
+ * A class for writing data streams in the MGen binary wire format.
  * BinaryWriter objects are constructed with two type parameters: MGenStreamType
  * and ClassRegistryType. These specify which type of data output stream is to
  * be written to and what classes can be written, respectively.

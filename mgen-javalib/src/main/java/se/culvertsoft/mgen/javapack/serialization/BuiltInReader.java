@@ -1,5 +1,6 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
+import java.io.ByteArrayInputStream;
 import java.nio.charset.Charset;
 
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
@@ -7,6 +8,7 @@ import se.culvertsoft.mgen.javapack.util.StringDecoder;
 
 abstract public class BuiltInReader implements Reader {
 
+	public static final ByteArrayInputStream EMPTY_INPUT_STREAM = new ByteArrayInputStream(new byte[0]);
 	public static final Charset CHARSET_UTF8 = Charset.forName("UTF8");
 	public static final int STRING_DECODE_BUFFER_SIZE = 256;
 
