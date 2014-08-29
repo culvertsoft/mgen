@@ -13,42 +13,73 @@
 namespace mgen {
 namespace varint {
 
+/**
+ * Convenience method for writing a single byte to a stream,
+ * used exclusively by the more meaningful functions in this file.
+ */
 template<typename Stream>
 inline void writeByte(const unsigned char c, Stream& out);
 
+/**
+ * Convenience method for reading a single byte to a stream,
+ * used exclusively by the more meaningful functions in this file.
+ */
 template<typename Stream>
 inline unsigned char readByte(Stream& in);
 
+/**
+ * Writes a signed 64 bit varint to a stream.
+ */
 template<typename Stream>
 inline void writeSigned64(long long value, Stream& out);
 
+/**
+ * Writes an unsigned 64 bit varint to a stream.
+ */
 template<typename Stream>
 inline void writeUnsigned64(unsigned long long value, Stream& out);
 
+/**
+ * Writes a signed 32 bit varint to a stream.
+ */
 template<typename Stream>
 inline void writeSigned32(int value, Stream& out);
 
+/**
+ * Writes an unsigned 32 bit varint to a stream.
+ */
 template<typename Stream>
 inline void writeUnsigned32(unsigned int value, Stream& out);
 
+/**
+ * Reads a signed 64 bit varint from a stream.
+ */
 template<typename Stream>
 inline long long readSigned64(Stream& in);
 
+/**
+ * Reads an unsigned 64 bit varint from a stream.
+ */
 template<typename Stream>
 inline unsigned long long readUnsigned64(Stream& in);
 
+/**
+ * Reads a signed 32 bit varint from a stream.
+ */
 template<typename Stream>
 inline int readSigned32(Stream& in);
 
+/**
+ * Reads an unsigned 32 bit varint from a stream.
+ */
 template<typename Stream>
 inline unsigned int readUnsigned32(Stream& in);
 
-/********************************************************
- *
- *
- *
- *
- ********************************************************/
+
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
+
 
 template<typename Stream>
 inline void writeByte(const unsigned char c, Stream& out) {

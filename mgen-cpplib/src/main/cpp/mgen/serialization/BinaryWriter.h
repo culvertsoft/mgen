@@ -61,16 +61,6 @@ public:
 
     /**
      * When this writer is visiting an object it should write, this method will be called
-     * for each selected object field to be written.
-     */
-    template<typename T>
-    void visit(const T& v, const Field& field) {
-        writeFieldStart(field.id(), BINARY_TAG_OF(&v));
-        write(v, false);
-    }
-
-    /**
-     * When this writer is visiting an object it should write, this method will be called
      * before starting to visit any fields. The purpose is mainly to let this writer know
      * how many fields will follow, so that this value can be written to the output stream.
      */
@@ -92,9 +82,18 @@ public:
     }
 
     /**
+     * When this writer is visiting an object it should write, this method will be called
+     * for each selected object field to be written.
+     */
+    template<typename T>
+    void visit(const T& v, const Field& field) {
+        writeFieldStart(field.id(), BINARY_TAG_OF(&v));
+        write(v, false);
+    }
+    
+    /**
      * Method called when all selected fields of an object have been visited. In this writer
-     * implementation, it doesn't do anything, but there may be future wire format writers
-     * that implement this method.
+     * implementation, it doesn't do anything, but writers for other wire formats may use this method.
      */
     void endVisit() {
     }
@@ -224,7 +223,7 @@ private:
     }
 
     /**
-     * Internal method for writing an float32.
+     * Internal method for writing a float32.
      */
     void write(const float v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT32, doTag);
@@ -232,7 +231,7 @@ private:
     }
 
     /**
-     * Internal method for writing an float64.
+     * Internal method for writing a float64.
      */
     void write(const double v, const bool doTag) {
         writeTagIf(BINARY_TAG_FLOAT64, doTag);
