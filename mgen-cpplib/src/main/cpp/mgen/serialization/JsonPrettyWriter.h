@@ -6,6 +6,11 @@
 
 namespace mgen {
 
+/**
+ * MGen writer which writes 'pretty' JSON. That is JSON with expected
+ * indentation and newlines. The standard MGen JsonWriter writes
+ * compact json.
+ */
 template<typename MGenStreamType, typename ClassRegistryType>
 class JsonPrettyWriter: public JsonWriterBase<MGenStreamType, ClassRegistryType,
         rapidjson::PrettyWriter<internal::JsonOutStream<MGenStreamType> > > {
@@ -13,6 +18,13 @@ class JsonPrettyWriter: public JsonWriterBase<MGenStreamType, ClassRegistryType,
             rapidjson::PrettyWriter<internal::JsonOutStream<MGenStreamType> > > super;
 public:
 
+    /**
+     * Creates a new JsonPrettyWriter (JsonWriter) around the provided data 
+     * output stream and class registry. A third optional parameter can be 
+     * specified to omit writing type ids before objects where they can be
+     * inferred by readers (makes the data written a little cleaner, 
+     * particularly useful for configuration files).
+     */
     JsonPrettyWriter(
             MGenStreamType& outputStream,
             const ClassRegistryType& classRegistry,

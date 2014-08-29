@@ -15,7 +15,8 @@
 
  /**
   * Convenience macro to encapsulate common logic for reading headers 
-  * of MGen objects from MGen binary data streams.
+  * of MGen objects from MGen binary data streams. This macro is undef:ed 
+  * at the end of this header, as it is only intended to be used internally.
   */
 #define READ_MGEN_OBJ_HEADER(retCall) \
     const int nIdsOrFields = readSize(); \
@@ -237,7 +238,7 @@ private:
 #undef SKIP_CASE_READ
 
     /**
-     * Internal method for reading a list of values in a data stream.
+     * Internal method for reading a list in a data stream.
      */
     template<typename T>
     void read(std::vector<T>& v, const bool verifyTag) {
@@ -252,7 +253,7 @@ private:
     }
 
     /**
-     * Internal method for reading a map of values in a data stream.
+     * Internal method for reading a map in a data stream.
      */
     template<typename K, typename V>
     void read(std::map<K, V>& v, const bool verifyTag) {

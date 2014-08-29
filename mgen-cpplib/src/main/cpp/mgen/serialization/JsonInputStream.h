@@ -4,6 +4,10 @@
 namespace mgen {
 namespace internal {
 
+/**
+ * Internal helper class for connecting MGen's JsonReader to the 
+ * RapidJson JSON library.
+ */
 template<typename InputStreamType>
 class JsonInStream {
 public:

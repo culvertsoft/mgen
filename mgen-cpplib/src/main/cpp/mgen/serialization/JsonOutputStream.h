@@ -4,6 +4,10 @@
 namespace mgen {
 namespace internal {
 
+/**
+ * Internal helper class for connecting MGen's JsonWriter to the 
+ * RapidJson JSON library.
+ */
 template<typename OutputStreamType>
 class JsonOutStream {
 public:
