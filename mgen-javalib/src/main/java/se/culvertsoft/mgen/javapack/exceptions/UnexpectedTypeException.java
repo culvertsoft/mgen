@@ -1,5 +1,9 @@
 package se.culvertsoft.mgen.javapack.exceptions;
 
+/**
+ * Signals that an unexpected type was read when reading data streams,
+ * for example an integer field was to be read, but in fact string data read.
+ */
 public class UnexpectedTypeException extends SerializationException {
 
 	private static final long serialVersionUID = 1L;
