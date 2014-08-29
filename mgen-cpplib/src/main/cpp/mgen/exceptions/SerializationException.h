@@ -12,6 +12,10 @@
 
 namespace mgen {
 
+/**
+ * A base class for exceptions that occur in the serialization
+ * logic of MGen.
+ */
 class SerializationException: public Exception {
 public:
     SerializationException(const std::string& msg = "") :

@@ -20,7 +20,6 @@ namespace mgen {
 class MGenBase {
 public:
 
-
     /**
      * Gets the 64 bit type id of this class.
      */

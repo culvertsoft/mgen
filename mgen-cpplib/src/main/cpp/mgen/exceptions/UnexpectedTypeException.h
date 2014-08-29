@@ -12,6 +12,10 @@
 
 namespace mgen {
 
+/**
+ * Signals that an unexpected type was read when reading data streams,
+ * for example an integer field was to be read, but in fact string data read.
+ */
 class UnexpectedTypeException: public SerializationException {
 public:
 	UnexpectedTypeException(const std::string& msg = "") :

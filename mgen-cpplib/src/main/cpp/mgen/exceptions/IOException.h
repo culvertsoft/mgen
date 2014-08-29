@@ -12,6 +12,10 @@
 
 namespace mgen {
 
+/**
+ * Represents an exception that occurred on the IO layer,
+ * e.g. running out of bytes to read before expected.
+ */
 class IOException: public Exception {
 public:
     IOException(const std::string& msg = "") :

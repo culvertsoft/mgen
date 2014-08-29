@@ -66,7 +66,7 @@ public:
 
     /**
      * Assignment operator which guarantees that the source object is deeply copied.
-     * Destructs and previously managed resource.
+     * Destructs previously managed resource.
      */
     Polymorphic& operator=(const Polymorphic& v) {
         return this->operator =<T>(v);
@@ -74,7 +74,7 @@ public:
 
     /**
      * Assignment operator which guarantees that the source object is deeply copied. 
-     * Destructs and previously managed resource.
+     * Destructs previously managed resource.
      */
     template<typename T2>
     Polymorphic& operator=(const Polymorphic<T2>& v) {
@@ -82,16 +82,16 @@ public:
     }
 
     /**
-     * Assignment operator which wraps the provided pointer without copying. Destructs and
-     * previously managed resource.
+     * Assignment operator which wraps the provided pointer without copying. 
+     * Destructs previously managed resource.
      */
     Polymorphic& operator=(T* v) {
         return set<T>(v);
     }
 
     /**
-     * Assignment which wraps the provided pointer without copying. Destructs and
-     * previously managed resource.
+     * Assignment which wraps the provided pointer without copying. 
+     * Destructs previously managed resource.
      */
     template<typename T2>
     Polymorphic& set(T2 * v, const bool managed = true) {
@@ -105,8 +105,8 @@ public:
     }
 
     /**
-     * Assignment which wraps the provided pointer without copying. Destructs and
-     * previously managed resource.
+     * Assignment which wraps the provided pointer without copying. 
+     * Destructs previously managed resource.
      */
     Polymorphic& set(T * v, const bool managed = true) {
         return set<T>(v, managed);

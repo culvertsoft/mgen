@@ -12,6 +12,10 @@
 
 namespace mgen {
 
+/**
+ * Signals that unexpected data was read when reading data streams,
+ * for example an array length was expected but a negative number was read.
+ */
 class StreamCorruptedException: public SerializationException {
 public:
     StreamCorruptedException(const std::string& msg = "") :

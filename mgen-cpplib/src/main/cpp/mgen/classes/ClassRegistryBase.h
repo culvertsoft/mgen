@@ -75,6 +75,11 @@ public:
 
     }
 
+    /**
+     * Returns the internal lookup-table from 64 bit type ids 
+     * to class registry entries. This can be used to iterate over
+     * registered classes, especially useful for testing.
+     */
     const EntryMap& entries() const {
         return m_typeId2Entry;
     }
