@@ -40,7 +40,7 @@ public:
      * after calling reset() will start reading the first bytes again 
      * (at offset 0).
      */
-	VectorInputStream& reset() {
+    VectorInputStream& reset() {
         m_offset = 0;
 		return *this;
     }

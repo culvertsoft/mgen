@@ -36,7 +36,8 @@ public:
     }
 
     const ClassRegistryEntry * getByIds(const std::vector<short>& typeIds16bit) const { return 0; }
-    const ClassRegistryEntry * getByIds(const std::vector<std::string>& typeIds16bitBase64) const { return 0; }
+    const ClassRegistryEntry * getByIds(const std::vector<std::string>& base64ids_vector) const { return 0; }
+    const ClassRegistryEntry * getByIds(const std::string& base64ids_concatenated) const { return 0; }
 
 };
 

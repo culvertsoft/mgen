@@ -18,12 +18,11 @@ namespace serialutil {
 #define throw_unexpected_type(expect, actual) \
     throw UnexpectedTypeException(toString("Unexpected type! -> Expected type ").append(toString(expect)).append(" but got type ").append(toString(actual)))
 
-template <typename ClassRegistryType, typename MGenType, typename IdType>
+template <typename ClassRegistryType, typename MGenType, typename IdsType>
 void throwByUnexpectedIds(
         const ClassRegistryType& classReg,
         const MGenType * obj,
-        const std::vector<IdType>& expIds,
-        const std::vector<IdType>& actualIds) {
+        const IdsType& actualIds) {
     const mgen::ClassRegistryEntry * entry = classReg.getByIds(actualIds);
     if (entry) {
         throw_unexpected_type(MGenType::_type_name(), entry->typeName());
@@ -56,10 +55,10 @@ MGenBase * readObjInternal(
 
 }
 
-template<typename ClassRegType, typename IdType>
+template<typename ClassRegType, typename IdsType>
 const ClassRegistryEntry * getCompatibleEntry(
         const ClassRegType& classReg,
-        const std::vector<IdType>& ids,
+        const IdsType& ids,
         const bool isExpType,
         const long long expType) {
 
@@ -96,23 +95,23 @@ const ClassRegistryEntry * getCompatibleEntry(
 
 }
 
-template<typename MGenClassRegType, typename MGenType, typename IdType>
+template<typename MGenClassRegType, typename MGenType, typename IdsType>
 void checkExpType(
         const MGenClassRegType& classReg,
         const MGenType * o,
-        const std::vector<IdType>& expIds,
-        const std::vector<IdType>& actualIds) {
+        const IdsType& expIds,
+        const IdsType& actualIds) {
 
     // Ids were omitted, so must assume true
     if (actualIds.empty())
         return;
 
     if (actualIds.size() < expIds.size())
-        throwByUnexpectedIds(classReg, o, expIds, actualIds);
+        throwByUnexpectedIds(classReg, o, actualIds);
 
     for (std::size_t i = 0; i < expIds.size(); i++) {
         if (actualIds[i] != expIds[i]) {
-            throwByUnexpectedIds(classReg, o, expIds, actualIds);
+            throwByUnexpectedIds(classReg, o, actualIds);
         }
     }
 
@@ -124,6 +123,14 @@ void checkExpType(
         const MGenType * o,
         const std::vector<std::string>& actualIds) {
     checkExpType(classReg, o, MGenType::_type_ids_16bit_base64(), actualIds);
+}
+
+template<typename MGenClassRegType, typename MGenType>
+void checkExpType(
+    const MGenClassRegType& classReg,
+    const MGenType * o,
+    const std::string& actualIds) {
+    checkExpType(classReg, o, MGenType::_type_ids_16bit_base64_string(), actualIds);
 }
 
 template<typename MGenClassRegType, typename MGenType>

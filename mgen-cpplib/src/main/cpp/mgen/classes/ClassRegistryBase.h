@@ -52,17 +52,27 @@ public:
     
     /**
      * Gets a class registry entry by 16 bit type ids in base64 format.
+     * This method takes the ids as a vector of strings.
      */
     const ClassRegistryEntry * getByIds(const std::vector<std::string>& base64ids_vector) const {
-        const std::string& base64ids = combine(base64ids_vector);
-        for (int sz = int(base64ids.size()); sz >= 3; sz-=3) {
-            const std::map<std::string, ClassRegistryEntry>::const_iterator it = 
-                m_typeIds16bitBase642Entry.find(base64ids.substr(0, sz));
-            if (it != m_typeIds16bitBase642Entry.end()) {
-                return &it->second;
-            }
-        }
-        return 0;
+        return getByIds(combine(base64ids_vector));
+    }
+
+    /**
+    * Gets a class registry entry by 16 bit type ids in base64 format.
+    * This method takes the ids concatenated into as a single string.
+    */
+    const ClassRegistryEntry * getByIds(const std::string& base64ids) const {
+
+        if (base64ids.size() < 3)
+            return 0;
+
+        const std::map<std::string, ClassRegistryEntry>::const_iterator it = m_typeIds16bitBase642Entry.find(base64ids);
+        if (it != m_typeIds16bitBase642Entry.end())
+            return &it->second;
+
+        return getByIds(base64ids.substr(0, base64ids.size() - 3));
+
     }
 
     const EntryMap& entries() const {

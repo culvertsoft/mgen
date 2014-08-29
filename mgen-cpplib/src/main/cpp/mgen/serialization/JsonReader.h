@@ -85,7 +85,7 @@ private:
         if (node.IsNull())
             return 0;
 
-        const std::vector<std::string>& ids = readIds(node);
+        const std::string& ids = readIds(node);
 
         const ClassRegistryEntry * entry = serialutil::getCompatibleEntry(m_clsReg, ids, constrained, expectTypeId);
 
@@ -96,26 +96,15 @@ private:
 
     }
 
-    const std::vector<std::string> readIds(const Node& node) {
-        static const std::vector<std::string> emptyIds(0);
-
+    const std::string readIds(const Node& node) {
         const Node& v = node["__t"];
         if (v.IsString()) {
-
-            const char * str = v.GetString();
-            const int nTypeIds = v.GetStringLength() / 3;
-
-            std::vector<std::string> ids(nTypeIds);
-
-            for (int i = 0; i < nTypeIds; i++)
-                ids[i].assign(str + i * 3, 3);
-
-            return ids;
-
-        } else {
-            return emptyIds;
+            return std::string(v.GetString(), v.GetStringLength());
         }
-
+        else {
+            static const std::string emptyString;
+            return emptyString;
+        }
     }
 
     template<typename T>
@@ -197,24 +186,12 @@ private:
         }
     }
 
-    void read(char & v, const Node& node) {
-        v = readFixedPointNumber<char>(node);
-    }
-    void read(short & v, const Node& node) {
-        v = readFixedPointNumber<short>(node);
-    }
-    void read(int& v, const Node& node) {
-        v = readFixedPointNumber<int>(node);
-    }
-    void read(long long& v, const Node& node) {
-        v = readFixedPointNumber<long long>(node);
-    }
-    void read(float & v, const Node& node) {
-        v = readFloatingPointNumber<float>(node);
-    }
-    void read(double & v, const Node& node) {
-        v = readFloatingPointNumber<double>(node);
-    }
+    void read(char & v, const Node& node) { v = readFixedPointNumber<char>(node); }
+    void read(short & v, const Node& node) { v = readFixedPointNumber<short>(node); }
+    void read(int& v, const Node& node) { v = readFixedPointNumber<int>(node); }
+    void read(long long& v, const Node& node) { v = readFixedPointNumber<long long>(node); }
+    void read(float & v, const Node& node) { v = readFloatingPointNumber<float>(node); }
+    void read(double & v, const Node& node) { v = readFloatingPointNumber<double>(node); }
 
     void read(std::string& v, const Node& node) {
         if (node.IsString()) {

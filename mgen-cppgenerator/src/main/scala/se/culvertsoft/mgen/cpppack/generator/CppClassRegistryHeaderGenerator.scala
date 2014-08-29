@@ -51,6 +51,11 @@ object CppClassRegistryHeaderGenerator extends CppClassRegistryGenerator(Header)
     ln(1, s"const mgen::ClassRegistryEntry * getByIds(const std::vector<std::string>& base64ids_vector) const {")
     ln(2, s"return mgen::ClassRegistryBase::getByIds(base64ids_vector);")
     ln(1, s"}")
+    endl()
+    ln(1, s"const mgen::ClassRegistryEntry * getByIds(const std::string& base64ids_concatenated) const {")
+    ln(2, s"return mgen::ClassRegistryBase::getByIds(base64ids_concatenated);")
+    ln(1, s"}")
+    endl()
   }
 
 }

@@ -56,9 +56,9 @@ public:
     }
 
     /**
-     * A way to determine if this ClassRegistryEntry is a sub class of the
+     * A way to determine if this ClassRegistryEntry represents a sub class of the
      * provided 64 bit type id. This is useful when reading objects from streams
-     * and wanting to verify that the read objects are of the currect type to
+     * and wanting to verify that the read objects are of the correct type to
      * match the field they are being read to.
      */
     bool isInstanceOfTypeId(const long long typeId) const {

@@ -28,7 +28,7 @@ public:
      * Wraps the provided vector. The bytes are not copied. The vector size is 
      * expected not to change. 
      */
-	MemInputStream(const std::vector<char>& input, const int offset = 0) :
+    MemInputStream(const std::vector<char>& input, const int offset = 0) :
             m_input(&input[0]), 
             m_size(input.size()),
             m_offset(offset) {
@@ -38,7 +38,7 @@ public:
      * Wraps the provided string. The bytes are not copied. The string size is 
      * expected not to change. 
      */
-	MemInputStream(const std::string& input, const int offset = 0) :
+    MemInputStream(const std::string& input, const int offset = 0) :
             m_input(&input[0]), 
             m_size(input.size()),
             m_offset(offset) {
@@ -47,7 +47,7 @@ public:
     /**
      * Wraps the provided pointer. The bytes are not copied.
      */
-	MemInputStream(const char * input, const int size, const int offset = 0) :
+    MemInputStream(const char * input, const int size, const int offset = 0) :
             m_input(input), 
             m_size(size),
             m_offset(offset) {
@@ -56,7 +56,7 @@ public:
     /**
      * Wraps the provided pointer. The bytes are not copied.
      */
-	MemInputStream& setInput(const char * input, const int size, const int offset = 0) { 
+    MemInputStream& setInput(const char * input, const int size, const int offset = 0) { 
         m_input = input;
         m_size = size;
         m_offset = offset;
@@ -66,14 +66,14 @@ public:
     /**
      * Wraps the provided string. The bytes are not copied.
      */
-	MemInputStream& setInput(const std::string& input, const int offset = 0) { 
+    MemInputStream& setInput(const std::string& input, const int offset = 0) { 
         return setInput(&input[0], input.size(), offset);
     }
     
     /**
      * Wraps the provided vector. The bytes are not copied.
      */
-	MemInputStream& setInput(const std::vector<char>& input, const int offset = 0) {
+    MemInputStream& setInput(const std::vector<char>& input, const int offset = 0) {
         return setInput(&input[0], input.size(), offset);
     }
     
@@ -84,7 +84,7 @@ public:
      * after calling reset() will start reading the first bytes again 
      * (at offset 0).
      */
-	MemInputStream& reset() {
+    MemInputStream& reset() {
         m_offset = 0;
 		return *this;
     }
