@@ -2,7 +2,7 @@ package se.culvertsoft.mgen.javapack.classes;
 
 /**
  * An interface that represents a way to default construct an instance of an
- * MGen object. Registered in class registries to facilitate runtime
+ * MGen class. Registered in class registries to facilitate runtime
  * instantiation of object of generated classes primarily during
  * deserialization.
  */
