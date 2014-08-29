@@ -27,8 +27,8 @@ BEGIN_TEST_GROUP(WhitepaperExample)
 
 BEGIN_TEST("Example1")
 
-// Create some objects and set some fields on these. We can use
-// generated setter-functions or constructors
+	// Create some objects and set some fields on these. We can use
+	// generated setter-functions or constructors
 	Car car1, car2;
 	car1.setBrand("Ford").setTopSpeed(321);
 	car2.setBrand("BMW").setTopSpeed(123);
