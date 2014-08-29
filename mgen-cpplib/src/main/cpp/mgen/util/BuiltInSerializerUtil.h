@@ -15,9 +15,16 @@
 namespace mgen {
 namespace serialutil {
 
+/**
+ * Convenience macro for throwing exceptions with meaningful error messages.
+ * Undef:ed at the end of this header as it's only intended to be used internally.
+ */
 #define throw_unexpected_type(expect, actual) \
     throw UnexpectedTypeException(toString("Unexpected type! -> Expected type ").append(toString(expect)).append(" but got type ").append(toString(actual)))
 
+/**
+ * Convenience function for throwing exceptions with meaningful error messages.
+ */
 template <typename ClassRegistryType, typename MGenType, typename IdsType>
 void throwByUnexpectedIds(
         const ClassRegistryType& classReg,
@@ -31,6 +38,10 @@ void throwByUnexpectedIds(
     }
 }
 
+/**
+ * Convenience function for reading object fields with identical code from
+ * all MGen Readers.
+ */
 template<typename ReaderType, typename ClassRegType, typename ContextType>
 MGenBase * readObjInternal(
         ReaderType& reader,
@@ -55,6 +66,11 @@ MGenBase * readObjInternal(
 
 }
 
+/**
+ * Convenience function for determining the class of the object being 
+ * read from a stream. This function is written here outside the Readers,
+ * so that the same code can be reused for all MGen Readers.
+ */
 template<typename ClassRegType, typename IdsType>
 const ClassRegistryEntry * getCompatibleEntry(
         const ClassRegType& classReg,
@@ -95,6 +111,11 @@ const ClassRegistryEntry * getCompatibleEntry(
 
 }
 
+/**
+ * Convenience function for checking that the class of the object being 
+ * read from a stream is of expected type. This function is written here outside the Readers,
+ * so that the same code can be reused for all MGen Readers.
+ */
 template<typename MGenClassRegType, typename MGenType, typename IdsType>
 void checkExpType(
         const MGenClassRegType& classReg,
@@ -117,6 +138,11 @@ void checkExpType(
 
 }
 
+/**
+ * Convenience function for checking that the class of the object being 
+ * read from a stream is of expected type. This function is written here outside the Readers,
+ * so that the same code can be reused for all MGen Readers.
+ */
 template<typename MGenClassRegType, typename MGenType>
 void checkExpType(
         const MGenClassRegType& classReg,
@@ -125,6 +151,11 @@ void checkExpType(
     checkExpType(classReg, o, MGenType::_type_ids_16bit_base64(), actualIds);
 }
 
+/**
+ * Convenience function for checking that the class of the object being 
+ * read from a stream is of expected type. This function is written here outside the Readers,
+ * so that the same code can be reused for all MGen Readers.
+ */
 template<typename MGenClassRegType, typename MGenType>
 void checkExpType(
     const MGenClassRegType& classReg,
@@ -133,6 +164,11 @@ void checkExpType(
     checkExpType(classReg, o, MGenType::_type_ids_16bit_base64_string(), actualIds);
 }
 
+/**
+ * Convenience function for checking that the class of the object being 
+ * read from a stream is of expected type. This function is written here outside the Readers,
+ * so that the same code can be reused for all MGen Readers.
+ */
 template<typename MGenClassRegType, typename MGenType>
 void checkExpType(
         const MGenClassRegType& classReg,

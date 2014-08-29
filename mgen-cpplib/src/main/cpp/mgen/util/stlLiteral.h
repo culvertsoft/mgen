@@ -6,9 +6,13 @@
 
 namespace mgen {
 
+/**
+ * Utility class for creating std::vectors in one line.
+ */
 template<typename T>
 class make_vector {
 public:
+
     make_vector() {
     }
 
@@ -38,6 +42,9 @@ private:
     std::vector<T> m_data;
 };
 
+/**
+ * Utility class for creating std::maps in one line.
+ */
 template<typename K, typename V>
 class make_map {
 public:

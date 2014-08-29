@@ -15,8 +15,37 @@
 namespace mgen {
 namespace missingfields {
 
+/**
+ * Utility method for getting all the required fields of an MGen object.
+ */
 inline std::vector<Field> required(const MGenBase& object, const FieldSetDepth depth = SHALLOW);
+
+/**
+ * Utility method for getting all the required fields of an MGen object 
+ */
 inline std::string requiredAsString(const MGenBase& object, const FieldSetDepth depth = SHALLOW);
+
+/**
+ * Utility function for MGen readers and writers to check that all required fields of classes
+ * being written or read are set. Throws SerializationException if any required fields are
+ * not set.
+ */
+template<typename MGenType>
+inline void ensureNoMissingFields(const MGenType& object);
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
+template<typename MGenType>
+inline void ensureNoMissingFields(const MGenType& object) {
+    if (!object._validate(SHALLOW)) {
+        const std::string missingFieldsString = requiredAsString(object);
+        throw SerializationException(
+                std::string("Missing required fields ").append(missingFieldsString).append(
+                        " for object of type: ").append(object._typeName()));
+    }
+}
 
 inline std::vector<Field> required(const MGenBase& object, const FieldSetDepth depth) {
 
@@ -48,16 +77,6 @@ inline std::string requiredAsString(const MGenBase& object, const FieldSetDepth 
 
     return missingFieldsString;
 
-}
-
-template<typename MGenType>
-inline void ensureNoMissingFields(const MGenType& object) {
-    if (!object._validate(SHALLOW)) {
-        const std::string missingFieldsString = requiredAsString(object);
-        throw SerializationException(
-                std::string("Missing required fields ").append(missingFieldsString).append(
-                        " for object of type: ").append(object._typeName()));
-    }
 }
 
 } /* namespace missingfields */
