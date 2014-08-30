@@ -1,10 +1,13 @@
 package se.culvertsoft.mgen.api.model;
 
 /**
- * Represents a boolean type
+ * Represents a boolean field type
  */
 public class BoolType extends PrimitiveType {
 
+	/**
+	 * Creates a new boolean type
+	 */
 	private BoolType() {
 		super(TypeEnum.BOOL, boolean.class, "bool");
 	}

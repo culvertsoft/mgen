@@ -7,16 +7,25 @@ import java.lang.reflect.Array;
  */
 public class ArrayType extends ListOrArrayType {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String fullName() {
 		return "array[" + elementType().fullName() + "]";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String shortName() {
 		return "array[" + elementType().shortName() + "]";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isLinked() {
 		return elementType().isLinked();
@@ -50,16 +59,28 @@ public class ArrayType extends ListOrArrayType {
 		}
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean containsUserDefinedType() {
 		return elementType().containsUserDefinedType();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Class<?> classOf() {
 		return m_cls;
 	}
 
+	/**
+	 * Private helper called during construction to get the java class that this
+	 * ArrayType represents.
+	 * 
+	 * @return The java class that this ArrayType represents
+	 */
 	private Class<?> doClassOf() {
 
 		switch (elementType().typeEnum()) {
@@ -85,12 +106,18 @@ public class ArrayType extends ListOrArrayType {
 		}
 	}
 
-	private final Class<?> m_cls;
-
+	/**
+	 * Creates a new ArrayType
+	 * 
+	 * @param elementType
+	 *            The element type of this ArrayType
+	 */
 	public ArrayType(final Type elementType) {
 		super(TypeEnum.ARRAY, elementType);
 		m_cls = doClassOf();
 	}
+
+	private final Class<?> m_cls;
 
 	public static final Object EMPTY_BOOL_ARRAY = new boolean[0];
 	public static final Object EMPTY_INT8_ARRAY = new byte[0];
