@@ -13,6 +13,10 @@ import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 
+/**
+ * Utility class to be used internally by generated code only. Used for deep
+ * copying MGen objects.
+ */
 public class DeepCopyer {
 
 	/***************************************************************

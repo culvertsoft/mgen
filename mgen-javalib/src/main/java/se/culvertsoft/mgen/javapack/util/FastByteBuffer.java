@@ -3,10 +3,15 @@ package se.culvertsoft.mgen.javapack.util;
 import java.io.OutputStream;
 
 /**
- * Wrote this because standard java types turned out slow. This class alone
- * doubled binary writer performance.
+ * Fast utility OutputStream for bytes used by the MGen BinaryWriter. This
+ * buffer can be used as a replacement for a ByteArrayOutputStream to improve
+ * performance. The BinaryWriter uses this by default as an internal buffer
+ * before flushing written bytes to the final data output stream.
  * 
- * @author GiGurra
+ * Using this class instead of Javas ByteArrayOutputStream more than doubled
+ * binary writing performance in the BinaryWriter.
+ * 
+ * Not intended to be used except by the MGen BinaryWriter.
  */
 public final class FastByteBuffer extends OutputStream {
 

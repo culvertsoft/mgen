@@ -42,9 +42,8 @@ import se.culvertsoft.mgen.javapack.util.Varint;
 
 /**
  * A class for reading data streams written in the MGen binary wire format.
- * BinaryReader objects are constructed with two type parameters: MGenStreamType
- * and ClassRegistryType. These specify which type of data input stream is to be
- * read from and what classes can be marshalled, respectively.
+ * BinaryReader objects must be constructed with a ClassRegistry object to
+ * facilitate object marshaling.
  */
 public class BinaryReader extends BuiltInReader {
 

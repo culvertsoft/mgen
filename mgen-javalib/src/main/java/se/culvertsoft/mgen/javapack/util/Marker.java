@@ -11,6 +11,10 @@ import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
 
+/**
+ * Utility class to be used internally by generated code only. Used for marking
+ * fields of MGen objects as set. Used for testing.
+ */
 public class Marker {
 
 	/***************************************************************
@@ -34,10 +38,7 @@ public class Marker {
 		setEntries(a, ((ListType) type).elementType());
 	}
 
-	public static
-			<K, V>
-			void
-			setFieldSetDeep(final Map<K, V> a, final Type type) {
+	public static <K, V> void setFieldSetDeep(final Map<K, V> a, final Type type) {
 		setMap(a, (MapType) type);
 	}
 

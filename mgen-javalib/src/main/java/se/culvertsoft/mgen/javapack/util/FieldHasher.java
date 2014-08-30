@@ -10,6 +10,11 @@ import se.culvertsoft.mgen.api.model.MapType;
 import se.culvertsoft.mgen.api.model.Type;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 
+/**
+ * Utility class to be used internally by generated code only. Used for deep
+ * hashing MGen objects (=calculating their hashCodes for their hashCode()
+ * method).
+ */
 public class FieldHasher {
 
 	/***************************************************************
@@ -132,8 +137,7 @@ public class FieldHasher {
 		int result = 1;
 
 		for (Object element : a)
-			result = 31 * result
-					+ (element == null ? 0 : calcObject(element, elemType));
+			result = 31 * result + (element == null ? 0 : calcObject(element, elemType));
 
 		return result;
 	}
@@ -215,9 +219,7 @@ public class FieldHasher {
 
 		for (final Map.Entry<?, ?> e : a.entrySet()) {
 			h += (e.getKey() == null ? 0 : calcObject(e.getKey(), keyType))
-					^ (e.getValue() == null ? 0 : calcObject(
-							e.getValue(),
-							valueType));
+					^ (e.getValue() == null ? 0 : calcObject(e.getValue(), valueType));
 		}
 
 		return h;
@@ -234,8 +236,7 @@ public class FieldHasher {
 		final Type elemType = listType.elementType();
 
 		for (final Object element : a)
-			result = 31 * result
-					+ (element == null ? 0 : calcObject(element, elemType));
+			result = 31 * result + (element == null ? 0 : calcObject(element, elemType));
 
 		return result;
 

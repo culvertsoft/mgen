@@ -10,6 +10,10 @@ import se.culvertsoft.mgen.javapack.serialization.BuiltInWriter;
 import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter;
 import se.culvertsoft.mgen.javapack.serialization.JsonWriter;
 
+/**
+ * Utility class for implementing toString() for generated MGen object classes.
+ * Not intended to be used except from generated code.
+ */
 public class Stringifyer {
 
 	public static final ClassRegistryBase REGISTRY = new EmptyClassRegistry();

@@ -34,10 +34,7 @@ import se.culvertsoft.mgen.javapack.util.FastByteBuffer;
 import se.culvertsoft.mgen.javapack.util.Varint;
 
 /**
- * A class for writing data streams in the MGen binary wire format. BinaryWriter
- * objects are constructed with two type parameters: MGenStreamType and
- * ClassRegistryType. These specify which type of data output stream is to be
- * written to and what classes can be written, respectively.
+ * A class for writing data streams in the MGen binary wire format.
  */
 public class BinaryWriter extends BuiltInWriter {
 
@@ -113,7 +110,6 @@ public class BinaryWriter extends BuiltInWriter {
 		m_streamOut = stream;
 		return this;
 	}
-
 
 	/**
 	 * {@inheritDoc}

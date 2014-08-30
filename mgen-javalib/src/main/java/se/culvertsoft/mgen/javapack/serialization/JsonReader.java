@@ -32,10 +32,9 @@ import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 import se.culvertsoft.mgen.javapack.serialization.mgen2jsonsimple.MGenJSONParser;
 
 /**
- * A class for reading data streams written in JSON. JsonReader objects are
- * constructed with two type parameters: MGenStreamType and ClassRegistryType.
- * These specify which type of data input stream is to be read from and what
- * classes can be marshalled, respectively.
+ * A class for reading data streams written in JSON format. JsonReader objects
+ * must be constructed with a ClassRegistry object to facilitate object
+ * marshaling.
  */
 public class JsonReader extends BuiltInReader {
 

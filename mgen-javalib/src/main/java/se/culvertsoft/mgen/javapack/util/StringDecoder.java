@@ -9,6 +9,10 @@ import java.nio.charset.CharsetDecoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 
+/**
+ * Utility class for decoding UTF8-streams in the built-in MGen readers. Not
+ * intended to be used except from MGen Readers.
+ */
 public class StringDecoder {
 
 	private final ByteBuffer m_inputBuffer;

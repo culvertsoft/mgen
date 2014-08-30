@@ -8,6 +8,10 @@ import java.nio.charset.CharsetEncoder;
 import java.nio.charset.CoderResult;
 import java.nio.charset.CodingErrorAction;
 
+/**
+ * Utility class for encoding UTF8-streams in the built-in MGen writers. Not
+ * intended to be used except from MGen Writers.
+ */
 public class StringEncoder {
 
 	private ByteBuffer m_buffer;
