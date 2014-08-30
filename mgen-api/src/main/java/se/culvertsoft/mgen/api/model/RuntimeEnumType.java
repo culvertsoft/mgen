@@ -15,21 +15,33 @@ public abstract class RuntimeEnumType extends UserDefinedType {
 	 */
 	public abstract Enum<?> get(final int entryIntvalue);
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String shortName() {
 		return m_shortName;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String fullName() {
 		return m_fullName;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isLinked() {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean containsUserDefinedType() {
 		return false;

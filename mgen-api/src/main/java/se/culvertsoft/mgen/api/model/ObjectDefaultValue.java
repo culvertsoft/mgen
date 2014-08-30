@@ -8,7 +8,7 @@ import java.util.Map;
 public class ObjectDefaultValue extends DefaultValue {
 
 	/**
-	 * The expected type of this default value
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ClassType expectedType() {
@@ -45,6 +45,9 @@ public class ObjectDefaultValue extends DefaultValue {
 		return m_overriddenDefaultValues;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return m_actualType.fullName() + ": {" + m_overriddenDefaultValues + "}";

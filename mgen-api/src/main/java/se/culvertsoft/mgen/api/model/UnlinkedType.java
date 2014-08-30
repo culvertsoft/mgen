@@ -21,26 +21,41 @@ public class UnlinkedType extends UserDefinedType {
 
 	private final String m_name;
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String shortName() {
 		return m_name;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String fullName() {
 		return m_name;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isLinked() {
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean containsUserDefinedType() {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Class<?> classOf() {
 		return null;

@@ -8,7 +8,7 @@ import java.util.Map;
 public class MapDefaultValue extends DefaultValue {
 
 	/**
-	 * The type of this default value
+	 * {@inheritDoc}
 	 */
 	@Override
 	public MapType expectedType() {
@@ -22,6 +22,9 @@ public class MapDefaultValue extends DefaultValue {
 		return m_values;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return "{" + m_values + "}";

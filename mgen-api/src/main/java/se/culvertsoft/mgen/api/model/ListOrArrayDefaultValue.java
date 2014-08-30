@@ -8,7 +8,7 @@ import java.util.List;
 public class ListOrArrayDefaultValue extends DefaultValue {
 
 	/**
-	 * The type of this default value
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ListOrArrayType expectedType() {
@@ -33,6 +33,9 @@ public class ListOrArrayDefaultValue extends DefaultValue {
 		m_values = values;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return "[" + m_values + "]";

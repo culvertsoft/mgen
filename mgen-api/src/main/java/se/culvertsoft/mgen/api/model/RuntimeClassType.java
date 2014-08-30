@@ -13,30 +13,48 @@ public class RuntimeClassType extends UserDefinedType {
 		return m_id;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	public boolean isLinked() {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String fullName() {
 		return m_fullName;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String shortName() {
 		return fullName();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Class<?> classOf() {
 		return m_cls;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return m_fullName;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean containsUserDefinedType() {
 		return true;

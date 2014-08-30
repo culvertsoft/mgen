@@ -9,8 +9,6 @@ import se.culvertsoft.mgen.api.exceptions.AnalysisException;
 /**
  * A project represents a set of modules (see Module) parsed by the MGen
  * Compiler through a Parser.
- * 
- * @author GiGurra
  */
 public class Project extends ParsedSources {
 

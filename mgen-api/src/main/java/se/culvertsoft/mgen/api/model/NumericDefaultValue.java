@@ -6,7 +6,7 @@ package se.culvertsoft.mgen.api.model;
 public class NumericDefaultValue extends DefaultValue {
 
 	/**
-	 * The type of this default value
+	 * {@inheritDoc}
 	 */
 	@Override
 	public PrimitiveType expectedType() {
@@ -27,6 +27,9 @@ public class NumericDefaultValue extends DefaultValue {
 		return m_value.longValue();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return m_value.toString();

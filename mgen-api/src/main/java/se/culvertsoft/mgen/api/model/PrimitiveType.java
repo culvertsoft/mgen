@@ -5,26 +5,41 @@ package se.culvertsoft.mgen.api.model;
  */
 public abstract class PrimitiveType extends Type {
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String fullName() {
 		return m_name;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String shortName() {
 		return m_name;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isLinked() {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean containsUserDefinedType() {
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Class<?> classOf() {
 		return m_cls;

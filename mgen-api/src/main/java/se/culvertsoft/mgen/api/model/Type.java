@@ -69,9 +69,7 @@ public abstract class Type {
 	public abstract Class<?> classOf();
 
 	/**
-	 * A hash code implemented as fullName().hashCode()
-	 * 
-	 * @return Hash code of this Type
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {
@@ -79,9 +77,7 @@ public abstract class Type {
 	}
 
 	/**
-	 * Returns the fully qualified name of this type (e.g. com.mypackage.Type)
-	 * 
-	 * @return The full (qualified) name of this type
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {

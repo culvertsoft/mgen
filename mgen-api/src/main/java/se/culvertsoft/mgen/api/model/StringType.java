@@ -5,35 +5,50 @@ package se.culvertsoft.mgen.api.model;
  */
 public class StringType extends Type {
 
-	private StringType() {
-		super(TypeEnum.STRING);
-	}
-
 	public final static StringType INSTANCE = new StringType();
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String shortName() {
 		return "string";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String fullName() {
 		return "string";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isLinked() {
 		return true;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean containsUserDefinedType() {
 		return false;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public Class<?> classOf() {
 		return String.class;
+	}
+
+	private StringType() {
+		super(TypeEnum.STRING);
 	}
 
 }

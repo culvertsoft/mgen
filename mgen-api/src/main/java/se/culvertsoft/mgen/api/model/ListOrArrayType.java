@@ -15,11 +15,17 @@ public abstract class ListOrArrayType extends Type {
 		return m_elementType;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean isLinked() {
 		return m_elementType.isLinked();
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean containsUserDefinedType() {
 		return elementType().containsUserDefinedType();

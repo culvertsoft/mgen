@@ -6,7 +6,7 @@ package se.culvertsoft.mgen.api.model;
 public class StringDefaultValue extends DefaultValue {
 
 	/**
-	 * The type of this default value
+	 * {@inheritDoc}
 	 */
 	@Override
 	public StringType expectedType() {
@@ -20,6 +20,9 @@ public class StringDefaultValue extends DefaultValue {
 		return m_value;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return '"' + m_value + '"';

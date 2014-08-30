@@ -3,35 +3,58 @@ package se.culvertsoft.mgen.api.model;
 import java.util.Map;
 
 /**
- * Represents a code generator class selected by the compiler from IDL
- * specifications.
+ * Represents a code generator class selected by the compiler.
+ * GeneratorDescriptors are created for each <Generator> section in the project
+ * files of the IDL.
  */
 public class GeneratorDescriptor {
 
 	/**
-	 * The name of this generator. Note this is not the class name but just an
-	 * identifier for the compiler.
+	 * Gets the name of this generator. This is not the class name but just an
+	 * identifier for the compiler (e.g. C++, Java, JavaScript, etc).
+	 * 
+	 * @return The name of this generator
 	 */
 	public String getGeneratorName() {
 		return m_generatorName;
 	}
 
 	/**
-	 * The class path/qualified class name of the generator that this descriptor
-	 * represents.
+	 * Gets the class path/qualified class name of the generator that this
+	 * descriptor represents.
+	 * 
+	 * @return The class path/qualified class name of the generator
 	 */
 	public String getGeneratorClassPath() {
 		return m_generatorClassName;
 	}
 
 	/**
-	 * The additional settings specified in the IDL to be used when running this
-	 * generator.
+	 * Gets the additional settings specified for this generator. Usually these
+	 * settings are specified in the IDL together with the generator itself.
+	 * 
+	 * @return The additional settings specified for this generator
 	 */
 	public Map<String, String> getGeneratorSettings() {
 		return m_generatorSettings;
 	}
 
+	/**
+	 * Creates a new GeneratorDescriptor
+	 * 
+	 * @param generatorName
+	 *            The name of this generator. This is not the class name but
+	 *            just an identifier for the compiler (e.g. C++, Java,
+	 *            JavaScript, etc).
+	 * 
+	 * @param generatorClassName
+	 *            The qualified class name of the generator. Needs to be
+	 *            precise, because it will be used to later instantiate the
+	 *            generator.
+	 * 
+	 * @param generatorSettings
+	 *            The additional settings specified for this generator
+	 */
 	public GeneratorDescriptor(
 			final String generatorName,
 			final String generatorClassName,
@@ -41,30 +64,33 @@ public class GeneratorDescriptor {
 		m_generatorSettings = generatorSettings;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
-		return "SelectedGenerator [generatorName=" + m_generatorName
-				+ ", generatorClassName=" + m_generatorClassName
-				+ ", generatorSettings=" + m_generatorSettings + "]";
+		return "SelectedGenerator [generatorName=" + m_generatorName + ", generatorClassName="
+				+ m_generatorClassName + ", generatorSettings=" + m_generatorSettings + "]";
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((m_generatorClassName == null) ? 0 : m_generatorClassName
-						.hashCode());
 		result = prime * result
-				+ ((m_generatorName == null) ? 0 : m_generatorName.hashCode());
-		result = prime
-				* result
-				+ ((m_generatorSettings == null) ? 0 : m_generatorSettings
-						.hashCode());
+				+ ((m_generatorClassName == null) ? 0 : m_generatorClassName.hashCode());
+		result = prime * result + ((m_generatorName == null) ? 0 : m_generatorName.hashCode());
+		result = prime * result
+				+ ((m_generatorSettings == null) ? 0 : m_generatorSettings.hashCode());
 		return result;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
