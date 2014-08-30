@@ -1,5 +1,9 @@
 package se.culvertsoft.mgen.api.exceptions;
 
+/**
+ * Exception representing an error that occurred because two or more classes or
+ * fields have conflicting IDs and/or names.
+ */
 public class TypeConflictException extends MGenException {
 
 	private static final long serialVersionUID = 1L;

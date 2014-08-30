@@ -3,7 +3,7 @@ package se.culvertsoft.mgen.api.model;
 import java.lang.reflect.Array;
 
 /**
- * Interface for array types
+ * Represents an Array in the MGen compiler's data model
  */
 public class ArrayType extends ListOrArrayType {
 
@@ -81,8 +81,7 @@ public class ArrayType extends ListOrArrayType {
 			return String[].class;
 		default:
 			final Class<?> elemCls = elementType().classOf();
-			return elemCls != null ? Array.newInstance(elemCls, 0).getClass()
-					: null;
+			return elemCls != null ? Array.newInstance(elemCls, 0).getClass() : null;
 		}
 	}
 

@@ -1,5 +1,9 @@
 package se.culvertsoft.mgen.api.exceptions;
 
+/**
+ * Exception representing an error that occurred during IDL analysis in the MGen
+ * compiler.
+ */
 public class AnalysisException extends MGenException {
 
 	private static final long serialVersionUID = 1L;
