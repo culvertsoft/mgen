@@ -7,13 +7,15 @@ public class EnumDefaultValue extends DefaultValue {
 
 	/**
 	 * Returns the enum value/entry represented by this default value object
+	 * 
+	 * @return The enum value/entry represented by this default value object
 	 */
 	public EnumEntry value() {
 		return m_value;
 	}
 
 	/**
-	 * The type of this enum default value
+	 * {@inheritDoc}
 	 */
 	@Override
 	public EnumType expectedType() {
@@ -23,16 +25,34 @@ public class EnumDefaultValue extends DefaultValue {
 	/**
 	 * Returns if the type of this default value is defined in the same scope it
 	 * is referenced from.
+	 * 
+	 * @return If the type of this default value is defined in the same scope it
+	 *         is referenced from.
 	 */
 	public boolean isLocalDefinition() {
 		return m_isLocalDefinition;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return m_value.toString();
 	}
 
+	/**
+	 * Creates a new enum default value
+	 * 
+	 * @param typ
+	 *            The enum type of this default value
+	 * 
+	 * @param entry
+	 *            The enum value/entry of this default value
+	 * 
+	 * @param referencedFrom
+	 *            The class from which this default value is referenced
+	 */
 	public EnumDefaultValue(
 			final EnumType typ,
 			final EnumEntry entry,

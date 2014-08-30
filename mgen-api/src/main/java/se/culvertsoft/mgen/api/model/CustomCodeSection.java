@@ -27,6 +27,15 @@ public class CustomCodeSection {
 		return m_endKey;
 	}
 
+	/**
+	 * Creates a new custom code section
+	 * 
+	 * @param beginKey
+	 *            The string which indicates the start of the section
+	 * 
+	 * @param endKey
+	 *            The string which indicates the end of the section
+	 */
 	public CustomCodeSection(final String beginKey, final String endKey) {
 		m_beginKey = beginKey;
 		m_endKey = endKey;

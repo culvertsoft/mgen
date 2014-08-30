@@ -1,10 +1,7 @@
 package se.culvertsoft.mgen.api.model;
 
 /**
- * Represents an entry in an enumeration
- * 
- * @author GiGurra
- * 
+ * Represents an entry/value in an enumeration list.
  */
 public class EnumEntry {
 
@@ -26,11 +23,23 @@ public class EnumEntry {
 		return m_constant;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return m_constant;
 	}
 
+	/**
+	 * Creates a new enum entry/value for an enum list
+	 * 
+	 * @param name
+	 *            The name of the entry
+	 * 
+	 * @param constant
+	 *            The value/constant of the entry
+	 */
 	public EnumEntry(final String name, final String constant) {
 		m_name = name;
 		m_constant = constant;

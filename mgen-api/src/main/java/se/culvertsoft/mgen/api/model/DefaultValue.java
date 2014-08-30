@@ -6,14 +6,18 @@ package se.culvertsoft.mgen.api.model;
 public class DefaultValue {
 
 	/**
-	 * The expected type of this default value
+	 * Gets the expected type of this default value
+	 * 
+	 * @return The expected type of this default value
 	 */
 	public Type expectedType() {
 		return m_expectedType;
 	}
 
 	/**
-	 * The class from which this default value is referenced
+	 * Gets the class from which this default value is referenced
+	 * 
+	 * @return The class from which this default value is referenced
 	 */
 	public ClassType referencedFrom() {
 		return m_referencedFrom;
@@ -23,13 +27,24 @@ public class DefaultValue {
 	 * If the compiler has yet linked this default values. Linking means the
 	 * compiler running its second pass where custom class and enum types are
 	 * linked to fields (going from being just names/strings).
+	 * 
+	 * @return If this default value is yet linked
 	 */
 	public boolean isLinked() {
 		return m_expectedType != null;
 	}
 
-	protected DefaultValue(final Type typ, final ClassType referencedFrom) {
-		m_expectedType = typ;
+	/**
+	 * Creates a new default value
+	 * 
+	 * @param expectedType
+	 *            The expected type of this default value
+	 * 
+	 * @param referencedFrom
+	 *            The class from where this default value is referenced
+	 */
+	protected DefaultValue(final Type expectedType, final ClassType referencedFrom) {
+		m_expectedType = expectedType;
 		m_referencedFrom = referencedFrom;
 	}
 
