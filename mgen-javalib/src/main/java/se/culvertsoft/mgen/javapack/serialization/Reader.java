@@ -16,8 +16,8 @@ import se.culvertsoft.mgen.javapack.exceptions.UnexpectedTypeException;
 public interface Reader {
 
 	/**
-	 * Read API for users. This method should be called to initiate the read of
-	 * an MGen object from a Reader.
+	 * Read API for users. This method reads an MGen object from the underlying
+	 * data input source.
 	 * 
 	 * @return The MGen object read from the stream, or null if the type of the
 	 *         object on the stream was unknown (Readers then skip past the
@@ -25,7 +25,7 @@ public interface Reader {
 	 * 
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream,
-	 *             such as reacing EOF before expected.
+	 *             such as reaching EOF before expected.
 	 */
 	public MGenBase readObject() throws IOException;
 
@@ -40,7 +40,7 @@ public interface Reader {
 	 * 
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream,
-	 *             such as reacing EOF before expected.
+	 *             such as reaching EOF before expected.
 	 * 
 	 * @throws UnexpectedTypeException
 	 *             if the object read from the stream is not of specified type T

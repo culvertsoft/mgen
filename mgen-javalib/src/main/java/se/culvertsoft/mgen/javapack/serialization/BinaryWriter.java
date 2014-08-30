@@ -114,19 +114,9 @@ public class BinaryWriter extends BuiltInWriter {
 		return this;
 	}
 
+
 	/**
-	 * Writes an MGen object to the underlying output stream. Primary interface
-	 * method for writing MGen objects to this writer. The class of the object
-	 * must be registered in class registry provided to this BinaryWriter when
-	 * it was constructed (this is always the case unless you have multiple data
-	 * models in parallel).
-	 * 
-	 * @param o
-	 *            The object to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeObject(final MGenBase o) throws IOException {
@@ -137,20 +127,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * When this writer is visiting an object it should write, this method will
-	 * be called before starting to visit any fields. The purpose is mainly to
-	 * let this writer know how many fields will follow, so that this value can
-	 * be written to the output stream.
-	 * 
-	 * @param object
-	 *            The object being written
-	 * 
-	 * @param nFields
-	 *            The number of selected fields for writing
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void beginWrite(final MGenBase object, final int nFields) throws IOException {
@@ -168,26 +145,14 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method called when all selected fields of an object have been visited. In
-	 * this writer implementation, it doesn't do anything, but writers for other
-	 * wire formats may use this method.
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void finishWrite() {
 	}
 
 	/**
-	 * Method for writing a boolean field
-	 * 
-	 * @param b
-	 *            The value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeBooleanField(final boolean b, final Field field) throws IOException {
@@ -196,17 +161,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing an int8 field
-	 * 
-	 * @param b
-	 *            The value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeInt8Field(final byte b, final Field field) throws IOException {
@@ -215,17 +170,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing an int16 field
-	 * 
-	 * @param s
-	 *            The value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeInt16Field(final short s, final Field field) throws IOException {
@@ -234,17 +179,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing an int32 field
-	 * 
-	 * @param i
-	 *            The value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeInt32Field(final int i, final Field field) throws IOException {
@@ -253,17 +188,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing an int64 field
-	 * 
-	 * @param l
-	 *            The value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeInt64Field(final long l, final Field field) throws IOException {
@@ -272,17 +197,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing a float32 field
-	 * 
-	 * @param f
-	 *            The value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeFloat32Field(final float f, final Field field) throws IOException {
@@ -291,17 +206,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing a float64 field
-	 * 
-	 * @param d
-	 *            The value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeFloat64Field(final double d, final Field field) throws IOException {
@@ -310,17 +215,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing a string field
-	 * 
-	 * @param s
-	 *            The value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeStringField(final String s, final Field field) throws IOException {
@@ -328,19 +223,6 @@ public class BinaryWriter extends BuiltInWriter {
 		writeString(s, false);
 	}
 
-	/**
-	 * Method for writing a list field
-	 * 
-	 * @param list
-	 *            The list to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
-	 */
 	@Override
 	public void writeListField(final ArrayList<Object> list, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_LIST);
@@ -348,17 +230,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing a map field
-	 * 
-	 * @param map
-	 *            The map to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeMapField(final HashMap<Object, Object> map, final Field field)
@@ -368,17 +240,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing an array field
-	 * 
-	 * @param array
-	 *            The array to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeArrayField(final Object array, final Field field) throws IOException {
@@ -387,17 +249,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing an enum field
-	 * 
-	 * @param e
-	 *            The enum value to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeEnumField(final Enum<?> e, final Field field) throws IOException {
@@ -406,17 +258,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	/**
-	 * Method for writing an MGen object field
-	 * 
-	 * @param o
-	 *            The object to write
-	 * 
-	 * @param field
-	 *            The field to write
-	 * 
-	 * @throws IOException
-	 *             If an IOException occurs when writing to the the underlying
-	 *             output stream
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void writeMGenObjectField(final MGenBase o, final Field field) throws IOException {

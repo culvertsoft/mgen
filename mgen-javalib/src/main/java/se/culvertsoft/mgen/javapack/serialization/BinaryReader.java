@@ -90,12 +90,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an MGen object from the input source of this reader.
-	 * 
-	 * @return The MGen object read, or null if it was of unknown type.
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public final MGenBase readObject() throws IOException {
@@ -118,16 +113,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an object of the specified type, or a subtype of the specified
-	 * type.
-	 * 
-	 * @param typ
-	 *            The type to read an object of.
-	 * 
-	 * @return The object read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -164,18 +150,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads a boolean field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean readBooleanField(final Field field, final Object context) throws IOException {
@@ -184,18 +159,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an int8 field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public byte readInt8Field(final Field field, final Object context) throws IOException {
@@ -204,18 +168,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an int16 field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public short readInt16Field(final Field field, final Object context) throws IOException {
@@ -224,18 +177,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an int32 field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public int readInt32Field(final Field field, final Object context) throws IOException {
@@ -244,18 +186,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an int64 field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public long readInt64Field(final Field field, final Object context) throws IOException {
@@ -264,18 +195,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads a float32 field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public float readFloat32Field(final Field field, final Object context) throws IOException {
@@ -284,18 +204,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads a float64 field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public double readFloat64Field(final Field field, final Object context) throws IOException {
@@ -304,18 +213,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads a string field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public String readStringField(final Field field, final Object context) throws IOException {
@@ -324,18 +222,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an object array (T[]) field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Object readArrayField(final Field field, final Object context) throws IOException {
@@ -344,19 +231,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an object java.util.ArrayList field from the underlying data input
-	 * source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public ArrayList<Object> readListField(final Field field, final Object context)
@@ -366,19 +241,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an object java.util.HashMap field from the underlying data input
-	 * source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public HashMap<Object, Object> readMapField(final Field field, final Object context)
@@ -388,18 +251,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an MGen object field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public MGenBase readMgenObjectField(final Field f, final Object context) throws IOException {
@@ -408,18 +260,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * Reads an enum field from the underlying data input source.
-	 * 
-	 * @param field
-	 *            The field to read
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @return The field value read
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public Enum<?> readEnumField(final Field f, final Object context) throws IOException {
@@ -429,21 +270,7 @@ public class BinaryReader extends BuiltInReader {
 	}
 
 	/**
-	 * 
-	 * When reading objects from a data stream, new fields may have been added
-	 * to the data model without us having generated source code for it yet.
-	 * New/Unknown fields are simply discarded and skipped past in the stream.
-	 * This callback is meant to be overloaded should you want to deal with
-	 * unknown fields in a different manner.
-	 * 
-	 * @param field
-	 *            null
-	 * 
-	 * @param context
-	 *            Not used by this reader
-	 * 
-	 * @throws IOException
-	 *             If the underlying data input source throws an IOException
+	 * {@inheritDoc}
 	 */
 	@Override
 	public void handleUnknownField(final Field field, final Object context) throws IOException {
