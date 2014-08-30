@@ -1,5 +1,9 @@
 package se.culvertsoft.mgen.api.model;
 
+/**
+ * Base class for user defined types. User defined types includes MGen object
+ * classes and enumerations. See ClassType and EnumType.
+ */
 public abstract class UserDefinedType extends Type {
 
 	/**
