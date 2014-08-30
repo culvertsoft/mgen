@@ -13,7 +13,17 @@ import se.culvertsoft.mgen.api.model.Project;
 public interface Generator {
 
 	/**
-	 * Overload this method to generate you own source code.
+	 * Generates code as a list of GeneratedSourceFile objects. Implement this
+	 * interface and overload this method to generate source code with your own
+	 * Generator.
+	 * 
+	 * @param project
+	 *            The root Project to generate source code for
+	 * 
+	 * @param generatorSettings
+	 *            The settings to be used when generating code
+	 * 
+	 * @return The generated code
 	 */
 	List<GeneratedSourceFile> generate(
 			final Project project,

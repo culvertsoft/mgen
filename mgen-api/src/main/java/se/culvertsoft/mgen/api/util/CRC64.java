@@ -2,7 +2,39 @@ package se.culvertsoft.mgen.api.util;
 
 import java.nio.charset.Charset;
 
+/**
+ * Utility class for calculating 64 bit hashes
+ */
 public class CRC64 {
+
+	/**
+	 * Calculates the 64 bit hash of a byte array
+	 * 
+	 * @param data
+	 *            The bytes to hash
+	 * 
+	 * @return The calculated hash
+	 */
+	public static long calc(final byte[] data) {
+		long out = 0;
+		for (final byte b : data) {
+			final int lookupidx = ((int) out ^ b) & 0xff;
+			out = (out >>> 8) ^ CACHE[lookupidx];
+		}
+		return out;
+	}
+
+	/**
+	 * Calculates the 64 bit hash of a string
+	 * 
+	 * @param buffer
+	 *            The string to hash
+	 * 
+	 * @return The calculated hash
+	 */
+	public static long calc(final String buffer) {
+		return calc(buffer.getBytes(charset));
+	}
 
 	private final static Charset charset = Charset.forName("UTF8");
 
@@ -29,19 +61,6 @@ public class CRC64 {
 			cache[i] = v;
 		}
 		return cache;
-	}
-
-	public static long calc(final byte[] data) {
-		long out = 0;
-		for (final byte b : data) {
-			final int lookupidx = ((int) out ^ b) & 0xff;
-			out = (out >>> 8) ^ CACHE[lookupidx];
-		}
-		return out;
-	}
-
-	public static long calc(final String buffer) {
-		return calc(buffer.getBytes(charset));
 	}
 
 }

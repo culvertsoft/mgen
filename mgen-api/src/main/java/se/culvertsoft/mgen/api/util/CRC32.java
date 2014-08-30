@@ -3,6 +3,9 @@ package se.culvertsoft.mgen.api.util;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 
+/**
+ * Utility class for calculating 32 bit hashes
+ */
 public class CRC32 {
 
 	private final static Charset charset = Charset.forName("UTF8");
@@ -45,6 +48,17 @@ public class CRC32 {
 			0x53b39330, 0x24b4a3a6, 0xbad03605, 0xcdd70693, 0x54de5729, 0x23d967bf, 0xb3667a2e,
 			0xc4614ab8, 0x5d681b02, 0x2a6f2b94, 0xb40bbe37, 0xc30c8ea1, 0x5a05df1b, 0x2d02ef8d };
 
+	/**
+	 * Calculates the 32 bit hash of the contents of a java ByteBuffer
+	 * 
+	 * @param bb
+	 *            The ByteBuffer to hash
+	 * 
+	 * @param nBytes
+	 *            The number of bytes to include in the hash
+	 * 
+	 * @return The calculated hash
+	 */
 	public static int calc(final ByteBuffer bb, final int nBytes) {
 		int prevPos = bb.position();
 		int crc = 0xffffffff;
@@ -56,22 +70,71 @@ public class CRC32 {
 		return crc;
 	}
 
+	/**
+	 * Calculates the 32 bit hash of the contents of a java ByteBuffer
+	 * 
+	 * @param bb
+	 *            The ByteBuffer to hash
+	 * 
+	 * @return The calculated hash
+	 */
 	public static int calc(final ByteBuffer bb) {
 		return calc(bb, bb.remaining());
 	}
 
+	/**
+	 * Calculates the 32 bit hash of the contents of a byte array
+	 * 
+	 * @param bytes
+	 *            The bytes to hash
+	 * 
+	 * @param offs
+	 *            The starting offset in the bytes from where to start hashing
+	 * 
+	 * @param n
+	 *            The number of bytes to calculate the hash from
+	 * 
+	 * @return The calculated hash
+	 */
 	public static int calc(final byte[] bytes, final int offs, final int n) {
 		return calc(ByteBuffer.wrap(bytes, offs, n));
 	}
 
+	/**
+	 * Calculates the 32 bit hash of the contents of a byte array
+	 * 
+	 * @param bytes
+	 *            The bytes to hash
+	 * 
+	 * @param n
+	 *            The number of bytes to calculate the hash from
+	 * 
+	 * @return The calculated hash
+	 */
 	public static int calc(final byte[] bytes, final int n) {
 		return calc(ByteBuffer.wrap(bytes, 0, n));
 	}
 
+	/**
+	 * Calculates the 32 bit hash of the contents of a byte array
+	 * 
+	 * @param bytes
+	 *            The bytes to hash
+	 * 
+	 * @return The calculated hash
+	 */
 	public static int calc(final byte[] bytes) {
 		return calc(ByteBuffer.wrap(bytes, 0, bytes.length));
 	}
 
+	/**
+	 * Calculates the 32 bit hash of a string
+	 * 
+	 * @param buffer
+	 *            The string to hash
+	 * 
+	 * @return The calculated hash
+	 */
 	public static int calc(final String buffer) {
 		return calc(buffer.getBytes(charset));
 	}

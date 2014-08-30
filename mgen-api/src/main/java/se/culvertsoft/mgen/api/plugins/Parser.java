@@ -21,10 +21,17 @@ public interface Parser {
 
 	/**
 	 * Parses a set of idl source files as specified in project files.
+	 * 
+	 * @param sources
+	 *            The source files to be parsed
+	 * 
+	 * @param settings
+	 *            The settings to be used when parsing
+	 * 
+	 * @param parent
+	 *            The parent project where to put the output of the method - the
+	 *            parsed types.
 	 */
-	void parse(
-			final List<File> sources,
-			final Map<String, String> settings,
-			final Project parent);
+	void parse(final List<File> sources, final Map<String, String> settings, final Project parent);
 
 }
