@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
-import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
+import static se.culvertsoft.mgen.javapack.util.BuiltInSerializerUtils.ensureNoMissingReqFields;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -14,6 +14,10 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.UnknownTypeException;
 import se.culvertsoft.mgen.javapack.util.StringEncoder;
 
+/**
+ * Base class for all built-in MGen wire format writers - not intended to be
+ * used directly. See BinaryWriter, JsonWriter and JsonPrettyWriter instead.
+ */
 public abstract class BuiltInWriter implements FieldVisitor {
 
 	public static final OutputStream EMPTY_OUTPUT_STREAM = new OutputStream() {
@@ -21,7 +25,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 			throw new IOException("Cannot write to empty stream");
 		}
 	};
-	
+
 	public static final int STRING_ENCODE_BUFFER_SIZE = 256;
 	public static final Charset CHARSET = Charset.forName("UTF8");
 

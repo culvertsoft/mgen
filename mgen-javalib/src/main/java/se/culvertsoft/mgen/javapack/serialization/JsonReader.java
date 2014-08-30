@@ -1,6 +1,6 @@
 package se.culvertsoft.mgen.javapack.serialization;
 
-import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
+import static se.culvertsoft.mgen.javapack.util.BuiltInSerializerUtils.ensureNoMissingReqFields;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

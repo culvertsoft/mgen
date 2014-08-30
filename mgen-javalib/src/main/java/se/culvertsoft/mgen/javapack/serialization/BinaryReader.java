@@ -11,8 +11,8 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_INT8;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_LIST;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_MAP;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
-import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.ensureNoMissingReqFields;
-import static se.culvertsoft.mgen.javapack.serialization.BuiltInSerializerUtils.throwUnexpectTag;
+import static se.culvertsoft.mgen.javapack.util.BuiltInSerializerUtils.ensureNoMissingReqFields;
+import static se.culvertsoft.mgen.javapack.util.BuiltInSerializerUtils.throwUnexpectTag;
 
 import java.io.ByteArrayInputStream;
 import java.io.EOFException;
@@ -1529,6 +1529,23 @@ public class BinaryReader extends BuiltInReader {
 
 	}
 
+	/**
+	 * Internal helper method for reading an enum
+	 * 
+	 * @param readTag
+	 *            If we should start by verifying the written binary type tag
+	 * 
+	 * @param constraint
+	 *            An required type constraint. In order to read the enum value,
+	 *            an enum type (the constraint) must be specified. Enums are
+	 *            written on the wire as strings, so the constraint parameter is
+	 *            what matches these strings against an actual local enum value.
+	 * 
+	 * @return The enum read
+	 * 
+	 * @throws IOException
+	 *             If the underlying data input source throws an IOException
+	 */
 	private Enum<?> readEnum(final boolean readTag, final RuntimeEnumType constraint)
 			throws IOException {
 		final String writtenName = readString(readTag);

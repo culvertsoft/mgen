@@ -12,6 +12,16 @@ import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
 
+/**
+ * Warning: EXPERIMENTAL. The API of this class may change significantly.
+ * 
+ * See CommandLineArgParser - which is an experimental command line parser
+ * generator. It takes an MGen object class and generates a statically typed
+ * command line argument parser from it.
+ * 
+ * This class, CommandLineArgHelp generates the help string associated with
+ * those command line arguments.
+ */
 public class CommandLineArgHelp {
 
 	private final Class<? extends MGenBase> m_cls;
@@ -24,6 +34,10 @@ public class CommandLineArgHelp {
 	private final Field[] m_fields;
 	private final StringBuilder m_builder;
 
+	/**
+	 * Creates a command line arguments help string for the provided MGen object
+	 * class.
+	 */
 	public CommandLineArgHelp(final Class<? extends MGenBase> cls) {
 		m_cls = cls;
 		m_instance = newInstance(cls);
@@ -33,6 +47,10 @@ public class CommandLineArgHelp {
 		buildHelpString();
 	}
 
+	/**
+	 * Internal helper method sorting fields of the class into required and
+	 * optional.
+	 */
 	private void sortFields() {
 
 		for (final Field field : m_fields) {
@@ -53,6 +71,9 @@ public class CommandLineArgHelp {
 		}
 	}
 
+	/**
+	 * Internal helper method for creating the help string.
+	 */
 	private void buildHelpString() {
 
 		try {
@@ -85,6 +106,19 @@ public class CommandLineArgHelp {
 		}
 	}
 
+	/**
+	 * Internal helper method for building the first line (the summary) of the
+	 * help text.
+	 * 
+	 * @param fields
+	 *            The fields to write
+	 * 
+	 * @param begin
+	 *            A string to be written before each argument
+	 * 
+	 * @param end
+	 *            A string to be written after each argument
+	 */
 	private void buildShortArgs(final List<Field> fields, final String begin, final String end) {
 		for (final Field field : fields) {
 			m_builder.append(" ");
@@ -95,6 +129,13 @@ public class CommandLineArgHelp {
 		}
 	}
 
+	/**
+	 * Internal helper method for building the more detailed argument
+	 * description of the help text.
+	 * 
+	 * @param set
+	 *            The fields to write
+	 */
 	private void buildArgDescr(final Collection<Field> set) {
 		for (final Field field : set) {
 			m_builder.append("  ");
@@ -108,31 +149,87 @@ public class CommandLineArgHelp {
 		m_builder.append("\n");
 	}
 
+	/**
+	 * Returns the help string that was built.
+	 * 
+	 * @return The help string that was built.
+	 */
 	@Override
 	public String toString() {
 		return m_builder.toString();
 	}
 
+	/**
+	 * Internal helper method to check if a field has a shortcut (single letter
+	 * argument key).
+	 * 
+	 * @param f
+	 *            The field to check
+	 * 
+	 * @return If a field has a shortcut (single letter argument key)
+	 */
 	boolean hasShortcut(final Field f) {
 		return m_shortCuts.contains(f);
 	}
 
+	/**
+	 * Internal convenience method to check if a field is of boolean type.
+	 * 
+	 * @param f
+	 *            The field to check
+	 * 
+	 * @return If a field is of boolean type
+	 */
 	boolean isBool(final Field field) {
 		return field.typ() != BoolType.INSTANCE;
 	}
 
+	/**
+	 * Internal convenience method for getting the full argument key for a field
+	 * 
+	 * @param field
+	 *            The field to get the key for
+	 * 
+	 * @return The long argument key (e.g. --myArgument)
+	 */
 	String fullKey(final Field field) {
 		return "--" + field.name();
 	}
 
+	/**
+	 * Internal convenience method for getting the short argument key for a
+	 * field. See: 'fullKey(Field)'.
+	 * 
+	 * @param field
+	 *            The field to get the key for
+	 * 
+	 * @return The short argument key (e.g. --m)
+	 */
 	String shortKey(final Field field) {
 		return "-" + field.name().substring(0, 1);
 	}
 
+	/**
+	 * Gets the most compact argument key representation of a field
+	 * 
+	 * @param field
+	 *            The field to get the key for
+	 * 
+	 * @return The most compact argument key representation of the field
+	 */
 	String key(final Field field) {
 		return m_shortCuts.contains(field) ? shortKey(field) : fullKey(field);
 	}
 
+	/**
+	 * Convenience method for instantiating MGen object classes without checked
+	 * exceptions.
+	 * 
+	 * @param cls
+	 *            The class to instantiate an object of
+	 * 
+	 * @return The instantiated MGen object
+	 */
 	private static MGenBase newInstance(final Class<? extends MGenBase> cls) {
 		try {
 			return cls.newInstance();

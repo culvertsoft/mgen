@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.javapack.serialization;
+package se.culvertsoft.mgen.javapack.util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
 
 public class BuiltInSerializerUtils {
 
-	protected static void throwUnexpectTag(
+	public static void throwUnexpectTag(
 			final String extraInfo,
 			final byte expTag,
 			final byte readTag) {
@@ -19,7 +19,7 @@ public class BuiltInSerializerUtils {
 				+ expTag + " but got " + readTag + ". " + extraInfo);
 	}
 
-	protected static void throwUnexpectType(
+	public static void throwUnexpectType(
 			final String extraInfo,
 			final String expTypeName,
 			final String typeName) {
@@ -27,7 +27,7 @@ public class BuiltInSerializerUtils {
 				+ expTypeName + " but got " + typeName + ". " + extraInfo);
 	}
 
-	protected static void throwMissingReqFields(
+	public static void throwMissingReqFields(
 			final List<Field> missingFields,
 			final MGenBase object) {
 		throw new MissingRequiredFieldsException("Missing required fields ["
