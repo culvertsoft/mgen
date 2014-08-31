@@ -48,14 +48,14 @@ def compile(workingDir, project):
 def createJavaVersionFileContents(pkg, version):
     dateString = os.popen("git show -s --format=%ci").read().rstrip() # Get commit date and time
     out = ""
-    out += "package " + pkg + ";" + os.linesep + os.linesep
-    out += "/**" + os.linesep
-    out += " * Class generated to keep track of what MGen version this is" + os.linesep
-    out += " */" + os.linesep
-    out += "public class BuildVersion {" + os.linesep
-    out += '   public static final String GIT_TAG = "' + version + '";' + os.linesep
-    out += '   public static final String GIT_COMMIT_DATE = "' + dateString + '";' + os.linesep
-    out += "}" + os.linesep
+    out += "package " + pkg + ";\n\n"
+    out += "/**\n"
+    out += " * Class generated to keep track of what MGen version this is\n"
+    out += " */\n"
+    out += "public class BuildVersion {\n"
+    out += '   public static final String GIT_TAG = "' + version + '";\n'
+    out += '   public static final String GIT_COMMIT_DATE = "' + dateString + '";\n'
+    out += "}\n"
     return out
 
 def createJavaVersionFile3(pkg, tgtFolder, version):
