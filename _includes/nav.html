@@ -8,7 +8,7 @@
                 <ul>
                     {% for item in page.submenu %}
                     <li>
-                        <a {% if p.url == page.url %}class="active"{% endif %} href="{{ site.baseurl }}{{ p.url }}#{{ item.hook }}">{{ item.title}}</a>
+                        <a {% if p.url == page.url %}class="active"{% endif %} href="{{ site.baseurl }}{{ p.url }}#{{ item.anchor }}">{{ item.title}}</a>
                     </li>
                     {% endfor %}
                 </ul>

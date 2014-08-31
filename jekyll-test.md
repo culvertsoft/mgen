@@ -1,20 +1,16 @@
 ---
 layout: default
-link-title: Javascript
+link-title: Jekyll Example
 submenu:
-  - { hook: "video", title: "Video" }
-  - { hook: "tyest", title: "Some Other Stuff" }
+  - { anchor: "one", title: "anchor1" }
+  - { anchor: "two", title: "anchor2" }
 --- 
 
 #JavaScript
 
-Work in progress to test jekyll. Here will be js documentation later.
+Work in progress to test jekyll.
 
-### Please watch <a name="video">&nbsp;</a>
-
-### Some other stuff<a name="other">&nbsp;</a>
-
-
+### Anchor 1 <a name="one">&nbsp;</a>
 
 {% highlight javascript %}
 
@@ -83,3 +79,6 @@ xml
 </Module>
 
 {% endhighlight %}
+
+
+### Anchor 2<a name="two">&nbsp;</a>
