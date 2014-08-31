@@ -1,5 +1,6 @@
 ---
 ---
+
 $font-default: 'Helvetica Neue', Helvetica, Arial, serif;
 $color-sub2: #35557d;
 $color-sub1: #6FB7EE;
@@ -127,7 +128,7 @@ aside#sidebar {
   line-height: 1.3;
   p.repo-owner {
     font-weight: bold;
-    a {
+    a { 
       font-weight: bold;
     }
   }
