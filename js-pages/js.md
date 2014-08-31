@@ -28,4 +28,4 @@ var b = (function(a, b){
   return a + b;
 }(1, 2));
 
-{% highlight javascript %}
+{% endhighlight %}
