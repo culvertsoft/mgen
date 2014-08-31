@@ -1,8 +1,8 @@
 package se.culvertsoft.mgen.api.model;
 
 /**
- * This type is intended to be used in generated source code to specify field
- * types, primarily for serializers/deserializers to use.
+ * This type is used in generated source code to specify field types, primarily
+ * for serializers/deserializers to use.
  */
 public class RuntimeClassType extends UserDefinedType {
 

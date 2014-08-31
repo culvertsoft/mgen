@@ -13,7 +13,8 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_MAP;
 import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 
 /**
- * Convenience enumeration for switching on field and class types.
+ * Convenience enumeration for switching on field and class types. Each MGen
+ * data model type has one enum.
  */
 public enum TypeEnum {
 	ENUM(TAG_STRING),
@@ -35,6 +36,13 @@ public enum TypeEnum {
 		m_binaryMetadatTag = binaryMetadatTag;
 	}
 
+	/**
+	 * Gets the binary type tag of the type that this TypeEnum represents. This
+	 * is a convenience method primarily for the MGen BinaryWriter and
+	 * BinaryReader.
+	 * 
+	 * @return The binary type tag of the type that this TypeEnum represents
+	 */
 	public byte binaryMetadatTag() {
 		return m_binaryMetadatTag;
 	}

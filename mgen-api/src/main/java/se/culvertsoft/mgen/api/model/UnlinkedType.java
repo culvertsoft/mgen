@@ -7,19 +7,14 @@ package se.culvertsoft.mgen.api.model;
 public class UnlinkedType extends UserDefinedType {
 
 	/**
-	 * Returns the written name of this type. This may be either the short or
-	 * full name.
+	 * Gets the written name of this type. This may be either the short or full
+	 * name.
+	 * 
+	 * @return Gets the written name of this type
 	 */
 	public String name() {
 		return m_name;
 	}
-
-	public UnlinkedType(final String name) {
-		super(TypeEnum.UNKNOWN, null);
-		m_name = name;
-	}
-
-	private final String m_name;
 
 	/**
 	 * {@inheritDoc}
@@ -60,5 +55,18 @@ public class UnlinkedType extends UserDefinedType {
 	public Class<?> classOf() {
 		return null;
 	}
+
+	/**
+	 * Creates a new UnlinkedType
+	 * 
+	 * @param name
+	 *            The written name of the type in the IDL
+	 */
+	public UnlinkedType(final String name) {
+		super(TypeEnum.UNKNOWN, null);
+		m_name = name;
+	}
+
+	private final String m_name;
 
 }

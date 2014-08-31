@@ -8,13 +8,18 @@ import se.culvertsoft.mgen.api.exceptions.AnalysisException;
 
 /**
  * A project represents a set of modules (see Module) parsed by the MGen
- * Compiler through a Parser.
+ * Compiler through a Parser. When the MGen compiler is executed, the result of
+ * the parsing phase is always a root project, which may contain Modules defined
+ * within. It may also reference further projects as dependencies.
+ * 
+ * IDL --> [Compiler: parsers] --> Project { modules, dependencies } -->
+ * [Compiler: generators] --> Generated source code
  */
 public class Project extends ParsedSources {
 
 	/**
-	 * The given name of this project. This name is the same as the project.xml
-	 * file excluding ".xml".
+	 * Gets the given name of this project. This name is the same as the
+	 * project.xml file excluding ".xml".
 	 * 
 	 * @return The name of this project.
 	 */
@@ -23,16 +28,20 @@ public class Project extends ParsedSources {
 	}
 
 	/**
-	 * The file search path of this project's definition file, as written as
-	 * command line argument for the compiler, or in a depender's project
+	 * Gets the file search path of this project's definition file, as written
+	 * as command line argument for the compiler, or in a depender's project
 	 * definition file.
+	 * 
+	 * @return The file search path of this project's definition file
 	 */
 	public String filePath() {
 		return m_filePath;
 	}
 
 	/**
-	 * The file absolute search path of this project's definition file.
+	 * Gets the file absolute search path of this project's definition file.
+	 * 
+	 * @return The file absolute search path of this project's definition file
 	 */
 	public String absoluteFilePath() {
 		return m_absoluteFilePath;
@@ -48,6 +57,8 @@ public class Project extends ParsedSources {
 	}
 
 	/**
+	 * Checks if this project is the root project (= not a dependency)
+	 * 
 	 * @return If this project is the root project (= not a dependency).
 	 */
 	public boolean isRoot() {
@@ -57,13 +68,19 @@ public class Project extends ParsedSources {
 	/**
 	 * Gets the parent project of this project (if it's a dependency), otherwise
 	 * it returns null.
+	 * 
+	 * @return The parent project of this project (if it's a dependency),
+	 *         otherwise it returns null
 	 */
 	public Project parent() {
 		return m_parent;
 	}
 
 	/**
-	 * Sets the name of this project
+	 * Sets the name of this Project
+	 * 
+	 * @param name
+	 *            The new name of this Project
 	 */
 	public void setName(String name) {
 		m_name = name;
@@ -71,6 +88,10 @@ public class Project extends ParsedSources {
 
 	/**
 	 * Sets the written (relative or absolute) file path of this project
+	 * 
+	 * @param filePath
+	 *            The new written (relative or absolute) file path of this
+	 *            project
 	 */
 	public void setFilePath(String filePath) {
 		m_filePath = filePath;
@@ -78,25 +99,54 @@ public class Project extends ParsedSources {
 
 	/**
 	 * Sets the absolute file path of this project
+	 * 
+	 * @param absolutefilePath
+	 *            The new absolute file path of this project
 	 */
 	public void setAbsoluteFilePath(String absolutefilePath) {
 		m_absoluteFilePath = absolutefilePath;
 	}
 
 	/**
-	 * Replaces all generators
+	 * Replaces all generators of this project
+	 * 
+	 * @param generators
+	 *            The new generators of this project
 	 */
 	public void setGenerators(List<GeneratorDescriptor> generators) {
 		m_generators = generators;
 	}
 
 	/**
-	 * Convenience method for parsers.
+	 * Convenience method for parsers. Gets an existing module with a given
+	 * module path or creates a new one and adds it to this Project.
 	 * 
-	 * Returns an existing module with the given module path or creates a new
-	 * one and adds it to this Project.
+	 * Both relative and absolute file path arguments of this function must be
+	 * supplied (cannot be null). However the file paths arguments are not
+	 * required to point to actual files. These arguments are necessary when the
+	 * compiler is set to output IDL code instead of normal source code/classes.
+	 * This is used primarily when consolidating multiple IDL languages and
+	 * sources into a single IDL definition. These arguments will then be used
+	 * to determine where to save the new definitions.
 	 * 
-	 * Both file paths must be supplied (cannot be null).
+	 * @param modulePath
+	 *            The path of this module. The path of a module is its full java
+	 *            package, e.g. com.mycompany.myproduct.
+	 * 
+	 * @param filePath
+	 *            The written (relative or absolute) file path to the file in
+	 *            which the Module is defined
+	 * 
+	 * @param absoluteFilePath
+	 *            The absolute file path to the file in which the Module is
+	 *            defined
+	 * 
+	 * @param settings
+	 *            The settings for a new module. This parameter is ignored if
+	 *            the module already exists within the project.
+	 * 
+	 * @return The new or existing Module (already added to this Project, by
+	 *         this function call)
 	 * 
 	 * @Throws AnalysisException if a module with the given module path already
 	 *         exists but is in a different project that this.
@@ -126,8 +176,14 @@ public class Project extends ParsedSources {
 	}
 
 	/**
-	 * Searches the modules of this project and its dependencies for a module
-	 * with a specific fully qualified package name.
+	 * Searches the modules of this entire project and its dependencies for a
+	 * module with a specific fully qualified package name. Not just the modules
+	 * defined within this Project.
+	 * 
+	 * @param name
+	 *            The name of the module to find
+	 * 
+	 * @return The found module, or null if none was found
 	 */
 	private Module findModule(final String name) {
 		if (isRoot()) {
@@ -137,6 +193,21 @@ public class Project extends ParsedSources {
 		}
 	}
 
+	/**
+	 * Creates a new Project
+	 * 
+	 * @param name
+	 *            The name of the Project
+	 * 
+	 * @param filePath
+	 *            The written file path of the Project file
+	 * 
+	 * @param absoluteFilePath
+	 *            The absolute file path of the Project file
+	 * 
+	 * @param parent
+	 *            It's parent project, or null if it is the root project
+	 */
 	public Project(
 			final String name,
 			final String filePath,

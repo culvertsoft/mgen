@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.api.model;
 
 /**
- * Base type for all compiler data types. Used to indicate types of class
+ * Base type for all MGen compiler data types. Used to indicate types of class
  * fields, super types, sub types and default values.
  */
 public abstract class Type {
