@@ -9,8 +9,6 @@ version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
 isSnapshot := version.value.contains("SNAPSHOT")
 
-pomIncludeRepository := { _ => false }
-
 publishMavenStyle := true
 
 publishTo := {
@@ -20,6 +18,8 @@ publishTo := {
   else
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
+
+pomIncludeRepository := { _ => false }
 
 publishArtifact in Test := false
 
@@ -58,5 +58,3 @@ libraryDependencies += "com.googlecode.json-simple" % "json-simple" % "1.1"
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false
-
-publishArtifact in (Compile, packageDoc) := false

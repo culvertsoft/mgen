@@ -60,5 +60,3 @@ libraryDependencies += "org.jsonschema2pojo" % "jsonschema2pojo-cli" % "0.4.5"
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false
-
-publishArtifact in (Compile, packageDoc) := false

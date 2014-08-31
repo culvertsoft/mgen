@@ -60,5 +60,3 @@ libraryDependencies += "com.sun.xml.bind" % "jaxb-xjc" % "2.2.7"
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false
-
-publishArtifact in (Compile, packageDoc) := false

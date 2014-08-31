@@ -54,5 +54,3 @@ libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
 EclipseKeys.withSource := true
 
 EclipseKeys.relativizeLibs := false
-
-publishArtifact in (Compile, packageDoc) := false
