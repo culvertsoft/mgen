@@ -64,7 +64,7 @@ def createJavaVersionFile3(pkg, tgtFolder, version):
     oldFileContents = file2String(fName)
     if (newFileContents != oldFileContents):
         mkFolder(tgtFolder)
-        f = file(fName, "w")
+        f = open(fName, "w")
         f.write(newFileContents)
 
 def createJavaVersionFile2(project, version):
