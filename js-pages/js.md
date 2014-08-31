@@ -17,4 +17,15 @@ Work in progress to test jekyll. Here will be js documentation later.
 
 
 
-<a name="tyest">Here</a>
+<a name="tyest"></a>
+
+
+{% highlight javascript %}
+
+var a = "Some Javascri[t";
+
+var b = (function(a, b){
+  return a + b;
+}(1, 2));
+
+{% highlight javascript %}
