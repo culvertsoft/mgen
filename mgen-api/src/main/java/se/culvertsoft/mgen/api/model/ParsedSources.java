@@ -113,6 +113,10 @@ public class ParsedSources {
 
 	/**
 	 * Internal backing method of allModulesRecursively()
+	 * @param out
+	 * 		The HashSet this function will add modules to
+	 * @param scannedSources
+	 * 		The already scanned sources (Will not be recursed)
 	 */
 	protected void allModulesRecursively(
 			final HashSet<Module> out,
@@ -133,7 +137,13 @@ public class ParsedSources {
 	}
 
 	/**
-	 * Convenience methods for finding a Module
+	 * Internal Convenience methods for finding a Module
+	 * @param name
+	 * 		The name of the module
+	 * @param alreadySearched
+	 *		Soruces that are already scanned
+	 * @return The found module or null if not found
+	 * 
 	 */
 	protected Module findModule(
 			final String name,

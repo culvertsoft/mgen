@@ -7,18 +7,28 @@ public abstract class RuntimeEnumType extends UserDefinedType {
 
 	/**
 	 * Gets enum instances by name.
+	 *
+	 * @param entryStringName
+	 * 		The enums name in string format.
+	 *
+	 * @return enum instances by name. 
 	 */
 	public abstract Enum<?> get(final String entryStringName);
 
 	/**
 	 * Gets enum instances by integer.
+	 * 
+	 * @param entryIntvalue
+	 *		The associated int value for the specified enum. 
+	 * 
+	 * @return enum instances by integer. 
 	 */
 	public abstract Enum<?> get(final int entryIntvalue);
 
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
+	// @Override
 	public String shortName() {
 		return m_shortName;
 	}

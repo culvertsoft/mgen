@@ -12,8 +12,8 @@ import se.culvertsoft.mgen.api.exceptions.AnalysisException;
  * the parsing phase is always a root project, which may contain Modules defined
  * within. It may also reference further projects as dependencies.
  * 
- * IDL --> [Compiler: parsers] --> Project { modules, dependencies } -->
- * [Compiler: generators] --> Generated source code
+ * IDL --&gt; [Compiler: parsers] to Project { modules, dependencies } --&gt;
+ * [Compiler: generators] --&gt; Generated source code
  */
 public class Project extends ParsedSources {
 
@@ -148,7 +148,7 @@ public class Project extends ParsedSources {
 	 * @return The new or existing Module (already added to this Project, by
 	 *         this function call)
 	 * 
-	 * @Throws AnalysisException if a module with the given module path already
+	 * @throws AnalysisException if a module with the given module path already
 	 *         exists but is in a different project that this.
 	 */
 	public Module getOrCreateModule(

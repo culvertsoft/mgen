@@ -15,6 +15,8 @@ public class StringDefaultValue extends DefaultValue {
 
 	/**
 	 * Returns the string written for this default value
+	 * 
+	 * @return the default value of this type
 	 */
 	public String value() {
 		return m_value;

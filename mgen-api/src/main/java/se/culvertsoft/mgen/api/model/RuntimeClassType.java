@@ -7,7 +7,7 @@ package se.culvertsoft.mgen.api.model;
 public class RuntimeClassType extends UserDefinedType {
 
 	/**
-	 * 64 bit id hashed from the qualified type name of this class
+	 * @return The 64 bit id hashed from the qualified type name of this class
 	 */
 	public long typeId() {
 		return m_id;
