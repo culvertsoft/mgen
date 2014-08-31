@@ -19,7 +19,7 @@ object MGenCompiler {
   def main(paramsUntrimmed: Array[String]) {
 
     // Print introduction
-    PrintIntro("0.x")
+    PrintIntro(s"(${BuildVersion.GIT_TAG} ${BuildVersion.GIT_COMMIT_DATE})")
 
     val compileResult = Try {
 

@@ -6,6 +6,7 @@
 README.md~
 .gitignore~
 LICENSE~
+*BuildVersion*
 
 # sbt specific
 .cache/

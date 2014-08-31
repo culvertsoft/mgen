@@ -14,7 +14,13 @@ cpp_build_cfgs = ["Debug", "RelwithDebInfo", "Release"]
 def mkFolder(path):
     if not os.path.exists(path):
         os.makedirs(path)
-        
+
+def file2String(path):
+    if os.path.exists(path):
+        return open(path, 'r').read()
+    else:
+        return ""
+
 def rmFolder(path):
     if os.path.exists(path):
         shutil.rmtree(path)

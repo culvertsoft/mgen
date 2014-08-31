@@ -16,6 +16,7 @@ args = parser.parse_args()
 
 # Buildimpl requires these to be set
 os.environ['MGEN_BUILD_VERSION'] = args.version
+buildimpl.mgen_version = args.version
 buildimpl.mgen_jar = "mgen-compiler/target/mgen-compiler-assembly-" + args.version + ".jar"
 buildimpl.mgen_cmd = "java -jar ../" + buildimpl.mgen_jar + " "
 buildimpl.pluginPaths = ' plugin_paths="' + "../mgen-javagenerator/target" + "," + "../mgen-cppgenerator/target" + "," + "../mgen-javascriptgenerator/target" + '"'

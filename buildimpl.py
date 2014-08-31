@@ -12,6 +12,7 @@ def clean():
     rmFolder("mgen-cpplib/target")
     
 def build():
+    createVersionFiles()
     fastbuild_step1()
     fastbuild_generate_code()
     fastbuild_step2()
@@ -33,6 +34,7 @@ def publish():
 # HELPERS #
 ###########
 
+mgen_version = "NEEDS_TO_BE_SET"
 mgen_cmd = "NEEDS_TO_BE_SET"
 pluginPaths = "NEEDS_TO_BE_SET"
 default_cpp_build_cfg = "NEEDS_TO_BE_SET"
@@ -42,6 +44,49 @@ def compile3(workingDir, project, outPath):
 
 def compile(workingDir, project):
     compile3(workingDir, project, ".")
+
+def createJavaVersionFileContents(pkg, version):
+    dateString = os.popen("git show -s --format=%ci").read().rstrip() # Get commit date and time
+    out = ""
+    out += "package " + pkg + ";" + os.linesep + os.linesep
+    out += "/**" + os.linesep
+    out += " * Class generated to keep track of what MGen version this is" + os.linesep
+    out += " */" + os.linesep
+    out += "public class BuildVersion {" + os.linesep
+    out += '   public static final String GIT_TAG = "' + version + '";' + os.linesep
+    out += '   public static final String GIT_COMMIT_DATE = "' + dateString + '";' + os.linesep
+    out += "}" + os.linesep
+    return out
+
+def createJavaVersionFile3(pkg, tgtFolder, version):
+    fName = tgtFolder + "/BuildVersion.java"    
+    newFileContents = createJavaVersionFileContents(pkg, version)
+    oldFileContents = file2String(fName)
+    if (newFileContents != oldFileContents):
+        mkFolder(tgtFolder)
+        f = file(fName, "w")
+        f.write(newFileContents)
+
+def createJavaVersionFile2(project, version):
+    pkg = "se.culvertsoft.mgen." + project
+    tgtFolder = "mgen-" + project + "/src/main/java/se/culvertsoft/mgen/" + project
+    createJavaVersionFile3(pkg, tgtFolder, version)
+
+def createVersionFiles():
+    createJavaVersionFile2("api", mgen_version)
+    createJavaVersionFile2("compiler", mgen_version)
+    createJavaVersionFile2("javalib", mgen_version)
+    createJavaVersionFile2("cppgenerator", mgen_version)
+    createJavaVersionFile2("cpplib", mgen_version)
+    createJavaVersionFile2("idlgenerator", mgen_version)
+    createJavaVersionFile2("idlparser", mgen_version)
+    createJavaVersionFile2("javagenerator", mgen_version)
+    createJavaVersionFile2("javalib", mgen_version)
+    createJavaVersionFile2("javascriptgenerator", mgen_version)
+    createJavaVersionFile2("jsonschemaparser", mgen_version)
+    createJavaVersionFile2("protobufparser", mgen_version)
+    createJavaVersionFile2("visualdesigner", mgen_version)
+    createJavaVersionFile2("xmlschemaparser", mgen_version)
 
 def fastbuild_step1():
     sbt(".",   ('"project mgen_api" publish-local '

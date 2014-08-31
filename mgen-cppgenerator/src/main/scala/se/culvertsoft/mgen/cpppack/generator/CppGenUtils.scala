@@ -4,6 +4,7 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.UserDefinedType
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.cppgenerator.BuildVersion
 
 object CppGenUtils {
 
@@ -44,7 +45,7 @@ object CppGenUtils {
   }
 
   def mkFancyHeader()(implicit txtBuffer: SuperStringBuffer) {
-    txtBuffer.textln(FancyHeaders.fileHeader).endl()
+    txtBuffer.textln(FancyHeaders.fileHeader(BuildVersion.GIT_TAG + " " + BuildVersion.GIT_COMMIT_DATE)).endl()
   }
 
   def getIncludeGuardTypeString(typeName: String): String = {

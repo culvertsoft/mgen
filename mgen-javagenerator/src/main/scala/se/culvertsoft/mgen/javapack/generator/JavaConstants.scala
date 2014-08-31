@@ -4,6 +4,7 @@ import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.RuntimeEnumType
 import se.culvertsoft.mgen.api.model.RuntimeClassType
+import se.culvertsoft.mgen.javagenerator.BuildVersion
 
 object JavaConstants {
 
@@ -61,7 +62,7 @@ object JavaConstants {
   val fieldSetDepthClsStringQ = s"${metadataPkg}.${fieldSetDepthClsString}"
   val fieldVisitSelectionClsStringQ = s"${metadataPkg}.${fieldVisitSelectionClsString}"
 
-  val fileHeader = FancyHeaders.fileHeader
+  val fileHeader = FancyHeaders.fileHeader(BuildVersion.GIT_TAG + " " + BuildVersion.GIT_COMMIT_DATE)
   val serializationSectionHeader = FancyHeaders.serializationSectionHeader
   val metadataSectionHeader = FancyHeaders.metadataSectionHeader
 
