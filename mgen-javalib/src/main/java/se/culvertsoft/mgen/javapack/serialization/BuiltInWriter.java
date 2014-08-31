@@ -47,7 +47,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	 * it was constructed (this is always the case unless you have multiple data
 	 * models in parallel).
 	 * 
-	 * @param o
+	 * @param object
 	 *            The object to write
 	 * 
 	 * @throws IOException

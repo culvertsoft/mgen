@@ -17,13 +17,6 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
  */
 public class FieldHasher {
 
-	/***************************************************************
-	 * 
-	 * 
-	 * - - - - - - - - - - - PUBLIC API - - - - - - - - - - -
-	 * 
-	 * *************************************************************/
-
 	public static int calc(final Enum<?> e, final Type type) {
 		return e != null ? e.hashCode() : 0;
 	}
@@ -112,16 +105,7 @@ public class FieldHasher {
 		return calcMap(a, (MapType) type);
 	}
 
-	/*
-	 * public static int calc(final Object a, final Type type) { // Obviously
-	 * need to be customized deep }
-	 */
-	/***************************************************************
-	 * 
-	 * 
-	 * - - - - - - - - - - - PRIVATE HELPERS - - - - - - - - - - -
-	 * 
-	 * *************************************************************/
+	// /////////////////// PRIVATE HELPERS //////////////////////////////
 
 	private static int calcMgenObject(final MGenBase a, final Type type) {
 		return a == null ? 0 : a.hashCode();
@@ -137,7 +121,8 @@ public class FieldHasher {
 		int result = 1;
 
 		for (Object element : a)
-			result = 31 * result + (element == null ? 0 : calcObject(element, elemType));
+			result = 31 * result
+					+ (element == null ? 0 : calcObject(element, elemType));
 
 		return result;
 	}
@@ -219,7 +204,9 @@ public class FieldHasher {
 
 		for (final Map.Entry<?, ?> e : a.entrySet()) {
 			h += (e.getKey() == null ? 0 : calcObject(e.getKey(), keyType))
-					^ (e.getValue() == null ? 0 : calcObject(e.getValue(), valueType));
+					^ (e.getValue() == null ? 0 : calcObject(
+							e.getValue(),
+							valueType));
 		}
 
 		return h;
@@ -236,7 +223,8 @@ public class FieldHasher {
 		final Type elemType = listType.elementType();
 
 		for (final Object element : a)
-			result = 31 * result + (element == null ? 0 : calcObject(element, elemType));
+			result = 31 * result
+					+ (element == null ? 0 : calcObject(element, elemType));
 
 		return result;
 

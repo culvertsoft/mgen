@@ -19,13 +19,6 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
  */
 public class DeepCopyer {
 
-	/***************************************************************
-	 * 
-	 * 
-	 * - - - - - - - - - - - PUBLIC API - - - - - - - - - - -
-	 * 
-	 * *************************************************************/
-
 	public static <T extends Enum<?>> T deepCopy(final T a, final Type type) {
 		return a;
 	}
@@ -105,7 +98,9 @@ public class DeepCopyer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <K, V> HashMap<K, V> deepCopy(final HashMap<K, V> a, final Type type) {
+	public static <K, V> HashMap<K, V> deepCopy(
+			final HashMap<K, V> a,
+			final Type type) {
 		return (HashMap<K, V>) deepCopyMap(a, (MapType) type);
 	}
 
@@ -114,14 +109,11 @@ public class DeepCopyer {
 		return (T) deepCopyMGenObject(a);
 	}
 
-	/***************************************************************
-	 * 
-	 * 
-	 * - - - - - - - - - - - PRIVATE HELPERS - - - - - - - - - - -
-	 * 
-	 * *************************************************************/
+	// ////////////////////// PRIVATE HELPERS ////////////////////////
 
-	private static Object deepCopyArray(final Object array, final ArrayType type) {
+	private static
+			Object
+			deepCopyArray(final Object array, final ArrayType type) {
 		if (array == null)
 			return null;
 		switch (type.elementType().typeEnum()) {
@@ -146,7 +138,12 @@ public class DeepCopyer {
 			final int n = Array.getLength(array);
 			final Object out = Array.newInstance(compType, n);
 			for (int index = 0; index < n; index++) {
-				Array.set(out, index, deepCopyObject(Array.get(array, index), type.elementType()));
+				Array.set(
+						out,
+						index,
+						deepCopyObject(
+								Array.get(array, index),
+								type.elementType()));
 			}
 			return out;
 		}
@@ -181,18 +178,25 @@ public class DeepCopyer {
 		}
 	}
 
-	private static Map<Object, Object> deepCopyMap(final HashMap<?, ?> src, final MapType type) {
+	private static Map<Object, Object> deepCopyMap(
+			final HashMap<?, ?> src,
+			final MapType type) {
 		if (src == null)
 			return null;
-		final HashMap<Object, Object> out = new HashMap<Object, Object>(src.size());
+		final HashMap<Object, Object> out = new HashMap<Object, Object>(
+				src.size());
 		for (final Object key : src.keySet()) {
 			final Object value = src.get(key);
-			out.put(deepCopyObject(key, type.keyType()), deepCopyObject(value, type.valueType()));
+			out.put(
+					deepCopyObject(key, type.keyType()),
+					deepCopyObject(value, type.valueType()));
 		}
 		return out;
 	}
 
-	private static ArrayList<Object> deepCopyList(final List<?> list, final ListType type) {
+	private static ArrayList<Object> deepCopyList(
+			final List<?> list,
+			final ListType type) {
 		if (list == null)
 			return null;
 		final ArrayList<Object> out = new ArrayList<Object>(list.size());

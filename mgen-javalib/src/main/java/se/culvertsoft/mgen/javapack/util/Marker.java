@@ -17,13 +17,6 @@ import se.culvertsoft.mgen.javapack.metadata.FieldSetDepth;
  */
 public class Marker {
 
-	/***************************************************************
-	 * 
-	 * 
-	 * - - - - - - - - - - - PUBLIC API - - - - - - - - - - -
-	 * 
-	 * *************************************************************/
-
 	public static void setFieldSetDeep(final MGenBase object, final Type type) {
 		if (object == null)
 			return;
@@ -38,7 +31,10 @@ public class Marker {
 		setEntries(a, ((ListType) type).elementType());
 	}
 
-	public static <K, V> void setFieldSetDeep(final Map<K, V> a, final Type type) {
+	public static
+			<K, V>
+			void
+			setFieldSetDeep(final Map<K, V> a, final Type type) {
 		setMap(a, (MapType) type);
 	}
 
@@ -46,12 +42,7 @@ public class Marker {
 		setObjectDeep(a, type);
 	}
 
-	/***************************************************************
-	 * 
-	 * 
-	 * - - - - - - - - - - - PRIVATE HELPERS - - - - - - - - - - -
-	 * 
-	 * *************************************************************/
+	// ///////////////////// PRIVATE HELPERS //////////////////////////
 
 	private static void setObjectDeep(final Object a, final Type type) {
 		if (a == null)

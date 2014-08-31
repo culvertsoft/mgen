@@ -36,6 +36,12 @@ public interface Reader {
 	 * method can also be used to read objects that are written to the stream
 	 * without type meta data information.
 	 * 
+	 * @param <T>
+	 *            The type of class to read
+	 * 
+	 * @param typ
+	 *            The class to read
+	 * 
 	 * @return The MGen object read from the stream.
 	 * 
 	 * @throws IOException
@@ -45,7 +51,8 @@ public interface Reader {
 	 * @throws UnexpectedTypeException
 	 *             if the object read from the stream is not of specified type T
 	 */
-	public <T extends MGenBase> T readObject(final Class<T> typ) throws IOException;
+	public <T extends MGenBase> T readObject(final Class<T> typ)
+			throws IOException;
 
 	/**
 	 * Method called to read an enum field from a stream.
@@ -69,7 +76,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public Enum<?> readEnumField(final Field field, final Object context) throws IOException;
+	public Enum<?> readEnumField(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read a boolean field from a stream.
@@ -93,7 +101,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public boolean readBooleanField(final Field field, final Object context) throws IOException;
+	public boolean readBooleanField(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read an int8 field from a stream.
@@ -117,7 +126,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public byte readInt8Field(final Field field, final Object context) throws IOException;
+	public byte readInt8Field(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read an int16 field from a stream.
@@ -141,7 +151,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public short readInt16Field(final Field field, final Object context) throws IOException;
+	public short readInt16Field(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read an int32 field from a stream.
@@ -165,7 +176,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public int readInt32Field(final Field field, final Object context) throws IOException;
+	public int readInt32Field(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read an int64 field from a stream.
@@ -189,7 +201,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public long readInt64Field(final Field field, final Object context) throws IOException;
+	public long readInt64Field(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read a float32 field from a stream.
@@ -213,7 +226,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public float readFloat32Field(final Field field, final Object context) throws IOException;
+	public float readFloat32Field(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read a float64 field from a stream.
@@ -237,7 +251,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public double readFloat64Field(final Field field, final Object context) throws IOException;
+	public double readFloat64Field(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read a string field from a stream.
@@ -261,7 +276,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public String readStringField(final Field field, final Object context) throws IOException;
+	public String readStringField(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read an array field from a stream.
@@ -285,7 +301,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public Object readArrayField(final Field field, final Object context) throws IOException;
+	public Object readArrayField(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read a list field from a stream.
@@ -309,7 +326,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public ArrayList<?> readListField(final Field field, final Object context) throws IOException;
+	public ArrayList<?> readListField(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read a map field from a stream.
@@ -333,7 +351,8 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public HashMap<?, ?> readMapField(final Field field, final Object context) throws IOException;
+	public HashMap<?, ?> readMapField(final Field field, final Object context)
+			throws IOException;
 
 	/**
 	 * Method called to read an MGen object field from a stream.
@@ -357,7 +376,10 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public MGenBase readMgenObjectField(final Field field, final Object context) throws IOException;
+	public
+			MGenBase
+			readMgenObjectField(final Field field, final Object context)
+					throws IOException;
 
 	/**
 	 * Method called when an unknown field (new field or old removed field) is
@@ -380,6 +402,7 @@ public interface Reader {
 	 * @throws IOException
 	 *             If an IOException occurs on the underlying data input stream
 	 */
-	public void handleUnknownField(final Field field, final Object context) throws IOException;
+	public void handleUnknownField(final Field field, final Object context)
+			throws IOException;
 
 }

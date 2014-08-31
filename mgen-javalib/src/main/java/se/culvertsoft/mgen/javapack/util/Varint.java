@@ -54,12 +54,15 @@ public final class Varint {
 	 * 
 	 * @param value
 	 *            value to encode
+	 * 
 	 * @param out
 	 *            to write bytes to
+	 * 
 	 * @throws IOException
 	 *             if {@link OutputStream} throws {@link IOException}
 	 */
-	public static void writeSignedVarLong(long value, OutputStream out) throws IOException {
+	public static void writeSignedVarLong(long value, OutputStream out)
+			throws IOException {
 		// Great trick from
 		// http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
 		writeUnsignedVarLong((value << 1) ^ (value >> 63), out);
@@ -80,7 +83,8 @@ public final class Varint {
 	 * @throws IOException
 	 *             if {@link OutputStream} throws {@link IOException}
 	 */
-	public static void writeUnsignedVarLong(long value, OutputStream out) throws IOException {
+	public static void writeUnsignedVarLong(long value, OutputStream out)
+			throws IOException {
 		while ((value & 0xFFFFFFFFFFFFFF80L) != 0L) {
 			out.write(((int) value & 0x7F) | 0x80);
 			value >>>= 7;
@@ -90,8 +94,18 @@ public final class Varint {
 
 	/**
 	 * @see #writeSignedVarLong(long, OutputStream)
+	 * 
+	 * @param value
+	 *            The integer value to write
+	 * 
+	 * @param out
+	 *            The stream to write to
+	 * 
+	 * @throws IOException
+	 *             if {@link OutputStream} throws {@link IOException}
 	 */
-	public static void writeSignedVarInt(int value, OutputStream out) throws IOException {
+	public static void writeSignedVarInt(int value, OutputStream out)
+			throws IOException {
 		// Great trick from
 		// http://code.google.com/apis/protocolbuffers/docs/encoding.html#types
 		writeUnsignedVarInt((value << 1) ^ (value >> 31), out);
@@ -99,8 +113,18 @@ public final class Varint {
 
 	/**
 	 * @see #writeUnsignedVarLong(long, OutputStream)
+	 * 
+	 * @param value
+	 *            The integer value to write
+	 * 
+	 * @param out
+	 *            The stream to write to
+	 * 
+	 * @throws IOException
+	 *             if {@link OutputStream} throws {@link IOException}
 	 */
-	public static void writeUnsignedVarInt(int value, OutputStream out) throws IOException {
+	public static void writeUnsignedVarInt(int value, OutputStream out)
+			throws IOException {
 		while ((value & 0xFFFFFF80) != 0L) {
 			out.write((value & 0x7F) | 0x80);
 			value >>>= 7;
@@ -111,12 +135,16 @@ public final class Varint {
 	/**
 	 * @param in
 	 *            to read bytes from
+	 * 
 	 * @return decode value
+	 * 
 	 * @throws IOException
 	 *             if {@link InputStream} throws {@link IOException}
+	 * 
 	 * @throws IllegalArgumentException
 	 *             if variable-length value does not terminate after 9 bytes
 	 *             have been read
+	 * 
 	 * @see #writeSignedVarLong(long, OutputStream)
 	 */
 	public static long readSignedVarLong(InputStream in) throws IOException {
@@ -133,12 +161,16 @@ public final class Varint {
 	/**
 	 * @param in
 	 *            to read bytes from
+	 * 
 	 * @return decode value
+	 * 
 	 * @throws IOException
 	 *             if {@link InputStream} throws {@link IOException}
+	 * 
 	 * @throws IllegalArgumentException
 	 *             if variable-length value does not terminate after 9 bytes
 	 *             have been read
+	 * 
 	 * @see #writeUnsignedVarLong(long, OutputStream)
 	 */
 	public static long readUnsignedVarLong(InputStream in) throws IOException {
@@ -155,11 +187,18 @@ public final class Varint {
 	}
 
 	/**
+	 * @param in
+	 *            The stream to read from
+	 * 
+	 * @return The integer value read
+	 * 
 	 * @throws IllegalArgumentException
 	 *             if variable-length value does not terminate after 5 bytes
 	 *             have been read
+	 * 
 	 * @throws IOException
 	 *             if {@link InputStream} throws {@link IOException}
+	 * 
 	 * @see #readSignedVarLong(InputStream)
 	 */
 	public static int readSignedVarInt(InputStream in) throws IOException {
@@ -174,11 +213,18 @@ public final class Varint {
 	}
 
 	/**
+	 * @param in
+	 *            The stream to read from
+	 * 
+	 * @return The integer value read
+	 * 
 	 * @throws IllegalArgumentException
 	 *             if variable-length value does not terminate after 5 bytes
 	 *             have been read
+	 * 
 	 * @throws IOException
 	 *             if {@link InputStream} throws {@link IOException}
+	 * 
 	 * @see #readUnsignedVarLong(InputStream)
 	 */
 	public static int readUnsignedVarInt(InputStream in) throws IOException {

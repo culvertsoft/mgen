@@ -13,7 +13,7 @@ public abstract class ClassRegistryBase {
 	/**
 	 * Gets a class registry entry by 64 bit type id.
 	 * 
-	 * @param id
+	 * @param typeId
 	 *            The 64 bit type id of the class to find
 	 * 
 	 * @return The found entry, or null
@@ -79,7 +79,8 @@ public abstract class ClassRegistryBase {
 	 * 
 	 * @return The found entry, or null
 	 */
-	public abstract ClassRegistryEntry getByTypeIds16BitBase64(final String[] ids);
+	public abstract ClassRegistryEntry getByTypeIds16BitBase64(
+			final String[] ids);
 
 	/**
 	 * Constructor to be used only by generated subclasses/generated
@@ -94,6 +95,9 @@ public abstract class ClassRegistryBase {
 	/**
 	 * Function for adding a new entry to the lookup tables. Only to be used by
 	 * generated subclasses/generated ClassRegistry classes.
+	 * 
+	 * @param entry
+	 *            The ClassRegistryEntry to add
 	 */
 	protected void add(final ClassRegistryEntry entry) {
 		m_typeId2Entry.put(entry.typeId(), entry);

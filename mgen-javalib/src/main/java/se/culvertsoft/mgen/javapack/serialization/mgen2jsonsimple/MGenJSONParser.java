@@ -28,7 +28,7 @@ import org.json.simple.parser.Yytoken;
  * 
  * Parser for JSON text. Please note that JSONParser is NOT thread-safe.
  * 
- * @author FangYidong<fangyidong@yahoo.com.cn>
+ * @author FangYidong [fangyidong@yahoo.com.cn]
  */
 public class MGenJSONParser {
 	public static final int S_INIT = 0;
