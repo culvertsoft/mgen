@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>Mgen by culvertsoft</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>Mgen</h1>
+        <h2>Tools for cross-language data models</h2>
+        <a href="https://github.com/culvertsoft/mgen" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>
+<a name="mgen" class="anchor" href="#mgen"><span class="octicon octicon-link"></span></a>MGen</h1>
+
+<p>-- HEADS UP: This README is Work-In-Progress. It's about 50% finished! -- </p>
+
+<p>MGen is a toolkit for designing cross-langauge data models to which functionality such as serialization and type introspection can easily be attached. MGen models are defined in an <a href="http://en.wikipedia.org/wiki/Interface_description_language" title="IDL on Wikipedia">Interface Definition Language (IDL)</a>, from which source code (classes) in multiple programming languages may be generated using the MGen Compiler.</p>
+
+<p>The goal of MGen is to simplify type-safe sharing of state between applications, while permitting significant data model changes without requiring all participants to rebuild their software. We seek to be highly customizable by having plug-in based architecture for extending the MGen toolkit without having to recompile the MGen tools and libraries.</p>
+
+<p>Check out <a href="http://culvertsoft.se/docs/WhitePaper.pdf">our preliminary technical whitepaper</a>.</p>
+
+<p>Why is MGen interesting? - MGen can help you with the following, cross-language and cross-platform:</p>
+
+<ul>
+<li>Save/Load the state of an application (objects) to memory, files, strings, etc</li>
+<li>Read/write config files directly to objects</li>
+<li>Reduce the amount of work required to build and maintain data structures in multiple languages</li>
+<li>Simplify the process of sharing the state of your application over network</li>
+<li>Make sure the data model in software you build today is as accessible as possible for future projects</li>
+<li>Build scalable, accessible, compatible data models that you come back to later and understand.</li>
+<li>Use native objects with external services and interfaces requiring text formats such as JSON.</li>
+<li>Combine definitions in multiple IDLs for your data models, and have dependencies between them.</li>
+<li>Much much more..</li>
+</ul><p>MGen is inspired by tools such as <a href="https://code.google.com/p/protobuf/" title="sometimes called protobuf">Protocol Buffers</a>, <a href="http://thrift.apache.org/">Thrift</a>, <a href="http://avro.apache.org/">Avro</a>, <a href="http://www.zeroc.com/ice.html" title="Internet Communications Engine">ICE</a>, <a href="http://en.wikipedia.org/wiki/High-level_architecture_(simulation)" title="High level architecture">HLA</a>, <a href="http://www.webtoolkit.eu/wt/">WtDbo</a>, <a href="http://google.github.io/flatbuffers/">Flat Buffers</a>, <a href="http://kentonv.github.io/capnproto/">Cap'n Proto</a>, <a href="https://github.com/real-logic/simple-binary-encoding">Simple Binary Encoding</a>. </p>
+
+<h2>
+<a name="table-of-contents" class="anchor" href="#table-of-contents"><span class="octicon octicon-link"></span></a>Table of Contents</h2>
+
+<ul>
+<li>
+<a href="#basic-usage">Basic Usage</a>
+
+<ul>
+<li><a href="#defining-a-data-model">Defining a data model</a></li>
+<li><a href="#generating-source-code">Generating source code</a></li>
+<li><a href="#using-generated-code">Using generated code</a></li>
+<li><a href="#customizing-generated-code">Customizing generated code</a></li>
+<li><a href="#demo-videos-and-tutorials">Demo videos and tutorials</a></li>
+</ul>
+</li>
+<li>
+<a href="#download-links">Download links</a>
+
+<ul>
+<li><a href="#stable">Stable</a></li>
+<li><a href="#nightly">Nightly</a></li>
+<li><a href="#snapshot">Snapshot</a></li>
+<li><a href="#maven">Maven</a></li>
+<li><a href="#sample-projects">Sample Projects</a></li>
+</ul>
+</li>
+<li>
+<a href="#installation">Installation</a>
+
+<ul>
+<li><a href="#system-requirements">System Requirements</a></li>
+<li><a href="#installing-the-compiler">Installing the compiler</a></li>
+<li><a href="#installing-the-java-runtime-libraries">Installing the Java runtime libraries</a></li>
+<li><a href="#installing-the-c++-runtime-libraries">Installing the C++ runtime libraries</a></li>
+<li><a href="#installing-the-javascript-libraries">Installing the JavaScript runtime libraries</a></li>
+<li><a href="#installing-the-visual-designer">Installing the Visual Designer</a></li>
+</ul>
+</li>
+<li>
+<a href="#under-the-hood">Under the Hood</a>
+
+<ul>
+<li>
+<a href="#components">Components</a>
+
+<ul>
+<li><a href="#the-mgen-api">The MGen API</a></li>
+<li><a href="#the-mgen-compiler">The MGen Compiler</a></li>
+<li><a href="#the-mgen-code-generators">The MGen Code Generators</a></li>
+<li><a href="#the-mgen-runtime-libraries">The MGen Runtime Libraries</a></li>
+<li><a href="#the-mgen-visual-designer">The MGen Visual Designer</a></li>
+</ul>
+</li>
+<li>
+<a href="#Wire-formats">Wire Formats</a>
+
+<ul>
+<li><a href="#type-ids">Type IDs</a></li>
+<li><a href="#the-mgen-api">The MGen binary format</a></li>
+<li><a href="#the-mgen-compiler">The MGen json format</a></li>
+</ul>
+</li>
+<li><a href="#performance">Performance</a></li>
+</ul>
+</li>
+<li>
+<a href="#advanced-usage">Advanced Usage</a>
+
+<ul>
+<li><a href="#adjusting-the-built-in-serializers">Adjusting the built-in serializers</a></li>
+<li><a href="#adding-code-generators">Adding code generators</a></li>
+<li><a href="#adding-idl-parsers">Adding IDL parsers</a></li>
+<li><a href="#add-wire-formats-and-serializers">Adding wire formats and serializers</a></li>
+<li><a href="#communication-with-the-non-mgen-world">Communication with the non-MGen world</a></li>
+<li>
+<a href="#ideas-for-adding-new-data-model-mappings">Ideas for adding new data model mappings</a>
+
+<ul>
+<li><a href="#c-structs">C Structs</a></li>
+<li><a href="#memory-mapped-data-types">Memory mapped data types</a></li>
+<li><a href="#gpu-data-types">GPU data types</a></li>
+<li><a href="#database-tables">Database tables</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#building-mgen">Building MGen</a></li>
+<li><a href="#state-of-development">State of Development</a></li>
+<li><a href="#feature-road-map">Feature road map</a></li>
+<li><a href="#license">License</a></li>
+<li><a href="#final-words">Final Words</a></li>
+</ul><h2>
+<a name="basic-usage" class="anchor" href="#basic-usage"><span class="octicon octicon-link"></span></a>Basic Usage</h2>
+
+<p>MGen's basic use case is defining a data model, generating source code and providing serializers and deserializers.</p>
+
+<h3>
+<a name="defining-a-data-model" class="anchor" href="#defining-a-data-model"><span class="octicon octicon-link"></span></a>Defining a data model</h3>
+
+<p>Data models are defined using the MGen IDL. You can write them in a text editor or use the MGen Visual Designer. Below is an example of how a type definition may look:</p>
+
+<pre><code>&lt;Apple&gt;
+  &lt;size type="int32"/&gt;
+  &lt;brand type="string"/&gt;
+&lt;/Apple&gt;
+</code></pre>
+
+<p>Compiling the type above with the MGen compiler will produce source code for a class called Apple with two member variables: <em>size</em> (a 32 bit signed integer) and <em>brand</em> (a string). To do this we must save the above type definition in a module file. A module file is simply an xml file with a sequence of type definitions. For example, we could create a file called <em>se.culvertsoft.mymodule.xml</em> with the following contents:</p>
+
+<pre><code>&lt;Module&gt;
+  &lt;Types&gt;
+
+    &lt;Apple&gt;
+      &lt;size type="int32"/&gt;
+      &lt;brand type="string"/&gt;
+    &lt;/Apple&gt;
+
+    &lt;Store&gt;
+      &lt;stock type="list[Apple]"/&gt;
+      &lt;price type="int32"/&gt;
+      &lt;name type="string"/&gt;
+    &lt;/Store&gt;
+
+  &lt;/Types&gt;
+&lt;/Module&gt;
+</code></pre>
+
+<p>Before passing this file to the MGen compiler, we probably want to specify which code generators to run, and if there is more than one module to generate code for. We do this by creating a project file. Here is an example of what a project file may look like:</p>
+
+<pre><code>&lt;Project&gt;
+
+  &lt;Dependency&gt;../models/libX/libX.xml&lt;/Dependency&gt;
+
+  &lt;Sources&gt;
+      &lt;Source&gt;se.culvertsoft.mymodule.xml&lt;/Source&gt;
+      &lt;Source&gt;se.culvertsoft.mymodule2.xml&lt;/Source&gt;
+  &lt;/Sources&gt;
+
+  &lt;Generator name="Java"&gt;
+    &lt;class_path&gt;se.culvertsoft.mgen.javapack.generator.JavaGenerator&lt;/class_path&gt;
+    &lt;output_path&gt;src_generated/main/java&lt;/output_path&gt;
+    &lt;classregistry_path&gt;se.culvertsoft.mymodule&lt;/classregistry_path&gt;
+  &lt;/Generator&gt;
+
+&lt;/Project&gt;
+</code></pre>
+
+<p>Here we specified one project dependency, two source modules and one code generator.</p>
+
+<p>The file structure of the above project will look something like:</p>
+
+<ul>
+<li>..../se.culvertsoft.mymodule.xml (the module file for se.culvertsoft.mymodule)</li>
+<li>..../se.culvertsoft.mymodule2.xml (the module file for se.culvertsoft.mymodule2)</li>
+<li>..../myproject.xml (the project file)</li>
+<li>..../../models/libX/libX.xml (The other project we depend on)</li>
+</ul><p>In the next section we will explain how to run the MGen compiler.</p>
+
+<h3>
+<a name="generating-source-code" class="anchor" href="#generating-source-code"><span class="octicon octicon-link"></span></a>Generating source code</h3>
+
+<p>The MGen Compiler is an executable java JAR. You can run it by typing 'java -jar [compiler].jar' or by using an exe/sh wrapper that does this for you, and then it simply becomes:</p>
+
+<pre><code>mgen MyProject.xml plugin_paths="generators/"
+</code></pre>
+
+<p>Here we run the compiler with two arguments, project and plugin_paths. </p>
+
+<ul>
+<li>project: which project file to load (see the previous section to learn more about project files).</li>
+<li>plugin_paths: where the compiler should search for java JAR files containing IDL parsers and code generators.</li>
+</ul><p>Example: Here is how we generate <a href="https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources">one of the data models for testing MGen</a>:</p>
+
+<pre><code>mgen src/test/resources/project.xml -plugin_paths="../mgen-cppgenerator/target/"
+
+***************************************
+**                                   **
+**                                   **
+**        MGen Compiler v0.x         **
+**                                   **
+***************************************
+
+Parsing command line args...ok
+  project: ../mgen-compiler/src/test/resources/project.xml
+  plugin_paths: ../mgen-cppgenerator/target/
+
+Parsing project...
+  parsing project: /home/johan/git/mgen/mgen-compiler/src/test/resources/project.xml
+  parsing project: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/project.xml
+  parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule1.xml
+  parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule2.xml
+  parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/dependencies/gameworld.dependency.depmodule3.xml
+  parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule1.xml
+  parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule2.xml
+  parsing module: /home/johan/git/mgen/mgen-compiler/src/test/resources/gameworld.types.basemodule3.xml
+ok
+
+Linking types...ok
+
+Checking for type conflicts...ok
+
+Instantiating generators...
+  WARNING: Could not find specified generator 'se.culvertsoft.mgen.javapack.generator.JavaGenerator', skipping
+  WARNING: Could not find specified generator 'se.culvertsoft.mgen.jspack.generator.JavascriptGenerator', skipping
+  Created generator: se.culvertsoft.mgen.cpppack.generator.CppGenerator
+ok
+
+Generating code...ok
+
+Writing files to disk:
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVectorR3.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVectorR3.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepPositioning.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepPositioning.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntity.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntity.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCreature.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCreature.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVehicle.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepVehicle.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCar.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepCar.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepItem.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepItem.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntityHolder.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepEntityHolder.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepGarageViewer.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepGarageViewer.cpp
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepWorld.h
+  writing: src_generated/test/cpp/gameworld/dependency/depmodule1/DepWorld.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/priority.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/priority.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/transport.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/transport.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/kind.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/kind.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/VectorR3.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/VectorR3.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Matrix4x4d.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Matrix4x4d.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Positioning.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Positioning.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Entity.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Entity.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Creature.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Creature.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Vehicle.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Vehicle.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Car.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Car.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Item.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/Item.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/EntityHolder.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/EntityHolder.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/GarageViewer.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/GarageViewer.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/World.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule1/World.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/Grade.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/Grade.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/AppConfigarion.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/AppConfigarion.cpp
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/StringContainer.h
+  writing: src_generated/test/cpp/gameworld/types/basemodule2/StringContainer.cpp
+  writing: src_generated/test/cpp/gameworld/types/ClassRegistry.h
+  writing: src_generated/test/cpp/gameworld/types/ClassRegistry.cpp
+  writing: src_generated/test/cpp/gameworld/types/Dispatcher.h
+  writing: src_generated/test/cpp/gameworld/types/Dispatcher.cpp
+  writing: src_generated/test/cpp/gameworld/types/Handler.h
+  writing: src_generated/test/cpp/gameworld/types/Handler.cpp
+  writing: src_generated/test/cpp/gameworld/types/ForwardDeclare.h
+
+*** COMPILATION SUCCESS ***
+</code></pre>
+
+<h3>
+<a name="using-generated-code" class="anchor" href="#using-generated-code"><span class="octicon octicon-link"></span></a>Using generated code</h3>
+
+<p>Read on below, or check some of our tests at:</p>
+
+<ul>
+<li>C++: <a href="https://github.com/culvertsoft/mgen/tree/master/mgen-cpplib/src/test/cpp/src/tests">https://github.com/culvertsoft/mgen/tree/master/mgen-cpplib/src/test/cpp/src/tests</a>
+</li>
+<li>Scala: <a href="https://github.com/culvertsoft/mgen/tree/master/mgen-javalib/src/test/scala/se/culvertsoft/mgen/javapack/test">https://github.com/culvertsoft/mgen/tree/master/mgen-javalib/src/test/scala/se/culvertsoft/mgen/javapack/test</a>
+</li>
+<li>Java: See scala examples (the generated code is pure java, but we wrote our tests in scala as it was easier)</li>
+<li>Javascript: coming soon!</li>
+<li>For advanced tests (with automatic data generation), <a href="https://github.com/culvertsoft/mgen/tree/master/mgen-integrationtests">click here</a>.</li>
+</ul><p>To access the generated types we include the headers of the types we need, or the generated ClassRegistry.h header file which will let us access all the types that were just generated. We will also include some mgen headers for serialization.</p>
+
+<pre><code>#include "gameworld/types/ClassRegistry.h"
+
+#include "mgen/serialization/VectorInputStream.h"
+#include "mgen/serialization/VectorOutputStream.h"
+#include "mgen/serialization/JsonWriter.h"
+#include "mgen/serialization/JsonReader.h"
+
+using mgen::VectorOutputStream;
+using mgen::VectorInputStream;
+using mgen::JsonWriter;
+using mgen::JsonReader;
+using mgen::VectorOutputStream;
+using gameworld::types::ClassRegistry;
+using namespace gameworld::types::basemodule1;
+</code></pre>
+
+<p>Let us then create some objects from the generated classes and set some properties on these.</p>
+
+<pre><code>int main() {
+  Car car1, car2, car3;
+  car1.setBrand("Ford");
+  car2.setTopSpeed(123);
+</code></pre>
+
+<p>Now let us try to serialize these cars to JSON. This is how we do it:</p>
+
+<pre><code>  // First we create a class registry.
+  ClassRegistry classRegistry;
+
+  // We will serialize our objects to this std::vector of bytes
+  std::vector&lt;char&gt; buffer;
+
+  // Create an OutputStream object around the vector (MGen readers and writers accept only streams)
+  VectorOutputStream out(buffer);
+
+  // Now create our serializer
+  JsonWriter&lt;VectorOutputStream, ClassRegistry&gt; writer(out, classRegistry);
+
+  // Write the objects
+  writer.writeObject(car1);
+  writer.writeObject(car2);
+  writer.writeObject(car3);
+</code></pre>
+
+<p>Now we can read these objects back from the buffer in the following manner:</p>
+
+<pre><code>  // Create an InputStream object from the data source
+  VectorInputStream in(buffer);
+
+  // Create our deserializer
+  JsonReader&lt;VectorInputStream, ClassRegistry&gt; reader(in, classRegistry);
+
+  // Read back the objects. 
+  // Note that here the root objects read back are placed on the free store, 
+  // so they eventually need to be manually deleted. 
+  MGenBase * obj1 = reader.readObject();
+  MGenBase * obj2 = reader.readObject();
+  MGenBase * obj3 = reader.readObject();
+
+  std::vector&lt;MGenBase*&gt; objects;
+  objects.push_back(obj1);
+  objects.push_back(obj2);
+  objects.push_back(obj3);
+
+  // What we could do now is dynamic_cast to identify the types, or use one 
+  // of the type ids supplied for generated classes:
+  // Here using Car::_type_id, which is a 64bit hash code calculated from 'name.space.Type'.
+  for (MGenBase obj * : objects) {
+    switch(obj-&gt;_typeId()) {
+      case Car::_type_id:
+        Car * car = static_cast&lt;Car*&gt;(obj);
+        std::cout &lt;&lt; "Yay we got a car!" &lt;&lt; std::endl;
+        break;
+      default:
+        std::cout &lt;&lt; "Oops, how did this happen?" &lt;&lt; std::endl;
+        break;
+    }
+  }
+
+  // Other ways of reading objects when the type is known are:
+  // Car * car1 = reader.readObject&lt;Car&gt;(); // Polymorphic read (-&gt; heap)
+  // Car car2 = reader.readStatic&lt;Car&gt;(); // Nonpolymorphic read (-&gt; stack)
+
+  // Ideally we'd wrap it all in a try-catch block to avoid leaking any exceptions unless we want to
+  // try {
+  //   reader-&gt;readObject();
+  // } catch (const mgen::Exception&amp; exception) {
+  // // do something. mgen::Exception extends std::runtime_error
+  // }
+</code></pre>
+
+<p>Additionally, MGen supports reading and writing data types from external non-MGen sources, such as json APIs to existing services, and can easily be further extended to custom binary and text formats by implementing new or extending existing Reader and Writer classes - Entirely separate of generated source code through a simple visitor interface (for example, see our <a href="https://github.com/culvertsoft/mgen/blob/master/mgen-cpplib/src/main/cpp/mgen/serialization/JsonWriterBase.h">C++ JsonWriter</a>).</p>
+
+<h3>
+<a name="customizing-generated-code" class="anchor" href="#customizing-generated-code"><span class="octicon octicon-link"></span></a>Customizing generated code</h3>
+
+<p>One of the most powerful features of MGen is its ability to let you customize generated code.</p>
+
+<p>MGen offers two ways of doing this:</p>
+
+<ul>
+<li>Using MGen's plug-in architecture: Providing your own code parser and generator plug-ins</li>
+<li>Editing generated code directly: Using custom code sections in generated code</li>
+</ul><p>MGen can be configured to emit sections in generated code intended for manual edits. This means you can generate code and then launch your favorite IDE and start hacking away - and MGen will respect your edits. When you later extend your model, run the compiler and generate code again, your custom code will be preserved in the newly generated file - your custom code will be picked up from the file you previously generated on disk, so no need to tell MGen where to fetch it from or deal with any extra included files.</p>
+
+<p>The MGen compiler is also intelligent enough to only write new files to disk if there is an actual difference between newly assembled code and the one that already exists on disk.</p>
+
+<h3>
+<a name="demo-videos-and-tutorials" class="anchor" href="#demo-videos-and-tutorials"><span class="octicon octicon-link"></span></a>Demo videos and tutorials</h3>
+
+<p>We plan to create demo videos and tutorials to show how to use mgen. Once finished, they will be posted on youtube with links in this section.</p>
+
+<h2>
+<a name="download-links" class="anchor" href="#download-links"><span class="octicon octicon-link"></span></a>Download links</h2>
+
+<p>The following are links where you can download MGen pre-built. NOTE:</p>
+
+<ul>
+<li>JAR files marked <em>assembly</em> are standalone executables, packaged with all dependencies included. </li>
+<li>JAR files intended as programming libraries are NOT marked <em>assembly</em>.</li>
+</ul><h3>
+<a name="stable" class="anchor" href="#stable"><span class="octicon octicon-link"></span></a>Stable</h3>
+
+<p>Represents the latest non-beta release. As we're currently in alpha phase, there are yet no entries here.</p>
+
+<h3>
+<a name="nightly" class="anchor" href="#nightly"><span class="octicon octicon-link"></span></a>Nightly</h3>
+
+<p>Represents the latest built development version, built once per night. You can download it from <a href="http://nightly.culvertsoft.se">http://nightly.culvertsoft.se</a></p>
+
+<h3>
+<a name="snapshot" class="anchor" href="#snapshot"><span class="octicon octicon-link"></span></a>Snapshot</h3>
+
+<p>Represents the latest built development version, built after each git push. You can download it from <a href="http://snapshot.culvertsoft.se">http://snapshot.culvertsoft.se</a></p>
+
+<h3>
+<a name="maven" class="anchor" href="#maven"><span class="octicon octicon-link"></span></a>Maven</h3>
+
+<p>We plan on making the MGen tools and libraries available through Maven. However we haven't reached any formal version numbers yet, so at this point your option is to grab the snapshot, see <a href="https://oss.sonatype.org/#nexus-search;quick%7Emgen">https://oss.sonatype.org/#nexus-search;quick~mgen</a> for details.</p>
+
+<h3>
+<a name="sample-projects" class="anchor" href="#sample-projects"><span class="octicon octicon-link"></span></a>Sample Projects</h3>
+
+<p>Currently we haven't had time to produce any dedicated sample projects. But some models of interest might be:</p>
+
+<ul>
+<li><a href="https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources">One of the data model used by our tests</a></li>
+<li><a href="https://github.com/culvertsoft/mgen/tree/master/mgen-integrationtests/models/depend">One of the data model used by our tests</a></li>
+<li><a href="https://github.com/culvertsoft/mgen/tree/master/mgen-integrationtests/models/read">One of the data model used by our tests</a></li>
+<li><a href="https://github.com/culvertsoft/mgen/tree/master/mgen-integrationtests/models/write">One of the data model used by our tests</a></li>
+<li><a href="https://github.com/culvertsoft/mgen/tree/master/mgen-visualdesigner/model">The data model of the MGen Visual Designer</a></li>
+</ul><h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>At this early stage installation is manual (there is currently no installer available). Below you can find installation instructions for each language we currently support. Read the later chapters if you would like to try to add support for more languages.</p>
+
+<h3>
+<a name="system-requirements" class="anchor" href="#system-requirements"><span class="octicon octicon-link"></span></a>System Requirements</h3>
+
+<p>The MGen standalone applications (MGen Compiler and MGen Visual Designer) require Java 7 or later to be installed on your computer, such as OpenJRE/OpenJDK or the <a href="http://java.com/en/download/index.jsp">Oracle JRE</a>. We are currently not planning to support any earlier versions than java7.</p>
+
+<h3>
+<a name="installing-the-compiler" class="anchor" href="#installing-the-compiler"><span class="octicon octicon-link"></span></a>Installing the compiler</h3>
+
+<p>The MGen Compiler is just an executable java JAR file. Check the <a href="#download-links">downloads section</a> and download a release of the version you want. You could for example try out <a href="http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-compiler/mgen-compiler-assembly-SNAPSHOT.jar">the latest build compiler</a>.</p>
+
+<p>There is no installation required. Just put it where you like and follow the instructions in the sections above on how to use it. Rename it as you see fit.</p>
+
+<p>See <a href="#generating-source-code">Generating source code</a> for how to use it.</p>
+
+<h3>
+<a name="installing-the-java-runtime-libraries" class="anchor" href="#installing-the-java-runtime-libraries"><span class="octicon octicon-link"></span></a>Installing the Java runtime libraries</h3>
+
+<p>The java libraries are compiled to java jar files, and currently have one external dependency: json-simple. Add the following jar files to your build:</p>
+
+<ul>
+<li><a href="http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-api/">mgen-api</a></li>
+<li><a href="http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-javalib/">mgen-javalib</a></li>
+<li><a href="https://code.google.com/p/json-simple/">json-simple</a></li>
+</ul><p>Check the <a href="#download-links">downloads section</a> or try the snapshots above.</p>
+
+<p>If you want to include the runtime libries by source instead or build them yourself, see <a href="#building-mgen">Building MGen</a>.</p>
+
+<h3>
+<a name="installing-the-c-runtime-libraries" class="anchor" href="#installing-the-c-runtime-libraries"><span class="octicon octicon-link"></span></a>Installing the C++ runtime libraries</h3>
+
+<p>The C++ runtime libraries are header-only (and should work with any c++98 compiler) - there is no installation required. Just download and add to your include path. All dependencies are included (currently just <a href="https://code.google.com/p/rapidjson/">rapipdjson</a>). Just download the nightly or snapshot package and look in the mgen-cpplib/ folder.</p>
+
+<h3>
+<a name="installing-the-javascript-runtime-libraries" class="anchor" href="#installing-the-javascript-runtime-libraries"><span class="octicon octicon-link"></span></a>Installing the JavaScript runtime libraries</h3>
+
+<ul>
+<li>Work in progress -</li>
+</ul><h3>
+<a name="installing-the-visual-designer" class="anchor" href="#installing-the-visual-designer"><span class="octicon octicon-link"></span></a>Installing the Visual Designer</h3>
+
+<p>The Visual Designer is an executable java JAR file. Check the <a href="#download-links">downloads section</a> to try out the latest version.
+<a href="http://snapshot.culvertsoft.se/mgen-SNAPSHOT/mgen-visualdesigner/mgen-visualdesigner-assembly-SNAPSHOT.jar">Here</a> a direct link for convenience.</p>
+
+<p>Place and rename the jar file where you like. It should be possible to launch by double clicking if you have a Java JRE correctly installed.</p>
+
+<h2>
+<a name="under-the-hood" class="anchor" href="#under-the-hood"><span class="octicon octicon-link"></span></a>Under the Hood</h2>
+
+<h3>
+<a name="components" class="anchor" href="#components"><span class="octicon octicon-link"></span></a>Components</h3>
+
+<p>MGen's core components consist of:</p>
+
+<ul>
+<li>The MGen API</li>
+<li>The MGen Compiler</li>
+<li>The MGen Code Generators</li>
+<li>The MGen Runtime libraries</li>
+<li>The MGen Visual Designer</li>
+</ul><h4>
+<a name="the-mgen-api" class="anchor" href="#the-mgen-api"><span class="octicon octicon-link"></span></a>The MGen API</h4>
+
+<p>The MGen API, as well as the interfaces to the compiler, are written entirely in Java, although under the hood much of the compiler is written in Scala.</p>
+
+<p>The API defines the standard data types supported by the compiler and runtime libraries. The API also defines the Parser and Generator interfaces used by the compiler.</p>
+
+<h4>
+<a name="the-mgen-compiler" class="anchor" href="#the-mgen-compiler"><span class="octicon octicon-link"></span></a>The MGen Compiler</h4>
+
+<p>The Compiler is a command line executable which parses IDL code and produces classes in your programming language of choice. It is capable of dynamically loading new parsers and code generators on startup, either the default MGen implementations or your own custom supplied libraries (just place a JAR file containing Java classes implementing the Generator or Parser interfaces on the Compiler's plugin search path, and they will become available to use through the compiler).</p>
+
+<p>Key features for the compiler, standard parser and standard generators are:</p>
+
+<ul>
+<li>Support for generic types </li>
+<li>Heterogeneous containers</li>
+<li>Support for polymorphic types (maps directly to c++/java class hierarchies)</li>
+<li>Plug-in architecture for loading custom parsers and generators
+
+<ul>
+<li>Ability to extend to new generated languages</li>
+<li>Ability to extend to new idl languages</li>
+</ul>
+</li>
+</ul><h4>
+<a name="the-mgen-code-generators" class="anchor" href="#the-mgen-code-generators"><span class="octicon octicon-link"></span></a>The MGen Code Generators</h4>
+
+<p>MGen currently provides code generators for the following languages: </p>
+
+<ul>
+<li>Java</li>
+<li>C++</li>
+<li>JavaScript</li>
+</ul><p>These produce:</p>
+
+<ul>
+<li>Classes (or class-like structures in JavaScript)</li>
+<li>ClassRegistries (registry for all generated classes)</li>
+<li>Utility classes (such as dispatchers and handlers)</li>
+</ul><p>By default generated classes are java-beans and C++ data containers with getters and setters or class-like structures in the case of JavaScript. Some of the functionality generated for classes is:</p>
+
+<ul>
+<li>Flag members indicating whether a member has been set or not</li>
+<li>Generic visitor methods that will visit all set fields</li>
+<li>Read methods</li>
+<li>Field identification methods</li>
+<li>Field metadata accessible while visiting an object and through method calls</li>
+<li>Type metadata accessible through both virtual and static methods</li>
+<li>Getters and Setters</li>
+<li>Query methods for asking if a member is set</li>
+<li>Type IDs</li>
+<li>Methods for testing equality (c++: == operator, java: equals(..))</li>
+<li>Stringification and object Hash Code methods (Java Only)</li>
+</ul><p>ClassRegistries are primarily used to identify and instantiate data types over data streams during deserialization.</p>
+
+<h4>
+<a name="the-mgen-runtime-libraries" class="anchor" href="#the-mgen-runtime-libraries"><span class="octicon octicon-link"></span></a>The MGen Runtime libraries</h4>
+
+<p>MGen currently provides runtime libraries for the following languages: </p>
+
+<ul>
+<li>Java</li>
+<li>C++</li>
+<li>JavaScript</li>
+</ul><p>The runtime libraries work together with generated classes to provide:</p>
+
+<ul>
+<li>Serialization</li>
+<li>Deep Copying</li>
+<li>Equality Testing</li>
+<li>Automatic type identification and instantiation</li>
+<li>Type metadata</li>
+<li>Stringification</li>
+<li>Hashing</li>
+</ul><p>The runtime libraries provide two default serializers:</p>
+
+<ul>
+<li>The MGen Binary format Serializer</li>
+<li>The MGen JSON format Serializer</li>
+</ul><p>Generated classes are serializer agnostic and supply interfaces through which you can connect your own writers and readers.</p>
+
+<h4>
+<a name="the-mgen-visual-designer" class="anchor" href="#the-mgen-visual-designer"><span class="octicon octicon-link"></span></a>The MGen Visual Designer</h4>
+
+<p>We are also working on a visual data model editor.</p>
+
+<h3>
+<a name="performance" class="anchor" href="#performance"><span class="octicon octicon-link"></span></a>Performance</h3>
+
+<p>So far we've only run some basic performance tests, but the results are promising. Single threaded binary serialization speed of objects is about 1-2 GBit/s (Java,C++), depending on compiler and platform. JSON serialization performance is about half of that.</p>
+
+<h2>
+<a name="building-mgen" class="anchor" href="#building-mgen"><span class="octicon octicon-link"></span></a>Building MGen</h2>
+
+<p>If you're not satisfied with downloading pre-built libraries (see <a href="#download-links">the downloads section</a>), this section will explain how you build MGen from source.</p>
+
+<p>Build Requirements (Build):</p>
+
+<ul>
+<li>Java JDK &gt;= 1.7</li>
+<li>Python 2.x&gt;=2.7 or 3</li>
+<li>SBT &gt;= 1.3.5 (Use the installer from <a href="http://www.scala-sbt.org/download.html">http://www.scala-sbt.org/download.html</a>)</li>
+</ul><p>Build Requirements (Test):</p>
+
+<ul>
+<li>same as above +</li>
+<li>CMAKE &gt;= 2.8</li>
+<li>MSVC&gt;=2005 or g++&gt;=4 or Clang. (should work with any c++98 compiler)</li>
+<li>msbuild (if using MSVC)</li>
+</ul><p>Build Instructions:</p>
+
+<ul>
+<li>clone the repo</li>
+<li>python build.py --help [example: "python build.py -b" for just building]</li>
+</ul><p>Output will be placed inside each mgen-component's target/ directory (e.g. mgen-api/target/).</p>
+
+<h2>
+<a name="state-of-development" class="anchor" href="#state-of-development"><span class="octicon octicon-link"></span></a>State of Development</h2>
+
+<p>Development is a about a month from an initial beta release. </p>
+
+<p>Most of the core functionality is implemented and we've built about half the cross-language integration tests we want, but there are currently a few limitations:</p>
+
+<ul>
+<li>Documentation is lacking.</li>
+<li>We've not yet configured test boxes for all the platforms we want.</li>
+<li>We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"</li>
+</ul><h2>
+<a name="feature-road-map" class="anchor" href="#feature-road-map"><span class="octicon octicon-link"></span></a>Feature road map</h2>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Dual-Licensed under:</p>
+
+<ul>
+<li>GPL v2</li>
+<li>Commercial license (will be available after initial release)</li>
+</ul><h2>
+<a name="final-words" class="anchor" href="#final-words"><span class="octicon octicon-link"></span></a>Final Words</h2>
+
+<p>MGen serializers and utilities are designed to be state-less. There is no common object graph preservation or node-to-node implementation with synchronization. This is a conscious design choice and also implies that the standard implementation of serializers do not support circular references. MGen serializers consider all data to be just that - data. MGen serializers have no concept of references or object identities (Although generated polymorphic code and data types in most languages are of reference types - during serialization they are treated as nothing more than data containers).</p>
+
+<p>However, what this does is it gives us the advantage of supporting lossy and reordering protocols, priority based messaging etc without worrying about objects having all the necessary information to be reconstructed on receiving side. If you wish to send one message over http, another over a UDP socket and a third with smoke signals, in the opposite order, MGen won't really care.</p>
+
+<p>We believe supporting identities and true object graphs should be the responsibility of the layer above, the layer syncronizing applications with with each other - not the data layer. We do have ideas to build such systems (ESBs, ORMs and common object graphs among application nodes and the like) on that support the MGen data model - but not as a part of MGen.</p>
+
+<p>In short - we chose to separate the concerns of data representation from data identity and transport method - the two latter not being anything MGen is concerned with at this point, however not anything MGen will prevent either - You could implement your own object identity and graph system on top of types generated by MGen (Something we already did for our visual data model editor).</p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/culvertsoft/mgen/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/culvertsoft/mgen/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/culvertsoft/mgen"></a> is maintained by <a href="https://github.com/culvertsoft">culvertsoft</a>.</p>
+
+          <p>This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the Architect theme by <a href="https://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+  
+  </body>
+</html>
