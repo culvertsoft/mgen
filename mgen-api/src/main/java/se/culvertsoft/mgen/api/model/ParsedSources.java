@@ -13,8 +13,8 @@ import java.util.Map;
 public class ParsedSources {
 
 	/**
-	 * Retrieves the settings specified. The settings are created from: <command
-	 * line args> + <project file settings>.
+	 * Retrieves the settings specified. The settings are created from: [command
+	 * line args] + [project file settings].
 	 * 
 	 * @return The settings for this project
 	 */
@@ -41,35 +41,50 @@ public class ParsedSources {
 	}
 
 	/**
-	 * Replaces all settings
+	 * Replaces all settings for this ParsedSources
+	 * 
+	 * @param settings
+	 *            The new settings for this ParsedSources
 	 */
 	public void setSettings(Map<String, String> settings) {
 		m_settings = settings;
 	}
 
 	/**
-	 * Replaces all modules
+	 * Replaces all modules of this ParsedSources
+	 * 
+	 * @param modules
+	 *            The new modules for this ParsedSources
 	 */
 	public void setModules(List<Module> modules) {
 		m_modules = modules;
 	}
 
 	/**
-	 * Adds a new module
+	 * Adds a new module to this ParsedSources
+	 * 
+	 * @param module
+	 *            The module to add
 	 */
 	public void addModule(Module module) {
 		m_modules.add(module);
 	}
 
 	/**
-	 * Replaces all dependencies
+	 * Replaces all dependencies for this ParsedSources
+	 * 
+	 * @param dependencies
+	 *            The new dependencies of this parsedSources
 	 */
 	public void setDependencies(List<Project> dependencies) {
 		m_dependencies = dependencies;
 	}
 
 	/**
-	 * Replaces all modules
+	 * Adds a new Project dependency to this ParsedSources
+	 * 
+	 * @param dependency
+	 *            The Project dependency to add
 	 */
 	public void addDependency(Project dependency) {
 		m_dependencies.add(dependency);
@@ -120,7 +135,9 @@ public class ParsedSources {
 	/**
 	 * Convenience methods for finding a Module
 	 */
-	protected Module findModule(final String name, final HashSet<ParsedSources> alreadySearched) {
+	protected Module findModule(
+			final String name,
+			final HashSet<ParsedSources> alreadySearched) {
 
 		if (alreadySearched.contains(this))
 			return null;
