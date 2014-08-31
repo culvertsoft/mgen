@@ -113,8 +113,10 @@ public class ParsedSources {
 
 	/**
 	 * Internal backing method of allModulesRecursively()
+	 *
 	 * @param out
 	 * 		The HashSet this function will add modules to
+	 *
 	 * @param scannedSources
 	 * 		The already scanned sources (Will not be recursed)
 	 */
