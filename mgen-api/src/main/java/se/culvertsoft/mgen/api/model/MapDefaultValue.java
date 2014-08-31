@@ -16,7 +16,9 @@ public class MapDefaultValue extends DefaultValue {
 	}
 
 	/**
-	 * The map values of this default value
+	 * Gets the map values of this default value
+	 * 
+	 * @return The map values of this default value
 	 */
 	public Map<DefaultValue, DefaultValue> values() {
 		return m_values;
@@ -30,6 +32,18 @@ public class MapDefaultValue extends DefaultValue {
 		return "{" + m_values + "}";
 	}
 
+	/**
+	 * Creates a new MapDefaultValue
+	 * 
+	 * @param typ
+	 *            The type meta data about the MapDefaultValue
+	 * 
+	 * @param values
+	 *            The actual values of this MapDefaultValue
+	 * 
+	 * @param referencedFrom
+	 *            The class wherein this MapDefaultValue is defined
+	 */
 	public MapDefaultValue(
 			final MapType typ,
 			final Map<DefaultValue, DefaultValue> values,

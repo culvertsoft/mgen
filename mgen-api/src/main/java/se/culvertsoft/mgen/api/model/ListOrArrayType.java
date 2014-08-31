@@ -6,7 +6,9 @@ package se.culvertsoft.mgen.api.model;
 public abstract class ListOrArrayType extends Type {
 
 	/**
-	 * The type of the elements in this array or list
+	 * Gets the type of the elements in this array or list
+	 * 
+	 * @return The type of the elements in this array or list
 	 * 
 	 * @throws RuntimeException
 	 *             If called inside the compiler
@@ -31,6 +33,16 @@ public abstract class ListOrArrayType extends Type {
 		return elementType().containsUserDefinedType();
 	}
 
+	/**
+	 * Creates a new ListOrArray type. Not to be used directly - Use ListType or
+	 * ArrayType instead.
+	 * 
+	 * @param enm
+	 *            The TypeEnum of this type. Must be LIST or ARRAY.
+	 * 
+	 * @param elementType
+	 *            The element type of this ListOrArrayType
+	 */
 	protected ListOrArrayType(final TypeEnum enm, final Type elementType) {
 		super(enm);
 		m_elementType = elementType;

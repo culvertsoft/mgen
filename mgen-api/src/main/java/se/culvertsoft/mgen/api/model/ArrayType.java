@@ -34,6 +34,11 @@ public class ArrayType extends ListOrArrayType {
 	/**
 	 * Creates a new array instance of this class. Intended for use outside the
 	 * compiler, primarily during deserialization.
+	 * 
+	 * @param n
+	 *            The size the array (the number of elements)
+	 * 
+	 * @return The array instance created
 	 */
 	public Object newInstance(final int n) {
 		switch (elementType().typeEnum()) {
@@ -102,7 +107,8 @@ public class ArrayType extends ListOrArrayType {
 			return String[].class;
 		default:
 			final Class<?> elemCls = elementType().classOf();
-			return elemCls != null ? Array.newInstance(elemCls, 0).getClass() : null;
+			return elemCls != null ? Array.newInstance(elemCls, 0).getClass()
+					: null;
 		}
 	}
 

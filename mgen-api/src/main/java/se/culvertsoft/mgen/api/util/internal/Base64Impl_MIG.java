@@ -3,6 +3,8 @@ package se.culvertsoft.mgen.api.util.internal;
 import java.util.Arrays;
 
 /**
+ * The MIG Base64 encoder/decoder adapted to fit inside the MGen project.
+ * 
  * A very fast and memory efficient class to encode and decode to and from
  * BASE64 in full accordance with RFC 2045.<br>
  * <br>
@@ -14,7 +16,7 @@ import java.util.Arrays;
  * 
  * On byte arrays the encoder is about 20% faster than Jakarta Commons Base64
  * Codec for encode and about 50% faster for decoding large arrays. This
- * implementation is about twice as fast on very small arrays (&lt 30 bytes). If
+ * implementation is about twice as fast on very small arrays (&lt; 30 bytes). If
  * source/destination is a <code>String</code> this version is about three times
  * as fast due to the fact that the Commons Codec result has to be recoded to a
  * <code>String</code> from <code>byte[]</code>, which is very expensive.<br>

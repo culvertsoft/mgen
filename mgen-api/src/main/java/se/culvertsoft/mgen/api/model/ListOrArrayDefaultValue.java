@@ -16,14 +16,25 @@ public class ListOrArrayDefaultValue extends DefaultValue {
 	}
 
 	/**
-	 * The list values of this default value
+	 * Gets the list values of this default value
+	 * 
+	 * @return The list values of this default value
 	 */
 	public List<DefaultValue> values() {
 		return m_values;
 	}
 
 	/**
-	 * The list values of this default value
+	 * Creates a new ListOrArrayDefaultValue
+	 * 
+	 * @param typ
+	 *            The type of this ListOrArrayDefaultValue
+	 * 
+	 * @param values
+	 *            The elements of this ListOrArrayDefaultValue
+	 * 
+	 * @param referencedFrom
+	 *            The class wherein this default value is defined
 	 */
 	public ListOrArrayDefaultValue(
 			final ListOrArrayType typ,

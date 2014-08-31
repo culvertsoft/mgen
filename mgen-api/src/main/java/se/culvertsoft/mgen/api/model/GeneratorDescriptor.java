@@ -4,7 +4,7 @@ import java.util.Map;
 
 /**
  * Represents a code generator class selected by the compiler.
- * GeneratorDescriptors are created for each <Generator> section in the project
+ * GeneratorDescriptors are created for each 'Generator' section in the project
  * files of the IDL.
  */
 public class GeneratorDescriptor {
@@ -69,8 +69,9 @@ public class GeneratorDescriptor {
 	 */
 	@Override
 	public String toString() {
-		return "SelectedGenerator [generatorName=" + m_generatorName + ", generatorClassName="
-				+ m_generatorClassName + ", generatorSettings=" + m_generatorSettings + "]";
+		return "SelectedGenerator [generatorName=" + m_generatorName
+				+ ", generatorClassName=" + m_generatorClassName
+				+ ", generatorSettings=" + m_generatorSettings + "]";
 	}
 
 	/**
@@ -80,11 +81,16 @@ public class GeneratorDescriptor {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
+		result = prime
+				* result
+				+ ((m_generatorClassName == null) ? 0 : m_generatorClassName
+						.hashCode());
 		result = prime * result
-				+ ((m_generatorClassName == null) ? 0 : m_generatorClassName.hashCode());
-		result = prime * result + ((m_generatorName == null) ? 0 : m_generatorName.hashCode());
-		result = prime * result
-				+ ((m_generatorSettings == null) ? 0 : m_generatorSettings.hashCode());
+				+ ((m_generatorName == null) ? 0 : m_generatorName.hashCode());
+		result = prime
+				* result
+				+ ((m_generatorSettings == null) ? 0 : m_generatorSettings
+						.hashCode());
 		return result;
 	}
 

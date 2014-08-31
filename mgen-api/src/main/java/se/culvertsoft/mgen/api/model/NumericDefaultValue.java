@@ -14,14 +14,18 @@ public class NumericDefaultValue extends DefaultValue {
 	}
 
 	/**
-	 * Gets the stored value as a double
+	 * Gets the stored value as a float64
+	 * 
+	 * @return The stored value as a float64
 	 */
 	public double floatingPtValue() {
 		return m_value.doubleValue();
 	}
 
 	/**
-	 * Gets the stored value as a long
+	 * Gets the stored value as an int64
+	 * 
+	 * @return The stored value as an int64
 	 */
 	public long fixedPtValue() {
 		return m_value.longValue();
@@ -35,6 +39,18 @@ public class NumericDefaultValue extends DefaultValue {
 		return m_value.toString();
 	}
 
+	/**
+	 * Creates a new NumericDefaultValue
+	 * 
+	 * @param expectedType
+	 *            The expected type of the field with this default value
+	 * 
+	 * @param value
+	 *            The actual value of this DefaultValue
+	 * 
+	 * @param referencedFrom
+	 *            The class wherein this default value is defined
+	 */
 	public NumericDefaultValue(
 			final PrimitiveType expectedType,
 			final Number value,

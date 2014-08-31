@@ -29,10 +29,10 @@ public class ConstantReferenceDefaultValue extends DefaultValue {
 	 *            The class within which this default value is defined
 	 */
 	public ConstantReferenceDefaultValue(
-			final Type typ,
+			final Type expectedType,
 			final Constant constant,
 			final ClassType referencedFrom) {
-		super(typ, referencedFrom);
+		super(expectedType, referencedFrom);
 		m_constant = constant;
 	}
 

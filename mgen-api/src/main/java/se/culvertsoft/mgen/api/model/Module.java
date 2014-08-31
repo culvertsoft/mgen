@@ -12,8 +12,8 @@ public class Module {
 
 	/**
 	 * Retrieves the settings map for this module. The settings are created
-	 * from: <command line args> + <project file settings> + <module file
-	 * settings>
+	 * from: [command line args] + [project file settings] + [module file
+	 * settings]
 	 * 
 	 * @return The settings for this module
 	 */
@@ -81,6 +81,9 @@ public class Module {
 
 	/**
 	 * Replaces the classes of this module.
+	 * 
+	 * @param classes
+	 *            The new classes of this module
 	 */
 	public void setClasses(final List<ClassType> classes) {
 		m_classes.clear();
@@ -89,6 +92,9 @@ public class Module {
 
 	/**
 	 * Adds classes to this module.
+	 * 
+	 * @param classes
+	 *            The classes to add
 	 */
 	public void addClasses(final List<ClassType> classes) {
 		m_classes.addAll(classes);
@@ -96,6 +102,9 @@ public class Module {
 
 	/**
 	 * Adds a class to this module.
+	 * 
+	 * @param c
+	 *            The class to add
 	 */
 	public void addClass(final ClassType c) {
 		m_classes.add(c);
@@ -103,6 +112,9 @@ public class Module {
 
 	/**
 	 * Replaces the enums of this module.
+	 * 
+	 * @param enums
+	 *            The new enums of this module
 	 */
 	public void setEnums(final List<EnumType> enums) {
 		m_enums.clear();
@@ -111,18 +123,43 @@ public class Module {
 
 	/**
 	 * Adds new enums to this module.
+	 * 
+	 * @param enums
+	 *            The enums to add
 	 */
 	public void addEnums(final List<EnumType> enums) {
 		m_enums.addAll(enums);
 	}
 
 	/**
-	 * Add a new enum to this module.
+	 * Adds a new enum to this module.
+	 * 
+	 * @param e
+	 *            The enum to add
 	 */
 	public void addEnum(final EnumType e) {
 		m_enums.add(e);
 	}
 
+	/**
+	 * Creates a new Module
+	 * 
+	 * @param path
+	 *            The full Module path, e.g. com.mycompany.mypkg
+	 * 
+	 * @param filePath
+	 *            The written file path to the file where this Module is defined
+	 * 
+	 * @param absoluteFilePath
+	 *            The absolute file path to the file where this Module is
+	 *            defined
+	 * 
+	 * @param settings
+	 *            The settings specified for this module
+	 * 
+	 * @param parent
+	 *            The Project wherein this Module is defined
+	 */
 	public Module(
 			final String path,
 			final String filePath,
