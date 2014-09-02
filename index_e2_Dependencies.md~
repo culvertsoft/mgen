@@ -17,7 +17,7 @@ External java dependencies are automatically downloaded when using MGen's maven 
 
 ### C++ runtime library
 
-Our philosophy for the MGen C++ runtime library is to keep it small and header-only. This way we make installation very simple and let users keep their build setups untouched, by just adding an include directory.
+Our philosophy for the MGen C++ runtime library is to keep it small and header-only. This way we make installation very simple and don't let users keep their build setups untouched, by just adding an include directory.
 
 By going header-only, we can also bundle any requirements with MGen. The MGen c++ runtime library depends on (and bundles):
 
