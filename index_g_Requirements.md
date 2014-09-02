@@ -18,6 +18,6 @@ Specific programming language compilers are only required if you are going to de
 
 ### Requirements for building MGen from sratch
 
-MGen does not require you to build anything, as it is released in JAR form for java and as a header-only library for c++, but should you wish to build it from scratch and/or run its tests, you check the build instructions and requirements at our <a href="https://github.com/culvertsoft/mgen">github repository</a>.
+You normally don't need to build MGen to use it, as it is released in JAR form for java and as a header-only library for c++, but should you wish to build it from scratch and/or run its tests, you check the build instructions and requirements at our <a href="https://github.com/culvertsoft/mgen">github repository</a>.
 
 
