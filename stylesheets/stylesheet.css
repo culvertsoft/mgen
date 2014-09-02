@@ -108,7 +108,7 @@ aside#sidebar {
     aside#sidebar ul a.active {
       font-weight: bolder; }
     aside#sidebar ul li {
-      font-size: 23;
+      font-size: 16;
       margin: 5px;
       border-radius: 5px;
       background-color: #35557d;
@@ -118,7 +118,7 @@ aside#sidebar {
         padding-left: 10px; }
         aside#sidebar ul li ul li {
           list-style-type: circle;
-          font-size: 18;
+          font-size: 13;
           margin: 2px;
           padding: 2px; }
 

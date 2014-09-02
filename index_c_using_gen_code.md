@@ -1,6 +1,6 @@
 ---
 layout: default
-link-title: Setting up projects
+link-title: Using generated code
 ---
 
 ## Creating and building MGen projects
