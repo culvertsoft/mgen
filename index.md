@@ -1,11 +1,13 @@
 ---
 layout: default
-link-title: What is it?
+link-title: Home
 ---
 
-MGen is a toolkit for designing cross-langauge data models to which functionality such as serialization and type introspection can easily be attached. MGen models are defined in an [Interface Definition Language (IDL)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code (classes) in multiple programming languages may be generated using the MGen Compiler.
+## MGen
 
-The goal of MGen is to simplify type-safe sharing of state between applications, while permitting significant data model changes without requiring all participants to rebuild their software. We seek to be highly customizable by having plug-in based architecture for extending the MGen toolkit without having to recompile the MGen tools and libraries.
+MGen is a softare development toolkit for designing cross-langauge data models to which functionality such as serialization and type introspection can easily be attached. MGen models are defined in one or more [Interface Definition Languages (IDLs)](http://en.wikipedia.org/wiki/Interface_description_language "IDL on Wikipedia"), from which source code (classes) in multiple programming languages may be generated using the MGen Compiler.
+
+The goal of MGen is to simplify type-safe sharing and persistence of state between applications, while permitting significant data model changes without requiring a global rebuild. We seek to make MGen highly extensible by having plug-in based architecture for extending the MGen toolkit.
 
 Check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
