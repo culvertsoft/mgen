@@ -14,7 +14,7 @@ This is where you can download the MGen source and learn how to build it. **If y
 
 ## Building MGen
 
-If you're not satisfied with downloading pre-built libraries (see [the downloads section](#download-links)), this section will explain how you build MGen from source.
+If you're not satisfied with downloading pre-built libraries, this section briefly explains how you build MGen from source.
 
 Build Requirements (Build):
   * Java JDK >= 1.7
