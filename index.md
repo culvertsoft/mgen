@@ -9,6 +9,8 @@ MGen is a softare development toolkit for designing cross-langauge data models t
 
 The goal of MGen is to simplify type-safe sharing and persistence of state between applications, while permitting significant data model changes without requiring a global rebuild. We seek to make MGen highly extensible by having plug-in based architecture for extending the MGen toolkit.
 
+MGen consists of a compiler for source code generation and language specific runtime libraries.
+
 Check out [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
 
