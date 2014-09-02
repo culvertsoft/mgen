@@ -23,3 +23,24 @@ MGen can help you manage your multi-language application environment, by letting
 Bottom line, MGen let's you build:
 
  * Accessible, comprehensible, cross-language data models that you come back to later and understand and attach to new (external or your own) interfaces.
+
+
+### Language support 
+
+The currently supported languages are:
+
+ * C++
+ * Java
+ * JavaScript
+
+We plan to support further languages, and prioritize by demand. The MGen toolkit is designed to be easily extendable to further languages by just adding custom code generator plug-ins to the MGen compiler.
+
+
+### Development information 
+
+ * Java 1.7 or newer. External deps through maven (currently just json-simple)
+ * C++98 or newer. External deps included. Libraries are header-only. Generated code is .cpp+.h
+ * JavaScript: [info pending]
+
+
+
