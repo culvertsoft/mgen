@@ -358,6 +358,14 @@ private:
     const ClassRegistryType& m_classRegistry;
 };
 
+template<typename MGenStreamType, typename ClassRegistryType>
+inline BinaryWriter<MGenStreamType, ClassRegistryType> make_BinaryWriter(
+		MGenStreamType& stream,
+		const ClassRegistryType& classRegistry,
+		const bool compact = false) {
+	return BinaryWriter<MGenStreamType, ClassRegistryType>(stream, classRegistry, compact);
+}
+
 } /* namespace mgen */
 
 #endif /* MGEN_MGENBINARYWRITER_H_ */

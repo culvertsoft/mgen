@@ -35,6 +35,14 @@ public:
 
 };
 
+template<typename MGenStreamType, typename ClassRegistryType>
+inline JsonPrettyWriter<MGenStreamType, ClassRegistryType> make_JsonPrettyWriter(
+		MGenStreamType& stream,
+		const ClassRegistryType& classRegistry,
+		const bool compact = false) {
+	return JsonPrettyWriter<MGenStreamType, ClassRegistryType>(stream, classRegistry, compact);
+}
+
 } /* namespace mgen */
 
 #endif /* MGEN_JSON_PRETTY_WRITER_H_ */
