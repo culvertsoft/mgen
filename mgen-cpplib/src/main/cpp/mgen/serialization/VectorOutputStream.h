@@ -9,7 +9,6 @@
 #define MGEN_VECTOROUTPUTSTREAM_H_
 
 #include <vector>
-#include "mgen/exceptions/IOException.h"
 
 namespace mgen {
 
