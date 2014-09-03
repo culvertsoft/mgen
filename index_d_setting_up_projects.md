@@ -3,7 +3,7 @@ layout: default
 link-title: Setting up projects
 ---
 
-## Creating and building MGen projects
+## Adding MGen to your projects
 
 [pending]
 
