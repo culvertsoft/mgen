@@ -16,7 +16,7 @@ This page shows how to serialize objects of previously generated example classes
 
 This example shows how to serialize generic objects to JSON and back. For simplicity we will serialize to std::strings, but we could just as well serialiize to generic data sink - just a class having a write(void*, int) method.
 
-First we use the following includes and namespace directives:
+In this example we use the following includes and namespace directives, and create a global class registry for our following functions to use:
 
     #include <iostream>
 
@@ -30,10 +30,9 @@ First we use the following includes and namespace directives:
     using namespace com::fruitcompany::fruits;
     using namespace mgen;
 
-We create a global class registry for our following functions to use:
-
     // A class registry for type identification
-    static const ClassRegistry registry;
+    const ClassRegistry registry;
+
 
 Then we define our serialization functions:
 
