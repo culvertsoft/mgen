@@ -168,6 +168,8 @@ Lastly comes the main function which uses the above:
 
 ### A javascript example <a name="c">&nbsp;</a>
 
+Coming soon!
+
 
 ### Other wire formats <a name="d">&nbsp;</a>
 
