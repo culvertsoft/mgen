@@ -33,7 +33,7 @@ def rmFolder(path):
 
 def mkFileExecutable(file_path):
     st = os.stat(file_path)
-    os.chmod(file_path, st.st_mode | stat.S_IEXEC)
+    os.chmod(file_path, st.st_mode | stat.S_IEXEC | stat.S_IXGRP | stat.S_IXOTH)
 
 def rmFolderContents(folder):
     if os.path.exists(folder):
