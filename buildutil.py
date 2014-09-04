@@ -1,4 +1,5 @@
 #!/usr/bin/python
+from __future__ import with_statement
 import argparse
 import shutil
 import os.path
@@ -7,7 +8,10 @@ import sys
 import subprocess
 import fnmatch
 import platform
+import zipfile
 from subprocess import check_call
+from contextlib import closing
+from zipfile import ZipFile, ZIP_DEFLATED
 
 cpp_build_cfgs = ["Debug", "RelwithDebInfo", "Release"]
 
@@ -31,6 +35,9 @@ def rmFile(path):
         
 def copyTree(src, dst):
     distutils.dir_util.copy_tree(src, dst)
+    
+def copyFile(src, dst):
+    shutil.copyfile(src, dst)
 
 def findDirs(path, matching):
     out = []
@@ -93,3 +100,13 @@ def sbt_clean(path):
 
 def sbt_jasmine(path):
     sbt(path, "jasmine")
+
+def zipdir(basedir, archivename):
+    assert os.path.isdir(basedir)
+    with closing(ZipFile(archivename, "w", ZIP_DEFLATED)) as z:
+        for root, dirs, files in os.walk(basedir):
+            #NOTE: ignore empty directories
+            for fn in files:
+                absfn = os.path.join(root, fn)
+                zfn = absfn[len(basedir)+len(os.sep):] #XXX: relative path
+                z.write(absfn, zfn)
