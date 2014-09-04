@@ -28,7 +28,17 @@ def file2String(path):
 def rmFolder(path):
     if os.path.exists(path):
         shutil.rmtree(path)
-        
+
+def rmFolderContents(folder):
+    if os.path.exists(folder):
+        for the_file in os.listdir(folder):
+            file_path = os.path.join(folder, the_file)
+            if os.path.exists(file_path):
+                if os.path.isfile(file_path):
+                    rmFile(file_path)
+                else:
+                    rmFolder(file_path)
+
 def rmFile(path):
     if os.path.exists(path):
         os.remove(path)

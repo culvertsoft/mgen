@@ -230,7 +230,7 @@ def install():
         raise Exception("Environmental variable MGEN_INSTALL_PATH not set")
 
     #prepare install folder
-    rmFolder(installPath)
+    rmFolderContents(installPath)
     mkFolder(installPath)
     
     #unzipping
