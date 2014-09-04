@@ -12,7 +12,7 @@ The goal of MGen is to simplify type-safe sharing and persistence of state betwe
 MGen consists of:
 
  * A compiler for source code generation
- * Language specific runtime libraries.
+ * Language specific runtime libraries
 
 ---
 
