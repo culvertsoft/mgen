@@ -3,7 +3,7 @@
 You've ended up at the MGen github repository!
 This is where you can download the MGen source and learn how to build it. 
 
-**[Click here to find out what MGen is and how to use it](http://culvertsoft.github.io/mgen/)**
+**[Click here instead to find out what MGen is and how to use it](http://culvertsoft.github.io/mgen/)**
 
 ---
 
