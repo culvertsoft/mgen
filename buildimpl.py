@@ -53,8 +53,12 @@ def compile(workingDir, project):
     compile3(workingDir, project, ".")
 
 
+def getCommitDateString():
+    return os.popen("git show -s --format=%ci").read().rstrip()
+
+
 def createJavaVersionFileContents(pkg, version):
-    dateString = os.popen("git show -s --format=%ci").read().rstrip() # Get commit date and time
+    dateString = getCommitDateString()
     out = ""
     out += "package " + pkg + ";\n\n"
     out += "/**\n"
@@ -220,6 +224,11 @@ def create_install_zip():
     mkFileExecutable("target/install_zip/bin/mgen")
     mkFileExecutable("target/install_zip/bin/mgen.sh")
     
+    versionFile = open("target/install_zip/BUILD.TXT", "w")
+    versionFile.write("Release version: " + mgen_version + "\n")
+    versionFile.write("Git commit date: " + getCommitDateString() + "\n")
+    versionFile.close()
+    
     zipdir("target/install_zip", getInstallZipName())
 
 
@@ -254,6 +263,16 @@ def install():
 
 
 def publish_impl():
+
+    #publish to culvertsoft.se
+    zipName = "mgen-" + mgen_version + ".zip"
+    zipSrc = "target/" + zipName
+    zipDest = "culvertsoft.se:/var/www/" + mgen_version.lower() + "/" + zipName
+    print("Uploading " +  zipName + " to " + zipDest)
+    os.system("scp " + zipSrc + " " + zipDest)
+    
+    #publish to sonatype
+    print("Publishing jar files to sonatype")
     sbt(".",   ('"project mgen_api" publish-signed '
                 '"project mgen_idlparser" publish-signed '
                 '"project mgen_jsonschemaparser" publish-signed '
