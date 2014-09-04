@@ -9,6 +9,8 @@ import subprocess
 import fnmatch
 import platform
 import zipfile
+import os
+import stat
 from subprocess import check_call
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
@@ -28,6 +30,10 @@ def file2String(path):
 def rmFolder(path):
     if os.path.exists(path):
         shutil.rmtree(path)
+
+def mkFileExecutable(file_path):
+    st = os.stat(file_path)
+    os.chmod(file_path, st.st_mode | stat.S_IEXEC)
 
 def rmFolderContents(folder):
     if os.path.exists(folder):

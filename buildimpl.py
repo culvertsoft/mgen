@@ -229,6 +229,8 @@ def install():
     if installPath == None:
         raise Exception("Environmental variable MGEN_INSTALL_PATH not set")
 
+    print("Installing MGEN to " + installPath)
+    
     #prepare install folder
     rmFolderContents(installPath)
     mkFolder(installPath)
@@ -239,6 +241,8 @@ def install():
     for name in z.namelist():
         z.extract(name, installPath + "/")
     fh.close()
+    
+    mkFileExecutable(installPath + "/bin/mgen")
 
 
 def publish_impl():
