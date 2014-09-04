@@ -262,16 +262,20 @@ def install():
     mkFileExecutable(installPath + "/bin/mgen.sh")
 
 
-def publish_impl():
+def upload_to_culvertsoft():
+    folderName = mgen_version.lower()
+    
+    if folderName.startswith("nightly."):
+        folderName = "nightly"
 
-    #publish to culvertsoft.se
     zipName = "mgen-" + mgen_version + ".zip"
     zipSrc = "target/" + zipName
-    zipDest = "culvertsoft.se:/var/www/" + mgen_version.lower() + "/" + zipName
+    zipDest = "culvertsoft.se:/var/www/" + folderName + "/" + zipName
     print("Uploading " +  zipName + " to " + zipDest)
     os.system("scp " + zipSrc + " " + zipDest)
-    
-    #publish to sonatype
+
+
+def publish_to_sonatype():
     print("Publishing jar files to sonatype")
     sbt(".",   ('"project mgen_api" publish-signed '
                 '"project mgen_idlparser" publish-signed '
@@ -285,3 +289,8 @@ def publish_impl():
                 '"project mgen_cppgenerator" publish-signed '
                 '"project mgen_javascriptgenerator" publish-signed '
                 '"project mgen_visualdesigner" publish-signed '))
+
+
+def publish_impl():
+    upload_to_culvertsoft()
+    publish_to_sonatype()
