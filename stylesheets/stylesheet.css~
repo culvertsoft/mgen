@@ -54,7 +54,7 @@ header {
   padding-top: 40px;
   padding-bottom: 40px;
   font-family: "Helvetica Neue", Helvetica, Arial, serif;
-  background: #365a7e url(../images/header-bg.jpg) 0 0 repeat-x;
+  background: #253444 url(../images/header-bg.jpg) 0 0 repeat-x;
   border-bottom: solid 1px #275da1; }
   header h1 {
     letter-spacing: -1px;
