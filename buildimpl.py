@@ -212,6 +212,8 @@ def create_install_zip():
     copyFile("mgen-installers/mgen.sh", "target/install_zip/bin/mgen")
     copyFile("mgen-installers/mgen.ex_", "target/install_zip/bin/mgen.exe")
     copyFile("LICENSE", "target/install_zip/LICENSE.TXT")
+  
+    mkFileExecutable("target/install_zip/bin/mgen")
     
     zipdir("target/install_zip", getInstallZipName())
 
