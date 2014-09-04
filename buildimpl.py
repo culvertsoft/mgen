@@ -203,17 +203,22 @@ def create_install_zip():
     mkFolder("target/install_zip")
     mkFolder("target/install_zip/jars")
     mkFolder("target/install_zip/bin")
+    mkFolder("target/install_zip/javascript")
     
     for filePath in getJarFiles():
         fileName = filePath.rpartition("/")[2]
         copyFile(filePath, "target/install_zip/jars/" + fileName)
 
     copyTree(getCppIncludeDir(), "target/install_zip/include")
+    copyFile("mgen-javascriptlib/src/main/javascript/mgen-lib.js", "target/install_zip/javascript/mgen-lib.js")
+    
     copyFile("mgen-installers/mgen.sh", "target/install_zip/bin/mgen")
+    copyFile("mgen-installers/mgen.sh", "target/install_zip/bin/mgen.sh")
     copyFile("mgen-installers/mgen.ex_", "target/install_zip/bin/mgen.exe")
     copyFile("LICENSE", "target/install_zip/LICENSE.TXT")
   
     mkFileExecutable("target/install_zip/bin/mgen")
+    mkFileExecutable("target/install_zip/bin/mgen.sh")
     
     zipdir("target/install_zip", getInstallZipName())
 
@@ -245,6 +250,7 @@ def install():
     fh.close()
     
     mkFileExecutable(installPath + "/bin/mgen")
+    mkFileExecutable(installPath + "/bin/mgen.sh")
 
 
 def publish_impl():
