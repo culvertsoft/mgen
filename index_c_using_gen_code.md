@@ -10,7 +10,7 @@ submenu:
 
 ## Using generated code
 
-This page shows how to serialize objects of previously generated example classes. 
+This page shows how to serialize objects of [previously generated example classes](index_c_Generating_code.html). 
 
 ### A c++ example <a name="a">&nbsp;</a>
 

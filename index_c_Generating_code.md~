@@ -5,7 +5,7 @@ link-title: Generating code
 
 ## Generating source code (classes)
 
-In order to generate source code/classes for [the data model you defined in the MGen IDL](index_b_Basic_model.html), we use the MGen compiler. Before we run it, it needs to know:
+In order to generate source code/classes for the types defined in the MGen IDL, we use the MGen compiler. Before we run it, it needs to know:
 
  * Which module files to use
  * What code generators to use
