@@ -78,12 +78,12 @@ object Vd2Api {
     cvState.apiObjLkup.getOrElseUpdate(fullClassPath, new UnlinkedType(fullClassPath)).asInstanceOf[ApiUserDefinedType]
   }
 
-  private def getApiCustomType(vdType: VdClass)(implicit cvState: Vd2ApiConversionState): ApiUserDefinedType = {
+  private def getApiCustomType(vdType: VdUserDefinedType)(implicit cvState: Vd2ApiConversionState): ApiUserDefinedType = {
     getApiCustomType(Type2String.getClassPath(vdType)(cvState.srcModel))
   }
 
   private def getApiCustomType(vdType: UserTypeRef)(implicit cvState: Vd2ApiConversionState): ApiUserDefinedType = {
-    getApiCustomType(cvState.srcModel.getEntity(vdType.getId()).get.asInstanceOf[VdClass])
+    getApiCustomType(cvState.srcModel.getEntity(vdType.getId()).get.asInstanceOf[VdUserDefinedType])
   }
 
   private def cvtFieldType(t: VdFieldType)(implicit cvState: Vd2ApiConversionState): ApiType = {
