@@ -187,7 +187,7 @@ MGen serializers consider all data to be just that - data. They have no concept 
 
 These limitations bring with them some benefits. It allows us to support lossy and reordering protocols without worrying about objects having all the necessary information to be reconstructed on receiving side. If you wish to send one message over http, another over a UDP socket and a third with smoke signals, in the opposite order, MGen won't really care.
 
-We believe identities and true object graphs should be the responsibility of the layer above - the layer syncronizing applications with each other - not the fundamental data serialization layer. We have plans to build such systems as future products - but not as a part of MGen.
+We believe identities and true object graphs should be the responsibility of the layer above - the layer syncronizing applications with each other - not the data layer. We have plans to build such systems as future products - but not as a part of MGen.
 
 In short - we chose to separate the concerns of data representation from data identity and transport method - the two latter not being anything MGen is concerned with at this point.
 
