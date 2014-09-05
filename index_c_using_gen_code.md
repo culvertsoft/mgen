@@ -183,7 +183,7 @@ If you wish to go further you can also add completely custom formats by creating
 
 MGen serializers are designed to be state-less. There is no common object graph preservation or node-to-node implementation with synchronization. This is a conscious design choice and also implies that the standard implementation of serializers do not support circular references. 
 
-MGen serializers consider all data to be just that - data. They have no concept of references or object identities (Although generated polymorphic code and data types in most languages are of reference types - during serialization they are treated as nothing more than data containers).
+MGen serializers consider all data to be just that - data. They have no concept of references or object identities (Although generated polymorphic code and data types in most languages are of reference types - during serialization they are treated as nothing more than polymorphic data containers).
 
 These limitations bring with them some benefits. It allows us to support lossy and reordering protocols without worrying about objects having all the necessary information to be reconstructed on receiving side. If you wish to send one message over http, another over a UDP socket and a third with smoke signals, in the opposite order, MGen won't really care.
 
