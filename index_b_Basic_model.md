@@ -67,8 +67,8 @@ The MGen IDL is the code you see in the section above. It is the language we cre
  * Class constants
  * Heterogenous containers (through polymorphism)
 
- For more information of what features are supported in the MGen IDL, see [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
+For more information of what features are supported in the MGen IDL, see [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
-
+Also have a look at [some of the test models for MGen we have over at github](https://github.com/culvertsoft/mgen/tree/master/mgen-compiler/src/test/resources).
 
 
