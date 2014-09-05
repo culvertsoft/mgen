@@ -219,10 +219,18 @@ def create_install_zip():
     copyFile("mgen-installers/mgen.sh", "target/install_zip/bin/mgen")
     copyFile("mgen-installers/mgen.sh", "target/install_zip/bin/mgen.sh")
     copyFile("mgen-installers/mgen.ex_", "target/install_zip/bin/mgen.exe")
+    
+    copyFile("mgen-installers/mgen-visualdesigner.sh", "target/install_zip/bin/mgen-visualdesigner")
+    copyFile("mgen-installers/mgen-visualdesigner.sh", "target/install_zip/bin/mgen-visualdesigner.sh")
+    copyFile("mgen-installers/mgen-visualdesigner.ex_", "target/install_zip/bin/mgen-visualdesigner.exe")
+    
     copyFile("LICENSE", "target/install_zip/LICENSE.TXT")
   
     mkFileExecutable("target/install_zip/bin/mgen")
     mkFileExecutable("target/install_zip/bin/mgen.sh")
+    
+    mkFileExecutable("target/install_zip/bin/mgen-visualdesigner")
+    mkFileExecutable("target/install_zip/bin/mgen-visualdesigner.sh")
     
     versionFile = open("target/install_zip/BUILD.TXT", "w")
     versionFile.write("Release version: " + mgen_version + "\n")
@@ -261,6 +269,8 @@ def install():
     mkFileExecutable(installPath + "/bin/mgen")
     mkFileExecutable(installPath + "/bin/mgen.sh")
 
+    mkFileExecutable(installPath + "/bin/mgen-visualdesigner")
+    mkFileExecutable(installPath + "/bin/mgen-visualdesigner.sh")
 
 def upload_to_culvertsoft():
     folderName = mgen_version.lower()
