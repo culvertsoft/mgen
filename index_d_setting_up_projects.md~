@@ -2,33 +2,31 @@
 layout: default
 link-title: Project configuration
 submenu:
-  - { anchor: "a", title: "cmake (c++)" }
-  - { anchor: "b", title: "visual studio (c++)" }
-  - { anchor: "c", title: "makefile (c++)" }
-  - { anchor: "d", title: "maven (java)" }
-  - { anchor: "e", title: "manual (java)" }
-  - { anchor: "f", title: "javascript" }
+  - { anchor: "a", title: "c++" }
+  - { anchor: "b", title: "java (maven)" }
+  - { anchor: "c", title: "java (manual)" }
+  - { anchor: "d", title: "javascript" }
 ---
 
 ## Adding MGen to your projects
 
-Once you have generated classes with the MGen compiler, you need to add the MGen runtime libraries to the builds of your applications. We will explain how to do this for some common build setups in each supported language. 
+Once you have [generated classes with the MGen compiler](index_c_Generating_code.html), you need to add the MGen runtime libraries to the builds of your applications. We will explain how to do this for some common build setups in each supported language. 
 
 We assume you have installed MGen as shown in the [Installation section](index_e1_Installation.html).
 
 
-### Configuring a CMake project (c++) <a name="a">&nbsp;</a>
+### Configuring a c++ project <a name="a">&nbsp;</a>
+
+Simply add:
+
+ * MGEN_INSTALL_PATH/include
+
+to the include paths of your build. See [Installation section](index_e1_Installation.html) for more information about MGEN_INSTALL_PATH.
 
 
-### Configuring a Visual Studio project (c++) <a name="b">&nbsp;</a>
+### Configuring a java project with Maven <a name="b">&nbsp;</a>
 
-
-### Configuring a Makefile project (c++) <a name="c">&nbsp;</a>
-
-
-### Configuring a Maven project (java) <a name="d">&nbsp;</a>
-
-Using Maven (or ivy/gradle/sbt or similar) is probably the easiest way is to depend on MGen for java builds. Currently only snapshot builds are available:
+Using Maven (or ivy/gradle/sbt or similar) is probably the easiest way is to depend on MGen for java builds. Currently only snapshot builds are available. All you need to do is att 'mgen-javalib' as a dependency:
 
     <dependency>
       <groupId>se.culvertsoft</groupId>
@@ -44,7 +42,7 @@ They are hosted on the following repository urls:
 To see all the MGen components hosted there - check out [oss.sonatype.org/#nexus-search;quick~mgen](https://oss.sonatype.org/#nexus-search;quick~mgen)
 
 
-### Configuring an project manually (java) <a name="e">&nbsp;</a>
+### Configuring a java project manually <a name="c">&nbsp;</a>
 
 If you prefer to set up your project manually, add the following libraries to your build:
 
@@ -56,9 +54,9 @@ The mgen jar files, sources and javadoc are available in the MGEN_INSTALL_PATH/j
 
 
 
-### Configuring a javascript project <a name="f">&nbsp;</a>
+### Configuring a javascript project <a name="d">&nbsp;</a>
 
-
+Coming soon!
 
 
 
