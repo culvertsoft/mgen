@@ -1,6 +1,13 @@
 ---
 layout: default
 link-title: Project configuration
+submenu:
+  - { anchor: "a", title: "cmake (c++)" }
+  - { anchor: "b", title: "visual studio (c++)" }
+  - { anchor: "c", title: "makefile (c++)" }
+  - { anchor: "d", title: "maven (java)" }
+  - { anchor: "e", title: "manual (java)" }
+  - { anchor: "f", title: "javascript" }
 ---
 
 ## Adding MGen to your projects
@@ -10,18 +17,18 @@ Once you have generated classes with the MGen compiler, you need to add the MGen
 We assume you have installed MGen as shown in the [Installation section](index_e1_Installation.html).
 
 
-### Configuring a CMake project (c++)
+### Configuring a CMake project (c++) <a name="a">&nbsp;</a>
 
 
-### Configuring a Visual Studio project (c++)
+### Configuring a Visual Studio project (c++) <a name="b">&nbsp;</a>
 
 
-### Configuring a Makefile project (c++)
+### Configuring a Makefile project (c++) <a name="c">&nbsp;</a>
 
 
-### Configuring a Maven project (java)
+### Configuring a Maven project (java) <a name="d">&nbsp;</a>
 
-Using Maven (or ivy/gradle/sbt or similar) is probably the easiest way is to depend on MGen for java builds. Simply add 'mgen-javalib' as a dependency. Currently only snapshot builds are available:
+Using Maven (or ivy/gradle/sbt or similar) is probably the easiest way is to depend on MGen for java builds. Currently only snapshot builds are available:
 
     <dependency>
       <groupId>se.culvertsoft</groupId>
@@ -37,10 +44,19 @@ They are hosted on the following repository urls:
 To see all the MGen components hosted there - check out [oss.sonatype.org/#nexus-search;quick~mgen](https://oss.sonatype.org/#nexus-search;quick~mgen)
 
 
-### Configuring an eclipse project (java)
+### Configuring an project manually (java) <a name="e">&nbsp;</a>
+
+If you prefer to set up your project manually, add the following libraries to your build:
+
+ * [mgen-api.jar](index_e1_Installation.html)
+ * [mgen-javalib.jar](index_e1_Installation.html)
+ * [MGen's external java dependencies](index_e2_Dependencies.html) 
+
+The mgen jar files, sources and javadoc are available in the MGEN_INSTALL_PATH/jars, once you have installed MGen. See the [Installation section](index_e1_Installation.html) for more information.
 
 
-### Configuring a javascript project
+
+### Configuring a javascript project <a name="f">&nbsp;</a>
 
 
 

@@ -62,7 +62,10 @@ The MGen IDL is the code you see in the section above. It is the language we cre
  * enumerations
  * Class members of any type of the types above (and classes)
  * Class members that are polymorphic
- * Class members that are heterogenous containers (through polymorphism)
+ * Class member default values
+ * Class member flags (e.g. required, polymorphic, transient etc.)
+ * Class constants
+ * Heterogenous containers (through polymorphism)
 
  For more information of what features are supported in the MGen IDL, see [our preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
