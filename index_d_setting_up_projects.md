@@ -1,9 +1,48 @@
 ---
 layout: default
-link-title: Setting up projects
+link-title: Project configuration
 ---
 
 ## Adding MGen to your projects
 
-[pending]
+Once you have generated classes with the MGen compiler, you need to add the MGen runtime libraries to the builds of your applications. We will explain how to do this for some common build setups in each supported language. 
+
+We assume you have installed MGen as shown in the [Installation section](index_e1_Installation.html).
+
+
+### Configuring a CMake project (c++)
+
+
+### Configuring a Visual Studio project (c++)
+
+
+### Configuring a Makefile project (c++)
+
+
+### Configuring a Maven project (java)
+
+Using Maven (or ivy/gradle/sbt or similar) is probably the easiest way is to depend on MGen for java builds. Currently only snapshot builds are available:
+
+    <dependency>
+      <groupId>se.culvertsoft</groupId>
+      <artifactId>mgen-javalib</artifactId>
+      <version>SNAPSHOT</version>
+    </dependency>
+
+They are hosted on the following repository urls:
+ 
+ * https://oss.sonatype.org/content/repositories/snapshots/
+ * https://oss.sonatype.org/content/repositories/releases/
+
+To see all the MGen components hosted there - check out [oss.sonatype.org/#nexus-search;quick~mgen](https://oss.sonatype.org/#nexus-search;quick~mgen)
+
+
+### Configuring an eclipse project (java)
+
+
+### Configuring a javascript project
+
+
+
+
 

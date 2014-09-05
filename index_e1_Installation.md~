@@ -5,9 +5,7 @@ link-title: Installation
 
 ## Installing MGen
 
-Although MGen does not require to be 'installed' to work, you will probably have a development environment that is easier to manage if you do perform the steps explained below. The installation procedure is independent of operating system.
-
-First, download any MGen version (a single zip file) and unzip it where you like to have it installed, and you should see a file structure as follows:
+First, download the MGen version you prefer (see the [Downloads section](index_e0_Downloads.html)) and unzip it where you like to have it installed, and you should see a file structure as follows:
 
     ├── bin
     ├── include
@@ -22,12 +20,14 @@ Then edit two environmental variables:
  * Set MGEN_INSTALL_PATH to your unzipped folder
  * Add MGEN_INSTALL_PATH/bin to your PATH
 
-That's it. Now you have MGen installed.
+That's it. Now you have MGen installed and are ready to use it when building your applications.
+
+For further explanations on what the different folders above contain, read on below.
 
 
 ### The 'bin' folder
 
-Inside the bin folder are shell scripts and java .exe wrappers for executing the mgen compiler without calling java. If you followed the installation above, you can simply type 'mgen' in your shell to run the MGen compiler.
+Inside the bin folder are shell scripts and java .exe wrappers for executing the mgen compiler without explicitly calling java. If you followed the installation above, you can simply type 'mgen' in your shell to run the MGen compiler.
 
 If you instead want to call the mgen compiler directly with java, you can type 'java -jar mgen-compiler-[version]-assembly.jar' instead of 'mgen'.
 
