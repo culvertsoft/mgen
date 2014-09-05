@@ -9,7 +9,6 @@ This is where you can download the MGen source and learn how to build it.
 
 * [Building MGen](#building-mgen)
 * [State of Development](#state-of-development)
-* [Feature road map](#feature-road-map)
 * [License](#license)
 * [Words regarding object references](#words-regarding-object-references)
 
