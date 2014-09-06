@@ -88,6 +88,19 @@ There may also be configuration parameters you may only have during runtime of y
 
 ### Identifying object types  <a name="b">&nbsp;</a>
 
+In all the previous examples, we have always known what class to map serialized object data to. That is however often not the case in real applications. In most of our internal use cases of MGen we rarely know what kind of object is being read back or sent over the wire, so we need to be able to:
+
+ * Serialize (write) objects to data streams with *just enough* type metadata
+ * Read the object generically to the correct type without losing any information
+ * Identify the type of object we just read back
+ * Pass it on to the right handlers
+
+Fortunately MGen generated code, readers and writers handlers all of this for us for all supported languages.
+
+
+
+
+
 
 ### Editing generated code directly <a name="c">&nbsp;</a>
 
