@@ -9,6 +9,11 @@ submenu:
   - { anchor: "using_generated_javascript", title: "using javascript" }
 ---
 
+## Video Tutorials
+
+We're planning to release a set of video tutorials showing you how to use MGen, to complement our written instructions. The videos will be posted on this page.
+
+
 ### Defining a data model <a name="defining_a_model">&nbsp;</a>
 
  [pending]
