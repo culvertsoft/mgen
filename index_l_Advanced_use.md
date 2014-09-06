@@ -105,9 +105,8 @@ Consider our initial example ([the fruit model](index_b_Basic_model.html)). It h
 
 Suppose we serialize a couple (let's pick 3) objects of randomly chosen classes (Apples or Bananas) to a file. Now we want to read it back and see what we got. First of all, let's read the objects back not assuming anything about their types.
 
-In java:
+In Java (With the reader from [the previous java example](http://culvertsoft.github.io/mgen/index_c_using_gen_code.html#b)):
 
-    // Using the same readers as [in the previous java example](http://culvertsoft.github.io/mgen/index_c_using_gen_code.html#b)
     final MGenBase object = reader.readObject();
 
 
