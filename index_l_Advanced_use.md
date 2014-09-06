@@ -31,7 +31,7 @@ In either case, we need a data model that maps the configuration file contents t
       "logFile": "/home/logger/app.log"
     }
 
-We could define a class class called for example 'AppConfigarion' that maps c++ and java objects to this file using the following MGen IDL code (see the section on [defining a data model](index_b_Basic_model.html)):
+We could define a class called for example 'AppConfigarion' that maps c++ and java objects to this file using the following MGen IDL code (see the section on [defining a data model](index_b_Basic_model.html)):
 
     <AppConfigarion>
       <hostName type="string" />
