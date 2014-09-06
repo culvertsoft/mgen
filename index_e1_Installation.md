@@ -49,7 +49,7 @@ You will probably depend on MGen through Maven/Ivy/Gradle, but if you want to in
  * mgen-api
  * mgen-javalib
 
-Check the dependencies page to see what external dependencies these have if adding jar files manually to your build.
+Check the [dependencies section](index_e2_Dependencies.html) to see what external dependencies these have if adding jar files manually to your build.
 
 
 ### The 'javascript' folder
