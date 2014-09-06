@@ -87,6 +87,11 @@ We can now read and write these files to and from our statically typed generated
     writeToDisk("/home/logger/cfg.json", newCfgFileContents);
 
 
+Instead of checking if fields are set when reading and writing objects you can flag them as 'required'. If those fields are not set when reading or writing an object an exception will be thrown. Be very careful though with required fields, as they may cause serious incompatibility issues when you want to be backwards compatible with older data models and clients.
+
+There may also be configuration parameters you may only have during runtime of your application, but don't want to store to the configuration files. You can flag those fields as 'transient'. For more information on field flags, again, see the section on [defining a data model](index_b_Basic_model.html).
+
+
 
 ### Identifying object types  <a name="b">&nbsp;</a>
 
