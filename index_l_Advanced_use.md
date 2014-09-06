@@ -15,7 +15,7 @@ submenu:
 
 ## Advanced use <a name="defining_a_model">&nbsp;</a>
 
-This page explains some of MGen's advanced use cases more in detail.
+This page explains some of MGen's advanced use cases.
 
 
 ### Config files <a name="a">&nbsp;</a>
