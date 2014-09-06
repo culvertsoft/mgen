@@ -5,6 +5,7 @@ submenu:
   - { anchor: "a", title: "config files" }
   - { anchor: "b", title: "type identification" }
   - { anchor: "c", title: "editing generated code" }
+  - { anchor: "c2", title: "compiler plug-ins" }
   - { anchor: "d", title: "non-mgen ifcs" }
   - { anchor: "e", title: "custom generators" }
   - { anchor: "f", title: "custom idl parsers" }
@@ -166,6 +167,19 @@ Of course, we can't support any arbitrary custom code edit, but you can do most 
 
 This functionality is entirely language agnostic and works on string identification level when the MGen compiler is writing generated code to disk - so if you decide to use this feature just make sure to keep generating code to the same place - The MGen compiler will handle the rest.
 
+
+### MGen compiler plug-ins <a name="c2">&nbsp;</a>
+
+The MGen compiler was built with extendability in mind. The compiler itself is completely agnostic to the IDL source code it uses as input and the actual programming language source code/classes it produces as output. What connects the IDL source code to the generated programming language code is the compiler's internal data model - which is what we call the MGen API. The MGen API is defined in Java (for details see the mgen-api-javadoc.jar or [the source code at github](https://github.com/culvertsoft/mgen)).
+
+There are two Interface classes in the MGen API that facilitate this architecture. 
+
+ * [The Parser class](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/main/java/se/culvertsoft/mgen/api/plugins/Parser.java)
+ * [The Generator class](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/main/java/se/culvertsoft/mgen/api/plugins/Generator.java)
+
+When [writing an MGen project file](index_c_Generating_code.html), you are telling the compiler what Parser and Generator classes to load. There is a default Parser which is used if you don't specify one (the MGen IDL parser), but you always specify which Generator classes to load by fully qualified java class paths.
+
+When you specify Parser and Generator classes to the compiler in your project file, they are searched on your java class path. If they are not found there, the compiler searches for java jar files containing classes with the correct name and Interface in your plug-in directories. This way you can easily extend existing parsers, generators and add completely new ones without having to recompile any part of the MGen compiler.
 
 
 ### Reading and writing objects from non-mgen sources <a name="d">&nbsp;</a>
