@@ -15,10 +15,22 @@ submenu:
 
 ## Advanced use <a name="defining_a_model">&nbsp;</a>
 
-This page explains some of MGen's functionality more in detail.
+This page explains some of MGen's advanced use cases more in detail.
 
 
 ### Config files <a name="a">&nbsp;</a>
+
+Reading or writing objects from configuration files is no different from reading it from any other source. MGen supports mapping objects to JSON out-of-the-box, so JSON is probably the easiest format to read configuration files from. Should you wish to read configuration files in other formats (YAML, XML, etc) the easieast way is probably to convert it to JSON with a generic xml/yaml -> json library.
+
+There are two situations to consider:
+
+ * Defining the contents of new configuration files
+ * Mapping the contents of existing configuration file
+
+In both cases you need to define a data model that maps the configuration file contents to an MGen object class. See the section on [Defining data models](index_b_Basic_model.html) for how to do this.
+
+
+
 
 
 ### Identifying object types  <a name="b">&nbsp;</a>
