@@ -5,7 +5,7 @@ link-title: Installation
 
 ## Installing MGen
 
-First, download the MGen version you prefer (see the [Downloads section](index_e0_Downloads.html)) and unzip it where you like to have it installed, and you should see a file structure as follows:
+First - Download the MGen version you prefer (see the [Downloads section](index_e0_Downloads.html)) and unzip it where you like to have it installed, and you should see a file structure as follows:
 
     ├── bin
     ├── include
@@ -15,10 +15,12 @@ First, download the MGen version you prefer (see the [Downloads section](index_e
     └── LICENSE.TXT
 
 
-Then edit two environmental variables:
+Then - Edit two environmental variables:
 
  * Set MGEN_INSTALL_PATH to your unzipped folder
  * Add MGEN_INSTALL_PATH/bin to your PATH
+
+Lastly - Set the executable bit on the files inside the bin/ folder (not needed on Windows)
 
 That's it. Now you have MGen installed and are ready to use it when building your applications.
 
