@@ -20,13 +20,9 @@ This page explains some of MGen's advanced use cases.
 
 ### Config files <a name="a">&nbsp;</a>
 
-Mapping objects to configuration files is no different from mapping objects to any other data source. MGen supports mapping objects to JSON (and the MGen binary format) out-of-the-box, so JSON is probably the easiest format to use with for configuration files. 
+Mapping objects to configuration files is no different from mapping objects to any other data source. MGen supports mapping objects to JSON (and the MGen binary format) out-of-the-box, so JSON is probably the easiest format to use with for configuration files. If you have existing configuration files in other formats (e.g. YAML, XML, ..) you can use generic libraries to convert it to JSON, and then pass that to the MGen readers and writers.
 
-If you have existing configuration files in other formats (e.g. YAML, XML, ..) you can use generic libraries to convert to and from JSON, and then pass that to the MGen readers and writers.
-
-In any case you need to create a data model that maps the configuration files to an MGen object class. See the section on [Defining data models](index_b_Basic_model.html) for how to do this.
-
-Example - Consider a JSON configuration file with the following contents:
+We need a data model that maps the configuration file contents to an MGen object class. Example - Consider a JSON configuration file with the following contents:
 
     {
       "hostName": "localhost",
