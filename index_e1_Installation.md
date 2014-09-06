@@ -29,7 +29,7 @@ That's it. Now you have MGen installed and are ready to use it when building you
 
 Inside the bin folder are shell scripts and java .exe wrappers for executing the mgen compiler without explicitly calling java. If you followed the installation instruction above, you can simply type 'mgen' in your shell to run the MGen compiler.
 
-If you instead want to call the mgen compiler directly with java, you can type 'java -jar mgen-compiler-[version]-assembly.jar' instead of 'mgen'.
+If you instead want to call the mgen compiler directly with java, you can type 'java -jar mgen-compiler-assembly.jar' instead of 'mgen'.
 
 
 ### The 'include' folder
