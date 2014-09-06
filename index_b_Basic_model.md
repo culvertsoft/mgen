@@ -54,7 +54,7 @@ The MGen IDL is the code you see in the section above. It is the language we cre
 
  * Classes with single inheritance
  * Fixed point numeric types: int8, int16, int32, int64
- * Floading point numeric types: float32, float64
+ * Floating point numeric types: float32, float64
  * Strings
  * maps: [*numeric/string* -> any]
  * lists: [any]
