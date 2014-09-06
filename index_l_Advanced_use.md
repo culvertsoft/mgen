@@ -29,7 +29,62 @@ There are two situations to consider:
 
 In both cases you need to define a data model that maps the configuration file contents to an MGen object class. See the section on [Defining data models](index_b_Basic_model.html) for how to do this.
 
+Consider a configuration file with the contents:
 
+    {
+      "hostName": "localhost",
+      "port": 12345,
+      "numThreads": 3,
+      "logFile": "/home/logger/app.log"
+    }
+
+Which we map to a class called 'AppConfigarion' using the following MGen IDL code (see the section on [defining a data model](index_b_Basic_model.html)):
+
+    <AppConfigarion>
+      <hostName type="string" />
+      <port type="int" />
+      <numThreads type="int" />
+      <logFile type="string" />
+    </AppConfigarion>
+
+We can now read and write these files to and from our statically typed generated classes, as shown in the section on [using generated code](index_c_using_gen_code.html). To recap, here's how you would use it in c++:
+
+    // Read the config file to memory (assuming you have such a utility function)
+    const std::string cfgFileData = readFile("/home/logger/cfg.json");
+
+    // Recap: The types required for reading an mgen object
+    ClassRegistry registry;
+    StringInputStream stream(cfgFileData);
+    JsonReader<StringInputStream, ClassRegistry> reader(stream, classRegistry);
+
+    // Now map the configuration
+    AppConfigarion cfg = reader.readStatic<AppConfigarion>();
+    
+    // Now we can check what parameters are set
+    cfg.hasHostName()
+    cfg.hasPort()
+    cfg.hasNumThreads()
+    cfg.hasLogFile()
+    
+    // And then get them
+    std::string hostName = cfg.getHostName();
+    int port = cfg.getPort();
+    int numThreads = cfg.getNumThreads();
+    std::string logFile = cfg.getLogFile();
+    
+    // Change the configuration
+    cfg.setHostName("remote_host_X");
+    
+    // And serialize it again to write the changes back to disk
+    StringOutputStream outStream;
+    JsonPrettyWriter<StringOutputStream, ClassRegistry> writer(outStream, classRegistry);
+    writer.writeObject(cfg);
+    
+    // Get the serialized string
+    std::string newCfgFileContents = outStream.str();
+    
+    // Write it back to disk (assuming you have such a utility function)
+    writeToDisk("/home/logger/cfg.json", newCfgFileContents);
 
 
 
