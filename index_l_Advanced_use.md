@@ -181,6 +181,14 @@ When [writing an MGen project file](index_c_Generating_code.html), you are telli
 
 When you specify Parser and Generator classes to the compiler in your project file, they are searched on your java class path. If they are not found there, the compiler searches for java jar files containing classes with the correct name and Interface in your plug-in directories. This way you can easily extend existing parsers, generators and add completely new ones without having to recompile any part of the MGen compiler.
 
+The following plug-ins are bundled with MGen:
+
+ * The MGen IDL parser
+ * The MGen java generator
+ * The MGen c++ generator
+ * The MGen javascript generator
+ * The MGen IDL generator (yes we can generate our own IDL)
+
 
 ### Reading and writing objects from non-mgen sources <a name="d">&nbsp;</a>
 
