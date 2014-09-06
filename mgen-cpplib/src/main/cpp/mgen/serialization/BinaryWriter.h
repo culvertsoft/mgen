@@ -8,9 +8,9 @@
 #ifndef MGEN_MGENBINARYWRITER_H_
 #define MGEN_MGENBINARYWRITER_H_
 
-#include "mgen/serialization/VarInt.h"
-#include "mgen/serialization/BinaryTags.h"
-#include "mgen/util/missingfields.h"
+#include <mgen/serialization/VarInt.h>
+#include <mgen/serialization/BinaryTags.h>
+#include <mgen/util/missingfields.h>
 
 namespace mgen {
 

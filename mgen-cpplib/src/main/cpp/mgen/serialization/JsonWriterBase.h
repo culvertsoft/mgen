@@ -1,9 +1,9 @@
 #ifndef MGEN_JSON_WRITER_BASE_H_
 #define MGEN_JSON_WRITER_BASE_H_
 
-#include "mgen/serialization/JsonOutputStream.h"
-#include "mgen/util/missingfields.h"
-#include "mgen/util/stringutil.h"
+#include <mgen/serialization/JsonOutputStream.h>
+#include <mgen/util/missingfields.h>
+#include <mgen/util/stringutil.h>
 
 namespace mgen {
 

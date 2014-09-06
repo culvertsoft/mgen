@@ -8,10 +8,10 @@
 #ifndef MGEN_MGENBINARYREADER_H_
 #define MGEN_MGENBINARYREADER_H_
 
-#include "mgen/serialization/VarInt.h"
-#include "mgen/serialization/BinaryTags.h"
-#include "mgen/util/BuiltInSerializerUtil.h"
-#include "mgen/util/missingfields.h"
+#include <mgen/serialization/VarInt.h>
+#include <mgen/serialization/BinaryTags.h>
+#include <mgen/util/BuiltInSerializerUtil.h>
+#include <mgen/util/missingfields.h>
 
  /**
   * Convenience macro to encapsulate common logic for reading headers 

@@ -8,12 +8,12 @@
 #ifndef MGEN_JsonREADER_H_
 #define MGEN_JsonREADER_H_
 
-#include "mgen/ext/rapidjson/document.h"
-#include "mgen/exceptions/StreamCorruptedException.h"
-#include "mgen/util/stringutil.h"
-#include "mgen/util/BuiltInSerializerUtil.h"
-#include "mgen/util/missingfields.h"
-#include "mgen/serialization/JsonInputStream.h"
+#include <mgen/ext/rapidjson/document.h>
+#include <mgen/exceptions/StreamCorruptedException.h>
+#include <mgen/util/stringutil.h>
+#include <mgen/util/BuiltInSerializerUtil.h>
+#include <mgen/util/missingfields.h>
+#include <mgen/serialization/JsonInputStream.h>
 
 namespace mgen {
 

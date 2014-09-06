@@ -8,7 +8,7 @@
 #ifndef MGEN_CLASSREGISTRYENTRY_H_
 #define MGEN_CLASSREGISTRYENTRY_H_
 
-#include "mgen/classes/MGenBase.h"
+#include <mgen/classes/MGenBase.h>
 
 namespace mgen {
 

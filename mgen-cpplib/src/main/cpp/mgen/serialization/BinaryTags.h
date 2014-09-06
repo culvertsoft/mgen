@@ -1,8 +1,8 @@
 #ifndef MGEN_BINARY_TAGS_H_
 #define MGEN_BINARY_TAGS_H_
 
-#include "mgen/classes/MGenBase.h"
-#include "mgen/util/stringutil.h"
+#include <mgen/classes/MGenBase.h>
+#include <mgen/util/stringutil.h>
 
 namespace mgen {
 

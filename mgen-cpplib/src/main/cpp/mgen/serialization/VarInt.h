@@ -8,7 +8,7 @@
 #ifndef MGEN_VARINT_H_
 #define MGEN_VARINT_H_
 
-#include "mgen/exceptions/StreamCorruptedException.h"
+#include <mgen/exceptions/StreamCorruptedException.h>
 
 namespace mgen {
 namespace varint {

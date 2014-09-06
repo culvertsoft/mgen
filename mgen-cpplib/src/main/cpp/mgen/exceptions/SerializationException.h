@@ -8,7 +8,7 @@
 #ifndef MGEN_SERIALIZATIONEXCEPTION_H_
 #define MGEN_SERIALIZATIONEXCEPTION_H_
 
-#include "mgen/exceptions/Exception.h"
+#include <mgen/exceptions/Exception.h>
 
 namespace mgen {
 

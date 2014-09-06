@@ -10,8 +10,8 @@
 
 #include <sstream>
 
-#include "mgen/classes/ClassRegistryEntry.h"
-#include "mgen/exceptions/Exception.h"
+#include <mgen/classes/ClassRegistryEntry.h>
+#include <mgen/exceptions/Exception.h>
 
 namespace mgen {
 

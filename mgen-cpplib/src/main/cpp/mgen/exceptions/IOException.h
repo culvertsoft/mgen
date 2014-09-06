@@ -8,7 +8,7 @@
 #ifndef MGEN_IOEXCEPTION_H_
 #define MGEN_IOEXCEPTION_H_
 
-#include "mgen/exceptions/Exception.h"
+#include <mgen/exceptions/Exception.h>
 
 namespace mgen {
 

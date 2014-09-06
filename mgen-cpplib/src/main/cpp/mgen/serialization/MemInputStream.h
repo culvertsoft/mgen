@@ -10,7 +10,7 @@
 
 #include <vector>
 #include <cstring>
-#include "mgen/exceptions/IOException.h"
+#include <mgen/exceptions/IOException.h>
 
 namespace mgen {
 

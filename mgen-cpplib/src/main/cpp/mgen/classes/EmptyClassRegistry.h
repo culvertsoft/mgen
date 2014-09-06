@@ -8,8 +8,8 @@
 #ifndef MGEN_EMPTYCLASSREGISTRY_H_
 #define MGEN_EMPTYCLASSREGISTRY_H_
 
-#include "mgen/classes/ClassRegistryBase.h"
-#include "mgen/exceptions/Exception.h"
+#include <mgen/classes/ClassRegistryBase.h>
+#include <mgen/exceptions/Exception.h>
 
 namespace mgen {
 

@@ -8,7 +8,7 @@
 #ifndef MGEN_MARKER_H_
 #define MGEN_MARKER_H_
 
-#include "mgen/classes/MGenBase.h"
+#include <mgen/classes/MGenBase.h>
 
 namespace mgen {
 namespace validation {

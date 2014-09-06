@@ -8,7 +8,7 @@
 #ifndef MGEN_MGENBASE_H_
 #define MGEN_MGENBASE_H_
 
-#include "mgen/metadata/Field.h"
+#include <mgen/metadata/Field.h>
 
 namespace mgen {
 

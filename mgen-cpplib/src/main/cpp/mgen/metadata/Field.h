@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "mgen/classes/Polymorphic.h"
+#include <mgen/classes/Polymorphic.h>
 
 namespace mgen {
 

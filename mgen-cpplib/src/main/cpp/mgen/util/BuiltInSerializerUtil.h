@@ -8,9 +8,9 @@
 #ifndef MGEN_BUILTINSERIALIZERUTIL_H_
 #define MGEN_BUILTINSERIALIZERUTIL_H_
 
-#include "mgen/classes/MGenBase.h"
-#include "mgen/exceptions/UnexpectedTypeException.h"
-#include "mgen/util/stringutil.h"
+#include <mgen/classes/MGenBase.h>
+#include <mgen/exceptions/UnexpectedTypeException.h>
+#include <mgen/util/stringutil.h>
 
 namespace mgen {
 namespace serialutil {

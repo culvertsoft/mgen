@@ -8,7 +8,7 @@
 #ifndef MGEN_STREAMCORRUPTEDEXCEPTION_H_
 #define MGEN_STREAMCORRUPTEDEXCEPTION_H_
 
-#include "mgen/exceptions/SerializationException.h"
+#include <mgen/exceptions/SerializationException.h>
 
 namespace mgen {
 

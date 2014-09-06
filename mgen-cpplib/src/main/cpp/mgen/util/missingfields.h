@@ -8,9 +8,9 @@
 #ifndef MGEN_MISSINGFIELDS_H_
 #define MGEN_MISSINGFIELDS_H_
 
-#include "mgen/classes/MGenBase.h"
-#include "mgen/exceptions/SerializationException.h"
-#include "mgen/serialization/BinaryTags.h"
+#include <mgen/classes/MGenBase.h>
+#include <mgen/exceptions/SerializationException.h>
+#include <mgen/serialization/BinaryTags.h>
 
 namespace mgen {
 namespace missingfields {
