@@ -25,9 +25,9 @@ In this example we use the following includes and namespace directives, and crea
     #include <mgen/serialization/JsonPrettyWriter.h>
     #include <mgen/serialization/JsonReader.h>
 
-    using com::fruitcompany::ClassRegistry;
-    using namespace com::fruitcompany::fruits;
     using namespace mgen;
+    using namespace com::fruitcompany;
+    using namespace com::fruitcompany::fruits;
 
     // A class registry for type identification
     const ClassRegistry registry;
