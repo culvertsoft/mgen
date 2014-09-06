@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>console</headerType>
-  <jar>..\jars\mgen-visualdesigner-assembly-SNAPSHOT.jar</jar>
+  <jar>..\jars\mgen-visualdesigner-assembly.jar</jar>
   <outfile>mgen-visualdesigner.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>

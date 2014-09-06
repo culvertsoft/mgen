@@ -171,27 +171,26 @@ def tests_normal():
     cppBuildRun("mgen-cpplib/target", default_cpp_build_cfg, "mgen-cpplib-test")
 
 
-def mkJarFiles(subprojectName, version, includeAssembly):
-    out = []
-    out.append(subprojectName + "/target/" + subprojectName + "-" + version + ".jar")
-    out.append(subprojectName + "/target/" + subprojectName + "-" + version + "-sources.jar")
-    out.append(subprojectName + "/target/" + subprojectName + "-" + version + "-javadoc.jar")
+def copySubProjectJarFilesToZipDir(subprojectName, version, includeAssembly):
+    srcFileBase = subprojectName + "/target/" + subprojectName + "-" + version
+    destFileBase = "target/install_zip/jars/" + subprojectName
+    copyFile(srcFileBase + ".jar", destFileBase + ".jar")
+    copyFile(srcFileBase + "-sources.jar", destFileBase + "-sources.jar")
+    copyFile(srcFileBase + "-javadoc.jar", destFileBase + "-javadoc.jar")
     if (includeAssembly):
-        out.append(subprojectName + "/target/" + subprojectName + "-assembly-" + version + ".jar")
-    return out
+        assemblySrc = subprojectName + "/target/" + subprojectName + "-assembly-" + version + ".jar"
+        copyFile(assemblySrc, destFileBase + "-assembly.jar")
 
 
-def getJarFiles():
-    jarFiles = []
-    jarFiles.extend(mkJarFiles("mgen-api", mgen_version, False))
-    jarFiles.extend(mkJarFiles("mgen-compiler", mgen_version, True))
-    jarFiles.extend(mkJarFiles("mgen-idlparser", mgen_version, False))
-    jarFiles.extend(mkJarFiles("mgen-idlgenerator", mgen_version, False))
-    jarFiles.extend(mkJarFiles("mgen-javagenerator", mgen_version, False))
-    jarFiles.extend(mkJarFiles("mgen-cppgenerator", mgen_version, False))
-    jarFiles.extend(mkJarFiles("mgen-javalib", mgen_version, False))
-    jarFiles.extend(mkJarFiles("mgen-visualdesigner", mgen_version, True))
-    return jarFiles
+def copyJarFilesToZipDir():
+    copySubProjectJarFilesToZipDir("mgen-api", mgen_version, False)
+    copySubProjectJarFilesToZipDir("mgen-compiler", mgen_version, True)
+    copySubProjectJarFilesToZipDir("mgen-idlparser", mgen_version, False)
+    copySubProjectJarFilesToZipDir("mgen-idlgenerator", mgen_version, False)
+    copySubProjectJarFilesToZipDir("mgen-javagenerator", mgen_version, False)
+    copySubProjectJarFilesToZipDir("mgen-cppgenerator", mgen_version, False)
+    copySubProjectJarFilesToZipDir("mgen-javalib", mgen_version, False)
+    copySubProjectJarFilesToZipDir("mgen-visualdesigner", mgen_version, True)
     
 
 def getCppIncludeDir():
@@ -209,9 +208,7 @@ def create_install_zip():
     mkFolder("target/install_zip/bin")
     mkFolder("target/install_zip/javascript")
     
-    for filePath in getJarFiles():
-        fileName = filePath.rpartition("/")[2]
-        copyFile(filePath, "target/install_zip/jars/" + fileName)
+    copyJarFilesToZipDir()
 
     copyTree(getCppIncludeDir(), "target/install_zip/include")
     copyFile("mgen-javascriptlib/src/main/javascript/mgen-lib.js", "target/install_zip/javascript/mgen-lib.js")

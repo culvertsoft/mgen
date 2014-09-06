@@ -2,7 +2,7 @@
 <launch4jConfig>
   <dontWrapJar>true</dontWrapJar>
   <headerType>console</headerType>
-  <jar>..\jars\mgen-compiler-assembly-SNAPSHOT.jar</jar>
+  <jar>..\jars\mgen-compiler-assembly.jar</jar>
   <outfile>mgen.exe</outfile>
   <errTitle></errTitle>
   <cmdLine></cmdLine>
