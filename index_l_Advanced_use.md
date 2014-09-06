@@ -170,7 +170,7 @@ This functionality is entirely language agnostic and works on string identificat
 
 ### MGen compiler plug-ins <a name="c2">&nbsp;</a>
 
-The MGen compiler was built with extendability in mind. The compiler itself is completely agnostic to the IDL source code it uses as input and the actual programming language source code/classes it produces as output. What connects the IDL source code to the generated programming language code is the compiler's internal model - which is what we call the MGen API. The MGen API is defined in Java (for details see the mgen-api-javadoc.jar or [the source code at github](https://github.com/culvertsoft/mgen)).
+The MGen compiler was built with extendability in mind. The compiler itself is completely agnostic to the IDL source code it uses as input and the actual programming language source code/classes it produces as output. What connects the IDL source code to the generated programming language code is MGen's internal model, and is part of what we call the MGen API. The MGen API is defined in Java (for details see the mgen-api-javadoc.jar or [the source code at github](https://github.com/culvertsoft/mgen)).
 
 There are two Interface classes in the MGen API that facilitate this architecture. 
 
