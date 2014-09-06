@@ -22,7 +22,7 @@ In this example we use the following includes and namespace directives, and crea
     #include <iostream>
 
     #include <com/fruitcompany/ClassRegistry.h>
-    #include <mgen/serialization/MemInputStream.h>
+    #include <mgen/serialization/StringInputStream.h>
     #include <mgen/serialization/StringOutputStream.h>
     #include <mgen/serialization/JsonPrettyWriter.h>
     #include <mgen/serialization/JsonReader.h>
@@ -56,10 +56,10 @@ Then we define our serialization functions:
     T fromJSON(const std::string& json) {
 
         // Create a data source to stream objects from
-        MemInputStream stream(json);
+        StringInputStream stream(json);
 
         // Create a reader object
-        JsonReader<MemInputStream, ClassRegistry> reader(stream, registry);
+        JsonReader<StringInputStream, ClassRegistry> reader(stream, registry);
 
         // Read object. You can read T* polymorphicly with reader.readObject<T>()
         return reader.readStatic<T>();
