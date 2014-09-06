@@ -20,7 +20,7 @@ This page explains some of MGen's advanced use cases more in detail.
 
 ### Config files <a name="a">&nbsp;</a>
 
-Reading or writing objects from configuration files is no different from reading it from any other source. MGen supports mapping objects to JSON out-of-the-box, so JSON is probably the easiest format to read configuration files from. Should you wish to read configuration files in other formats (YAML, XML, etc) the easieast way is probably to convert it to JSON with a generic xml/yaml -> json library.
+Reading or writing objects from configuration files is no different from mapping objects to any other source. MGen supports mapping objects to JSON out-of-the-box, so JSON is probably the easiest format to read configuration files from. Should you wish to read configuration files in other formats (YAML, XML, etc) the easieast way is probably to convert it to JSON with a generic xml/yaml -> json library.
 
 There are two situations to consider:
 
