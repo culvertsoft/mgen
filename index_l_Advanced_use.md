@@ -188,7 +188,7 @@ In the same way we saw that [config files can be mapped directly to objects](ind
 
 Ideas for how this can be done can be seen in the sections on [adding new wire formats](index_l_Advanced_use.html#g) and [writing custom object visitors](index_l_Advanced_use.html#g). If you're more interested in solving a specific problem, less general solutions may be easier to implement.
 
-One way to approach the problem is to implement new IDL parsers. For example many APIs are defined using xml schemas, json schemas or similar. The MGen compiler is IDL agnostic and only requires a parser plug-in to work. If an xml schema plug-in or json schema plug-in was to be written for the MGen compiler, you could add those schemas to your model and get generated source code that directly mapped to those APIs.
+One way to approach the problem is to write your own [MGen compiler plug-in](index_l_Advanced_use.html#c2). For example many APIs are defined using xml schemas, json schemas or similar. The MGen compiler is IDL agnostic and only requires a parser plug-in to work. If an xml schema plug-in or json schema plug-in was to be written for the MGen compiler, you could add those schemas to your model and get generated source code that directly mapped to those APIs.
 
 
 
