@@ -170,6 +170,11 @@ This functionality is entirely language agnostic and works on string identificat
 
 ### Reading and writing objects from non-mgen sources <a name="d">&nbsp;</a>
 
+In the same way we saw that [config files can be mapped directly to objects](index_l_Advanced_use.html#a), similar principles can be applied to other data sources that provide data in well defined formats. This includes, but is not limited to REST APIs, C structs, lua tables. It is simply a matter of providing a generalized mapping between the type of data source you're working with and the MGen data model.
+
+Ideas for how this can be done can be seen in the sections on [adding new wire formats](index_l_Advanced_use.html#g) and [writing custom object visitors](index_l_Advanced_use.html#g). If you're more interested in solving a specific problem, less general solutions may be easier to implement.
+
+
 
 ### Adding custom code generators to the MGen compiler <a name="e">&nbsp;</a>
 
