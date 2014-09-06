@@ -29,7 +29,7 @@ There are two situations to consider:
 
 In both cases you need to define a data model that maps the configuration file contents to an MGen object class. See the section on [Defining data models](index_b_Basic_model.html) for how to do this.
 
-Consider a configuration file with the contents:
+Consider a JSON configuration file with the contents:
 
     {
       "hostName": "localhost",
