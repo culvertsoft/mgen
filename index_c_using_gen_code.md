@@ -19,8 +19,6 @@ This example shows how to serialize objects to JSON and back. For simplicity we 
 
 In this example we use the following includes and namespace directives, and create a global class registry for our following functions to use:
 
-    #include <iostream>
-
     #include <com/fruitcompany/ClassRegistry.h>
     #include <mgen/serialization/StringInputStream.h>
     #include <mgen/serialization/StringOutputStream.h>
