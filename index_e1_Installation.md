@@ -22,9 +22,7 @@ Then - Edit two environmental variables:
 
 Lastly - Set the executable bit on the files inside the bin/ folder (not needed on Windows)
 
-That's it. Now you have MGen installed and are ready to use it when building your applications.
-
-For further explanations on what the different folders above contain, read on below.
+That's it. Now you have MGen installed and are ready to use it when building your applications. For further explanations on what the different folders above contain, read on below.
 
 
 ### The 'bin' folder
