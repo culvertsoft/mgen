@@ -1,6 +1,2 @@
 #!/bin/bash
-
-COMPILER=$(find ${MGEN_INSTALL_PATH} | grep compiler-assembly)
-
-java -jar ${COMPILER} $*
-
+java -jar ${MGEN_INSTALL_PATH}/jars/mgen-compiler-assembly.jar $*
