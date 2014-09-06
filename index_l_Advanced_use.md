@@ -120,8 +120,8 @@ In Java we can use the following methods to identify the type of the object:
 
 In c++ we can use:
 
- * C++ RTTI: dynamic_cast
- * C++ RTTI: typeId(object)
+ * RTTI: dynamic_cast
+ * RTTI: typeId(object)
  * MGen's 64bit type id by object->_typeId() (generated for all MGen classes)
  * MGen's generated Dispatch and Handler types
 
