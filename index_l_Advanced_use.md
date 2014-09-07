@@ -260,6 +260,17 @@ In this example we'll create a simple Generator class that just logs the names o
       }
     }
 
+Then just build and package that into a standard java jar file with your build system of choice. 
+
+Now we need to tell the MGen compiler what folder the jar file is in. We do this with the command line parameter [plugin_paths](index_c_Generating_code.html#b). Another way is to simply drop it in your MGEN_INSTALL_PATH/jars (see [Installation](index_e1_Installation.html)).
+
+Lastly, we add a 'Generator' directive to our [MGen project file](index_c_Generating_code.html), like this:
+
+    <Generator name="MyExampleGenerator">
+      <class_path>com.fruitcompany.ExampleGenerator</class_path>
+    </Generator>
+
+Executing the mgen compiler will then also run the compiler just created.
 
 
 ### Adding custom IDL parsers to the MGen compiler <a name="f">&nbsp;</a>
