@@ -202,14 +202,14 @@ One way to approach the problem is to write your own [MGen compiler plug-in](ind
 
 ### Adding custom code generators to the MGen compiler <a name="e">&nbsp;</a>
 
-This section will show you how to create your own code generator plug-in (=[a compiler plug-in](index_l_Advanced_use.html#c2)) and use it with the MGen compiler. To do this, we:
+This section will show you how to create your own code generator plug-in ([a compiler plug-in](index_l_Advanced_use.html#c2)) and use it with the MGen compiler. To do this, we:
 
  * Create a class implementing the Generator interface
  * Build and package the class into a java jar file
  * Place the jar file on the MGen compiler's plug-in path
  * Specify the generator in your MGen [project file](index_c_Generating_code.html)
 
-Ok, so the Generator interface looks like this (comments removed):
+The Generator interface looks like this (comments removed):
 
     public interface Generator {
       List<GeneratedSourceFile> generate(final Project project, 
@@ -275,6 +275,62 @@ Next time you run the MGen compiler, it will generate the log file using the cla
 
 ### Adding custom IDL parsers to the MGen compiler <a name="f">&nbsp;</a>
 
+This section will show you how to create your own IDL parser plug-in ([a compiler plug-in](index_l_Advanced_use.html#c2)) and use it with the MGen compiler. To do this, we:
+
+ * Create a class implementing the Parser interface
+ * Build and package the class into a java jar file
+ * Place the jar file on the MGen compiler's plug-in path
+ * Specify the parser in your MGen [project file](index_c_Generating_code.html)
+
+The Parser interface looks like this (comments removed):
+
+    public interface Parser {
+      void parse(final List<File> sources, 
+                 final Map<String, String> settings, 
+                 final Project parent);
+    }
+
+The input we have to work with are the source files specified for us to read, and some settings - And we should add our putput (the modules and classes we parse) into the provided project parameter. Handling the settings parameter is optional - it is just a map containing the settings you provided in your IDL project file, module files and command line arguments.
+
+In this example we will pretend we just parsed a module with a single class, and add it to the project ([full source code](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/test/java/se/culvertsoft/mgen/api/test/examplegenerator/ExampleParser.java)).
+
+public class ExampleParser implements Parser {
+
+    @Override
+    public void parse(List<File> sources, 
+                      Map<String, String> settings, 
+                      Project parent) {
+		
+      // This parser doesn't parse any code.
+      // It just pretends to already have done so 
+      // and adds a mock Module with a mock Class for
+      // example and tutorial purposes.
+      
+      String modulePath = "com.fruitcompany";
+      String idlRelFilePath = "com.fruitcompany.txt";
+      String idlAbsFilePath = "c:\\myMgenProject\\com.fruitcompant.txt";
+      
+      // Get or create the module we want to add a class to
+      Module module = 
+          parent.getOrCreateModule(modulePath,
+                                   idlRelFilePath,
+                                   idlAbsFilePath,
+                                   settings);
+		
+      // Create a class called "FruitBowl"
+      ClassType bowl = 
+          new ClassType("FruitBowl", // Class name 
+                        module, // Parent module
+                        null); // Super type
+		
+      // Add a field named "capacity" to class "FruitBowl"
+      bowl.addField(new Field(bowl.fullName(), // parent class name
+                              "capacity", // field name
+                              Int32Type.INSTANCE, // field type
+                              null)); // field flags
+      }
+}
+    
 
 ### Adding new wire formats/writing custom serializers <a name="g">&nbsp;</a>
 
