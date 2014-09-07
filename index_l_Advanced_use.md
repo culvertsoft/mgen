@@ -202,7 +202,12 @@ One way to approach the problem is to write your own [MGen compiler plug-in](ind
 
 ### Adding custom code generators to the MGen compiler <a name="e">&nbsp;</a>
 
-This section will show you an example on how to create your own code generator (=[a compiler plug-in](index_l_Advanced_use.html#c2)) and load it into the MGen compiler.
+This section will show you how to create your own code generator plug-in (=[a compiler plug-in](index_l_Advanced_use.html#c2)) and use it with the MGen compiler. To do this, we:
+
+ * Create a class implementing the Generator interface
+ * Build and package the class into a java jar file
+ * Place the jar file on the MGen compiler's plug-in path
+ * Specify the generator in your MGen [project file](index_c_Generating_code.html)
 
 
 ### Adding custom IDL parsers to the MGen compiler <a name="f">&nbsp;</a>
