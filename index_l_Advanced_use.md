@@ -374,7 +374,7 @@ As we've seen before this can be used to serialize and deserialize objects, but 
  * Generic mapping of objects to UI elements
  * and more ..
 
-In fact for our cross-language integration tests, we make extensive use of this functionality to simplify creating test data. Using the generic visitor interfaces, we can very easily (roughly 150 lines of code, including empty lines) write a class that will generically visit and randomize objects of any set of classes ([source link](https://github.com/culvertsoft/mgen/blob/master/mgen-integrationtests/build/common/MGenObjectRandomizer.h)). Therefore it's very easy for us to generate test data to use for cross-language tests.
+In fact for our cross-language integration tests, we make extensive use of this functionality to simplify creating test data. Using the generic visitor methods, we can very easily (roughly 150 lines of code, including empty lines) write a class that will generically visit and randomize objects of any set of classes ([source link](https://github.com/culvertsoft/mgen/blob/master/mgen-integrationtests/build/common/MGenObjectRandomizer.h)). Therefore it's very easy for us to generate test data to for our tests.
 
 
 ### Parsing command line arguments <a name="i">&nbsp;</a>
