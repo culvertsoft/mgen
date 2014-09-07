@@ -294,42 +294,42 @@ The input we have to work with are the source files specified for us to read, an
 
 In this example we will pretend we just parsed a module with a single class, and add it to the project ([full source code](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/test/java/se/culvertsoft/mgen/api/test/examplegenerator/ExampleParser.java)).
 
-public class ExampleParser implements Parser {
+    public class ExampleParser implements Parser {
 
-    @Override
-    public void parse(List<File> sources, 
-                      Map<String, String> settings, 
-                      Project parent) {
+      @Override
+      public void parse(List<File> sources, 
+                        Map<String, String> settings, 
+                        Project parent) {
 		
-      // This parser doesn't parse any code.
-      // It just pretends to already have done so 
-      // and adds a mock Module with a mock Class for
-      // example and tutorial purposes.
+        // This parser doesn't parse any code.
+        // It just pretends to already have done so 
+        // and adds a mock Module with a mock Class for
+        // example and tutorial purposes.
       
-      String modulePath = "com.fruitcompany";
-      String idlRelFilePath = "com.fruitcompany.txt";
-      String idlAbsFilePath = "c:\\myMgenProject\\com.fruitcompant.txt";
+        String modulePath = "com.fruitcompany";
+        String idlRelFilePath = "com.fruitcompany.txt";
+        String idlAbsFilePath = "c:\\myMgenProject\\com.fruitcompant.txt";
       
-      // Get or create the module we want to add a class to
-      Module module = 
-          parent.getOrCreateModule(modulePath,
-                                   idlRelFilePath,
-                                   idlAbsFilePath,
-                                   settings);
+        // Get or create the module we want to add a class to
+        Module module = 
+            parent.getOrCreateModule(modulePath,
+                                     idlRelFilePath,
+                                     idlAbsFilePath,
+                                     settings);
 		
-      // Create a class called "FruitBowl"
-      ClassType bowl = 
-          new ClassType("FruitBowl", // Class name 
-                        module, // Parent module
-                        null); // Super type
+        // Create a class called "FruitBowl"
+        ClassType bowl = 
+            new ClassType("FruitBowl", // Class name 
+                          module, // Parent module
+                          null); // Super type
 		
-      // Add a field named "capacity" to class "FruitBowl"
-      bowl.addField(new Field(bowl.fullName(), // parent class name
-                              "capacity", // field name
-                              Int32Type.INSTANCE, // field type
-                              null)); // field flags
+        // Add a field named "capacity" to class "FruitBowl"
+        bowl.addField(new Field(bowl.fullName(), // parent class name
+                                "capacity", // field name
+                                Int32Type.INSTANCE, // field type
+                                null)); // field flags
       }
-}
+    }
     
 
 ### Adding new wire formats/writing custom serializers <a name="g">&nbsp;</a>
