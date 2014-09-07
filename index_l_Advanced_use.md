@@ -290,7 +290,7 @@ The Parser interface looks like this (comments removed):
                  final Project parent);
     }
 
-The input we have to work with are the source files specified for us to read, and some settings - And we should add our putput (the modules and classes we parse) into the provided project parameter. Handling the settings parameter is optional - it is just a map containing the settings you provided in your IDL project file, module files and command line arguments.
+The input we have to work with are the source files specified for us to read, and some settings - And we should add our output (the modules and classes we parse) into the provided project parameter. Handling the settings parameter is optional - it is just a map containing the settings you provided in your IDL project file, module files and command line arguments.
 
 In this example we will pretend we just parsed a module with a single class, and add it to the project ([full source code](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/test/java/se/culvertsoft/mgen/api/test/examplegenerator/ExampleParser.java)).
 
