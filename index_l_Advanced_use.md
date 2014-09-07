@@ -202,6 +202,8 @@ One way to approach the problem is to write your own [MGen compiler plug-in](ind
 
 ### Adding custom code generators to the MGen compiler <a name="e">&nbsp;</a>
 
+This section will show you an example on how to create your own code generator (=[a compiler plug-in](index_l_Advanced_use.html#c2)) and load it into the MGen compiler.
+
 
 ### Adding custom IDL parsers to the MGen compiler <a name="f">&nbsp;</a>
 
