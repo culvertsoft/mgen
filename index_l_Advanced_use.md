@@ -216,7 +216,7 @@ Ok, so the Generator interface looks like this (comments removed):
                                          final Map<String, String> settings);
     }
 
-The input we have to work with is a Project model and some settings - And we should produce a list of GeneredSourceFile items. Handling the she settings parameter is optional - it is just a map containing the settings you provided in your IDL project file, module files and command line arguments.
+The input we have to work with is a Project model and some settings - And we should produce a list of GeneredSourceFile items. Handling the settings parameter is optional - it is just a map containing the settings you provided in your IDL project file, module files and command line arguments.
 
 The Project parameter is where the interesting content exists. A Project is an MGen API class that describes your model (see the MGen API javadoc documentation or [the source](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/main/java/se/culvertsoft/mgen/api/model/Project.java)). You can query it for what modules a project contains (project.modules()) and what dependencies (project.dependencies()) it has. 
 
