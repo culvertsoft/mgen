@@ -333,7 +333,21 @@ In this example we will pretend we just parsed a module with a single class, and
         module.addClass(bowl);
       }
     }
-    
+
+Then just build and package that into a standard java jar file with your build system of choice. 
+
+Now we need to tell the MGen compiler where to find the jar file. We do this with the command line parameter [plugin_paths](index_c_Generating_code.html#b). Another way is to simply drop it in your MGEN_INSTALL_PATH/jars (see [Installation](index_e1_Installation.html)).
+
+Lastly, we add a 'Sources' section to our [MGen project file](index_c_Generating_code.html), like this:
+
+    <Sources parser="com.fruitcompany.ExampleParser">
+      <Source>my_source_file1.xyz</Source>
+      <Source>my_source_file2.xyz</Source>
+      <Source>my_source_file3.xyz</Source>
+    </Sources>
+
+Next time you run the MGen compiler, it will try to load the source files specified above and parse them to your new parser class, which we defined above.
+
 
 ### Adding new wire formats/writing custom serializers <a name="g">&nbsp;</a>
 
