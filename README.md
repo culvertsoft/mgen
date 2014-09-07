@@ -42,7 +42,7 @@ Most of the core functionality is implemented, however:
  - Documentation is lacking.
  - We've not configured test boxes for all the platforms we want.
 
-For our first non-beta release:
+Later, for our first non-beta release:
  - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"
 
 
