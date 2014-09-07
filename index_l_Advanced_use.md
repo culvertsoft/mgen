@@ -242,28 +242,28 @@ In this example we'll create a simple Generator class that just logs the names o
 		
         // Print all the modules and their contents
         for (Module module : project.modules()) {
+        		
+          // First we print the module path
+          sb.append(module.path()).append("\n");
+        		
+          // Print enums
+          sb.append("  enums:").append("\n");
+          for (EnumType enumT : module.enums()) {
+            sb.append("    ").append(enumT.shortName()).append("\n");
+          }
+        		
+          // Print classes
+          sb.append("  classes:").append("\n");
+          for (ClassType classT : module.classes()) {
+            sb.append("    ").append(classT.shortName()).append("\n");
+          }
 			
-	  // First we print the module path
-	  sb.append(module.path()).append("\n");
-			
-	  // Print enums
-	  sb.append("  enums:").append("\n");
-	  for (EnumType enumT : module.enums()) {
-	    sb.append("    ").append(enumT.shortName()).append("\n");
-	  }
-			
-	  // Print classes
-	  sb.append("  classes:").append("\n");
-	  for (ClassType classT : module.classes()) {
-	    sb.append("    ").append(classT.shortName()).append("\n");
-	  }
-			
-	}
+        }
 		
-	String fileName = "generated_files.log";
-	String sourceCode = sb.toString();
+        String fileName = "generated_files.log";
+        String sourceCode = sb.toString();
 
-	return Arrays.asList(new GeneratedSourceFile(fileName, sourceCode));
+        return Arrays.asList(new GeneratedSourceFile(fileName, sourceCode));
       }
     }
 
