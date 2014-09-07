@@ -220,14 +220,7 @@ The input we have to work with is a Project model and some settings - And we sho
 
 The Project parameter is where the interesting content exists. A Project is an MGen API class that describes your model (see the MGen API javadoc documentation or [the source](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/main/java/se/culvertsoft/mgen/api/model/Project.java)). You can query it for what modules a project contains (project.modules()) and what dependencies (project.dependencies()) it has. 
 
-In this example we'll create a simple Generator class that just logs the names of all classes to be generated to a file. This is what it looks like:
-
-    import se.culvertsoft.mgen.api.model.ClassType;
-    import se.culvertsoft.mgen.api.model.EnumType;
-    import se.culvertsoft.mgen.api.model.GeneratedSourceFile;
-    import se.culvertsoft.mgen.api.model.Module;
-    import se.culvertsoft.mgen.api.model.Project;
-    import se.culvertsoft.mgen.api.plugins.Generator;
+In this example we'll create a simple Generator class that just logs the names of all classes to be generated to a file. This is what it looks like ([source code](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/test/java/se/culvertsoft/mgen/api/test/examplegenerator/ExampleGenerator.java)):
 
     public class ExampleGenerator implements Generator {
 
@@ -243,7 +236,7 @@ In this example we'll create a simple Generator class that just logs the names o
         // Print all the modules and their contents
         for (Module module : project.modules()) {
         		
-          // First we print the module path
+          // Print the module path
           sb.append(module.path()).append("\n");
         		
           // Print enums
