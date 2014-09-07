@@ -36,7 +36,7 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 
 ## State of Development
 
-Development is a about a month from an initial beta release. 
+Development is a about a couple of weeks from an initial beta release. 
 
 Most of the core functionality is implemented, however:
  - Documentation is lacking.
