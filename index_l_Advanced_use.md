@@ -270,7 +270,7 @@ Lastly, we add a 'Generator' directive to our [MGen project file](index_c_Genera
       <class_path>com.fruitcompany.ExampleGenerator</class_path>
     </Generator>
 
-Executing the mgen compiler will then also run the compiler just created.
+Next time you run the MGen compiler, it will generate the log file using the class we defined above.
 
 
 ### Adding custom IDL parsers to the MGen compiler <a name="f">&nbsp;</a>
