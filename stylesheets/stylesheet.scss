@@ -76,7 +76,7 @@ header {
   padding-top: 40px;
   padding-bottom: 40px;
   font-family: $font-default;
-  background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
+  background: #365a7e url(../images/header-bg.jpg) 0 0 repeat-x;
   border-bottom: solid 1px #275da1;
   h1 {
     letter-spacing: -1px;
@@ -146,7 +146,7 @@ aside#sidebar {
     padding: 0px;
     border-radius: 7px;
     li {
-      font-size: 23;
+      font-size: 16;
       margin: 5px;
       border-radius: 5px;
       background-color: $color-sub2;
@@ -156,7 +156,7 @@ aside#sidebar {
         padding-left: 10px;
         li {
           list-style-type: circle;
-          font-size: 18;
+          font-size: 13;
           margin: 2px;
           padding: 2px;
         }
@@ -239,7 +239,7 @@ hr {
   margin-top: 1em;
   padding-bottom: 1em;
   border: none;
-  background: transparent url('../images/hr.png') 0 0 no-repeat;
+  background: transparent;
 }
 
 table {
@@ -380,7 +380,7 @@ dl dd {
 }
 
 footer {
-  background: transparent url('../images/hr.png') 0 0 no-repeat;
+  background: transparent;
   margin-top: 40px;
   padding-top: 20px;
   padding-bottom: 30px;
