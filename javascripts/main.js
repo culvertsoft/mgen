@@ -1,3 +1,3 @@
 $(function(){
-	console.log('jQuery installed');
+	$('.tabs').tabs();
 });
