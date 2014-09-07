@@ -1,4 +1,4 @@
-package se.culvertsoft.mgen.api.test.examplegenerator;
+package se.culvertsoft.mgen.api.test.exampleparser;
 
 import java.io.File;
 import java.util.List;
@@ -51,6 +51,9 @@ public class ExampleParser implements Parser {
 						"capacity", // field name
 						Int32Type.INSTANCE, // field type
 						null)); // field flags
+		
+		// Finally, add the new class to the module
+		module.addClass(bowl);
 		
 		
 	}
