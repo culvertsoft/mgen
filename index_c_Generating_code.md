@@ -1,9 +1,12 @@
 ---
 layout: default
 link-title: Generating code
+submenu:
+  - { anchor: "a", title: "generating code" }
+  - { anchor: "b", title: "command line parameters" }
 ---
 
-## Generating source code (classes)
+## Generating source code (classes) <a name="a">&nbsp;</a>
 
 In order to generate source code/classes for [the data model you defined in the MGen IDL](index_b_Basic_model.html), we use the MGen compiler. Before we run it, it needs to know:
 
@@ -91,6 +94,8 @@ Lastly we call the MGen compiler:
 
     *** COMPILATION SUCCESS ***
 
+
+### Supported command line parameters <a name="b">&nbsp;</a>
 
 Calling the compiler without arguments will show you the command line options it supports:
 
