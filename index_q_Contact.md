@@ -25,4 +25,5 @@ We haven't yet decided on a licensing or business model (if there will be any), 
 
 ### Company
 
-We're planning to host a company website at [www.culvertsoft.se](http://www.culvertsoft.se). It's not that high on our priority list yet though.
+We're planning to host a company website at [www.culvertsoft.se](http://www.culvertsoft.se). 
+
