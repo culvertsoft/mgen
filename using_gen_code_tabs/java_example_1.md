@@ -23,35 +23,39 @@ public class Application {
 
 We define our serialization functions:
 
-      static String toJSON(final MGenBase object) 
-          throws IOException {
+{% highlight java %}
 
-        // Create an output to stream the object to
-        OutputStream stream = new ByteArrayOutputStream();
+static String toJSON(MGenBase object) 
+        throws IOException {
 
-        // Create a writer object
-        JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
+    // Create an output to stream the object to
+    OutputStream stream = new ByteArrayOutputStream();
 
-        // Write the object
-        writer.writeObject(object);
+    // Create a writer object
+    JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
 
-        // Return the written string
-        return new String(bos.toByteArray(), charset);
-      }
+    // Write the object
+    writer.writeObject(object);
 
-      static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
-          throws IOException {
+    // Return the written string
+    return new String(bos.toByteArray(), charset);
+}
 
-        // Create a data source to stream objects from
-        // Standard Java InputStream objects can also be used
-        StringReader stream = new StringReader(json);
+static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
+        throws IOException {
 
-        // Create a reader object
-        JsonReader reader = new JsonReader(stream, classRegistry);
+    // Create a data source to stream objects from
+    // Standard Java InputStream objects can also be used
+    StringReader stream = new StringReader(json);
 
-        // Read the object (the read is polymorphic)
-        return reader.readObject(cls);
-      }
+    // Create a reader object
+    JsonReader reader = new JsonReader(stream, classRegistry);
+
+    // Read the object (the read is polymorphic)
+    return reader.readObject(cls);
+}
+
+{% endhighlight %}
 
 Lastly comes the main function which uses the above:
 
