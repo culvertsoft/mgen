@@ -20,6 +20,7 @@ Just as in the c++ example, this examples shows how to serialize objects to JSON
 
 We define our serialization functions:
 {% highlight java %}
+
       static String toJSON(final MGenBase object) 
           throws IOException {
 
