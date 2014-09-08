@@ -25,11 +25,11 @@ We define our serialization functions:
 
 {% highlight java %}
 
-static String toJSON(MGenBase object) 
-    throws IOException {
+  static String toJSON(MGenBase object) 
+      throws IOException {
 
-  // Create an output to stream the object to
-  OutputStream stream = new ByteArrayOutputStream();
+    // Create an output to stream the object to
+    OutputStream stream = new ByteArrayOutputStream();
 
     // Create a writer object
     JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
@@ -39,10 +39,10 @@ static String toJSON(MGenBase object)
 
     // Return the written string
     return new String(bos.toByteArray(), charset);
-}
+  }
 
-static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
-        throws IOException {
+  static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
+      throws IOException {
 
     // Create a data source to stream objects from
     // Standard Java InputStream objects can also be used
@@ -53,7 +53,7 @@ static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
 
     // Read the object (the read is polymorphic)
     return reader.readObject(cls);
-}
+  }
 
 {% endhighlight %}
 
@@ -61,8 +61,8 @@ Lastly comes the main function which uses the above:
 
 {% highlight java %}
 
-public static void main(final String[] params) 
-        throws IOException {
+  public static void main(final String[] params) 
+      throws IOException {
 
     // Create some objects
     Apple apple = new Apple(Brand.A, 4);
@@ -79,8 +79,8 @@ public static void main(final String[] params)
     // Check that they are still the same
     System.out.println(apple.equals(appleBack));
     System.out.println(banana.equals(bananaBack));
-
-    }
+  }
+  
 }
 
 {% endhighlight %}
