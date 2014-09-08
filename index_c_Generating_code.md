@@ -15,12 +15,6 @@ In order to generate source code/classes for [the data model you defined in the 
  * What code generators to use
  * Where to place the output
 
-We need:
-
- * An MGen **Project** file
- * To run the MGen compiler
- * Know what options the compiler supports
-
 ---
 
 

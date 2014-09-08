@@ -1,7 +1,7 @@
 ---
 ---
 
-An MGen project file is an ordinary xml file. In this example we'll create one called project.xml (the name does not matter) with the following contents:
+To tell the MGen compiler these things we need to write a project file. An MGen project file is just an ordinary xml file - so we'll simply create one for this example named project.xml (the name does not matter) with the following contents:
 
 
     <Project>
