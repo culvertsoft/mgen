@@ -5,19 +5,19 @@ Just as in the c++ example, this examples shows how to serialize objects to JSON
 
 {% highlight java %}
 
-    import se.culvertsoft.mgen.javapack.classes.MGenBase;
-    import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter;
-    import se.culvertsoft.mgen.javapack.serialization.JsonReader;
+import se.culvertsoft.mgen.javapack.classes.MGenBase;
+import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter;
+import se.culvertsoft.mgen.javapack.serialization.JsonReader;
 
-    import com.fruitcompany.ClassRegistry;
-    import com.fruitcompany.fruits.Apple;
-    import com.fruitcompany.fruits.Banana;
-    import com.fruitcompany.fruits.Brand;
+import com.fruitcompany.ClassRegistry;
+import com.fruitcompany.fruits.Apple;
+import com.fruitcompany.fruits.Banana;
+import com.fruitcompany.fruits.Brand;
 
-    public class Application {
+public class Application {
 
-      static Charset charset = Charset.forName("UTF-8");
-      static ClassRegistry classRegistry = new ClassRegistry();
+    static Charset charset = Charset.forName("UTF-8");
+    static ClassRegistry classRegistry = new ClassRegistry();
 
 {% endhighlight %}
 
