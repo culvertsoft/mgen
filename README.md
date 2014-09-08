@@ -8,7 +8,6 @@ This is where you can download the MGen source and learn how to build it.
 ---
 
 * [Building MGen](#building-mgen)
-* [State of Development](#state-of-development)
 * [License](#license)
 
 
@@ -32,18 +31,6 @@ Build Instructions:
   * python build.py --help [example: "python build.py -b" for just building]
 
 Output will be placed inside each mgen-component's target/ directory (e.g. mgen-api/target/).
- 
-
-## State of Development
-
-Development is a about a couple of weeks from an initial beta release. 
-
-Most of the core functionality is implemented, however:
- - Documentation is lacking.
- - We've not configured test boxes for all the platforms we want.
-
-Later, for our first non-beta release:
- - We're hoping to add parsers for xml schema, json schema and protocol buffers IDLs, but those are currently on the "nice-to-have-list"
 
 
 ## License
