@@ -25,35 +25,35 @@ We define our serialization functions:
 
 {% highlight java %}
 
-  static String toJSON(MGenBase object) 
-      throws IOException {
+static String toJSON(MGenBase object) 
+    throws IOException {
 
-    // Create an output to stream the object to
-    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+  // Create an output to stream the object to
+  ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
-    // Create a writer object
-    JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
+  // Create a writer object
+  JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
 
-    // Write the object
-    writer.writeObject(object);
+  // Write the object
+  writer.writeObject(object);
 
-    // Return the written string
-    return new String(stream.toByteArray(), charset);
-  }
+  // Return the written string
+  return new String(stream.toByteArray(), charset);
+}
 
-  static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
-      throws IOException {
+static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
+    throws IOException {
 
-    // Create a data source to stream objects from
-    // Standard Java InputStream objects can also be used
-    StringReader stream = new StringReader(json);
+  // Create a data source to stream objects from
+  // Standard Java InputStream objects can also be used
+  StringReader stream = new StringReader(json);
 
-    // Create a reader object
-    JsonReader reader = new JsonReader(stream, classRegistry);
+  // Create a reader object
+  JsonReader reader = new JsonReader(stream, classRegistry);
 
-    // Read the object (the read is polymorphic)
-    return reader.readObject(cls);
-  }
+  // Read the object (the read is polymorphic)
+  return reader.readObject(cls);
+}
 
 {% endhighlight %}
 
@@ -61,27 +61,25 @@ Lastly comes the main function which uses the above:
 
 {% highlight java %}
 
-  public static void main(final String[] params) 
-      throws IOException {
+public static void main(final String[] params) 
+    throws IOException {
 
-    // Create some objects
-    Apple apple = new Apple(Brand.A, 4);
-    Banana banana = new Banana().setLength(5).setBrand(Brand.B);
+  // Create some objects
+  Apple apple = new Apple(Brand.A, 4);
+  Banana banana = new Banana().setLength(5).setBrand(Brand.B);
 
-    // Serialize them to JSON and print them
-    System.out.println(toJSON(banana));
-    System.out.println(toJSON(apple));
+  // Serialize them to JSON and print them
+  System.out.println(toJSON(banana));
+  System.out.println(toJSON(apple));
 
-    // Read the objects back from their serialized form
-    Apple appleBack = fromJSON(toJSON(apple), Apple.class);
-    Banana bananaBack = fromJSON(toJSON(banana), Banana.class);
+  // Read the objects back from their serialized form
+  Apple appleBack = fromJSON(toJSON(apple), Apple.class);
+  Banana bananaBack = fromJSON(toJSON(banana), Banana.class);
 
-    // Check that they are still the same
-    System.out.println(apple.equals(appleBack));
-    System.out.println(banana.equals(bananaBack));
-  }
-  
+  // Check that they are still the same
+  System.out.println(apple.equals(appleBack));
+  System.out.println(banana.equals(bananaBack));
 }
-
+  
 {% endhighlight %}
 
