@@ -3,8 +3,7 @@
 
 Just as in the c++ example, this examples shows how to serialize objects to JSON and back. We start by using the following imports, and similar to the c++ example we also create a class registry for type identification:
 
-{% highlight java %}
-
+```Java
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter;
 import se.culvertsoft.mgen.javapack.serialization.JsonReader;
@@ -15,16 +14,13 @@ import com.fruitcompany.fruits.Banana;
 import com.fruitcompany.fruits.Brand;
 
 public class Application {
-
   static Charset charset = Charset.forName("UTF-8");
   static ClassRegistry classRegistry = new ClassRegistry();
-
-{% endhighlight %}
+```
 
 We define our serialization functions:
 
-{% highlight java %}
-
+```Java
 static String toJSON(MGenBase object) 
     throws IOException {
 
@@ -54,12 +50,11 @@ static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
   // Read the object (the read is polymorphic)
   return reader.readObject(cls);
 }
-
-{% endhighlight %}
+```
 
 Lastly comes the main function which uses the above:
 
-{% highlight java %}
+```Java
 
 public static void main(final String[] params) 
     throws IOException {
@@ -81,5 +76,4 @@ public static void main(final String[] params)
   System.out.println(banana.equals(bananaBack));
 }
   
-{% endhighlight %}
-
+```
