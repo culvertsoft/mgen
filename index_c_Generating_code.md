@@ -15,9 +15,6 @@ In order to generate source code/classes for [the data model you defined in the 
  * What code generators to use
  * Where to place the output
 
----
-
-
 <div class="tabs"><a name="a">&nbsp;</a> 
   <ul>
       <li>

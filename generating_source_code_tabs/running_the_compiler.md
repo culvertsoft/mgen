@@ -1,7 +1,7 @@
 ---
 ---
 
-To run the MGen compiler, we simply call it from a shell:
+To run the MGen compiler, we simply call 'mgen' from a shell and pass the project file name as the first parameter:
 
     $..> mgen project.xml
 
