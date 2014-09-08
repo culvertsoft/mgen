@@ -2,9 +2,9 @@
 layout: default
 link-title: Using generated code
 submenu:
-  - { anchor: "a", target-tab: "cpp-example", title: "cpp code example" }
-  - { anchor: "a", target-tab: "java-example", title: "java code example" }
-  - { anchor: "a", target-tab: "javascript-example", title: "javascript code example" }
+  - { anchor: "a", target-tab: "cpp-example", title: "cpp example" }
+  - { anchor: "a", target-tab: "java-example", title: "java example" }
+  - { anchor: "a", target-tab: "javascript-example", title: "javascript example" }
   - { anchor: "d", title: "other wire formats" }
   - { anchor: "e", title: "limitations" }
 ---
