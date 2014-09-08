@@ -1,6 +1,6 @@
 ---
 layout: default
-link-title: Functionality
+link-title: Features
 ---
 
 ## Summary of functionality
