@@ -5,19 +5,22 @@ This example shows how to serialize objects to JSON and back. For simplicity we 
 
 In this example we use the following includes and namespace directives, and create a global class registry for our following functions to use:
 
-    #include <com/fruitcompany/ClassRegistry.h>
-    #include <mgen/serialization/StringInputStream.h>
-    #include <mgen/serialization/StringOutputStream.h>
-    #include <mgen/serialization/JsonPrettyWriter.h>
-    #include <mgen/serialization/JsonReader.h>
+{% highlight java %}
 
-    using namespace mgen;
-    using namespace com::fruitcompany;
-    using namespace com::fruitcompany::fruits;
+#include <com/fruitcompany/ClassRegistry.h>
+#include <mgen/serialization/StringInputStream.h>
+#include <mgen/serialization/StringOutputStream.h>
+#include <mgen/serialization/JsonPrettyWriter.h>
+#include <mgen/serialization/JsonReader.h>
 
-    // A class registry for type identification
-    const ClassRegistry registry;
+using namespace mgen;
+using namespace com::fruitcompany;
+using namespace com::fruitcompany::fruits;
 
+// A class registry for type identification
+const ClassRegistry registry;
+
+{% endhighlight %}
 
 Then we define our serialization functions:
 
