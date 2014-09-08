@@ -16,8 +16,8 @@ import com.fruitcompany.fruits.Brand;
 
 public class Application {
 
-    static Charset charset = Charset.forName("UTF-8");
-    static ClassRegistry classRegistry = new ClassRegistry();
+  static Charset charset = Charset.forName("UTF-8");
+  static ClassRegistry classRegistry = new ClassRegistry();
 
 {% endhighlight %}
 
@@ -26,10 +26,10 @@ We define our serialization functions:
 {% highlight java %}
 
 static String toJSON(MGenBase object) 
-        throws IOException {
+    throws IOException {
 
-    // Create an output to stream the object to
-    OutputStream stream = new ByteArrayOutputStream();
+  // Create an output to stream the object to
+  OutputStream stream = new ByteArrayOutputStream();
 
     // Create a writer object
     JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
