@@ -1,6 +1,5 @@
 ---
 ---
-### A c++ example
 
 This example shows how to serialize objects to JSON and back. For simplicity we will serialize to std::strings, but we could just as well serialiize to generic data sink - just a class having a write(void*, int) method.
 

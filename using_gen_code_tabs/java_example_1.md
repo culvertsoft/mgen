@@ -1,6 +1,5 @@
 ---
 ---
-### A java example
 
 Just as in the c++ example, this examples shows how to serialize objects to JSON and back. We start by using the following imports, and similar to the c++ example we also create a class registry for type identification:
 
