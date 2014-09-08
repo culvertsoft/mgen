@@ -383,7 +383,7 @@ We are certain that there are lots of other applications for this API that we ha
 
 Note: This is an experimental feature currently only available in the MGen java runtime library. 
 
-We have added a simple command line argument parser to the MGen runtime library, which lets you take a set of application command line arguements and create a java object from them. It works by analyzing an MGen class through the generated class visitor interface ([explained earlier](index_l_Advanced_use.html#h)), and produce a command line argument parser for that class with corresponding help string.
+We have added a simple command line argument parser, which lets you take a set of application command line arguments and create a java object from them. It works by analyzing an MGen class through the generated class visitor interface ([explained earlier](index_l_Advanced_use.html#h)), and produce a command line argument parser for that class with corresponding help string.
 
 Below is an example on how to use this functionality:
 
