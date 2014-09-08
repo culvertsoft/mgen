@@ -24,54 +24,61 @@ const ClassRegistry registry;
 
 Then we define our serialization functions:
 
-    std::string toJSON(const MGenBase& object) {
+{% highlight c++ %}
 
-        // Create a target to stream the object to
-        StringOutputStream stream;
+std::string toJSON(const MGenBase& object) {
 
-        // Create a writer object
-        JsonPrettyWriter<StringOutputStream, ClassRegistry> writer(stream, registry);
+  // Create a target to stream the object to
+  StringOutputStream stream;
 
-        // Write the object
-        writer.writeObject(object);
+  // Create a writer object
+  JsonPrettyWriter<StringOutputStream, ClassRegistry> writer(stream, registry);
 
-        // Return the written string
-        return stream.str();
-    }
+  // Write the object
+  writer.writeObject(object);
 
-    template <typename T>
-    T fromJSON(const std::string& json) {
+  // Return the written string
+  return stream.str();
+}
 
-        // Create a data source to stream objects from
-        StringInputStream stream(json);
+template <typename T>
+T fromJSON(const std::string& json) {
 
-        // Create a reader object
-        JsonReader<StringInputStream, ClassRegistry> reader(stream, registry);
+  // Create a data source to stream objects from
+  StringInputStream stream(json);
 
-        // Read object. You can read T* polymorphicly with reader.readObject<T>()
-        return reader.readStatic<T>();
-    }
+  // Create a reader object
+  JsonReader<StringInputStream, ClassRegistry> reader(stream, registry);
 
+  // Read object. You can read T* polymorphicly with reader.readObject<T>()
+  return reader.readStatic<T>();
+}
+
+{% endhighlight %}
 
 Lastly comes the main function which uses the above:
 
-    int main() {
+{% highlight c++ %}
 
-        // Create some objects
-        const Apple apple(Brand_A, 4);
-        const Banana banana = Banana().setLength(5).setBrand(Brand_B);
+int main() {
 
-        // Serialize them to JSON and print them
-        std::cout << toJSON(banana) << std::endl;
-        std::cout << toJSON(apple) << std::endl;
+  // Create some objects
+  const Apple apple(Brand_A, 4);
+  const Banana banana = Banana().setLength(5).setBrand(Brand_B);
 
-        // Read the objects back from their serialized form
-        const Apple appleBack = fromJSON<Apple>(toJSON(apple));
-        const Banana bananaBack = fromJSON<Banana>(toJSON(banana));
+  // Serialize them to JSON and print them
+  std::cout << toJSON(banana) << std::endl;
+  std::cout << toJSON(apple) << std::endl;
 
-        // Check that they are still the same
-        std::cout << (apple == appleBack) << std::endl;
-        std::cout << (banana == bananaBack) << std::endl;
+  // Read the objects back from their serialized form
+  const Apple appleBack = fromJSON<Apple>(toJSON(apple));
+  const Banana bananaBack = fromJSON<Banana>(toJSON(banana));
 
-        return 0;
-    }
+  // Check that they are still the same
+  std::cout << (apple == appleBack) << std::endl;
+  std::cout << (banana == bananaBack) << std::endl;
+
+  return 0;
+}
+
+{% endhighlight %}
