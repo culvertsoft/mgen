@@ -3,6 +3,8 @@
 
 Just as in the c++ example, this examples shows how to serialize objects to JSON and back. We start by using the following imports, and similar to the c++ example we also create a class registry for type identification:
 
+{% highlight java %}
+
     import se.culvertsoft.mgen.javapack.classes.MGenBase;
     import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter;
     import se.culvertsoft.mgen.javapack.serialization.JsonReader;
@@ -16,6 +18,8 @@ Just as in the c++ example, this examples shows how to serialize objects to JSON
 
       static Charset charset = Charset.forName("UTF-8");
       static ClassRegistry classRegistry = new ClassRegistry();
+
+{% endhighlight %}
 
 We define our serialization functions:
 
