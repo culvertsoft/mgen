@@ -10,7 +10,7 @@ A file named **com.fruitcompany.fruits.xml**, with the contents:
 <Module>
 
   <Enums>
-    <Brand><A/></B/><C/></Brand>
+    <Brand><A/><B/><C/></Brand>
   </Enums>
 
   <Types>
