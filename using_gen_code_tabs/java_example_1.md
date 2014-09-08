@@ -2,76 +2,79 @@
 ---
 
 Just as in the c++ example, this examples shows how to serialize objects to JSON and back. We start by using the following imports, and similar to the c++ example we also create a class registry for type identification:
-{% highlight java %}
-    import se.culvertsoft.mgen.javapack.classes.MGenBase;
-    import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter;
-    import se.culvertsoft.mgen.javapack.serialization.JsonReader;
 
-    import com.fruitcompany.ClassRegistry;
-    import com.fruitcompany.fruits.Apple;
-    import com.fruitcompany.fruits.Banana;
-    import com.fruitcompany.fruits.Brand;
+```java
+import se.culvertsoft.mgen.javapack.classes.MGenBase;
+import se.culvertsoft.mgen.javapack.serialization.JsonPrettyWriter;
+import se.culvertsoft.mgen.javapack.serialization.JsonReader;
 
-    public class Application {
+import com.fruitcompany.ClassRegistry;
+import com.fruitcompany.fruits.Apple;
+import com.fruitcompany.fruits.Banana;
+import com.fruitcompany.fruits.Brand;
 
-      static Charset charset = Charset.forName("UTF-8");
-      static ClassRegistry classRegistry = new ClassRegistry();
-{% endhighlight %}
+public class Application {
+
+  static Charset charset = Charset.forName("UTF-8");
+  static ClassRegistry classRegistry = new ClassRegistry();
+```
 
 We define our serialization functions:
-{% highlight java %}
-      static String toJSON(final MGenBase object) 
-          throws IOException {
 
-        // Create an output to stream the object to
-        OutputStream stream = new ByteArrayOutputStream();
+```
+static String toJSON(final MGenBase object) 
+    throws IOException {
 
-        // Create a writer object
-        JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
+  // Create an output to stream the object to
+  OutputStream stream = new ByteArrayOutputStream();
 
-        // Write the object
-        writer.writeObject(object);
+  // Create a writer object
+  JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
 
-        // Return the written string
-        return new String(bos.toByteArray(), charset);
-      }
+  // Write the object
+  writer.writeObject(object);
 
-      static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
-          throws IOException {
+  // Return the written string
+  return new String(bos.toByteArray(), charset);
+}
 
-        // Create a data source to stream objects from
-        // Standard Java InputStream objects can also be used
-        StringReader stream = new StringReader(json);
+static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
+    throws IOException {
 
-        // Create a reader object
-        JsonReader reader = new JsonReader(stream, classRegistry);
+  // Create a data source to stream objects from
+  // Standard Java InputStream objects can also be used
+  StringReader stream = new StringReader(json);
 
-        // Read the object (the read is polymorphic)
-        return reader.readObject(cls);
-      }
-{% endhighlight %}
+  // Create a reader object
+  JsonReader reader = new JsonReader(stream, classRegistry);
+
+  // Read the object (the read is polymorphic)
+  return reader.readObject(cls);
+}
+```
 
 Lastly comes the main function which uses the above:
-{% highlight java %}
-      public static void main(final String[] params) 
-          throws IOException {
 
-        // Create some objects
-        Apple apple = new Apple(Brand.A, 4);
-        Banana banana = new Banana().setLength(5).setBrand(Brand.B);
+```
+public static void main(final String[] params) 
+    throws IOException {
 
-        // Serialize them to JSON and print them
-        System.out.println(toJSON(banana));
-        System.out.println(toJSON(apple));
+  // Create some objects
+  Apple apple = new Apple(Brand.A, 4);
+  Banana banana = new Banana().setLength(5).setBrand(Brand.B);
 
-        // Read the objects back from their serialized form
-        Apple appleBack = fromJSON(toJSON(apple), Apple.class);
-        Banana bananaBack = fromJSON(toJSON(banana), Banana.class);
+  // Serialize them to JSON and print them
+  System.out.println(toJSON(banana));
+  System.out.println(toJSON(apple));
 
-        // Check that they are still the same
-        System.out.println(apple.equals(appleBack));
-        System.out.println(banana.equals(bananaBack));
+  // Read the objects back from their serialized form
+  Apple appleBack = fromJSON(toJSON(apple), Apple.class);
+  Banana bananaBack = fromJSON(toJSON(banana), Banana.class);
 
-      }
-    }
-{% endhighlight %}
+  // Check that they are still the same
+  System.out.println(apple.equals(appleBack));
+  System.out.println(banana.equals(bananaBack));
+
+  }
+}
+```
