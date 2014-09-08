@@ -29,7 +29,7 @@ We define our serialization functions:
       throws IOException {
 
     // Create an output to stream the object to
-    OutputStream stream = new ByteArrayOutputStream();
+    ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
     // Create a writer object
     JsonPrettyWriter writer = new JsonPrettyWriter(stream, classRegistry);
@@ -38,7 +38,7 @@ We define our serialization functions:
     writer.writeObject(object);
 
     // Return the written string
-    return new String(bos.toByteArray(), charset);
+    return new String(stream.toByteArray(), charset);
   }
 
   static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
