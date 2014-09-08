@@ -59,25 +59,27 @@ static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
 
 Lastly comes the main function which uses the above:
 
-      public static void main(final String[] params) 
-          throws IOException {
+{% highlight java %}
 
-        // Create some objects
-        Apple apple = new Apple(Brand.A, 4);
-        Banana banana = new Banana().setLength(5).setBrand(Brand.B);
+public static void main(final String[] params) 
+        throws IOException {
 
-        // Serialize them to JSON and print them
-        System.out.println(toJSON(banana));
-        System.out.println(toJSON(apple));
+    // Create some objects
+    Apple apple = new Apple(Brand.A, 4);
+    Banana banana = new Banana().setLength(5).setBrand(Brand.B);
 
-        // Read the objects back from their serialized form
-        Apple appleBack = fromJSON(toJSON(apple), Apple.class);
-        Banana bananaBack = fromJSON(toJSON(banana), Banana.class);
+    // Serialize them to JSON and print them
+    System.out.println(toJSON(banana));
+    System.out.println(toJSON(apple));
 
-        // Check that they are still the same
-        System.out.println(apple.equals(appleBack));
-        System.out.println(banana.equals(bananaBack));
+    // Read the objects back from their serialized form
+    Apple appleBack = fromJSON(toJSON(apple), Apple.class);
+    Banana bananaBack = fromJSON(toJSON(banana), Banana.class);
 
-      }
+    // Check that they are still the same
+    System.out.println(apple.equals(appleBack));
+    System.out.println(banana.equals(bananaBack));
+
     }
+}
 
