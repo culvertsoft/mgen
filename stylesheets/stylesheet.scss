@@ -270,12 +270,6 @@ form {
     font-size: 2.8em;
     letter-spacing: -1px;
     color: #474747;
-    &:before {
-      content: "/";
-      color: $color-sub1;
-      padding-right: 0.3em;
-      margin-left: -0.9em;
-    }
   }
   h2 {
     font-family: $font-default;
