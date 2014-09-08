@@ -2,7 +2,9 @@
 layout: default
 link-title: Using generated code
 submenu:
-  - { anchor: "a", title: "code examples" }
+  - { anchor: "a", target-tab: "cpp-example", title: "cpp code example" }
+  - { anchor: "a", target-tab: "java-example", title: "java code example" }
+  - { anchor: "a", target-tab: "javascript-example", title: "javascript code example" }
   - { anchor: "d", title: "other wire formats" }
   - { anchor: "e", title: "limitations" }
 ---
@@ -11,14 +13,16 @@ submenu:
 
 This page shows how to serialize objects of [previously generated example classes](index_c_Generating_code.html). 
 
-<div class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
-  <a name="a">&nbsp;</a>
+<div class="tabs"><a name="a">&nbsp;</a> 
   <ul>
       <li>
-          <a href="{{ site.baseurl }}/using_gen_code_tabs/cpp_example_1.html">C++ example</a>
+          <a tab-id="cpp-example" href="{{ site.baseurl }}/using_gen_code_tabs/cpp_example_1.html">C++ example</a>
       </li>
       <li>
-          <a href="{{ site.baseurl }}/using_gen_code_tabs/java_example_1.html">Java example</a>
+          <a tab-id="java-example" href="{{ site.baseurl }}/using_gen_code_tabs/java_example_1.html">Java example</a>
+      </li>
+      <li>
+          <a tab-id="javascript-example" href="{{ site.baseurl }}/using_gen_code_tabs/javascript_example_1.html">Javascript example</a>
       </li>
   </ul>
 </div>

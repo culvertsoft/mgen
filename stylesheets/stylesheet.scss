@@ -1,6 +1,8 @@
 $font-default: 'Helvetica Neue', Helvetica, Arial, serif;
+$color-sub3: rgb(68, 126, 189);
 $color-sub2: #35557d;
 $color-sub1: #6FB7EE;
+$color-gray: #AAA;
 
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -113,6 +115,58 @@ header {
   img {
     max-width: 100%;
   }
+}
+
+
+.tabs>div {
+  padding: 10px;
+  margin: 0px;
+  clear: both;
+  border: 1px solid $color-gray;
+  background-color: rgb(247, 247, 247);
+}
+
+
+
+li[aria-selected="true"]{
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  a {
+      background-color: $color-sub3 !important;
+    border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  }
+}
+
+.tabs>ul {
+  padding: 0px;
+  padding-bottom: 0px;
+  margin: 0px;
+  margin-bottom: -1px;
+  float: left;
+  list-style-type: none;
+  clear: both;
+
+  vertical-align: bottom;
+  
+  li {
+    float: left;
+    a {
+      color: white;
+      float: left;
+      display: block;
+      background-color: $color-sub2;
+      border: 1px solid  white;
+      border-top-left-radius: 5px;
+      border-top-right-radius: 5px;
+      padding: 5px;
+    }
+  }
+}
+
+.hidden-anchor {
+  display: relative;
+  font-size: 0px;
 }
 
 aside#sidebar {
@@ -310,7 +364,7 @@ form {
 }
 
 p {
-  margin-bottom: 20px;
+  margin: 20px 13px;
 }
 
 a {
