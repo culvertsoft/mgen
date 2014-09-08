@@ -21,7 +21,7 @@ public class Application {
 
 We define our serialization functions:
 
-```
+```java
 static String toJSON(final MGenBase object) 
     throws IOException {
 
@@ -55,7 +55,7 @@ static <T extends MGenBase> T fromJSON(String json, Class<T> cls)
 
 Lastly comes the main function which uses the above:
 
-```
+```java
 public static void main(final String[] params) 
     throws IOException {
 
