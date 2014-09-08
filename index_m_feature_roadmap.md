@@ -6,7 +6,7 @@ link-title: Feature road map
 ## Feature road map and future plans
 
 We have several features that we want to implement for MGen in the future. 
-Below is a list of the highest priority items on our wish list:
+Below are some of these:
 
  * Add support for Python (generator + runtime library)
  * Add support for C# (generator + runtime library)
@@ -14,6 +14,7 @@ Below is a list of the highest priority items on our wish list:
  * Add support for custom allocators (c++)
  * Add support for std:: and boost:: smart pointers (c++)
  * Add generated operators "<<", "<" and ">" (c++)
+ * Add support for C++11 features
  * Add support for mixins
  * Add support for ordered maps
  * Add support for sets
