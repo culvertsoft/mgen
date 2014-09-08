@@ -220,11 +220,6 @@ form {
   font-weight: bold;
   margin-bottom: 8px;
   color: #474747; }
-  #main-content h2:before {
-    content: "//";
-    color: #6FB7EE;
-    padding-right: 0.3em;
-    margin-left: -1.5em; }
 #main-content h3 {
   font-family: "Helvetica Neue", Helvetica, Arial, serif;
   font-size: 18px;
@@ -232,44 +227,21 @@ form {
   margin-top: 24px;
   margin-bottom: 8px;
   color: #474747; }
-  #main-content h3:before {
-    content: "///";
-    color: #6FB7EE;
-    padding-right: 0.3em;
-    margin-left: -2em; }
 #main-content h4 {
   font-family: "Helvetica Neue", Helvetica, Arial, serif;
   font-size: 15px;
   font-weight: bold;
   color: #474747; }
 
-h4:before {
-  content: "////";
-  color: #6FB7EE;
-  padding-right: 0.3em;
-  margin-left: -2.8em; }
-
 #main-content h5 {
   font-family: "Helvetica Neue", Helvetica, Arial, serif;
   font-size: 14px;
   color: #474747; }
 
-h5:before {
-  content: "/////";
-  color: #6FB7EE;
-  padding-right: 0.3em;
-  margin-left: -3.2em; }
-
 #main-content h6 {
   font-family: "Helvetica Neue", Helvetica, Arial, serif;
   font-size: .8em;
   color: #474747; }
-
-h6:before {
-  content: "//////";
-  color: #6FB7EE;
-  padding-right: 0.3em;
-  margin-left: -3.7em; }
 
 p {
   margin-bottom: 20px; }
