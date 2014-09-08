@@ -404,6 +404,7 @@ Below is an example on how to use this functionality:
     System.out.println(helpString);
 
     // And map command line args directly to an object
-    String[] applicationArgs = {"-brand", "A", "radius", "3" };
+    // The "-" signs are not required.
+    String[] applicationArgs = {"-brand", "A", "-radius", "3" };
     Apple apply = parser.parse(applicationArgs);
 
