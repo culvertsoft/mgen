@@ -5,29 +5,33 @@ Types/classes are defined within modules. A module corresponds to a c++ namespac
 
 A file named **com.fruitcompany.fruits.xml**, with the contents:
 
-    <Module>
+{% highlight xml %}
 
-      <Enums>
-        <Brand><A/></B/><C/></Brand>
-      </Enums>
+<Module>
 
-      <Types>
+  <Enums>
+    <Brand><A/></B/><C/></Brand>
+  </Enums>
 
-        <Fruit>
-          <brand type="Brand"/>
-        </Fruit>
+  <Types>
 
-        <Apple extends="Fruit">
-          <radius type="float64"/>
-        </Apple>
+    <Fruit>
+      <brand type="Brand"/>
+    </Fruit>
 
-        <Banana extends="Fruit">
-          <length type="float64"/>
-        </Banana>
+    <Apple extends="Fruit">
+      <radius type="float64"/>
+    </Apple>
 
-      </Types>
+    <Banana extends="Fruit">
+      <length type="float64"/>
+    </Banana>
 
-    </Module>
+  </Types>
+
+</Module>
+
+{% endhighlight %}
 
 Defines a module with:
 
