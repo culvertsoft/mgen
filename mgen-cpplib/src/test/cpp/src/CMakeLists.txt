@@ -23,5 +23,6 @@ add_executable(
 	tests/UtfTests.cpp
 	tests/TransientFields.cpp
 	tests/MemInputStream.cpp
+	tests/CppStreams.cpp
 )
 
