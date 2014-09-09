@@ -11,7 +11,7 @@ MGen is a software development toolkit for reducing duplicate work when building
 
 The goal of MGen is to reduce manual boilerplate code, maintanance efforts and simplify type-safe sharing and persistence of state between applications, while permitting significant data model changes without requiring a global rebuild. 
 
-We also seek to make MGen highly extendable by having plug-in based architecture.
+We also seek to make MGen highly extendable by having plug-in based architecture, using which you can easily add new code generators and IDL parsers.
 
 MGen consists of:
 
