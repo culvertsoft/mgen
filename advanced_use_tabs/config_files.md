@@ -56,7 +56,7 @@ std::string logFile = cfg.getLogFile();
 // Change the configuration
 cfg.setHostName("remote_host_X");
     
-// Serialize andwrite it back to disk
+// Serialize and write it back to disk
 std::fstream oStream("/home/logger/cfg.json");
 JsonPrettyWriter<std::fstream, ClassRegistry> writer(oStream, classRegistry);
 writer.writeObject(cfg);
