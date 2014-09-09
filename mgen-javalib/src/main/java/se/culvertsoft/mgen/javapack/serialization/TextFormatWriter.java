@@ -243,7 +243,7 @@ public abstract class TextFormatWriter extends BuiltInWriter {
 	 * Internal method for checking if the internal string buffer/builder has
 	 * reached the flush limit and needs to be flushed to the underlying data
 	 * output stream. Only does something if this TextFormatWriter is actually
-	 * considered to write to the underlying data output stream, and not
+	 * configured to write to the underlying data output stream, and not
 	 * directly to a string.
 	 * 
 	 * @throws IOException
