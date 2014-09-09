@@ -1,6 +1,6 @@
 ---
 layout: default
-link-title: Advanced examples
+link-title: Advanced features
 submenu:
   - { anchor: "a", target-tab: "config-files", title: "config files" }
   - { anchor: "a", target-tab: "type-identification", title: "type identification" }
