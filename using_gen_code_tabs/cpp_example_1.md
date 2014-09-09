@@ -27,7 +27,7 @@ Then we define our serialization functions:
 std::string toJSON(const MGenBase& object) {
 
   // Create a target to stream the object to
-	std::stringstream stream;
+  std::stringstream stream;
 
   // Create a writer object
   JsonPrettyWriter<std::stringstream, ClassRegistry> writer(stream, registry);
@@ -43,7 +43,7 @@ template <typename T>
 T fromJSON(const std::string& json) {
 
   // Create a data source to stream objects from
-	std::stringstream stream(json);
+  std::stringstream stream(json);
 
   // Create a reader object
   JsonReader<std::stringstream, ClassRegistry> reader(stream, registry);
