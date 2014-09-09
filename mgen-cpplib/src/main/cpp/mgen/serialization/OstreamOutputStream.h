@@ -7,7 +7,9 @@
 namespace mgen {
 
 /**
- * An MGen data output wrapping a C++ std::ostream
+ * An MGen data output wrapping a C++ std::ostream. Although std istreams and std::ostreams
+ * work fine with MGen, they do not throw any exceptions. Using this wrapper will cause exceptions
+ * to be thrown, instead of having to check the error bits of the istream or ostream.
  */
 class OstreamOutputStream {
 public:

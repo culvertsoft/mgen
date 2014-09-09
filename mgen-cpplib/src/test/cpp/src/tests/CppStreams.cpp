@@ -4,8 +4,8 @@
 #include <fstream>
 
 #include "gameworld/types/ClassRegistry.h"
-#include "mgen/serialization/VectorInputStream.h"
 #include "mgen/serialization/JsonReader.h"
+#include "mgen/serialization/JsonPrettyWriter.h"
 #include "mgen/serialization/IstreamInputStream.h"
 #include "mgen/serialization/OstreamOutputStream.h"
 
@@ -19,13 +19,13 @@ BEGIN_TEST_GROUP(CppStreamsTests)
 
 /////////////////////////////////////////////////////////////////////
 
-BEGIN_TEST("ReadFile")
+BEGIN_TEST("ReadWriteFile_std")
 
     ClassRegistry classRegistry;
 
-  /*
-    VectorInputStream stream(data);
-    JsonReader<VectorInputStream, ClassRegistry> reader(stream, classRegistry);
+    std::fstream iStream("../src/test/cpp/src/testdata/TestConfigDiff.txt");
+
+    JsonReader<std::fstream, ClassRegistry> reader(iStream, classRegistry);
 
     const AppConfigarion cfg = reader.readStatic<AppConfigarion>();
 
@@ -35,34 +35,53 @@ BEGIN_TEST("ReadFile")
     ASSERT(!cfg.hasHost_game());
 
     ASSERT(cfg.getDifficulty() == Grade_MEDIUM);
-    */
+
+    std::fstream oStream("tempfile.txt", std::fstream::out);
+    JsonPrettyWriter<std::fstream, ClassRegistry> writer(oStream, classRegistry);
+    writer.writeObject(cfg);
+    oStream.close();
+
+    std::fstream iStream2("tempfile.txt");
+    JsonReader<std::fstream, ClassRegistry> reader2(iStream2, classRegistry);
+    const AppConfigarion cfg2 = reader2.readStatic<AppConfigarion>();
+
+    ASSERT(cfg == cfg2);
+
 END_TEST
 
 /////////////////////////////////////////////////////////////////////
 
-BEGIN_TEST("WriteFile")
+BEGIN_TEST("ReadWriteFile_wrapped")
 
     ClassRegistry classRegistry;
 
-    /*
-    const std::vector<char> data = readFile("../src/test/cpp/src/testdata/TestConfigAll.txt");
-    ASSERT(!data.empty());
+    std::fstream std_iStream("../src/test/cpp/src/testdata/TestConfigDiff.txt");
+    IstreamInputStream iStream(std_iStream);
 
-    VectorInputStream stream(data);
-    JsonReader<VectorInputStream, ClassRegistry> reader(stream, classRegistry);
+    JsonReader<IstreamInputStream, ClassRegistry> reader(iStream, classRegistry);
 
     const AppConfigarion cfg = reader.readStatic<AppConfigarion>();
 
     ASSERT(cfg.hasDifficulty());
-    ASSERT(cfg.hasAi_threads());
-    ASSERT(cfg.hasCpu_threshold());
-    ASSERT(cfg.hasHost_game());
+    ASSERT(!cfg.hasAi_threads());
+    ASSERT(!cfg.hasCpu_threshold());
+    ASSERT(!cfg.hasHost_game());
 
-    ASSERT(cfg.getDifficulty() == Grade_HIGH);
-    ASSERT(cfg.getAi_threads() == 4);
-    ASSERT(cfg.getHost_game() == true);
-    ASSERT(std::abs(cfg.getCpu_threshold() - 0.9) < 1e-5);
-    */
+    ASSERT(cfg.getDifficulty() == Grade_MEDIUM);
+
+    std::fstream std_oStream("tempfile2.txt", std::fstream::out);
+    OstreamOutputStream oStream(std_oStream);
+    JsonPrettyWriter<OstreamOutputStream, ClassRegistry> writer(oStream, classRegistry);
+    writer.writeObject(cfg);
+    std_oStream.close();
+
+    std::fstream std_iStream2("tempfile2.txt");
+    IstreamInputStream iStream2(std_iStream2);
+    JsonReader<IstreamInputStream, ClassRegistry> reader2(iStream2, classRegistry);
+    const AppConfigarion cfg2 = reader2.readStatic<AppConfigarion>();
+
+    ASSERT(cfg == cfg2);
+
 END_TEST
 
 /////////////////////////////////////////////////////////////////////
