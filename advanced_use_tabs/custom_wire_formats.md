@@ -1,7 +1,7 @@
 ---
 ---
 
-Classes generated with the MGen compiler do not contain any specific code for serialization. Instead they are generated with generic object visitor methods. For ideas on what other features besides serialization you could implement with these methods, see the section on [writing MGen object visitors](index_l_Advanced_use.html#h).
+Classes generated with the MGen compiler do not contain any specific code for serialization. Instead they are generated with generic object visitor methods. For ideas on what other features besides serialization you could implement with these methods, see the section on <a target-tab="generic-visitors" class="active" href="index_l_Advanced_use.html#a">writing MGen object visitors</a>.
 
 MGen readers and writers (serializers) are hand-written classes able to exploit the generic visitor methods mentioned above. While these look slightly different java vs c++, the idea is the same. You dispatch your serializer to the object you wish to serialize, and you will receive a callback for every field.
 
