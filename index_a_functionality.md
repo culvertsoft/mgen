@@ -18,7 +18,7 @@ MGen can help you manage your multi-language application environment, by letting
  * Combine data model definitions from multiple IDLs
  * Add your own IDL parsers through MGen's plug-in architecture
  * Add custom code generators through MGen's plug-in architecture
- * Edit code directly in generated source files, and re-generate!
+ * Edit generated code directly, and re-generate!
 
 Bottom line, MGen let's you build:
 
