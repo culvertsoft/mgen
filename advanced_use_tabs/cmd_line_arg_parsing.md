@@ -7,24 +7,28 @@ We have added a simple command line argument parser, which lets you take a set o
 
 Below is an example on how to use this functionality:
 
-    // Just like previous examples we need a class registry
-    ClassRegistry registry = new ClassRegistry();
+{% highlight java %}
 
-    // Select the class you wish to map the command line arguments to
-    // - We use one of the classes from the previous fruit example
-    Class<Apple> cls = Apple.class;
+// Just like previous examples we need a class registry
+ClassRegistry registry = new ClassRegistry();
 
-    // Then we create the parser
-    CommandLineArgParser parser = new CommandLineArgParser(cls, registry);
+// Select the class you wish to map the command line arguments to
+// - We use one of the classes from the previous fruit example
+Class<Apple> cls = Apple.class;
+
+// Then we create the parser
+CommandLineArgParser parser = new CommandLineArgParser(cls, registry);
     
-    // And the corresponding help string
-    String helpString = new CommandLineArgHelp(cls).toString();
+// And the corresponding help string
+String helpString = new CommandLineArgHelp(cls).toString();
     
-    // Now we can print the help string
-    System.out.println(helpString);
+// Now we can print the help string
+System.out.println(helpString);
 
-    // And map command line args directly to an object
-    // The "-" signs are not required.
-    String[] applicationArgs = {"-brand", "A", "-radius", "3" };
-    Apple apply = parser.parse(applicationArgs);
+// And map command line args directly to an object
+// The "-" signs are not required.
+String[] applicationArgs = {"-brand", "A", "-radius", "3"};
+Apple apple = parser.parse(applicationArgs);
+
+{% endhighlight %}
 
