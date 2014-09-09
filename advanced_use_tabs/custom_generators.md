@@ -10,10 +10,14 @@ This section will show you how to create your own code generator plug-in (<a tar
 
 The Generator interface looks like this (comments removed):
 
-    public interface Generator {
-      List<GeneratedSourceFile> generate(final Project project, 
-                                         final Map<String, String> settings);
-    }
+{% highlight java %}
+
+public interface Generator {
+  List<GeneratedSourceFile> generate(final Project project, 
+                                     final Map<String, String> settings);
+}
+
+{% endhighlight %}
 
 The input we have to work with is a Project model and some settings - And we should produce a list of GeneredSourceFile items. Handling the settings parameter is optional - it is just a map containing the settings you provided in your IDL project file, module files and command line arguments.
 
@@ -21,43 +25,47 @@ The Project parameter is where the interesting content exists. A Project is an M
 
 In this example we'll create a simple Generator class that just logs the names of all classes to be generated to a file. This is what it looks like ([source code](https://github.com/culvertsoft/mgen/blob/master/mgen-api/src/test/java/se/culvertsoft/mgen/api/test/examplegenerator/ExampleGenerator.java)):
 
-    public class ExampleGenerator implements Generator {
+{% highlight java %}
 
-      @Override
-      public List<GeneratedSourceFile> generate(
-		    Project project, 
-		    Map<String, String> settinsg) {
+public class ExampleGenerator implements Generator {
 
-        StringBuilder sb = new StringBuilder();
-		
-        sb.append("Generator log for: " + project.name()).append("\n");
-		
-        // Print all the modules and their contents
-        for (Module module : project.modules()) {
-        		
-          // Print the module path
-          sb.append(module.path()).append("\n");
-        		
-          // Print enums
-          sb.append("  enums:").append("\n");
-          for (EnumType enumT : module.enums()) {
-            sb.append("    ").append(enumT.shortName()).append("\n");
-          }
-        		
-          // Print classes
-          sb.append("  classes:").append("\n");
-          for (ClassType classT : module.classes()) {
-            sb.append("    ").append(classT.shortName()).append("\n");
-          }
-			
-        }
-		
-        String fileName = "generated_files.log";
-        String sourceCode = sb.toString();
+  @Override
+  public List<GeneratedSourceFile> generate(
+      Project project, 
+	  Map<String, String> settinsg) {
 
-        return Arrays.asList(new GeneratedSourceFile(fileName, sourceCode));
+    StringBuilder sb = new StringBuilder();
+		
+    sb.append("Generator log for: " + project.name()).append("\n");
+		
+    // Print all the modules and their contents
+    for (Module module : project.modules()) {
+        		
+      // Print the module path
+      sb.append(module.path()).append("\n");
+        		
+      // Print enums
+      sb.append("  enums:").append("\n");
+      for (EnumType enumT : module.enums()) {
+        sb.append("    ").append(enumT.shortName()).append("\n");
       }
+        		
+      // Print classes
+      sb.append("  classes:").append("\n");
+      for (ClassType classT : module.classes()) {
+        sb.append("    ").append(classT.shortName()).append("\n");
+      }
+			
     }
+		
+    String fileName = "generated_files.log";
+    String sourceCode = sb.toString();
+
+    return Arrays.asList(new GeneratedSourceFile(fileName, sourceCode));
+  }
+}
+
+{% endhighlight %}
 
 Then just build and package that into a standard java jar file with your build system of choice. 
 
@@ -65,9 +73,13 @@ Now we need to tell the MGen compiler what folder the jar file is in. We do this
 
 Lastly, we add a 'Generator' directive to our [MGen project file](index_c_Generating_code.html), like this:
 
-    <Generator name="MyExampleGenerator">
-      <class_path>com.fruitcompany.ExampleGenerator</class_path>
-    </Generator>
+{% highlight xml %}
+
+<Generator name="MyExampleGenerator">
+  <class_path>com.fruitcompany.ExampleGenerator</class_path>
+</Generator>
+
+{% endhighlight %}
 
 Next time you run the MGen compiler, it will generate the log file using the class we defined above.
 

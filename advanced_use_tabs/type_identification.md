@@ -18,11 +18,19 @@ Suppose we serialize a couple of objects of randomly chosen classes (Apples or B
 
 In Java (With the reader from <a target-tab="java-example" class="active" href="index_c_using_gen_code.html#a">the previous java example</a>):
 
+{% highlight java %}
+
     MGenBase object = reader.readObject();
+
+{% endhighlight %}
 
 And in c++:
 
+{% highlight c++ %}
+
     MGenBase * object = reader.readObject(); // read to heap
+
+{% endhighlight %}
 
 In Java we can use the following methods to identify the type of the object:
 
@@ -44,25 +52,29 @@ Handlers' handle(object)-methods have default implementations for all types. The
 
 Here's a c++ example of using dispatch and a Handler:
 
-    // First we define a custom handler class
-    // that extends the generated Handler class
-    class MyHandler: public Handler {
-    public:
-      void handle(Apple& apple) {
-        std::cout << "That was an apple!" << std::endl;
-      }
-      void handle(Banana& banana) {
-        std::cout << "That was a banana!" << std::endl;
-      }
-    };
+{% highlight c++ %}
+
+// First we define a custom handler class
+// that extends the generated Handler class
+class MyHandler: public Handler {
+public:
+  void handle(Apple& apple) {
+    std::cout << "That was an apple!" << std::endl;
+  }
+  void handle(Banana& banana) {
+    std::cout << "That was a banana!" << std::endl;
+  }
+};
     
-    MyHandler handler;
+MyHandler handler;
     
-    MGenBase * object = reader.readObject();
+MGenBase * object = reader.readObject();
     
-    if (object) {
-      dispatch(*object, handler);
-    }
+if (object) {
+  dispatch(*object, handler);
+}
+
+{% endhighlight %}
 
 The java way is almost identical. For more information about type identification, dispatch and handlers you can also look in our [preliminary technical whitepaper](http://culvertsoft.se/docs/WhitePaper.pdf).
 
