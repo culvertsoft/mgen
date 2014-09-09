@@ -8,8 +8,6 @@ In this example we use the following includes and namespace directives, and crea
 {% highlight c++ %}
 
 #include <com/fruitcompany/ClassRegistry.h>
-#include <mgen/serialization/StringInputStream.h>
-#include <mgen/serialization/StringOutputStream.h>
 #include <mgen/serialization/JsonPrettyWriter.h>
 #include <mgen/serialization/JsonReader.h>
 
@@ -29,10 +27,10 @@ Then we define our serialization functions:
 std::string toJSON(const MGenBase& object) {
 
   // Create a target to stream the object to
-  StringOutputStream stream;
+	std::stringstream stream;
 
   // Create a writer object
-  JsonPrettyWriter<StringOutputStream, ClassRegistry> writer(stream, registry);
+  JsonPrettyWriter<std::stringstream, ClassRegistry> writer(stream, registry);
 
   // Write the object
   writer.writeObject(object);
@@ -45,10 +43,10 @@ template <typename T>
 T fromJSON(const std::string& json) {
 
   // Create a data source to stream objects from
-  StringInputStream stream(json);
+	std::stringstream stream(json);
 
   // Create a reader object
-  JsonReader<StringInputStream, ClassRegistry> reader(stream, registry);
+  JsonReader<std::stringstream, ClassRegistry> reader(stream, registry);
 
   // Read object. You can read T* polymorphicly with reader.readObject<T>()
   return reader.readStatic<T>();
