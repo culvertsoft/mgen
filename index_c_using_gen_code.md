@@ -11,7 +11,7 @@ submenu:
 
 ## Using generated code
 
-This page shows how to serialize objects of [previously generated example classes](index_c_Generating_code.html). 
+This page shows how to serialize objects of [previously generated example classes](index_c_Generating_code.html). In the following examples, all objects are serialized to JSON, but we could also have chosen to use MGen's binary serialization format.
 
 <div class="tabs"><a name="a">&nbsp;</a> 
   <ul>
