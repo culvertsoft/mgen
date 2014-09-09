@@ -1,7 +1,7 @@
 ---
 ---
 
-This example shows how to serialize objects to JSON and back. For simplicity we will serialize to a std::stringstream, but we could just as well serialiize to any generic data sink - just a class having a write(void*, int) method. Any c++ std::istream or std::ostream will do for MGen readers and writers, but if you want exceptions on the IO layer instead of the parsing layer, you should use MGen's own streams (which can wrap std::istreams and std::ostreams).
+This example shows how to serialize objects to JSON and back. For simplicity we will serialize to a std::stringstream, but we could write to any generic data sink - a class having a write(void*, int) method. Any c++ std::istream or std::ostream will do for MGen readers and writers, but if you want exceptions on the IO layer instead of the parsing layer, you should use MGen's own streams (which can wrap std::istreams and std::ostreams).
 
 In this example we use the following includes and namespace directives, and create a global class registry for our following functions to use:
 
