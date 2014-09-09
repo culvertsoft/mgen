@@ -33,13 +33,10 @@ We can now read and write these files to and from our statically typed generated
 
 {% highlight c++ %}
 
-// Read the config file to memory (assuming you have such a utility function)
-const std::string cfgFileData = readFile("/home/logger/cfg.json");
-
 // Recap: The types required for reading an mgen object
 ClassRegistry registry;
-StringInputStream stream(cfgFileData);
-JsonReader<StringInputStream, ClassRegistry> reader(stream, classRegistry);
+std::fstream iStream("/home/logger/cfg.json");
+JsonReader<std::fstream, ClassRegistry> reader(iStream, classRegistry);
 
 // Now map the configuration
 AppConfigarion cfg = reader.readStatic<AppConfigarion>();
@@ -59,16 +56,10 @@ std::string logFile = cfg.getLogFile();
 // Change the configuration
 cfg.setHostName("remote_host_X");
     
-// And serialize it again to write the changes back to disk
-StringOutputStream outStream;
-JsonPrettyWriter<StringOutputStream, ClassRegistry> writer(outStream, classRegistry);
+// Serialize andwrite it back to disk
+std::fstream oStream("/home/logger/cfg.json");
+JsonPrettyWriter<std::fstream, ClassRegistry> writer(oStream, classRegistry);
 writer.writeObject(cfg);
-    
-// Get the serialized string
-std::string newCfgFileContents = outStream.str();
-    
-// Write it back to disk (assuming you have such a utility function)
-writeToDisk("/home/logger/cfg.json", newCfgFileContents);
 
 {% endhighlight %}
 
