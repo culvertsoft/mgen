@@ -1,7 +1,7 @@
 ---
 ---
 
-Types/classes are defined within modules. A module corresponds to a c++ namespace or java package. A module is defined in a module file, where the name of the module file determines the **module path** (java package name, or c++ namespace).
+You define your classes in modules. A module corresponds to a c++ namespace or java package, and is defined within a module file. The name of the module file determines the **module path** (i.e. the java package or c++ namespace).
 
 A file named **com.fruitcompany.fruits.xml**, with the contents:
 
