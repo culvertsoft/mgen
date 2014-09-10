@@ -188,6 +188,7 @@ def copyJarFilesToZipDir():
     copySubProjectJarFilesToZipDir("mgen-idlparser", mgen_version, False)
     copySubProjectJarFilesToZipDir("mgen-idlgenerator", mgen_version, False)
     copySubProjectJarFilesToZipDir("mgen-javagenerator", mgen_version, False)
+    copySubProjectJarFilesToZipDir("mgen-javascriptgenerator", mgen_version, False)
     copySubProjectJarFilesToZipDir("mgen-cppgenerator", mgen_version, False)
     copySubProjectJarFilesToZipDir("mgen-javalib", mgen_version, False)
     copySubProjectJarFilesToZipDir("mgen-visualdesigner", mgen_version, True)
