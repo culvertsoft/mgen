@@ -51,7 +51,7 @@ def rmFile(path):
         
 def copyTree(src, dst):
     distutils.dir_util.copy_tree(src, dst)
-    
+
 def copyFile(src, dst):
     shutil.copyfile(src, dst)
 

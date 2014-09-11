@@ -7,8 +7,8 @@ from buildutil import *
 
 def clean():
     sbt_clean(".")
-    rmFolder("mgen-integrationtests/generated/")
     rmFolders(".", "src_generated")
+    rmFolder("mgen-integrationtests/generated/")
     rmFolder("mgen-cpplib/target")
     rmFolder("target/install_zip")
     
