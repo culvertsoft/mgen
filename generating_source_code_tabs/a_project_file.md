@@ -24,6 +24,13 @@ To tell the MGen compiler these things we need to write a project file. An MGen 
     <class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</class_path>
   </Generator>
 
+  <Generator name="Javascript">
+    <class_path>se.culvertsoft.mgen.jspack.generator.JavascriptGenerator</class_path>
+    <output_path>src</output_path>
+    <output_filename>blueprint.js</output_filename>
+    <classregistryblueprint>blueprint</classregistryblueprint>
+  </Generator>
+
 </Project>
 
 {% endhighlight %}
