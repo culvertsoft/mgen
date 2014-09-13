@@ -53,46 +53,41 @@ This is how the blueprint will look like when generated from the previous projec
 
 {% endhighlight %}
 
-
+Now onto how to use this library
 
 
 {% highlight javascript %}
 
-	//Assuming that you have the mGen library and the blueprint in you javascript scope
+//Assuming that you have the mGen library 
+//and the blueprint in you javascript scope
 
-	//create a registry over the classes.
-	var registry = mGen.generate(blueprint);
+//create a registry over the classes.
+var registry = mGen.generate(blueprint);
 
-	//a jsonHandler is used for json mapping
-	var jsonHandler = mGen.jsonHandler(registry);
+// Create some objects
+var apple = new registry.Apple({
+	brand: "A",
+	radius: 4
+});
 
-  	// Create some objects
-	var apple = new registry.Apple({
-		brand: "A",
-		radius: 4
-	});
+var banana = new registry.Banana({
+	length: 5,
+	brand: "B"
+});
 
-	var banana = new registry.Banana({
-		length: 5,
-		brand: "B"
-	});
+//The jsonHandler is used for json mapping
+var jh = mGen.jsonHandler(registry);
 
-	// Serialize them to a JSON string and print them
-	var appleAsString = jsonHandler.objectToString(apple);
-	var bananaAsString = jsonHandler.objectToString(banana);
+// Serialize them to a JSON string
+var appleAsString = jh.objectToString(apple);
+var bananaAsString = jh.objectToString(banana);
 
-	// or if you are not using transient fields then you can just
-	appleAsString = JSON.stringify(object);
+// Read the objects back from their serialized form
+var appleBack = jh.stringToObject(appleAsString);
+var bananaBack = jh.stringToObject(bananaAsString);
 
-
-
-	// Read the objects back from their serialized form
-	var appleBack = jsonHandler.stringToObject(appleAsString);
-	var bananaBack = jsonHandler.stringToObject(bananaAsString);
-
-	// Or if you know what kind of object you have. You can also create the object directly:
-	appleBack = registry.Apple(appleAsString)
-
-	JSON.stringify(def);
+// Or if you know what kind of object you have.
+// You can also create the object directly:
+appleBack = new registry.Apple(appleAsString);
 
 {% endhighlight  %}
