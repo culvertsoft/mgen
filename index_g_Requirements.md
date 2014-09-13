@@ -13,7 +13,7 @@ Specific programming language compilers are only required if you are going to de
 
  * Java 1.7 or newer. Tested with OpenJDK 7 and Oracle's JDK7 & 8
  * C++98 or newer. Tested with GCC, VS and Clang
- * JavaScript: [info pending]
+ * JavaScript: JavaScript 1.8.1 environment
 
 
 ### Requirements for building MGen from sratch

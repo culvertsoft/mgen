@@ -42,12 +42,12 @@ This is how the blueprint will look like when generated from the previous projec
 
 	// Support for requirejs etc.
 	if (typeof define === "function" && define.amd) {
-		define("blueprint", [], function(){
+		define("fruits_blueprint", [], function(){
 			return blueprint;
 		});
 	} else {
 		// expose blueprint the old fashioned way.
-		window.blueprint = blueprint;
+		window.fruits_blueprint = blueprint;
 	}
 })();
 
