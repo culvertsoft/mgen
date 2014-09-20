@@ -107,7 +107,7 @@ As can be seen above, generated c++ classes by default gets 3 generated sections
  * custom_ifcs
  * custom_methods
  
-These are just names to indicate what you *could* put there, but you can add any valid c++ code there.
+These are names to indicate what you *could* put there - but you can add any valid c++ code.
 
 This functionality is entirely language agnostic and works on string identification level when the MGen compiler is writing generated code to disk - so if you decide to use this feature just make sure to keep generating code to the same place - The MGen compiler will handle the rest.
 
