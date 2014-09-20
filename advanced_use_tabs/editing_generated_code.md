@@ -13,9 +13,9 @@ Here is an example. Consider the following class definition for a class called "
 
 <StreamMsg>
   <frameNbr type="int32">-1</frameNbr>
-	<width type="int32">0</width>
-	<height type="int32">0</height>
-	<data type="array[int8]">[]</data>
+  <width type="int32">0</width>
+  <height type="int32">0</height>
+  <data type="array[int8]">[]</data>
 </StreamMsg>
 
 {% endhighlight %}
