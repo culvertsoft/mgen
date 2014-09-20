@@ -36,7 +36,7 @@ We can now read and write these files to and from our statically typed generated
 // Recap: The types required for reading an mgen object
 ClassRegistry registry;
 std::fstream iStream("/home/logger/cfg.json");
-JsonReader<std::fstream, ClassRegistry> reader(iStream, classRegistry);
+JsonReader<std::fstream, ClassRegistry> reader(iStream, registry);
 
 // Now map the configuration
 AppConfigarion cfg = reader.readStatic<AppConfigarion>();
@@ -58,7 +58,7 @@ cfg.setHostName("remote_host_X");
     
 // Serialize and write it back to disk
 std::fstream oStream("/home/logger/cfg.json");
-JsonPrettyWriter<std::fstream, ClassRegistry> writer(oStream, classRegistry);
+JsonPrettyWriter<std::fstream, ClassRegistry> writer(oStream, registry);
 writer.writeObject(cfg);
 
 {% endhighlight %}
