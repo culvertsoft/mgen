@@ -7,7 +7,5 @@ MGen's philosophy is a bit different - Use your own code where you want to, and 
 
 Code generated with MGen contain what we call 'custom code sections'. These are blocks in generated code intended specificly to be edited manually. When you re-generate the source code for your model (e.g. add some fields, rename some members, etc) your custom code sections will be picked up and moved to the newly generated source code file. 
 
-Of course, we can't support any arbitrary custom code edit, but you can do most things like add methods to classes, add inheritance of more super types and interfaces (multiple inheritance), and add some fields that you don't want to be included in the MGen system (e.g. runtime information, debug information etc).
-
 This functionality is entirely language agnostic and works on string identification level when the MGen compiler is writing generated code to disk - so if you decide to use this feature just make sure to keep generating code to the same place - The MGen compiler will handle the rest.
 
