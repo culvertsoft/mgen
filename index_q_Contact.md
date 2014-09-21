@@ -5,7 +5,7 @@ link-title: Contact
 
 ### Discussion forum
 
-We're planning to set up a discussion forum for support and questions. This is planned for the inital beta release.
+We're looking to host a forum or mailing list for community support questions and discussions. We're currently leaning towards a discussion board solution based on [discourse](http://www.discourse.org/), and have one at [forum.culvertsoft.se](http://forum.culvertsoft.se/).
 
 
 ### Bug reports
