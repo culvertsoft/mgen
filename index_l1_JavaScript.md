@@ -20,7 +20,7 @@ This page shows how to use the JavaScript library and what it's features.
           <a tab-id="settings" href="{{ site.baseurl }}/javascript_tabs/settings.html">Settings</a>
       </li>
       <li>
-          <a tab-id="settings" href="{{ site.baseurl }}/javascript_tabs/validation.html">Type validation and Inheritance</a>
+          <a tab-id="settings" href="{{ site.baseurl }}/javascript_tabs/validation.html">Type validation</a>
       </li>
   </ul>
 </div>
