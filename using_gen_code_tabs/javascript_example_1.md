@@ -4,6 +4,8 @@ Just as in the c++ example, this examples shows how to serialize objects to JSON
 
 The code generated in previous examples creates what we call a blueprint. The blueprint is used by the javascript library to create a class registry. Both the blueprint and the mgen javascript library can be used in an oldschool manner (that pollutes the window object) or by using the AMD approach (tested with require.js).
 
+The registry is then responsible of creating stuff like validation and inheritance. We highly suggest that you also check out the JavaScript <a href="{{ site.baseurl }}/index_l1_JavaScript.html"> use cases </a> after you have read this page.
+
 This is how the blueprint will look like when generated from the previous project example:
 
 {% highlight javascript %}
@@ -53,8 +55,7 @@ This is how the blueprint will look like when generated from the previous projec
 
 {% endhighlight %}
 
-Now onto how to use this library
-
+This is a simple example on how to use this library.
 
 {% highlight javascript %}
 
@@ -74,6 +75,15 @@ var banana = new registry.Banana({
 	length: 5,
 	brand: "B"
 });
+
+// banana can now be accessed as simple js objects.
+
+console.log(banana.length);
+
+// would print 5 in the console.
+
+// Also note that banana is a instanceof Fruit! Yes, we have inheritance in js!
+console.assert(banana instanceof registry.Fruit);
 
 //The jsonHandler is used for json mapping
 var jh = mGen.jsonHandler(registry);

@@ -1,7 +1,7 @@
 ---
 ---
 
-As mentioned in <a target-tab="custom-wire-formats" class="active" href="index_l_Advanced_use.html#a">the section on custom serializers</a>, all generated classes get generic visitor methods. You can use any visitor type that adheres to the visitor api of MGen classes. In java this is just a normal java interface, while in c++ any duck typed template type will work (Side note: it turns out that double dynamic dispatch of template parameters can be implemented in c++ if you generate code for your own method dispatch tables - which the MGen compiler does).
+As mentioned in <a target-tab="custom-wire-formats" class="active" href="index_l0_Advanced_use.html#a">the section on custom serializers</a>, all generated classes get generic visitor methods. You can use any visitor type that adheres to the visitor api of MGen classes. In java this is just a normal java interface, while in c++ any duck typed template type will work (Side note: it turns out that double dynamic dispatch of template parameters can be implemented in c++ if you generate code for your own method dispatch tables - which the MGen compiler does).
 
 As we've seen before this can be used to serialize and deserialize objects, but it can also be used for other purposes. We can use it for: 
 

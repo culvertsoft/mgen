@@ -1,7 +1,7 @@
 ---
 ---
 
-This section will show you how to create your own code generator plug-in (<a target-tab="compiler-plug-ins" class="active" href="index_l_Advanced_use.html#a">a compiler plug-in</a>) and use it with the MGen compiler. To do this, we:
+This section will show you how to create your own code generator plug-in (<a target-tab="compiler-plug-ins" class="active" href="index_l0_Advanced_use.html#a">a compiler plug-in</a>) and use it with the MGen compiler. To do this, we:
 
  * Create a class implementing the Generator interface
  * Build and package the class into a java jar file
