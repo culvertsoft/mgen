@@ -13,7 +13,7 @@ MGen can help you manage your multi-language application environment, by letting
  * Map config files directly to objects
  * Map command line arguments directly to objects
  * Share the state of your application over network
- * Create model driven data generators (e.g. for testing)
+ * Model driven data generation (e.g. for testing)
  * Stay backwards compatible with old data and clients
  * Customize serialization through generated visitor methods
  * Combine data model definitions from multiple IDLs
