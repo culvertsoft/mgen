@@ -13,9 +13,9 @@ The Parser interface looks like this (comments removed):
 {% highlight java %}
 
 public interface Parser {
-  void parse(final List<File> sources, 
-             final Map<String, String> settings, 
-             final Project parent);
+  void parse(List<File> sources, 
+             Map<String, String> settings, 
+             Project parent);
 }
 
 {% endhighlight %}
