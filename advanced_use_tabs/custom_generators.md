@@ -13,8 +13,8 @@ The Generator interface looks like this (comments removed):
 {% highlight java %}
 
 public interface Generator {
-  List<GeneratedSourceFile> generate(final Project project, 
-                                     final Map<String, String> settings);
+  List<GeneratedSourceFile> generate(Project project, 
+                                     Map<String, String> settings);
 }
 
 {% endhighlight %}
@@ -30,7 +30,8 @@ In this example we'll create a simple Generator class that just logs the names o
 public class ExampleGenerator implements Generator {
 
   @Override
-  public List<GeneratedSourceFile> generate(Project project, Map<String, String> settings) {
+  public List<GeneratedSourceFile> generate(Project project, 
+                                            Map<String, String> settings) {
 
     StringBuilder sb = new StringBuilder();
 		
