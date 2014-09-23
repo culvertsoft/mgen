@@ -30,9 +30,7 @@ In this example we'll create a simple Generator class that just logs the names o
 public class ExampleGenerator implements Generator {
 
   @Override
-  public List<GeneratedSourceFile> generate(
-      Project project, 
-	  Map<String, String> settinsg) {
+  public List<GeneratedSourceFile> generate(Project project, Map<String, String> settings) {
 
     StringBuilder sb = new StringBuilder();
 		
