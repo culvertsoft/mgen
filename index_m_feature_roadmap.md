@@ -24,4 +24,4 @@ Below are some of these:
  * Add support for IDL: JSON Schema
  * Add support for further languages
 
-We'd also like to start work on sister products to mgen. At this point our first follow-up product will be something we call MNet (working name), which is intended to be a language agnostic software network infrastructure / service bus provider.
+We'd also like to start work on sister products to mgen. At this point our first follow-up product will be something we call [MNet](https://github.com/culvertsoft/mnet/) (working name), which is intended to be a language agnostic software network infrastructure / service bus provider.
