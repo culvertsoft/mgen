@@ -10,7 +10,7 @@ We're looking to host a forum or mailing list for community support questions an
 
 ### Bug reports
 
-Head over to our [github repository](https://github.com/culvertsoft/mgen) and click *issues* to report any bugs. The more reports we get - the more bugs we can fix!
+Head over to our [github repository/issues](https://github.com/culvertsoft/mgen/issues) to report any bugs. The more reports we get - the more bugs we can fix! Please include the version you use (check your installation directory/BUILD.txt, where you can find the commit tag and date)
 
 
 ### Support
