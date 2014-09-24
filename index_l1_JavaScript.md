@@ -9,7 +9,7 @@ submenu:
 
 ## Advanced use <a name="a">&nbsp;</a>
 
-This page shows how to use the JavaScript library and what it's features. 
+This page shows how to use MGen's JavaScript features. 
 
 <div class="tabs"><a name="a">&nbsp;</a> 
   <ul>
