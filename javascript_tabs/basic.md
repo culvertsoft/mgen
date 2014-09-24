@@ -1,7 +1,7 @@
 ---
 ---
 
-This is a simple example on how to use this library.
+This page shows a simple example on how to use MGen's javascript runtime library.
 
 {% highlight javascript %}
 
