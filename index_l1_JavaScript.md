@@ -7,7 +7,7 @@ submenu:
   - { anchor: "a", target-tab: "validation", title: "validation" }
 ---
 
-## Advanced use <a name="a">&nbsp;</a>
+## Javascript features <a name="a">&nbsp;</a>
 
 This page shows how to use MGen's JavaScript features. 
 
