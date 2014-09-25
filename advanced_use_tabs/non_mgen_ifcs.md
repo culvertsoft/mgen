@@ -1,7 +1,7 @@
 ---
 ---
 
-0In the same way we saw that <a target-tab="config-files" class="active" href="index_l0_Advanced_use.html#a">config files can be mapped directly to objects</a>, similar principles can be applied to other data sources that provide data in well defined formats, such as REST APIs, C structs, lua tables and other custom formats. It is simply a matter of providing a generalized mapping between the type of data source you're working with and the MGen data model.
+In the same way we saw that <a target-tab="config-files" class="active" href="index_l0_Advanced_use.html#a">config files can be mapped directly to objects</a>, similar principles can be applied to other data sources that provide data in well defined formats, such as REST APIs, C structs, lua tables and other custom formats. It is simply a matter of providing a generalized mapping between the type of data source you're working with and the MGen data model.
 
 Ideas for how this can be done can be seen in the sections on <a target-tab="custom-wire-formats" class="active" href="index_l0_Advanced_use.html#a">adding new wire formats</a> and <a target-tab="generic-visitors" class="active" href="index_l0_Advanced_use.html#a">writing custom object visitors</a>. If you're more interested in solving a specific problem, less general solutions may be easier to implement.
 
