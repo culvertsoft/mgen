@@ -3,7 +3,7 @@
 
 One of the most important features of MGen is backwards compatibility. Consider the following scenarios: 
 
- * Your application stores data using an old data model, then loads with an uddated one
+ * Your application stored data using an old data model, then needs to load it with an updated model
  * You build two applications that communicate with each other but will be updated at different times, so they might have different models when they talk to each other.
 
 MGen serializers handle both of these situations, if the changes to the model are reasonable. Below are the rules you need to follow when modifying a model that needs to stay backwards compatible.
