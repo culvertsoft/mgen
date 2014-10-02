@@ -12,6 +12,7 @@ MGen can help you manage your multi-language application environment, by letting
  * Map binary data, JSON, XML, tables etc directly to objects
  * Map config files directly to objects
  * Map command line arguments directly to objects
+ * Map data between scripting languages and host languages
  * Share the state of your application over network
  * Model driven data generation (e.g. for testing)
  * Stay backwards compatible with old data and clients
