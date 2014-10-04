@@ -182,7 +182,7 @@ object Api2Vd {
     val vdEnum = EntityFactory.mkEnum(apiEnum.shortName)
     state.markConverted(apiEnum, vdEnum)
 
-    vdEnum.setEntries(toJava(apiEnum.entries.map(cvtEnumEntry(_, module, state))))
+    vdEnum.setEntries(toJava(apiEnum.entries.map(cvtEnumEntry(_, vdEnum, state))))
 
     module.getEnums().add(vdEnum)
     vdEnum.setParent(module.getId)
@@ -190,7 +190,7 @@ object Api2Vd {
     vdEnum
   }
 
-  def cvtEnumEntry(apiEnumEntry: ApiEnumEntry, parent: VdModule, state: Api2VdConversionState): VdEnumEntry = {
+  def cvtEnumEntry(apiEnumEntry: ApiEnumEntry, parent: VdEnum, state: Api2VdConversionState): VdEnumEntry = {
     val const = if (apiEnumEntry.constant != null && apiEnumEntry.constant.trim.nonEmpty) apiEnumEntry.constant else null
     val entry = EntityFactory.mkEnumEntry(apiEnumEntry.name, const)
     entry.setParent(parent.getId)

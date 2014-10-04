@@ -9,13 +9,6 @@
 
 /////////////////////////////////////////////////////////////////////
 
-static std::vector<char> readFile(const std::string& fileName) {
-    std::ifstream f(fileName.c_str(), std::ios::binary);
-    return std::vector<char>(std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>());
-}
-
-/////////////////////////////////////////////////////////////////////
-
 using namespace mgen;
 using namespace gameworld::types;
 using namespace gameworld::types::basemodule2;
@@ -27,12 +20,8 @@ BEGIN_TEST_GROUP(ConfigFileTests)
 BEGIN_TEST("TestHaveDifficultyParameter")
 
     ClassRegistry classRegistry;
-
-    const std::vector<char> data = readFile("../src/test/cpp/src/testdata/TestConfigDiff.txt");
-    ASSERT(!data.empty());
-
-    VectorInputStream stream(data);
-    JsonReader<VectorInputStream, ClassRegistry> reader(stream, classRegistry);
+    std::ifstream stream("../src/test/cpp/src/testdata/TestConfigDiff.txt");
+    JsonReader<std::ifstream, ClassRegistry> reader(stream, classRegistry);
 
     const AppConfigarion cfg = reader.readStatic<AppConfigarion>();
 
@@ -50,12 +39,8 @@ END_TEST
 BEGIN_TEST("TestHaveAllParameters")
 
     ClassRegistry classRegistry;
-
-    const std::vector<char> data = readFile("../src/test/cpp/src/testdata/TestConfigAll.txt");
-    ASSERT(!data.empty());
-
-    VectorInputStream stream(data);
-    JsonReader<VectorInputStream, ClassRegistry> reader(stream, classRegistry);
+    std::ifstream stream("../src/test/cpp/src/testdata/TestConfigAll.txt");
+    JsonReader<std::ifstream, ClassRegistry> reader(stream, classRegistry);
 
     const AppConfigarion cfg = reader.readStatic<AppConfigarion>();
 
