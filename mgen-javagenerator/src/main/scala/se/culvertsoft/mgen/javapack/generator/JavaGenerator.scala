@@ -64,7 +64,7 @@ object JavaGenerator {
   }
 
   def mkCustomCodeSection(name: String): CustomCodeSection = {
-    def mkKey(ending: String) = s"/*${name}_${ending}*/"
+    def mkKey(ending: String) = s"/* ${name}_${ending} */"
     new CustomCodeSection(mkKey("begin"), mkKey("end"))
   }
 
