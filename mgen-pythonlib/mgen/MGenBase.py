@@ -16,12 +16,15 @@ class MGenBase:
     def deepCopy(self): return copy.deepcopy(self)
     
     # Generated instance methods
-    def _nFieldsSet(depth, inclTransient): return 0
-    def _isFieldSet(field, depth): return False
-    def _setAllFieldsSet(self): return
-    def _validate(self): return True
-    def _accept(self, visitor, selection): return
-    def _readField(self, id, context, reader): return False
+    def _accept(self, visitor, visitTransient=False, visitUnset=False): return
+    def _readField(self, fieldId, reader, context=None): return False
+    def _isFieldSet(self, fieldId, deep=False): return False
+    def _nFieldsSet(self, includeTransient=False, deep=False): return 0
+    def _setFieldSet(self, fieldId, state=True, deep=False): return
+    def _setAllFieldsSet(self, state=True, deep=False): return
+    def _validate(self, deep=False): return True
+    def _fieldById(self, fieldId): return None
+    def _fieldByName(self, fieldName): return None
 
     # Generated class methods    
     @classmethod
