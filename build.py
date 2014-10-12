@@ -22,7 +22,7 @@ os.environ['MGEN_BUILD_VERSION'] = args.version
 buildimpl.mgen_version = args.version
 buildimpl.mgen_jar = "mgen-compiler/target/mgen-compiler-assembly-" + args.version + ".jar"
 buildimpl.mgen_cmd = "java -jar ../" + buildimpl.mgen_jar + " "
-buildimpl.pluginPaths = ' plugin_paths="' + "../mgen-javagenerator/target" + "," + "../mgen-cppgenerator/target" + "," + "../mgen-javascriptgenerator/target" + '"'
+buildimpl.pluginPaths = ' "plugin_paths=../mgen-javagenerator/target,../mgen-cppgenerator/target,../mgen-javascriptgenerator/target,../mgen-pythongenerator/target"'
 buildimpl.default_cpp_build_cfg = "RelwithDebInfo" # Because VS is epicly slow in debug
 
 # Targets 
