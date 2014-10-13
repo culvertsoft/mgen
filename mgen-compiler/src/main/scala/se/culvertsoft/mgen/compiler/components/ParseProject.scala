@@ -27,7 +27,7 @@ object ParseProject {
     val paramPaths = settings.get("include_paths").getOrElse("").split(",")
 
     val envPaths =
-      if (settings.getOrDefault("use_env_vars", "true").toBoolean)
+      if (settings.getOrElse("use_env_vars", "true").toBoolean)
         EnvVarUtils.getCommaSeparated("MGEN_INCLUDE_PATHS")
       else
         Array[String]()
