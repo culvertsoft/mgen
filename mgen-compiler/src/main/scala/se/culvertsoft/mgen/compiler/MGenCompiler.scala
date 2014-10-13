@@ -68,7 +68,7 @@ object MGenCompiler {
   }
 
   def run(settings: Map[String, String]): Seq[GeneratedSourceFile] = {
-    val pluginFinder = new PluginFinder(settings.getOrElse("plugin_paths", ""))
+    val pluginFinder = new PluginFinder(settings.getOrElse("plugin_paths", ""), settings.getOrElse("use_env_vars", "true").toBoolean)
     val project = CreateProject(settings, pluginFinder)
     RemoveParkedFields(project)
     GenerateCode(project, settings, pluginFinder)

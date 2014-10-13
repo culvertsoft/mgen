@@ -45,8 +45,13 @@ mgen_cmd = "NEEDS_TO_BE_SET"
 pluginPaths = "NEEDS_TO_BE_SET"
 default_cpp_build_cfg = "NEEDS_TO_BE_SET"
 
+
+def compile4(workingDir, project, outPath, plug_paths):
+    check_call(mgen_cmd + project + ' plugin_paths="' + plug_paths + '" output_path="' + outPath + '" use_env_vars="false"', cwd=workingDir, shell=True)
+
+
 def compile3(workingDir, project, outPath):
-    check_call(mgen_cmd + project + pluginPaths + ' output_path="' + outPath + '"', cwd=workingDir, shell=True)
+    compile4(workingDir, project, outPath, pluginPaths)
 
 
 def compile(workingDir, project):
@@ -131,7 +136,7 @@ def fastbuild_step2():
 def tests_generate_code(): # Ideally here we'd just generate once, not nLangs times.
     for lang in ["java", "cpp", "javascript", "python"]:
         for model in ["project.xml", "transient_testmodel/project.xml", "defaultvalues_testmodel/project.xml", "defaultvaluesreq_testmodel/project.xml"]:
-            compile("mgen-" + lang + "lib", "../mgen-compiler/src/test/resources/" + model)          
+            compile4("mgen-" + lang + "lib", "../mgen-compiler/src/test/resources/" + model, ".", "../mgen-" + lang + "generator/target")          
     for name in ["depends", "write", "read"]:
         compile3("mgen-integrationtests", 'models/'+name+'/project.xml', "generated/"+name)
 

@@ -24,9 +24,15 @@ object ParseProject {
         .get("project")
         .getOrElse(throw new RuntimeException("Missing '-project' cmd line argument"))
 
-    val includePaths =
-      (settings.get("include_paths").getOrElse("").split(",") ++
-        EnvVarUtils.getCommaSeparated("MGEN_INCLUDE_PATHS")).distinct
+    val paramPaths = settings.get("include_paths").getOrElse("").split(",")
+
+    val envPaths =
+      if (settings.getOrDefault("use_env_vars", "true").toBoolean)
+        EnvVarUtils.getCommaSeparated("MGEN_INCLUDE_PATHS")
+      else
+        Array[String]()
+
+    val includePaths = (paramPaths ++ envPaths).distinct
 
     FileUtils.checkiSsFileOrThrow(projectPath)
 

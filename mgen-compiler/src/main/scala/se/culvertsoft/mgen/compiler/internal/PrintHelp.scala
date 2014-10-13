@@ -11,6 +11,7 @@ object PrintHelp {
     println("  -fail_on_missing_generator=true/false: Default false (Optional)")
     println("  -check_conflicts=\"true/false\" (default=true): If false: the compiler will ignore any type name/id/hash conflicts (Optional). Useful for IDL<->IDL translation")
     println("  -include_paths=\"/home/me,/home/you\": The paths to search for project files")
+    println("  -use_env_vars=\"true/false\" (default=true): If to search environmental variable paths")
     println()
     println("Environmental variables can also be used:")
     println("  MGEN_PLUGIN_PATHS: See command line argument 'plugin_paths'")

@@ -4,6 +4,7 @@ import java.io.File
 import java.net.URL
 import java.net.URLClassLoader
 
+import scala.Array.canBuildFrom
 import scala.Option.option2Iterable
 import scala.collection.mutable.HashMap
 import scala.collection.mutable.TreeSet
@@ -13,8 +14,8 @@ import se.culvertsoft.mgen.api.exceptions.MGenException
 import se.culvertsoft.mgen.compiler.util.EnvVarUtils
 import se.culvertsoft.mgen.compiler.util.SplitCommaSeparated
 
-class PluginFinder(pluginPaths_in: Seq[String]) {
-  def this(commaSeparatedPaths: String) = this(SplitCommaSeparated(commaSeparatedPaths))
+class PluginFinder(pluginPaths_in: Seq[String], useEnvPaths: Boolean) {
+  def this(commaSeparatedPaths: String, useEnvPaths: Boolean) = this(SplitCommaSeparated(commaSeparatedPaths), useEnvPaths)
 
   val DEFAULT_PATH = "plugins/"
   val pluginPaths = getPaths()
@@ -34,16 +35,23 @@ class PluginFinder(pluginPaths_in: Seq[String]) {
   }
 
   def getPaths(): Seq[String] = {
+
     val custom = pluginPaths_in.toList.filter(_.nonEmpty)
+
     val out =
       if (defaultFolderExists) {
         DEFAULT_PATH :: custom
       } else {
         custom
       }
-    (out ++
-      EnvVarUtils.getCommaSeparated("MGEN_PLUGIN_PATHS") ++
-      Properties.envOrNone("MGEN_INSTALL_PATH").map(_ + "/jars")).distinct
+
+    val envPaths =
+      if (useEnvPaths)
+        EnvVarUtils.getCommaSeparated("MGEN_PLUGIN_PATHS") ++ Properties.envOrNone("MGEN_INSTALL_PATH").map(_ + "/jars")
+      else
+        Array[String]()
+
+    (out ++ envPaths).distinct
   }
 
   def defaultFolderExists(): Boolean = {

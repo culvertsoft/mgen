@@ -3,8 +3,7 @@
 <Project>
 
 	<Generator name="Java">
-		<class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator
-		</class_path>
+		<class_path>se.culvertsoft.mgen.javapack.generator.JavaGenerator</class_path>
 		<output_path>src_generated/test/java</output_path>
 		<classregistry_path>defaultvalreq.model</classregistry_path>
 	</Generator>
@@ -17,11 +16,16 @@
     </Generator>
 
 	<Generator name="C++">
-		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator
-		</class_path>
+		<class_path>se.culvertsoft.mgen.cpppack.generator.CppGenerator</class_path>
 		<output_path>src_generated/test/cpp</output_path>
 		<classregistry_path>defaultvalreq.model</classregistry_path>
 		<generate_unity_build>true</generate_unity_build>
+	</Generator>
+
+	<Generator name="Python">
+		<class_path>se.culvertsoft.mgen.pythongenerator.PythonGenerator</class_path>
+		<output_path>src_generated/test/python</output_path>
+		<classregistry_path>defaultvalreq.model</classregistry_path>
 	</Generator>
 
 	<Sources>

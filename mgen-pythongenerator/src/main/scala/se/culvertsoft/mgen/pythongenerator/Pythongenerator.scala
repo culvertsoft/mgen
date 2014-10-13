@@ -1,14 +1,16 @@
 package se.culvertsoft.mgen.pythongenerator
 
 import scala.collection.JavaConversions.seqAsJavaList
-
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.CustomCodeSection
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
+import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
+import se.culvertsoft.mgen.compiler.util.SettingsUtils.RichSettings
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import java.io.File
 
 object PythonGenerator {
 
@@ -77,15 +79,12 @@ class PythonGenerator extends BuiltInStaticLangGenerator {
   override def generateClassSources(module: Module, t: ClassType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     val folder = getModuleFolderPath(module, settings)
     val fileName = t.shortName + ".py"
-    /*
     val generateCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(true)
-    val sourceCode = generateClassSourceCode(t, generateCustomCodeSections)
+    val sourceCode = generateClassSourceCode(t, generateCustomCodeSections)    
     List(new GeneratedSourceFile(
       folder + File.separator + fileName,
       sourceCode,
       getCustomCodeSections(generateCustomCodeSections)))
-      */
-    List()
   }
 
   override def generateEnumSources(module: Module, t: EnumType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
@@ -96,6 +95,12 @@ class PythonGenerator extends BuiltInStaticLangGenerator {
     List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
     */
     List()
+  }
+  
+  def generateClassSourceCode(t: ClassType, generateCustomCodeSections: Boolean): String = {
+    txtBuffer.clear()
+    txtBuffer.textln(PythonConstants.fileHeader)
+    txtBuffer.toString()
   }
 
 }

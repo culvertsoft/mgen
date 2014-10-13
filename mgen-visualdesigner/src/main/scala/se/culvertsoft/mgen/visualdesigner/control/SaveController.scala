@@ -332,7 +332,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
       val settings = new HashMap[String, String]
       settings.put("project", file.getPath())
 
-      val pluginFinder = new PluginFinder(Nil)
+      val pluginFinder = new PluginFinder(Nil, true)
       val project = ParseProject(settings.toMap, pluginFinder)
       LinkTypes(project)
 
