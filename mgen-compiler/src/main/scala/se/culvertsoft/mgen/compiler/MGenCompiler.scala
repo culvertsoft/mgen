@@ -9,6 +9,7 @@ import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.compiler.components.CreateProject
 import se.culvertsoft.mgen.compiler.components.GenerateCode
 import se.culvertsoft.mgen.compiler.components.PluginFinder
+import se.culvertsoft.mgen.compiler.components.RemoveParkedFields
 import se.culvertsoft.mgen.compiler.internal.PrintHelp
 import se.culvertsoft.mgen.compiler.internal.PrintIntro
 import se.culvertsoft.mgen.compiler.util.FileUtils
@@ -69,6 +70,7 @@ object MGenCompiler {
   def run(settings: Map[String, String]): Seq[GeneratedSourceFile] = {
     val pluginFinder = new PluginFinder(settings.getOrElse("plugin_paths", ""))
     val project = CreateProject(settings, pluginFinder)
+    RemoveParkedFields(project)
     GenerateCode(project, settings, pluginFinder)
   }
 
