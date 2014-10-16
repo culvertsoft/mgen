@@ -7,9 +7,9 @@ link-title: Home
 
 Welcome to the MGen project page!
 
-MGen is a software development toolkit for reducing duplicate work when building cross-language applications. It lets you define your data model in one place, and generate source code for the languages you choose. The generated sources provide interfaces that can be used for object serialization and type introspection, to which MGen also provides runtime libraries with ready-to-use serializers.
+MGen is a software development toolkit for reducing duplicate work when building cross-language applications. It lets you define data models in one place, from which you can generate source code for multiple programming languages. The generated sources provide interfaces that can be used for object serialization and type introspection, to which MGen also provides runtime libraries with ready-to-use serializers.
 
-The goal of MGen is to reduce manual boilerplate code, maintanance efforts and simplify type-safe sharing and persistence of state between applications, while permitting significant data model changes without requiring a global rebuild. 
+The goal of MGen is to reduce manual boilerplate code, maintanance efforts and simplify type-safe sharing and persistence of state between applications, while maintaining backwards compatibility when applications and their data models may be updated at different times. 
 
 We also seek to make MGen highly extendable by having plug-in based architecture, using which you can easily add new code generators and IDL parsers.
 
