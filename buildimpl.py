@@ -285,7 +285,7 @@ def upload_to_culvertsoft():
 
     zipName = "mgen-" + mgen_version + ".zip"
     zipSrc = "target/" + zipName
-    zipDest = "culvertsoft.se:/var/www/" + folderName + "/" + zipName
+    zipDest = "www.culvertsoft.se:/var/www/" + folderName + "/" + zipName
     print("Uploading " +  zipName + " to " + zipDest)
     os.system("scp " + zipSrc + " " + zipDest)
 
