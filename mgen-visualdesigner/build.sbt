@@ -9,6 +9,8 @@ EclipseKeys.createSrc := EclipseCreateSrc.Default + EclipseCreateSrc.Resource
 
 version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
+scalaVersion := "2.11.4"
+
 isSnapshot := version.value.contains("SNAPSHOT")
 
 pomIncludeRepository := { _ => false }

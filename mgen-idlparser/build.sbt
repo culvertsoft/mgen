@@ -7,6 +7,8 @@ organization := "se.culvertsoft"
 
 version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
+scalaVersion := "2.11.4"
+
 isSnapshot := version.value.contains("SNAPSHOT")
 
 publishMavenStyle := true
@@ -50,6 +52,8 @@ pomExtra := (
 crossPaths := false
 
 libraryDependencies += "se.culvertsoft" % "mgen-api" % version.value
+
+libraryDependencies += "org.scala-lang.modules" %% "scala-xml" % "1.0.2"
 
 EclipseKeys.withSource := true
 
