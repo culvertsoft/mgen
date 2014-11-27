@@ -61,5 +61,13 @@ object Alias {
   def instantiate(t: UserDefinedType): String = {
     s"new ${t.fullName()}()"
   }
+  
+  def has(f: Field): String = {
+    s"has${upFirst(f.name)}()"
+  }
+  
+  def unset(f: Field): String = {
+    s"unset${upFirst(f.name)}()"
+  }
 
 }

@@ -32,11 +32,17 @@ object MkImports {
     ln(s"import ${readerClsStringQ};")
 
     if (t.fieldsInclSuper.nonEmpty) {
-      ln(s"import ${eqTesterClsStringQ};")
-      ln(s"import ${deepCopyerClsStringQ};")
       ln(s"import ${fieldHasherClsStringQ};")
     }
 
+    if (t.fieldsInclSuper.filter(JavaGenerator.isMutable).nonEmpty) {
+      ln(s"import ${deepCopyerClsStringQ};")
+    }
+
+    if (t.fieldsInclSuper.filter(JavaGenerator.needsDeepEqual).nonEmpty) {
+      ln(s"import ${eqTesterClsStringQ};")
+    }
+    
     if (t.fields.exists(_.typ.containsUserDefinedType)) {
       ln(s"import ${validatorClsStringQ};")
       ln(s"import ${setFieldSetClsStringQ};")

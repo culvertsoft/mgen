@@ -1,17 +1,20 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
-
 import Alias.fieldMetadata
-import Alias.get
-import Alias.isFieldSet
-import Alias.set
-import Alias.setFieldSet
+import Alias._
 import se.culvertsoft.mgen.api.model.ClassType
+import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsString
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
+import se.culvertsoft.mgen.javapack.generator.JavaConstants._
+import se.culvertsoft.mgen.javapack.generator.JavaGenerator
+import se.culvertsoft.mgen.api.model.PrimitiveType
+import se.culvertsoft.mgen.api.model.StringType
+import se.culvertsoft.mgen.api.model.EnumType
 
 object MkDeepCopy {
 
@@ -19,20 +22,40 @@ object MkDeepCopy {
 
     implicit val m = module
 
-    val allFields = t.fieldsInclSuper()
-
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln(s"public ${t.shortName()} deepCopy() {")
-    txtBuffer.tabs(2).textln(s"final ${t.shortName()} out = new ${t.shortName()}();")
-    for (field <- allFields)
-      txtBuffer.tabs(2).textln(s"out.${set(field, s"${deepCopyerClsString}.deepCopy(${get(field)}, ${fieldMetadata(field)}.typ())")};")
-    for (field <- allFields) {
-      val shallow = s"${fieldSetDepthClsString}.SHALLOW"
-      val isFieldSetString = isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")
-      txtBuffer.tabs(2).textln(s"out.${setFieldSet(field, s"$isFieldSetString, $shallow")};")
+    def deepCopyField(f: Field): String = {
+      if (JavaGenerator.isMutable(f)) {
+        s"${deepCopyerClsString}.deepCopy(${get(f)}, ${fieldMetadata(f)}.typ())"
+      } else {
+        get(f)
+      }
     }
-    txtBuffer.tabs(2).textln("return out;")
-    txtBuffer.tabs(1).textln("}").endl()
+
+    val allFields = t.fieldsInclSuper()
+    val allFieldsStrings = allFields.map(deepCopyField)
+    val clsName = t.shortName;
+
+    ln(1, "@Override")
+    ln(1, s"public ${t.shortName()} deepCopy() {")
+
+    if (allFieldsStrings.isEmpty) {
+      ln(2, s"return new $clsName();")
+    } else {
+      ln(2, s"final $clsName out = new $clsName(")
+      for (f <- allFieldsStrings) {
+        txt(3, s"$f")
+        if (!(f eq allFieldsStrings.last)) {
+          ln(",")
+        }
+      }
+      ln(");")
+      for (f <- allFields) {
+        if (!JavaGenerator.canBeNull(f)) {
+          ln(2, s"if (!${has(f)}) out.${unset(f)};")
+        }
+      }
+      ln(2, "return out;")
+    }
+    ln(1, "}").endl()
 
   }
 }

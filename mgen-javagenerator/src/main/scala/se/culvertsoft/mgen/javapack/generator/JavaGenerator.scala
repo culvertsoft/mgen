@@ -1,9 +1,7 @@
 package se.culvertsoft.mgen.javapack.generator
 
 import java.io.File
-
 import scala.collection.JavaConversions.seqAsJavaList
-
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.CustomCodeSection
 import se.culvertsoft.mgen.api.model.EnumType
@@ -50,12 +48,14 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkToString
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdFields
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdMethods
 import se.culvertsoft.mgen.javapack.generator.impl.MkValidate
+import se.culvertsoft.mgen.api.model.StringType
 
 object JavaGenerator {
 
   def canBeNull(f: Field): Boolean = {
     canBeNull(f.typ())
   }
+  
   def canBeNull(t: Type): Boolean = {
     t match {
       case t: PrimitiveType => false
@@ -63,6 +63,31 @@ object JavaGenerator {
     }
   }
 
+  def needsDeepEqual(f: Field): Boolean = {
+    needsDeepEqual(f.typ)
+  }
+  
+  def needsDeepEqual(t: Type): Boolean = {
+    t match {
+      case t: EnumType => false
+      case t: PrimitiveType => false
+      case _ => true
+    }
+  }
+  
+  def isMutable(f: Field): Boolean = {
+    isMutable(f.typ)
+  }
+  
+  def isMutable(t: Type): Boolean = {
+    t match {
+      case t: EnumType => false
+      case t: PrimitiveType => false
+      case t: StringType => false
+      case _ => true
+    }
+  }
+  
   def mkCustomCodeSection(name: String): CustomCodeSection = {
     def mkKey(ending: String) = s"/* ${name}_${ending} */"
     new CustomCodeSection(mkKey("begin"), mkKey("end"))
