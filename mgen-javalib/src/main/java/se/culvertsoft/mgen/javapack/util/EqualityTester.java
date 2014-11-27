@@ -17,163 +17,71 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
  */
 public class EqualityTester {
 
-	public static boolean areEqual(
-			final boolean a,
-			final boolean b,
-			final Type type) {
-		return a == b;
-	}
-
-	public static boolean areEqual(
-			final Enum<?>[] a,
-			final Enum<?>[] b,
-			final Type type) {
+	public static boolean areEqual(final Enum<?>[] a, final Enum<?>[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static boolean areEqual(
-			final boolean[] a,
-			final boolean[] b,
-			final Type type) {
+	public static boolean areEqual(final boolean[] a, final boolean[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static boolean areEqual(final byte a, final byte b, final Type type) {
-		return a == b;
-	}
-
-	public static boolean areEqual(
-			final byte[] a,
-			final byte[] b,
-			final Type type) {
+	public static boolean areEqual(final byte[] a, final byte[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static
-			boolean
-			areEqual(final short a, final short b, final Type type) {
-		return a == b;
-	}
-
-	public static boolean areEqual(
-			final short[] a,
-			final short[] b,
-			final Type type) {
+	public static boolean areEqual(final short[] a, final short[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static boolean areEqual(final int a, final int b, final Type type) {
-		return a == b;
-	}
-
-	public static
-			boolean
-			areEqual(final int[] a, final int[] b, final Type type) {
+	public static boolean areEqual(final int[] a, final int[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static boolean areEqual(final long a, final long b, final Type type) {
-		return a == b;
-	}
-
-	public static boolean areEqual(
-			final long[] a,
-			final long[] b,
-			final Type type) {
+	public static boolean areEqual(final long[] a, final long[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static
-			boolean
-			areEqual(final float a, final float b, final Type type) {
-		return a == b;
-	}
-
-	public static boolean areEqual(
-			final float[] a,
-			final float[] b,
-			final Type type) {
+	public static boolean areEqual(final float[] a, final float[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static boolean areEqual(
-			final double a,
-			final double b,
-			final Type type) {
-		return a == b;
-	}
-
-	public static boolean areEqual(
-			final double[] a,
-			final double[] b,
-			final Type type) {
+	public static boolean areEqual(final double[] a, final double[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static boolean areEqual(
-			final String a,
-			final String b,
-			final Type type) {
+	public static boolean areEqual(final String a, final String b, final Type type) {
 		if (a == null || b == null || a == b)
 			return a == b;
 		return a.equals(b);
 	}
 
-	public static boolean areEqual(
-			final String[] a,
-			final String[] b,
-			final Type type) {
+	public static boolean areEqual(final String[] a, final String[] b, final Type type) {
 		return Arrays.equals(a, b);
 	}
 
-	public static
-			<T>
-			boolean
-			areEqual(final T[] a, final T[] b, final Type type) {
+	public static <T> boolean areEqual(final T[] a, final T[] b, final Type type) {
 		return areArraysEqual(a, b, (ArrayType) type);
 	}
 
-	public static <T> boolean areEqual(
-			final List<T> a,
-			final List<T> b,
-			final Type type) {
+	public static <T> boolean areEqual(final List<T> a, final List<T> b, final Type type) {
 		return areListsEqual(a, b, (ListType) type);
 	}
 
-	public static <K, V> boolean areEqual(
-			final Map<K, V> a,
-			final Map<K, V> b,
-			final Type type) {
+	public static <K, V> boolean areEqual(final Map<K, V> a, final Map<K, V> b, final Type type) {
 		return areMapsEqual(a, b, (MapType) type);
 	}
 
-	public static boolean areEqual(
-			final MGenBase a,
-			final MGenBase b,
-			final Type type) {
+	public static boolean areEqual(final MGenBase a, final MGenBase b, final Type type) {
 		return areMgenObjectsEqual(a, b, type);
 	}
 
-	public static boolean areEqual(
-			final Enum<?> a,
-			final Enum<?> b,
-			final Type type) {
-		return a == b;
-	}
-
-	public static boolean areEqual(
-			final Object a,
-			final Object b,
-			final Type type) {
+	public static boolean areEqual(final Object a, final Object b, final Type type) {
 		return areObjectsEqual(a, b, type);
 	}
 
 	// ///////////////////// PRIVATE HELPERS /////////////////////////
 
-	private static boolean areMgenObjectsEqual(
-			final MGenBase a,
-			final MGenBase b,
-			final Type type) {
+	private static boolean areMgenObjectsEqual(final MGenBase a, final MGenBase b, final Type type) {
 		if (a == null || b == null || a == b)
 			return a == b;
 		if (!a.getClass().equals(b.getClass()))
@@ -181,10 +89,7 @@ public class EqualityTester {
 		return a.equals(b);
 	}
 
-	private static <T> boolean areArraysEqual(
-			final T[] a,
-			final T[] b,
-			final ArrayType type) {
+	private static <T> boolean areArraysEqual(final T[] a, final T[] b, final ArrayType type) {
 		if (a == null || b == null || a == b)
 			return a == b;
 		if (a.length != b.length)
@@ -197,10 +102,7 @@ public class EqualityTester {
 		return true;
 	}
 
-	private static boolean areArraysEqual(
-			final Object a,
-			final Object b,
-			final ArrayType arrayType) {
+	private static boolean areArraysEqual(final Object a, final Object b, final ArrayType arrayType) {
 		if (a == null || b == null || a == b)
 			return a == b;
 		if (a.getClass() != b.getClass())
@@ -229,10 +131,7 @@ public class EqualityTester {
 		}
 	}
 
-	private static boolean areObjectsEqual(
-			final Object a,
-			final Object b,
-			final Type type) {
+	private static boolean areObjectsEqual(final Object a, final Object b, final Type type) {
 		if (a == null || b == null || a == b)
 			return a == b;
 		if (!a.getClass().equals(b.getClass()))
@@ -271,10 +170,7 @@ public class EqualityTester {
 		return a.equals(b);
 	}
 
-	private static boolean areMapsEqual(
-			final Map<?, ?> a,
-			final Map<?, ?> b,
-			final MapType type) {
+	private static boolean areMapsEqual(final Map<?, ?> a, final Map<?, ?> b, final MapType type) {
 		if (a == null || b == null || a == b)
 			return a == b;
 		if (a.size() != b.size())
@@ -290,10 +186,7 @@ public class EqualityTester {
 	}
 
 	@SuppressWarnings("unchecked")
-	private static boolean areListsEqual(
-			final List<?> a,
-			final List<?> b,
-			final ListType type) {
+	private static boolean areListsEqual(final List<?> a, final List<?> b, final ListType type) {
 		if (a == null || b == null || a == b)
 			return a == b;
 		if (a.size() != b.size())
@@ -322,10 +215,7 @@ public class EqualityTester {
 		}
 	}
 
-	private static boolean areObjectListsEqual(
-			final List<?> a,
-			final List<?> b,
-			final Type elemType) {
+	private static boolean areObjectListsEqual(final List<?> a, final List<?> b, final Type elemType) {
 		if (a == null || b == null || a == b)
 			return a == b;
 		if (a.size() != b.size())

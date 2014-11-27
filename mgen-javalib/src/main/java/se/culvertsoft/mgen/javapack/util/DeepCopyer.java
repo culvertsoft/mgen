@@ -4,7 +4,6 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
@@ -19,68 +18,32 @@ import se.culvertsoft.mgen.javapack.classes.MGenBase;
  */
 public class DeepCopyer {
 
-	public static <T extends Enum<?>> T deepCopy(final T a, final Type type) {
-		return a;
-	}
-
-	public static boolean deepCopy(final boolean a, final Type type) {
-		return a;
-	}
-
 	public static boolean[] deepCopy(final boolean[] a, final Type type) {
 		return a != null ? Arrays.copyOf(a, a.length) : null;
-	}
-
-	public static byte deepCopy(final byte a, final Type type) {
-		return a;
 	}
 
 	public static byte[] deepCopy(final byte[] a, final Type type) {
 		return a != null ? Arrays.copyOf(a, a.length) : null;
 	}
 
-	public static short deepCopy(final short a, final Type type) {
-		return a;
-	}
-
 	public static short[] deepCopy(final short[] a, final Type type) {
 		return a != null ? Arrays.copyOf(a, a.length) : null;
-	}
-
-	public static int deepCopy(final int a, final Type type) {
-		return a;
 	}
 
 	public static int[] deepCopy(final int[] a, final Type type) {
 		return a != null ? Arrays.copyOf(a, a.length) : null;
 	}
 
-	public static long deepCopy(final long a, final Type type) {
-		return a;
-	}
-
 	public static long[] deepCopy(final long[] a, final Type type) {
 		return a != null ? Arrays.copyOf(a, a.length) : null;
-	}
-
-	public static float deepCopy(final float a, final Type type) {
-		return a;
 	}
 
 	public static float[] deepCopy(final float[] a, final Type type) {
 		return a != null ? Arrays.copyOf(a, a.length) : null;
 	}
 
-	public static double deepCopy(final double a, final Type type) {
-		return a;
-	}
-
 	public static double[] deepCopy(final double[] a, final Type type) {
 		return a != null ? Arrays.copyOf(a, a.length) : null;
-	}
-
-	public static String deepCopy(final String a, final Type type) {
-		return a;
 	}
 
 	public static String[] deepCopy(final String[] a, final Type type) {
@@ -93,14 +56,12 @@ public class DeepCopyer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> ArrayList<T> deepCopy(final List<T> a, final Type type) {
+	public static <T> ArrayList<T> deepCopy(final ArrayList<T> a, final Type type) {
 		return (ArrayList<T>) deepCopyList(a, (ListType) type);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <K, V> HashMap<K, V> deepCopy(
-			final HashMap<K, V> a,
-			final Type type) {
+	public static <K, V> HashMap<K, V> deepCopy(final HashMap<K, V> a, final Type type) {
 		return (HashMap<K, V>) deepCopyMap(a, (MapType) type);
 	}
 
@@ -111,9 +72,7 @@ public class DeepCopyer {
 
 	// ////////////////////// PRIVATE HELPERS ////////////////////////
 
-	private static
-			Object
-			deepCopyArray(final Object array, final ArrayType type) {
+	private static Object deepCopyArray(final Object array, final ArrayType type) {
 		if (array == null)
 			return null;
 		switch (type.elementType().typeEnum()) {
@@ -141,8 +100,7 @@ public class DeepCopyer {
 				Array.set(
 						out,
 						index,
-						deepCopyObject(
-								Array.get(array, index),
+						deepCopyObject(Array.get(array, index),
 								type.elementType()));
 			}
 			return out;
@@ -167,7 +125,7 @@ public class DeepCopyer {
 		case ARRAY:
 			return deepCopyArray(o, (ArrayType) type);
 		case LIST:
-			return deepCopyList((List<Object>) o, (ListType) type);
+			return deepCopyList((ArrayList<Object>) o, (ListType) type);
 		case MAP:
 			return deepCopyMap((HashMap<Object, Object>) o, (MapType) type);
 		case CLASS:
@@ -178,8 +136,7 @@ public class DeepCopyer {
 		}
 	}
 
-	private static Map<Object, Object> deepCopyMap(
-			final HashMap<?, ?> src,
+	private static Map<Object, Object> deepCopyMap(final HashMap<?, ?> src,
 			final MapType type) {
 		if (src == null)
 			return null;
@@ -187,15 +144,13 @@ public class DeepCopyer {
 				src.size());
 		for (final Object key : src.keySet()) {
 			final Object value = src.get(key);
-			out.put(
-					deepCopyObject(key, type.keyType()),
+			out.put(deepCopyObject(key, type.keyType()),
 					deepCopyObject(value, type.valueType()));
 		}
 		return out;
 	}
 
-	private static ArrayList<Object> deepCopyList(
-			final List<?> list,
+	private static ArrayList<Object> deepCopyList(final ArrayList<?> list,
 			final ListType type) {
 		if (list == null)
 			return null;
