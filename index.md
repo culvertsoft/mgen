@@ -10,14 +10,6 @@ Welcome to the MGen project page!
 MGen is a toolkit for serializing, deserializing, analyzing and modifying objects in a generic way. It lets you read and write polymorphic objects using generated visitor methods in a way that is type safe, storage format agnostic and backwards compatible. Basically, it gives you the ability to store and load language independent snapshots of your application.
 
 
-This is achieved using:
-
- * Source code generation
- * Language specific support libraries
- 
-The MGen compiler generates source code for the data structures to read/write, while libraries are used to facilitate read/write functionality (among other things). The compiler is plug-in based and allows you to easily add support for your own code generation, new output languages, and new input IDLs.
-
-
 Using MGen in your c++ application could look like this:
 
 {% highlight c++ %}
@@ -32,6 +24,14 @@ std::string fruitString = jsonWriter.write(*fruit);
 Apple * apple = static_cast<Apple*>(jsonReader.readObject(fruitString));
 
 {% endhighlight %}
+
+
+This is achieved using:
+
+ * Source code generation
+ * Language specific support libraries
+ 
+The MGen compiler generates source code for the data structures to read/write, while libraries are used to facilitate read/write functionality (among other things). The compiler is plug-in based and allows you to easily add support for your own code generation, new output languages, and new input IDLs.
 
 
 Supported languages (so far):
