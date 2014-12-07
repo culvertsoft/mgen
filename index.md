@@ -7,7 +7,7 @@ link-title: Home
 
 Welcome to the MGen project page!
 
-MGen is a toolkit for serializing, deserializing, analyzing and modifying objects in a generic way. It lets you snapshot polymorphic objects for both read and write using generated visitor methods, in a way that is type safe, storage format agnostic and backwards compatible.
+MGen is a toolkit for serializing, deserializing, analyzing and modifying objects in a generic way. It lets you read and write polymorphic objects using generated visitor methods in a way that is type safe, storage format agnostic and backwards compatible.
 
 This is achieved using:
 
