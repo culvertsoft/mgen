@@ -15,10 +15,10 @@ This is achieved using:
  * Source code generation
  * Language specific support libraries
  
-The MGen compiler generates source code for the data structures to read/write, and libraries are used to facilitate read/write functionality (among other things). The compiler is plug-in based and allows you to easily add support for your own code generation, new output languages, and new input IDLs.
+The MGen compiler generates source code for the data structures to read/write, while libraries are used to facilitate read/write functionality (among other things). The compiler is plug-in based and allows you to easily add support for your own code generation, new output languages, and new input IDLs.
 
 
-A c++ example:
+Using MGen in your c++ application could look like this:
 
 {% highlight c++ %}
 
