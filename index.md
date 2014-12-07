@@ -21,16 +21,14 @@ The MGen compiler generates source code for the data structures to read/write, a
 A c++ example:
 
 {% highlight c++ %}
-
-  // The object we want to serialize
-  Fruit * fruit = new Apple();
+// The object we want to serialize
+Fruit * fruit = new Apple();
   
-  // Write it
-  std::string fruitString = jsonWriter.write(fruit);
+// Write it
+std::string fruitString = jsonWriter.write(fruit);
   
-  // Read it back
-  Apple * apple = static_cast<Apple*>(jsonReader.readObject());
-
+// Read it back
+Apple * apple = static_cast<Apple*>(jsonReader.readObject());
 {% endhighlight %}
 
 
