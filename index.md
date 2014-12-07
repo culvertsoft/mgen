@@ -26,7 +26,7 @@ Using MGen in your c++ application could look like this:
 Fruit * fruit = new Apple();
   
 // Write it
-std::string fruitString = jsonWriter.write(fruit);
+std::string fruitString = jsonWriter.write(*fruit);
   
 // Read it back
 Apple * apple = static_cast<Apple*>(jsonReader.readObject(fruitString));
