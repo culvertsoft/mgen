@@ -11,5 +11,3 @@ This will probably result in one of two things:
 
  * Either we will add a commercial license alternative that you can purchase from us.
  * Or release MGen under a completely free license such as MIT. 
-
-It depends on what interest we find for MGen as a product.
