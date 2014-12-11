@@ -23,7 +23,7 @@ apple.setBrand(BRAND_A);
 std::string fruitString = jsonWriter.write(apple);
   
 // Read it back
-Apple * appleBack = static_cast<Apple*>(jsonReader.readObject(fruitString));
+std::unique_ptr<Apple> appleBack(static_cast<Apple*>(jsonReader.readObject(fruitString)));
 
 {% endhighlight %}
 
