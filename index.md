@@ -7,7 +7,7 @@ link-title: Home
 
 Welcome to the MGen project page!
 
-MGen is a toolkit for serializing, deserializing, analyzing and modifying objects in a generic way. It operates on polymorphic objects using generated visitor methods in a way that is type safe, storage format agnostic and backwards compatible.
+MGen is a toolkit for serializing, analyzing and modifying polymorphic objects, by using generated visitor methods, in a way that is generic, storage format agnostic and backwards compatible.
 
 
 Using MGen in your c++ application could look like this:
