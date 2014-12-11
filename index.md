@@ -15,13 +15,15 @@ Using MGen in your c++ application could look like this:
 {% highlight c++ %}
 
 // The object we want to serialize
-Fruit * fruit = new Apple();
+Apple apple;
+apple.setWeight(10.0);
+apple.setBrand(BRAND_A);
   
 // Write it
-std::string fruitString = jsonWriter.write(*fruit);
+std::string fruitString = jsonWriter.write(apple);
   
 // Read it back
-Apple * apple = static_cast<Apple*>(jsonReader.readObject(fruitString));
+Apple * appleBack = static_cast<Apple*>(jsonReader.readObject(fruitString));
 
 {% endhighlight %}
 
