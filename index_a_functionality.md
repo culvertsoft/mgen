@@ -5,11 +5,11 @@ link-title: Features
 
 ## Summary of functionality
 
-MGen can help you manage your multi-language application environment, by letting you:
+MGen lets you:
 
  * Define your applications' data model in one place
- * Generate classes for multiple languages
- * Map binary data, JSON, XML, tables etc directly to objects
+ * Generate representations/classes for multiple languages
+ * Map binary data, string data (JSON, XML, tables..) directly to objects
  * Map config files directly to objects
  * Map command line arguments directly to objects
  * Map data between scripting languages and host languages
