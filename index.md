@@ -35,7 +35,7 @@ This is achieved using:
  * Language specific libraries (mgen libraries)
 
 
-The MGen compiler uses a language independent IDL to generate classes, which accept generic visitors that can implement read/write functionality (among other things). The compiler is plug-in based and allows you to easily add support for your own code generation, new output languages, and new input IDLs.
+The MGen compiler uses a language independent IDL to generate classes, which accept generic visitors that can implement read/write functionality (among other things). The compiler is plug-in based and lets you add your own code generation,  output languages, and input IDLs.
 
 
 Supported languages (so far):
