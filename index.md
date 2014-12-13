@@ -24,6 +24,7 @@ string fruitString = writer.write(apple);
   
 // Read it back
 Apple appleBack = reader.read<Apple>(fruitString);
+assert(apple == appleBack);
 
 {% endhighlight %}
 
