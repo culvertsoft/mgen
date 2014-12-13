@@ -23,7 +23,7 @@ apple.setBrand(BRAND_A);
 string fruitString = writer.write(apple);
   
 // Read it back
-unique_ptr<Apple> appleBack(static_cast<Apple*>(reader.readObject(fruitString)));
+Apple appleBack = reader.read<Apple>(fruitString);
 
 {% endhighlight %}
 
