@@ -13,6 +13,13 @@ import se.culvertsoft.mgen.api.plugins.Generator
 
 object GenerateCode {
 
+  def apply(settings: Map[String, String]): Seq[GeneratedSourceFile] = {
+    val pluginFinder = new PluginFinder(settings.getOrElse("plugin_paths", ""), settings.getOrElse("use_env_vars", "true").toBoolean)
+    val project = CreateProject(settings, pluginFinder)
+    RemoveParkedFields(project)
+    GenerateCode(project, settings, pluginFinder)
+  }
+  
   def apply(
     project: Project,
     generators: Seq[Generator]): Seq[GeneratedSourceFile] = {
