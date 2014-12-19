@@ -1,7 +1,7 @@
 ---
 ---
 
-You define your classes in modules. A module corresponds to a c++ namespace or java package, and is defined within a module file. The name of the module file determines the **module path** (i.e. the java package or c++ namespace).
+The MGen compiler expects you to define your classes in what we call modules. A module corresponds to a c++ namespace or java package, and is defined within a module file. The name of the module file determines the **module path** (i.e. the java package or c++ namespace).
 
 A file named **com.fruitcompany.fruits.xml**, with the contents:
 
