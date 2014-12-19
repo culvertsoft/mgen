@@ -10,7 +10,7 @@ submenu:
 ## Defining a model <a name="a">&nbsp;</a>
 
 The simplest use for MGen is defining a data model, [generating source code](index_c_Generating_code.html) and [providing cross-language serialization functionality](index_c_using_gen_code.html). 
-In the example on this page we define a data model in the MGen IDL. MGen can be configured to use other IDLs - If you don't like ours you can add your own IDL parser plug-in.
+In the example on this page we define a data model in the MGen IDL. MGen can be configured to use other IDLs - If you don't like our IDL you can add your own IDL parser plug-in.
 
 <div class="tabs"><a name="a">&nbsp;</a> 
   <ul>
