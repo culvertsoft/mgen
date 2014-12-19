@@ -7,10 +7,9 @@ link-title: Home
 
 Welcome to the MGen project page!
 
-MGen is a toolkit for serializing, analyzing and modifying polymorphic objects through generic visitor methods, in a way that is storage format agnostic and backwards compatible.
+MGen is a toolkit for cross language object serialization. The MGen compiler generates classes accepting generic visitor objects which may implement serialization functionality. The MGen libraries provide serializers for JSON and binary formats.
 
-
-E.g. using MGen for c++ object serialization can look like this:
+Using MGen in C++ might look like this:
 
 {% highlight c++ %}
 
@@ -19,7 +18,7 @@ Apple apple;
 apple.setWeight(10.0);
 apple.setBrand(BRAND_A);
   
-// Write it
+// Write it (to json, or xml, or something completely different!)
 string fruitString = writer.write(apple);
   
 // Read it back
@@ -28,14 +27,7 @@ assert(apple == appleBack);
 
 {% endhighlight %}
 
-
-This is achieved using:
-
- * Source code generation (mgen compiler)
- * Language specific libraries (mgen libraries)
-
-
-The MGen compiler uses a language independent IDL to generate classes, which accept generic visitors that can implement read/write functionality (among other things). The compiler is plug-in based and lets you add your own code generation,  output languages, and input IDLs.
+The MGen compiler uses a language independent IDL to generate classes. It is plug-in based and lets you add your own code generation, output languages, and input IDLs.
 
 
 Supported languages (so far):
