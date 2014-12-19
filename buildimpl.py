@@ -104,18 +104,12 @@ def createVersionFiles():
     createJavaVersionFile2("javalib", mgen_version)
     createJavaVersionFile2("pythongenerator", mgen_version)
     createJavaVersionFile2("javascriptgenerator", mgen_version)
-    createJavaVersionFile2("jsonschemaparser", mgen_version)
-    createJavaVersionFile2("protobufparser", mgen_version)
     createJavaVersionFile2("visualdesigner", mgen_version)
-    createJavaVersionFile2("xmlschemaparser", mgen_version)
 
 
 def fastbuild_step1():
     sbt(".",   ('"project mgen_api" publish-local '
                 '"project mgen_idlparser" publish-local '
-                '"project mgen_jsonschemaparser" publish-local '
-                '"project mgen_protobufparser" publish-local '
-                '"project mgen_xmlschemaparser" publish-local '
                 '"project mgen_idlgenerator" publish-local '
                 '"project mgen_javalib" publish-local '
                 '"project mgen_compiler" assembly publish-local '
@@ -294,9 +288,6 @@ def publish_to_sonatype():
     print("Publishing jar files to sonatype")
     sbt(".",   ('"project mgen_api" publish-signed '
                 '"project mgen_idlparser" publish-signed '
-                '"project mgen_jsonschemaparser" publish-signed '
-                '"project mgen_protobufparser" publish-signed '
-                '"project mgen_xmlschemaparser" publish-signed '
                 '"project mgen_idlgenerator" publish-signed '
                 '"project mgen_javalib" publish-signed '
                 '"project mgen_compiler" publish-signed '
