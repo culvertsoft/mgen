@@ -215,13 +215,13 @@ def create_install_zip():
     copyTree(getCppIncludeDir(), "target/install_zip/include")
     copyFile("mgen-javascriptlib/src/main/javascript/mgen-lib.js", "target/install_zip/javascript/mgen-lib.js")
     
-    copyFile("mgen-installers/mgen.sh", "target/install_zip/bin/mgen")
-    copyFile("mgen-installers/mgen.sh", "target/install_zip/bin/mgen.sh")
-    copyFile("mgen-installers/mgen.ex_", "target/install_zip/bin/mgen.exe")
+    copyFile("mgen-starters/mgen.sh", "target/install_zip/bin/mgen")
+    copyFile("mgen-starters/mgen.sh", "target/install_zip/bin/mgen.sh")
+    copyFile("mgen-starters/mgen.ex_", "target/install_zip/bin/mgen.exe")
     
-    copyFile("mgen-installers/mgen-visualdesigner.sh", "target/install_zip/bin/mgen-visualdesigner")
-    copyFile("mgen-installers/mgen-visualdesigner.sh", "target/install_zip/bin/mgen-visualdesigner.sh")
-    copyFile("mgen-installers/mgen-visualdesigner.ex_", "target/install_zip/bin/mgen-visualdesigner.exe")
+    copyFile("mgen-starters/mgen-visualdesigner.sh", "target/install_zip/bin/mgen-visualdesigner")
+    copyFile("mgen-starters/mgen-visualdesigner.sh", "target/install_zip/bin/mgen-visualdesigner.sh")
+    copyFile("mgen-starters/mgen-visualdesigner.ex_", "target/install_zip/bin/mgen-visualdesigner.exe")
     
     copyFile("LICENSE", "target/install_zip/LICENSE.TXT")
   
