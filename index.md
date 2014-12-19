@@ -27,7 +27,7 @@ assert(apple == appleBack);
 
 {% endhighlight %}
 
-The MGen compiler uses a language independent IDL to generate classes. It is plug-in based and lets you add your own code generation, output languages, and input IDLs.
+The MGen compiler is plug-in based, with code generation decoupled from IDL parsing - so if you're unhappy with either you can add your own IDL parser and/or code generator plug-in.
 
 
 Supported languages (so far):
