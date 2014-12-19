@@ -7,7 +7,7 @@ link-title: Home
 
 Welcome to the MGen project page!
 
-MGen is a toolkit for cross language object serialization. The MGen compiler generates classes accepting generic visitor objects which may implement serialization functionality. The MGen libraries provide serializers for JSON and binary formats.
+MGen is a toolkit for cross language object serialization. The MGen compiler generates classes accepting generic visitor objects which may implement serialization functionality. The MGen libraries provide serializers for JSON and binary formats. You can also use your own custom object visitors to implement whatever functionality you like.
 
 Using MGen in C++ might look like this:
 
