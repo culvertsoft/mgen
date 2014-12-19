@@ -5,4 +5,4 @@ link-title: License
 
 ## License alternatives
 
-MGen is now released under the [MIT license](http://opensource.org/licenses/MIT). It is included with all MGen downloads.
+MGen is released under the [MIT license](http://opensource.org/licenses/MIT). It is included with all MGen downloads.
