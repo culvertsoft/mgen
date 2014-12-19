@@ -3,12 +3,13 @@ layout: default
 link-title: Contact
 ---
 
-### Support
+### Help
 
-You can reach us at johan@culvertsoft.se or mikael@culvertsoft.se questions about MGen and our plans. We'll try to answer as best as we can.
+Hop on irc:freenode #culvertsoft. 
+Or send an email to johan@culvertsoft.se or mikael@culvertsoft.se. We'll try to answer as best as we can.
 
 
-### Business?
+### Business
 
 We are not planning any immediate business for MGen, but you are always welcome to contact us with suggestions.
 At some point we might host a website at [www.culvertsoft.se](http://www.culvertsoft.se). 
