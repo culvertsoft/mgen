@@ -35,6 +35,4 @@ Output will be placed inside each mgen-component's target/ directory (e.g. mgen-
 
 ## License
 
-GPL v2 for now. 
-
-Later, we may add a commercial license option, or release MGen completely free under a permissive license such as MIT.
+MGen is released under the MIT license.
