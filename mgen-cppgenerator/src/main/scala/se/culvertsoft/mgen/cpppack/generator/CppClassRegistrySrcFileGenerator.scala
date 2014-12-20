@@ -5,11 +5,12 @@ import scala.collection.JavaConversions.collectionAsScalaIterable
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkGetByTypeIds16Bit
 
 object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFile) {
 
-  override def mkIncludes(param: UtilClassGenParam) {
+  override def mkIncludes(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
 
     CppGenUtils.include("ClassRegistry.h")
 
@@ -30,7 +31,7 @@ object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFil
 
   }
 
-  override def mkDefaultCtor(param: UtilClassGenParam) {
+  override def mkDefaultCtor(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
     ln(s"ClassRegistry::ClassRegistry() {")
     for (m <- param.modules)
       for (t <- m.classes)
@@ -38,12 +39,12 @@ object CppClassRegistrySrcFileGenerator extends CppClassRegistryGenerator(SrcFil
     ln(s"}").endl()
   }
 
-  override def mkDestructor(param: UtilClassGenParam) {
+  override def mkDestructor(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
     ln("ClassRegistry::~ClassRegistry() {")
     ln("}").endl()
   }
 
-  override def mkGetByTypeIds16Bit(param: UtilClassGenParam) {
+  override def mkGetByTypeIds16Bit(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
     MkGetByTypeIds16Bit(0, param.nameSpaceString, param.modules, param.settings)
   }
 

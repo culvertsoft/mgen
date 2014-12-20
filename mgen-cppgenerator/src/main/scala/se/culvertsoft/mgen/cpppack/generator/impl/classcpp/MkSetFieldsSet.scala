@@ -8,7 +8,7 @@ import se.culvertsoft.mgen.api.model.MapType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppConstruction
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isFieldSet
@@ -17,12 +17,9 @@ import se.culvertsoft.mgen.cpppack.generator.impl.Alias.setFieldSet
 
 object MkSetFieldsSet {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
-    implicit val currentModule = module
-
+    implicit val module = t.module
     val fields = t.fields()
     val allFields = t.fieldsInclSuper()
 

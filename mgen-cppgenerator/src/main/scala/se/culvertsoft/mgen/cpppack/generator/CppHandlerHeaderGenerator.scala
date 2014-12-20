@@ -5,16 +5,17 @@ import scala.collection.JavaConversions.asScalaBuffer
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkLongTypeName
 
 object CppHandlerHeaderGenerator extends CppHandlerGenerator(Header) {
 
-  override def mkIncludes(param: UtilClassGenParam) {
+  override def mkIncludes(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
     CppGenUtils.include("ForwardDeclare.h")
     endl()
   }
 
-  override def mkClassContents(param: UtilClassGenParam) {
+  override def mkClassContents(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
     super.mkClassContents(param)
     ln(1, "public:")
     endl()

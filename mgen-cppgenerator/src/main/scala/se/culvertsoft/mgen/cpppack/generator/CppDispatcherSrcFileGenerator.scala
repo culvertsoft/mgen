@@ -4,18 +4,19 @@ import scala.collection.JavaConversions.asScalaBuffer
 
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkLongTypeName
 import se.culvertsoft.mgen.cpppack.generator.impl.utilh.MkTypeIdSwitch
 
 object CppDispatchSrcFileGenerator extends CppDispatchGenerator(SrcFile) {
 
-  override def mkIncludes(param: UtilClassGenParam) {
+  override def mkIncludes(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
     CppGenUtils.include("Dispatcher.h")
     CppGenUtils.include("ClassRegistry.h")
     endl()
   }
 
-  override def mkDispatch(param: UtilClassGenParam) {
+  override def mkDispatch(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
 
     val allClasses = param.modules.flatMap(_.classes())
     val topLevelClasses = allClasses.filterNot(_.hasSuperType())

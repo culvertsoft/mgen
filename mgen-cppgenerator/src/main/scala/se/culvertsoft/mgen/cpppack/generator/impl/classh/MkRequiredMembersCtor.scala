@@ -3,17 +3,14 @@ package se.culvertsoft.mgen.cpppack.generator.impl.classh
 import scala.collection.JavaConversions.asScalaBuffer
 
 import se.culvertsoft.mgen.api.model.ClassType
-import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
 
 object MkRequiredMembersCtor {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
-    implicit val currentModule = module
+    implicit val module = t.module
 
     val reqAndOptFields = t.fieldsInclSuper().toBuffer
     val reqFields = t.fieldsInclSuper().filter(_.isRequired())

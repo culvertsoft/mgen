@@ -7,7 +7,7 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.eqTesterClsStringQ
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldHasherClsStringQ
@@ -22,7 +22,7 @@ import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 
 object MkImports {
 
-  def apply(t: ClassType, module: Module, genCustomCodeSections: Boolean)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module, genCustomCodeSections: Boolean)(implicit txtBuffer: SourceCodeBuffer) {
 
     ln(s"import ${fieldIfcClsStringQ};")
 

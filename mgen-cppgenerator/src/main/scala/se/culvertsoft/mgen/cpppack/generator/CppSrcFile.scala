@@ -2,6 +2,7 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkAllMembersCtor
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkConstants
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkDeepCopy
@@ -25,89 +26,89 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkValidate
 
 object CppSrcFile extends CppSrcFileOrHeader(".cpp") {
 
-  override def mkIncludes(t: ClassType, generateCustomCodeSection: Boolean) {
-    MkIncludes(t, currentModule, generateCustomCodeSection)
+  override def mkIncludes(t: ClassType, generateCustomCodeSection: Boolean)(implicit txtBuffer: SourceCodeBuffer) {
+    MkIncludes(t, generateCustomCodeSection)
   }
 
-  override def mkConstants(t: ClassType) {
-    MkConstants(t, currentModule)
+  override def mkConstants(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkConstants(t)
   }
 
-  override def mkCustomPublicMethodsSection(t: ClassType) {
+  override def mkCustomPublicMethodsSection(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
     ln(CppGenerator.custom_methods_section.toString)
     ln()
   }
 
-  override def mkDefaultCtor(t: ClassType) {
-    MkDefaultCtor(t, currentModule)
+  override def mkDefaultCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkDefaultCtor(t, t.module)
   }
 
-  override def mkRequiredMembersCtor(t: ClassType) {
-    MkRequiredMembersCtor(t, currentModule)
+  override def mkRequiredMembersCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkRequiredMembersCtor(t)
   }
 
-  override def mkAllMembersCtor(t: ClassType) {
-    MkAllMembersCtor(t, currentModule)
+  override def mkAllMembersCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkAllMembersCtor(t)
   }
 
-  override def mkFieldById(t: ClassType) {
-    MkFieldById(t, currentModule)
+  override def mkFieldById(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkFieldById(t)
   }
 
-  override def mkEqOperator(t: ClassType) {
-    MkEqOperator(t, currentModule)
+  override def mkEqOperator(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkEqOperator(t)
   }
 
-  override def mkEquals(t: ClassType) {
-    MkEquals(t, currentModule)
+  override def mkEquals(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkEquals(t)
   }
 
-  override def mkDeepCopy(t: ClassType) {
-    MkDeepCopy(t, currentModule)
+  override def mkDeepCopy(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkDeepCopy(t)
   }
 
-  override def mkDestructor(t: ClassType) {
-    MkDestructor(t, currentModule)
+  override def mkDestructor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkDestructor(t)
   }
 
-  override def mkGetters(t: ClassType) {
-    MkGetters(t, currentModule)
+  override def mkGetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkGetters(t)
   }
 
-  override def mkSetters(t: ClassType) {
-    MkSetters(t, currentModule)
+  override def mkSetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkSetters(t)
   }
 
-  override def mkHasers(t: ClassType) {
-    MkHasers(t, currentModule)
+  override def mkHasers(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkHasers(t)
   }
 
-  override def mkNewInstance(t: ClassType) {
-    MkNewInstance(t, currentModule)
+  override def mkNewInstance(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkNewInstance(t)
   }
 
-  override def mkMetadataGetters(t: ClassType) {
-    MkMetadataGetters(t, currentModule)
+  override def mkMetadataGetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkMetadataGetters(t)
   }
 
-  override def mkMetaDataFields(t: ClassType) {
-    MkMetadataFields(t, currentModule)
+  override def mkMetaDataFields(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkMetadataFields(t)
   }
 
-  override def mkSetFieldsSet(t: ClassType) {
-    MkSetFieldsSet(t, currentModule)
+  override def mkSetFieldsSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkSetFieldsSet(t)
   }
 
-  override def mkNumFieldsSet(t: ClassType) {
-    MkNumFieldsSet(t, currentModule)
+  override def mkNumFieldsSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkNumFieldsSet(t)
   }
 
-  override def mkValidate(t: ClassType) {
-    MkValidate(t, currentModule)
+  override def mkValidate(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkValidate(t)
   }
 
-  override def mkIsFieldSet(t: ClassType) {
-    MkIsFieldSet(t, currentModule)
+  override def mkIsFieldSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkIsFieldSet(t)
   }
 
 }

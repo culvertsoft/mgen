@@ -8,7 +8,7 @@ import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsString
 import se.culvertsoft.mgen.javapack.generator.JavaConstants._
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
@@ -18,7 +18,7 @@ import se.culvertsoft.mgen.api.model.EnumType
 
 object MkDeepCopy {
 
-  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SourceCodeBuffer) {
 
     implicit val m = module
 

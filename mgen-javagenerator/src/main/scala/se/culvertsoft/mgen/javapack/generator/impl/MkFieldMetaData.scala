@@ -14,12 +14,12 @@ import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants._
 
 object MkFieldMetaData {
 
-  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SourceCodeBuffer) {
 
     implicit val m = module
 

@@ -9,7 +9,7 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
 import se.culvertsoft.mgen.compiler.util.SettingsUtils.RichSettings
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import java.io.File
 
 object PythonGenerator {
@@ -41,13 +41,14 @@ class PythonGenerator extends BuiltInStaticLangGenerator {
   import PythonGenerator.getCustomCodeSections
   import BuiltInStaticLangGenerator._
 
-  implicit val txtBuffer = SuperStringBuffer.getCached()
-
   override def generateMetaSources(
     folder: String,
     packagePath: String,
     referencedModules: Seq[Module],
     generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+
+    implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
+
     /*
     def mkClasReg(): GeneratedSourceFile = {
       val fileName = "ClassRegistry" + ".java"
@@ -80,7 +81,7 @@ class PythonGenerator extends BuiltInStaticLangGenerator {
     val folder = getModuleFolderPath(module, settings)
     val fileName = t.shortName + ".py"
     val generateCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(true)
-    val sourceCode = generateClassSourceCode(t, generateCustomCodeSections)    
+    val sourceCode = generateClassSourceCode(t, generateCustomCodeSections)
     List(new GeneratedSourceFile(
       folder + File.separator + fileName,
       sourceCode,
@@ -96,8 +97,10 @@ class PythonGenerator extends BuiltInStaticLangGenerator {
     */
     List()
   }
-  
+
   def generateClassSourceCode(t: ClassType, generateCustomCodeSections: Boolean): String = {
+    implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
+
     txtBuffer.clear()
     txtBuffer.textln(PythonConstants.fileHeader)
     txtBuffer.toString()

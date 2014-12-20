@@ -6,7 +6,7 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldIdString
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.get
@@ -15,11 +15,8 @@ import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
 
 object MkIsFieldSet {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
-    implicit val currentModule = module
     val allFields = t.fieldsInclSuper()
 
     ln(s"bool ${t.shortName()}::_isFieldSet(const mgen::Field& field, const mgen::FieldSetDepth depth) const {")

@@ -2,28 +2,28 @@ package se.culvertsoft.mgen.compiler.util
 
 import scala.language.implicitConversions
 
-object SuperStringBuffer {
+object SourceCodeBuffer {
 
-  implicit def SuperStringBuffer2String(s: SuperStringBuffer) = s.toString
+  implicit def SourceCodeBuffer2String(s: SourceCodeBuffer) = s.toString
 
-  private val cachedInstances = new ThreadLocal[SuperStringBuffer] {
-    override def initialValue(): SuperStringBuffer = {
-      new SuperStringBuffer
+  private val cachedInstances = new ThreadLocal[SourceCodeBuffer] {
+    override def initialValue(): SourceCodeBuffer = {
+      new SourceCodeBuffer
     }
   }
 
-  def getCached(): SuperStringBuffer = {
+  def getThreadLocal(): SourceCodeBuffer = {
     cachedInstances.get()
   }
 
 }
 
-class SuperStringBuffer(
+class SourceCodeBuffer(
   val scopeBegin: String = " {",
   val scopeEnd: String = "}") {
 
   private var tabString = "\t"
-  private val buffer = new StringBuilder
+  private val buffer = new java.lang.StringBuilder(10 * 1024)
   private var _tabLevel = 0
 
   def tabLevel() = { _tabLevel }
@@ -35,16 +35,18 @@ class SuperStringBuffer(
     this
   }
 
-  def endl(): SuperStringBuffer = {
+  def endl(): SourceCodeBuffer = {
     buffer.append('\n')
     this
   }
 
   def setTabString(s: String) = { tabString = s }
+  
+  def backingBuffer() = buffer
 
   def endl2() = { buffer.append('\n').append('\n'); this }
   def text(s: String) = { buffer.append(s); this }
-  def +=(s: String): SuperStringBuffer = { this.text(s) }
+  def +=(s: String): SourceCodeBuffer = { this.text(s) }
   def textln(s: String = "") = { buffer.append(s).append('\n'); this }
   def function(name: String)(params: String = "") = { buffer.append(name).append('(').append(params).append(')'); this }
   def paranthBegin() = { buffer.append('('); this }

@@ -1,7 +1,7 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classcpp
 
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import scala.collection.JavaConversions._
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator._
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
@@ -13,11 +13,7 @@ import se.culvertsoft.mgen.cpppack.generator.CppTypeNames._
 
 object MkValidate {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
-
-    implicit val currentModule = module
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
     txtBuffer.tabs(0).textln(s"bool ${t.shortName()}::_validate(const mgen::FieldSetDepth depth) const { ")
     txtBuffer.tabs(1).textln(s"if (depth == mgen::SHALLOW) {")

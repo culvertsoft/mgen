@@ -10,11 +10,11 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.quote
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object MkTypeIdFields {
 
-  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SourceCodeBuffer) {
 
     implicit val m = module
 

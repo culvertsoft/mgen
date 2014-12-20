@@ -1,9 +1,11 @@
 package se.culvertsoft.mgen.cpppack.generator
 
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
+
 abstract class CppClassRegistryGenerator(artifactType: CppArtifactType)
   extends UtilityClassGenerator("ClassRegistry", Some("mgen::ClassRegistryBase"), artifactType) {
 
-  override def mkClassContents(param: UtilClassGenParam) {
+  override def mkClassContents(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
 
     mkDefaultCtor(param)
     mkDestructor(param)
@@ -16,16 +18,16 @@ abstract class CppClassRegistryGenerator(artifactType: CppArtifactType)
 
   }
 
-  def mkDefaultCtor(param: UtilClassGenParam) {}
+  def mkDefaultCtor(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  def mkDestructor(param: UtilClassGenParam) {}
+  def mkDestructor(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  def mkReadObjectFields(param: UtilClassGenParam) {}
+  def mkReadObjectFields(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  def mkVisitObjectFields(param: UtilClassGenParam) {}
+  def mkVisitObjectFields(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  def mkGetByTypeIds16Bit(param: UtilClassGenParam) {}
+  def mkGetByTypeIds16Bit(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  def mkGetByTypeIds16BitBase64(param: UtilClassGenParam) {}
+  def mkGetByTypeIds16BitBase64(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
 }

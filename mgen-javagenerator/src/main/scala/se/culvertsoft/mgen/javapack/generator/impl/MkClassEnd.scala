@@ -1,10 +1,10 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object MkClassEnd {
 
-  def apply()(implicit txtBuffer: SuperStringBuffer) {
+  def apply()(implicit txtBuffer: SourceCodeBuffer) {
     txtBuffer.text("}").endl()
   }
 }

@@ -7,7 +7,7 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator.canBeNull
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator.writeInitializerList
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
@@ -15,10 +15,8 @@ import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
 
 object MkAllMembersCtor {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
-    implicit val currentModule = module
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    implicit val module = t.module
     val allFields = t.fieldsInclSuper()
 
     def mkArgumentList() {
@@ -36,7 +34,7 @@ object MkAllMembersCtor {
       val nonNullFields = t.fields().filterNot(canBeNull)
 
       if (fieldsToSuper.nonEmpty)
-        initializerList += MkCtorHelper.mkPassToSuper(fieldsToSuper, t, module)
+        initializerList += MkCtorHelper.mkPassToSuper(fieldsToSuper, t)
 
       if (t.fields.nonEmpty) {
 

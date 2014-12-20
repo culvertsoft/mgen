@@ -5,7 +5,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object MkReadObjectFieldsDispatch {
 
@@ -15,7 +15,7 @@ object MkReadObjectFieldsDispatch {
 
   def apply(
     referencedModules: Seq[Module],
-    generatorSettings: Map[String, String])(implicit txtBuffer: SuperStringBuffer) {
+    generatorSettings: Map[String, String])(implicit txtBuffer: SourceCodeBuffer) {
 
     val nTabs = 1
     val allClasses = referencedModules.flatMap(_.classes)

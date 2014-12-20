@@ -4,7 +4,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object MkTypeIdSwitch {
 
@@ -15,7 +15,7 @@ object MkTypeIdSwitch {
     defaultValue: String,
     possibleTypes: Seq[ClassType],
     caser: ClassType => String,
-    returner: ClassType => String)(implicit txtBuffer: SuperStringBuffer) {
+    returner: ClassType => String)(implicit txtBuffer: SourceCodeBuffer) {
 
     ln(nTabs, s"switch(i < ids.size() ? ${transform("ids[i++]")} : mgen::ClassRegistryBase::INVALID_16BIT_ID) {")
 

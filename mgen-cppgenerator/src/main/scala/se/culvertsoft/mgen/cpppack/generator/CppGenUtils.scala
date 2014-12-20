@@ -3,22 +3,22 @@ package se.culvertsoft.mgen.cpppack.generator
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.UserDefinedType
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cppgenerator.BuildVersion
 
 object CppGenUtils {
 
-  def mkNameSpaces(namespaces: Seq[String])(implicit txtBuffer: SuperStringBuffer) {
+  def mkNameSpaces(namespaces: Seq[String])(implicit txtBuffer: SourceCodeBuffer) {
     for (namespace <- namespaces)
       txtBuffer.textln(s"namespace $namespace {")
     txtBuffer.endl()
   }
 
-  def include(path: String)(implicit txtBuffer: SuperStringBuffer) {
+  def include(path: String)(implicit txtBuffer: SourceCodeBuffer) {
     txtBuffer.textln("#include \"" + path + "\"")
   }
 
-  def includeT(path: String)(implicit txtBuffer: SuperStringBuffer) {
+  def includeT(path: String)(implicit txtBuffer: SourceCodeBuffer) {
     txtBuffer.textln("#include <" + path + ">")
   }
 
@@ -34,17 +34,17 @@ object CppGenUtils {
     }
   }
 
-  def include(t: UserDefinedType, fileEnding: String = ".h")(implicit txtBuffer: SuperStringBuffer) {
+  def include(t: UserDefinedType, fileEnding: String = ".h")(implicit txtBuffer: SourceCodeBuffer) {
     include(t.fullName().replaceAllLiterally(".", "/") + fileEnding)
   }
 
-  def mkNameSpacesEnd(namespaces: Seq[String])(implicit txtBuffer: SuperStringBuffer) {
+  def mkNameSpacesEnd(namespaces: Seq[String])(implicit txtBuffer: SourceCodeBuffer) {
     for (namespace <- namespaces.reverse)
       txtBuffer.textln(s"} // End namespace $namespace")
     txtBuffer.endl()
   }
 
-  def mkFancyHeader()(implicit txtBuffer: SuperStringBuffer) {
+  def mkFancyHeader()(implicit txtBuffer: SourceCodeBuffer) {
     txtBuffer.textln(FancyHeaders.fileHeader(BuildVersion.GIT_TAG + " " + BuildVersion.GIT_COMMIT_DATE)).endl()
   }
 
@@ -52,18 +52,18 @@ object CppGenUtils {
     typeName.replaceAllLiterally(".", "_").replaceAllLiterally("::", "_").toUpperCase()
   }
 
-  def mkIncludeGuardStart(fullTypeName: String)(implicit txtBuffer: SuperStringBuffer) {
+  def mkIncludeGuardStart(fullTypeName: String)(implicit txtBuffer: SourceCodeBuffer) {
     val includeGuardString = getIncludeGuardTypeString(fullTypeName)
     txtBuffer.textln(s"#ifndef $includeGuardString")
     txtBuffer.textln(s"#define $includeGuardString")
     txtBuffer.endl()
   }
 
-  def mkIncludeGuardEnd()(implicit txtBuffer: SuperStringBuffer) {
+  def mkIncludeGuardEnd()(implicit txtBuffer: SourceCodeBuffer) {
     txtBuffer.textln(s"#endif")
   }
 
-  def mkClassStart(thisClsName: String, superClsName: String = "", genCustomCodeSections: Boolean = false)(implicit txtBuffer: SuperStringBuffer) {
+  def mkClassStart(thisClsName: String, superClsName: String = "", genCustomCodeSections: Boolean = false)(implicit txtBuffer: SourceCodeBuffer) {
 
     val customCodeSection = if (genCustomCodeSections) CppGenerator.custom_interfaces_section else ""
 
@@ -73,7 +73,7 @@ object CppGenUtils {
       txtBuffer.textln(s"class $thisClsName $customCodeSection {")
   }
 
-  def mkClassEnd(thisClsName: String)(implicit txtBuffer: SuperStringBuffer) {
+  def mkClassEnd(thisClsName: String)(implicit txtBuffer: SourceCodeBuffer) {
     txtBuffer.textln(s"}; // End class $thisClsName").endl()
   }
 

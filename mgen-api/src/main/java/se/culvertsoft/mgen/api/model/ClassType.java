@@ -22,7 +22,7 @@ public class ClassType extends UserDefinedType {
 	 * @return The 64 bit type id of the class that this ClassType represents
 	 */
 	public long typeId() {
-		return CRC64.calc(m_fullName);
+		return m_typeId;
 	}
 
 	/**
@@ -70,12 +70,12 @@ public class ClassType extends UserDefinedType {
 
 		if (m_typeId16BitBase64Heirarchy == null) {
 
-			String s = "";
+			String idsString = "";
 
 			for (ClassType customType : typeHierarchy())
-				s += customType.typeId16BitBase64();
+				idsString += customType.typeId16BitBase64();
 
-			m_typeId16BitBase64Heirarchy = s;
+			m_typeId16BitBase64Heirarchy = idsString;
 		}
 
 		return m_typeId16BitBase64Heirarchy;
@@ -118,14 +118,14 @@ public class ClassType extends UserDefinedType {
 
 		if (m_typeHierarchy == null) {
 
-			final List<ClassType> l = new ArrayList<ClassType>();
+			final List<ClassType> ts = new ArrayList<ClassType>();
 
 			if (hasSuperType())
-				l.addAll(((ClassType) superType()).typeHierarchy());
+				ts.addAll(((ClassType) superType()).typeHierarchy());
 
-			l.add(this);
+			ts.add(this);
 
-			m_typeHierarchy = l;
+			m_typeHierarchy = ts;
 
 		}
 
@@ -154,13 +154,15 @@ public class ClassType extends UserDefinedType {
 
 		if (m_fieldsInclSuper == null) {
 
-			m_fieldsInclSuper = new ArrayList<Field>();
+			final ArrayList<Field> fs = new ArrayList<Field>();
 
 			if (hasSuperType()) {
-				m_fieldsInclSuper.addAll(((ClassType) superType()).fieldsInclSuper());
+				fs.addAll(((ClassType) superType()).fieldsInclSuper());
 			}
 
-			m_fieldsInclSuper.addAll(m_fields);
+			fs.addAll(fields());
+			
+			m_fieldsInclSuper = fs;
 
 		}
 
@@ -217,7 +219,7 @@ public class ClassType extends UserDefinedType {
 	 */
 	public Set<ClassType> referencedClasses() {
 		if (m_referencedClasses == null)
-			findReferences();
+			populateReferences();
 		return m_referencedClasses;
 	}
 
@@ -230,7 +232,7 @@ public class ClassType extends UserDefinedType {
 	 */
 	public java.util.Set<EnumType> referencedEnums() {
 		if (m_referencedEnums == null)
-			findReferences();
+			populateReferences();
 		return m_referencedEnums;
 	}
 
@@ -368,7 +370,7 @@ public class ClassType extends UserDefinedType {
 	 * Internal helper method for finding all the types that this ClassType has
 	 * references to.
 	 */
-	private void findReferences() {
+	private void populateReferences() {
 
 		final Set<EnumType> enums = new LinkedHashSet<EnumType>();
 		final Set<ClassType> classes = new LinkedHashSet<ClassType>();
@@ -377,10 +379,10 @@ public class ClassType extends UserDefinedType {
 			classes.add((ClassType) superType());
 
 		for (final Field f : m_fields)
-			findReferences(f.typ(), classes, enums);
+			populateReferences(f.typ(), classes, enums);
 
 		for (final Constant c : m_constants)
-			findReferences(c.typ(), classes, enums);
+			populateReferences(c.typ(), classes, enums);
 
 		m_referencedEnums = enums;
 		m_referencedClasses = classes;
@@ -399,7 +401,7 @@ public class ClassType extends UserDefinedType {
 	 * @param enums
 	 *            The referenced enums found so far
 	 */
-	private static void findReferences(
+	private static void populateReferences(
 			final Type t,
 			final Set<ClassType> classes,
 			final Set<EnumType> enums) {
@@ -412,14 +414,14 @@ public class ClassType extends UserDefinedType {
 			classes.add((ClassType) t);
 			break;
 		case ARRAY:
-			findReferences(((ArrayType) t).elementType(), classes, enums);
+			populateReferences(((ArrayType) t).elementType(), classes, enums);
 			break;
 		case LIST:
-			findReferences(((ListType) t).elementType(), classes, enums);
+			populateReferences(((ListType) t).elementType(), classes, enums);
 			break;
 		case MAP:
-			findReferences(((MapType) t).keyType(), classes, enums);
-			findReferences(((MapType) t).valueType(), classes, enums);
+			populateReferences(((MapType) t).keyType(), classes, enums);
+			populateReferences(((MapType) t).valueType(), classes, enums);
 			break;
 		default:
 			break;
@@ -467,6 +469,7 @@ public class ClassType extends UserDefinedType {
 		super(TypeEnum.CLASS, module);
 		m_name = name;
 		m_fullName = module.path() + "." + m_name;
+		m_typeId = CRC64.calc(m_fullName);
 		m_typeId16BitBase64Heirarchy = null;
 		m_id16Bit = id16Bit;
 		m_superType = superType;
@@ -481,6 +484,7 @@ public class ClassType extends UserDefinedType {
 
 	private final String m_name;
 	private final String m_fullName;
+	private final long m_typeId;
 	private final short m_id16Bit;
 	private UserDefinedType m_superType;
 	private List<ClassType> m_typeHierarchy;

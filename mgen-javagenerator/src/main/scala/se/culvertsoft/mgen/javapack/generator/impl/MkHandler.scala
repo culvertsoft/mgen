@@ -5,12 +5,12 @@ import scala.collection.JavaConversions.asScalaBuffer
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants
 
 object MkHandler {
 
-  def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SuperStringBuffer): String = {
+  def apply(referencedModules: Seq[Module], packagePath: String)(implicit txtBuffer: SourceCodeBuffer): String = {
 
     val allClasses = referencedModules.flatMap(_.classes)
 

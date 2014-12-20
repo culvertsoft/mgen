@@ -8,17 +8,16 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator.canBeNull
 import se.culvertsoft.mgen.cpppack.generator.CppGenerator.writeInitializerList
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
 
 object MkRequiredMembersCtor {
 
-  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
-    implicit val currentModule = module
-
+    implicit val module = t.module
     val reqAndOptFields = t.fieldsInclSuper().toBuffer
     val reqFields = t.fieldsInclSuper().filter(_.isRequired())
     val fieldsToSuper = reqFields -- t.fields
@@ -27,7 +26,7 @@ object MkRequiredMembersCtor {
     def mkInitializerList() {
       val initializerList = new ArrayBuffer[String]
       if (fieldsToSuper.nonEmpty)
-        initializerList += MkCtorHelper.mkPassToSuper(fieldsToSuper, t, module)
+        initializerList += MkCtorHelper.mkPassToSuper(fieldsToSuper, t)
       if (t.fields.nonEmpty)
         initializerList ++= MkCtorHelper.mkReqMemberCtorInitListValues(t.fields, module)
       if (nonNullFields.nonEmpty)

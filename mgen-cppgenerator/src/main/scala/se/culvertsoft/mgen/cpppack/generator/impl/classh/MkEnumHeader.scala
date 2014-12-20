@@ -5,20 +5,19 @@ import scala.collection.mutable.ArrayBuffer
 
 import se.culvertsoft.mgen.api.model.EnumEntry
 import se.culvertsoft.mgen.api.model.EnumType
-import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 
 object MkEnumHeader {
 
-  def apply(module: Module, _e: EnumType, generatorSettings: java.util.Map[String, String]): String = {
+  def apply(_e: EnumType, generatorSettings: java.util.Map[String, String]): String = {
 
-    implicit val txtBuffer = SuperStringBuffer.getCached()
-    implicit val currentModule = module
-    val namespaces = currentModule.path().split("\\.")
+    implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
+    implicit val module = _e.module
+    val namespaces = module.path().split("\\.")
     val fullname = _e.fullName().replaceAllLiterally(".", "::")
 
     val name = _e.shortName()

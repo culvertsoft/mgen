@@ -4,15 +4,11 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object MkMetadataGetters {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
-
-    implicit val currentModule = module
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
     ln(s"const long long ${t.shortName()}::_typeId() const {")
     ln(1, s"return _type_id;")

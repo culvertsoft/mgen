@@ -7,13 +7,13 @@ import Alias.isFieldSet
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
 import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
 
 object MkGetters {
 
-  def apply(t: ClassType, module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType, module: Module)(implicit txtBuffer: SourceCodeBuffer) {
 
     implicit val m = module
 

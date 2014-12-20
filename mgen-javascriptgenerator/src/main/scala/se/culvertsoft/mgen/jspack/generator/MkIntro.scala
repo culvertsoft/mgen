@@ -1,12 +1,12 @@
 package se.culvertsoft.mgen.jspack.generator
 
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import scala.collection.JavaConversions._
 
 object MkIntro {
 
-  def apply(settings: java.util.Map[String, String])(implicit txtBuffer: SuperStringBuffer) = {
+  def apply(settings: java.util.Map[String, String])(implicit txtBuffer: SourceCodeBuffer) = {
 
     val classregistryBlueprint = settings.getOrElse("classregistryblueprint", "blueprint")
 

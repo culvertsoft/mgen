@@ -13,9 +13,7 @@ import se.culvertsoft.mgen.api.model.TypeEnum
 
 object CppTypeNames {
 
-  def getTypeName(
-    typ: Type,
-    isPolymorphicField: Boolean)(implicit currentModule: Module): String = {
+  def getTypeName(typ: Type, isPolymorphicField: Boolean)(implicit referencedFromModule: Module): String = {
 
     typ.typeEnum() match {
       case TypeEnum.BOOL => "bool"
@@ -38,7 +36,7 @@ object CppTypeNames {
       case TypeEnum.CLASS =>
         val t = typ.asInstanceOf[ClassType]
         val name =
-          if (t.module() == currentModule) {
+          if (t.module() == referencedFromModule) {
             t.shortName()
           } else {
             t.fullName().replaceAllLiterally(".", "::")
@@ -49,7 +47,7 @@ object CppTypeNames {
           name
       case TypeEnum.ENUM =>
         val t = typ.asInstanceOf[EnumType]
-        if (t.module == currentModule) {
+        if (t.module == referencedFromModule) {
           s"${typ.shortName}"
         } else {
           s"${t.fullName.replaceAllLiterally(".", "::")}"
@@ -60,7 +58,7 @@ object CppTypeNames {
 
   }
 
-  def getTypeName(field: Field)(implicit currentModule: Module): String = {
+  def getTypeName(field: Field)(implicit referencedFromModule: Module): String = {
     getTypeName(field.typ(), field.isPolymorphic())
   }
 

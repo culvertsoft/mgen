@@ -6,20 +6,17 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.FixedPointType
 import se.culvertsoft.mgen.api.model.FloatingPointType
-import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
 import se.culvertsoft.mgen.cpppack.generator.impl.classcpp.MkDefaultValue
 import se.culvertsoft.mgen.idlgenerator.util.IdlGenUtil
 
 object MkConstants {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
-    implicit val currentModule = module
+    implicit val module = t.module
 
     if (t.constants.nonEmpty) {
       ln(0, "public:")

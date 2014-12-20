@@ -1,11 +1,7 @@
 package se.culvertsoft.mgen.compiler.internal
 
-import scala.collection.JavaConversions.asScalaBuffer
-import scala.collection.JavaConversions.bufferAsJavaList
-import scala.collection.JavaConversions.collectionAsScalaIterable
-import scala.collection.JavaConversions.mapAsScalaMap
-import scala.collection.JavaConversions.seqAsJavaList
-import scala.collection.JavaConverters.mapAsScalaMapConverter
+import scala.collection.JavaConversions._
+import scala.collection.JavaConverters._
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ClassType
@@ -28,19 +24,16 @@ object BuiltInStaticLangGenerator {
 
 abstract class BuiltInStaticLangGenerator extends Generator {
 
-  implicit var currentModule: Module = null
-
   override def generate(project: Project, generatorSettings: java.util.Map[String, String]): java.util.List[GeneratedSourceFile] = {
     val modules = project.allModulesRecursively()
-    val sources = modules.flatMap(generateSources(_, generatorSettings))
+    val sources = modules.flatMap(generateSources(_, generatorSettings)).seq
     val metaSources = generateMetaSources(modules, generatorSettings)
     sources ++ metaSources
   }
 
   def generateSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.List[GeneratedSourceFile] = {
-    currentModule = module
-    val enumSources = module.enums.flatMap(e => generateEnumSources(module, e, generatorSettings))
-    val typesSources = module.classes.flatMap(t => generateClassSources(module, t, generatorSettings))
+    val enumSources = module.enums.par.flatMap(e => generateEnumSources(module, e, generatorSettings)).seq
+    val typesSources = module.classes.par.flatMap(t => generateClassSources(module, t, generatorSettings)).seq
     enumSources ++ typesSources
   }
 

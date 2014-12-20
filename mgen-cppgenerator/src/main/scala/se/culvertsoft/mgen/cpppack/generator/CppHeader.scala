@@ -3,6 +3,7 @@ package se.culvertsoft.mgen.cpppack.generator
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkAcceptVisitor
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkAllMembersCtor
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkConstants
@@ -30,129 +31,129 @@ import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkValidate
 
 object CppHeader extends CppSrcFileOrHeader(".h") {
 
-  override def mkIncludes(t: ClassType, genCustomCodeSections: Boolean) {
-    MkIncludes(t, currentModule, genCustomCodeSections)
+  override def mkIncludes(t: ClassType, genCustomCodeSections: Boolean)(implicit txtBuffer: SourceCodeBuffer) {
+    MkIncludes(t, genCustomCodeSections)
   }
 
-  override def mkIncludeGuardStart(module: Module, t: ClassType) {
+  override def mkIncludeGuardStart(module: Module, t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
     CppGenUtils.mkIncludeGuardStart(t.fullName())
   }
 
-  override def mkIncludeGuardEnd() {
+  override def mkIncludeGuardEnd()(implicit txtBuffer: SourceCodeBuffer) {
     CppGenUtils.mkIncludeGuardEnd()
   }
 
-  override def mkConstants(t: ClassType) {
-    MkConstants(t, currentModule)
+  override def mkConstants(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkConstants(t)
   }
 
-  override def mkEqOperator(t: ClassType) {
-    MkEqOperator(t, currentModule)
+  override def mkEqOperator(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkEqOperator(t)
   }
 
-  override def mkClassStart(t: ClassType, genCustomCodeSections: Boolean) {
+  override def mkClassStart(t: ClassType, genCustomCodeSections: Boolean)(implicit txtBuffer: SourceCodeBuffer) {
     CppGenUtils.mkClassStart(t.shortName(), getSuperTypeNameString(t), genCustomCodeSections)
   }
 
-  override def mkPrivate() {
+  override def mkPrivate()(implicit txtBuffer: SourceCodeBuffer) {
     ln("private:")
   }
 
-  override def mkPublic() {
+  override def mkPublic()(implicit txtBuffer: SourceCodeBuffer) {
     ln("public:")
   }
 
-  override def mkDefaultCtor(t: ClassType) {
-    MkDefaultCtor(t, currentModule)
+  override def mkDefaultCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkDefaultCtor(t)
   }
 
-  override def mkAllMembersCtor(t: ClassType) {
-    MkAllMembersCtor(t, currentModule)
+  override def mkAllMembersCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkAllMembersCtor(t)
   }
 
-  override def mkDestructor(t: ClassType) {
-    MkDestructor(t, currentModule)
+  override def mkDestructor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkDestructor(t)
   }
 
-  override def mkGetters(t: ClassType) {
-    MkGetters(t, currentModule)
+  override def mkGetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkGetters(t)
   }
 
-  override def mkSetters(t: ClassType) {
-    MkSetters(t, currentModule)
+  override def mkSetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkSetters(t)
   }
 
-  override def mkCustomPublicMethodsSection(t: ClassType) {
+  override def mkCustomPublicMethodsSection(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
     ln(1, CppGenerator.custom_methods_section.toString)
     ln()
   }
 
-  override def mkHasers(t: ClassType) {
-    MkHasers(t, currentModule)
+  override def mkHasers(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkHasers(t)
   }
 
-  override def mkMembers(t: ClassType) {
-    MkMembers(t, currentModule)
+  override def mkMembers(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkMembers(t)
   }
 
-  override def mkEquals(t: ClassType) {
-    MkEquals(t, currentModule)
+  override def mkEquals(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkEquals(t)
   }
 
-  override def mkMetaDataFields(t: ClassType) {
-    MkMetadataFields(t, currentModule)
+  override def mkMetaDataFields(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkMetadataFields(t)
   }
 
-  override def mkReadField(t: ClassType) {
-    MkReadField(t, currentModule)
+  override def mkReadField(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkReadField(t)
   }
 
-  override def mkAcceptVisitor(t: ClassType) {
-    MkAcceptVisitor(t, currentModule)
+  override def mkAcceptVisitor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkAcceptVisitor(t)
   }
 
-  override def mkFieldById(t: ClassType) {
-    MkFieldById(t, currentModule)
+  override def mkFieldById(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkFieldById(t)
   }
 
-  override def mkMetadataGetters(t: ClassType) {
-    MkMetadataGetters(t, currentModule)
+  override def mkMetadataGetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkMetadataGetters(t)
   }
 
-  override def mkNewInstance(t: ClassType) {
-    MkNewInstance(t, currentModule)
+  override def mkNewInstance(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkNewInstance(t)
   }
 
-  override def mkDeepCopy(t: ClassType) {
-    MkDeepCopy(t, currentModule)
+  override def mkDeepCopy(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkDeepCopy(t)
   }
 
-  override def mkUsingStatements(t: ClassType) {
-    MkUsingStatements(t, currentModule)
+  override def mkUsingStatements(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkUsingStatements(t)
   }
 
-  override def mkSetFieldsSet(t: ClassType) {
-    MkSetFieldsSet(t, currentModule)
+  override def mkSetFieldsSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkSetFieldsSet(t)
   }
 
-  override def mkValidate(t: ClassType) {
-    MkValidate(t, currentModule)
+  override def mkValidate(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkValidate(t)
   }
 
-  override def mkRequiredMembersCtor(t: ClassType) {
-    MkRequiredMembersCtor(t, currentModule)
+  override def mkRequiredMembersCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkRequiredMembersCtor(t)
   }
 
-  override def mkNumFieldsSet(t: ClassType) {
-    MkNumFieldsSet(t, currentModule)
+  override def mkNumFieldsSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkNumFieldsSet(t)
   }
 
-  override def mkClassEnd(t: ClassType) {
+  override def mkClassEnd(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
     CppGenUtils.mkClassEnd(t.shortName())
   }
 
-  override def mkIsFieldSet(t: ClassType) {
-    MkIsFieldSet(t, currentModule)
+  override def mkIsFieldSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
+    MkIsFieldSet(t)
   }
 
 }

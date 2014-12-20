@@ -13,7 +13,7 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEnumCpp
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEnumHeader
 
@@ -23,7 +23,7 @@ object CppGenerator {
     f.typ.isInstanceOf[ClassType] && f.isPolymorphic()
   }
 
-  def writeInitializerList(list: Seq[String])(implicit txtBuffer: SuperStringBuffer) {
+  def writeInitializerList(list: Seq[String])(implicit txtBuffer: SourceCodeBuffer) {
     if (list.nonEmpty) {
       ln(" : ")
       for ((s, i) <- list.zipWithIndex) {
@@ -89,16 +89,16 @@ class CppGenerator extends BuiltInStaticLangGenerator {
   }
 
   override def generateClassSources(module: Module, t: ClassType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    List(CppHeader.generate(module, t, settings),
-      CppSrcFile.generate(module, t, settings))
+    List(CppHeader.generate(t, settings),
+      CppSrcFile.generate(t, settings))
   }
 
   override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
     val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, generatorSettings)
     val hFileName = t.shortName + ".h"
-    val hSourceCode = MkEnumHeader(module, t, generatorSettings)
+    val hSourceCode = MkEnumHeader(t, generatorSettings)
     val cppFileName = t.shortName + ".cpp"
-    val cppSourceCode = MkEnumCpp(module, t, generatorSettings)
+    val cppSourceCode = MkEnumCpp(t, generatorSettings)
     List(
       new GeneratedSourceFile(folder + File.separator + hFileName, hSourceCode),
       new GeneratedSourceFile(folder + File.separator + cppFileName, cppSourceCode))

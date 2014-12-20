@@ -1,19 +1,17 @@
 package se.culvertsoft.mgen.cpppack.generator.impl.classh
 
 import scala.collection.JavaConversions.asScalaBuffer
+
 import se.culvertsoft.mgen.api.model.ClassType
-import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
-import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldIdString
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldMetaString
 
 object MkMetadataFields {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
-
-    implicit val currentModule = module
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
     
     // Own type metadata    
     ln(1, s"static const long long _type_id = ${t.typeId()}LL;")

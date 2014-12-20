@@ -10,10 +10,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.HasDefaultCtor
 
 object MkCtorHelper {
 
-  def mkPassToSuper(
-    fieldsToSuper: Seq[Field],
-    t: ClassType,
-    module: Module): String = {
+  def mkPassToSuper(fieldsToSuper: Seq[Field], t: ClassType): String = {
 
     var passToSuperString = ""
 
@@ -47,12 +44,11 @@ object MkCtorHelper {
   }
 
   def mkReqMemberCtorInitListValues(fields: Seq[Field], module: Module): Seq[String] = {
-    implicit val currentModule = module
     fields.filter(requiredInitializerListValue) map { field =>
       if (field.isRequired())
         s"m_${field.name()}(${field.name()})"
       else
-        s"m_${field.name()}(${MkDefaultValue.apply(field)})"
+        s"m_${field.name()}(${MkDefaultValue.apply(field)(module)})"
     }
   }
 

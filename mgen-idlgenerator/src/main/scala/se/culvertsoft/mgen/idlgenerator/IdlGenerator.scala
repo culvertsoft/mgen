@@ -143,15 +143,15 @@ class IdlGenerator extends Generator {
     XmlSourceFile(module.absoluteFilePath(), xml)
   }
 
-  private def enum2xml(typ: EnumType)(implicit currentModule: Module): scala.xml.Node = {
+  private def enum2xml(typ: EnumType)(implicit module: Module): scala.xml.Node = {
     <EnumType>{ typ.entries map enumentry2xml }</EnumType>.copy(label = typ.shortName)
   }
 
-  private def enumentry2xml(entry: EnumEntry)(implicit currentModule: Module): scala.xml.Node = {
+  private def enumentry2xml(entry: EnumEntry)(implicit module: Module): scala.xml.Node = {
     <entry>{ entry.constant } </entry>.copy(label = entry.name)
   }
 
-  private def type2xml(typ: ClassType)(implicit currentModule: Module): scala.xml.Node = {
+  private def type2xml(typ: ClassType)(implicit module: Module): scala.xml.Node = {
 
     val autoId = CRC16.calc(typ.fullName)
     val idString = if (typ.typeId16Bit != autoId) typ.typeId16Bit.toString else null
@@ -167,7 +167,7 @@ class IdlGenerator extends Generator {
 
   }
 
-  private def type2string(t: Type)(implicit currentModule: Module): String = {
+  private def type2string(t: Type)(implicit module: Module): String = {
     t match {
       case t: BoolType => "bool"
       case t: Int8Type => "int8"
@@ -180,11 +180,11 @@ class IdlGenerator extends Generator {
       case t: ListType => s"list[${type2string(t.elementType)}]"
       case t: ArrayType => s"array[${type2string(t.elementType)}]"
       case t: MapType => s"map[${type2string(t.keyType)}, ${type2string(t.valueType)}]"
-      case t: UserDefinedType => if (t.module == currentModule) t.shortName else t.fullName
+      case t: UserDefinedType => if (t.module == module) t.shortName else t.fullName
     }
   }
 
-  private def field2xml(field: Field)(implicit currentModule: Module): scala.xml.Node = {
+  private def field2xml(field: Field)(implicit module: Module): scala.xml.Node = {
 
     val flags = field.flags().map(_.trim).filter(_.nonEmpty)
     val typeString = type2string(field.typ)

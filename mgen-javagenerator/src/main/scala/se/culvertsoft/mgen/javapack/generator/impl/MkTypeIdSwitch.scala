@@ -4,7 +4,7 @@ import scala.collection.JavaConversions.asScalaBuffer
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object MkTypeIdSwitch {
 
@@ -17,7 +17,7 @@ object MkTypeIdSwitch {
     possibleTypes: Seq[ClassType],
     caser: ClassType => String,
     returner: ClassType => String,
-    depth: Int = 0)(implicit txtBuffer: SuperStringBuffer) {
+    depth: Int = 0)(implicit txtBuffer: SourceCodeBuffer) {
 
     ln(nTabs, s"switch((i < ids.length ? ${transform("ids[i++]")} : $outOfBoundsCase)) {")
 

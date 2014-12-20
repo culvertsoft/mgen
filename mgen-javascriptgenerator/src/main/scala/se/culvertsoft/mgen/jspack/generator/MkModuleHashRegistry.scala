@@ -2,12 +2,12 @@ package se.culvertsoft.mgen.jspack.generator
 
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil._
 import se.culvertsoft.mgen.api.model.Module
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import scala.collection.JavaConversions._
 
 object MkModuleHashRegistry {
 
-  def apply(modules: Seq[Module])(implicit txtBuffer: SuperStringBuffer) {
+  def apply(modules: Seq[Module])(implicit txtBuffer: SourceCodeBuffer) {
 
     val allClasses = modules.flatMap(_.classes).distinct
     val topLevelClasses = allClasses.filterNot(_.hasSuperType)

@@ -86,38 +86,36 @@ object FileUtils {
   }
 
   def writeIfChanged(
-    outputs: Seq[GeneratedSourceFile],
+    generatedFiles: Seq[GeneratedSourceFile],
     outputPathPrepend: Option[String] = None) {
 
     println("Writing files to disk:")
 
-    val buffer = new java.lang.StringBuilder
-
-    for (output <- outputs) {
+    generatedFiles.par.foreach { generatedFile => 
 
       val filePath = outputPathPrepend match {
-        case Some(prepend) => prepend + File.separator + output.filePath
-        case _ => output.filePath
+        case Some(prepend) => prepend + File.separator + generatedFile.filePath
+        case _ => generatedFile.filePath
       }
 
       if (!FileUtils.exists(filePath)) {
         println(s"  writing: ${filePath}")
         val dir = FileUtils.directoryOf(filePath)
         Path(dir).createDirectory(true, false)
-        writeToFile(filePath, output.sourceCode)
+        writeToFile(filePath, generatedFile.sourceCode)
       } else {
 
         val sourceOnDisk = FileUtils.readToString(filePath, charset)
 
         val sourceToWrite =
 
-          if (!output.hasCustomCodeSections) {
-            output.sourceCode
+          if (!generatedFile.hasCustomCodeSections) {
+            generatedFile.sourceCode
           } else {
 
-            findCustomCode(filePath, sourceOnDisk, output) match {
-              case customSources if (customSources.isEmpty) => output.sourceCode
-              case customSources => buildNewSourceCode(buffer, sourceOnDisk, output.sourceCode, customSources)
+            findCustomCode(filePath, sourceOnDisk, generatedFile) match {
+              case customSources if (customSources.isEmpty) => generatedFile.sourceCode
+              case customSources => buildNewSourceCode(sourceOnDisk, generatedFile.sourceCode, customSources)
             }
 
           }
@@ -140,23 +138,23 @@ object FileUtils {
   private case class CustomSourceIndices(begin: Int, end: Int)
 
   private def buildNewSourceCode(
-    buffer: java.lang.StringBuilder,
     sourceOnDisk: String,
     generatedCode: String,
     customSources: Map[CustomCodeSection, CustomSourceIndices]): String = {
 
-    buffer.setLength(0)
+    val buffer = SourceCodeBuffer.getThreadLocal()
+    buffer.clear
 
     var readOffset = 0
     for ((section, customSourceIndices) <- customSources) {
       val insertIndex = generatedCode.indexOf(section.getEndKey, readOffset)
-      buffer.append(generatedCode, readOffset, insertIndex)
-      buffer.append(sourceOnDisk, customSourceIndices.begin, customSourceIndices.end)
-      buffer.append(section.getEndKey)
+      buffer.backingBuffer.append(generatedCode, readOffset, insertIndex)
+      buffer.backingBuffer.append(sourceOnDisk, customSourceIndices.begin, customSourceIndices.end)
+      buffer.backingBuffer.append(section.getEndKey)
       readOffset = insertIndex + section.getEndKey.length
     }
 
-    buffer.append(generatedCode, readOffset, generatedCode.length)
+    buffer.backingBuffer.append(generatedCode, readOffset, generatedCode.length)
     buffer.toString
   }
 

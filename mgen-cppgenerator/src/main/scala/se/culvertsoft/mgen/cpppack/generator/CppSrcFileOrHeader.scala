@@ -10,26 +10,25 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.FancyHeaders
 import se.culvertsoft.mgen.compiler.util.SettingsUtils.RichSettings
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
-  implicit val txtBuffer = SuperStringBuffer.getCached()
-  implicit var currentModule: Module = null
-
-  def generate(module: Module, t: ClassType, settings: java.util.Map[String, String]): GeneratedSourceFile = {
-    currentModule = module
-    val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, settings)
+  def generate(t: ClassType, settings: java.util.Map[String, String]): GeneratedSourceFile = {
+    val folder = BuiltInStaticLangGenerator.getModuleFolderPath(t.module, settings)
     val fileName = t.shortName() + fileEnding
     val genCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(true)
-    val sourceCode = generateSourceCode(module, t, genCustomCodeSections)
+    val sourceCode = generateSourceCode(t, genCustomCodeSections)
     new GeneratedSourceFile(folder + File.separator + fileName, sourceCode, CppGenerator.getCustomCodeSections(genCustomCodeSections))
   }
 
-  def generateSourceCode(module: Module, t: ClassType, genCustomCodeSections: Boolean): String = {
+  def generateSourceCode(t: ClassType, genCustomCodeSections: Boolean): String = {
 
-    val namespaces = currentModule.path().split("\\.")
-
+    implicit val module = t.module
+    implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
+    
+    val namespaces = module.path().split("\\.")
+ 
     txtBuffer.clear()
 
     // Header
@@ -89,7 +88,7 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
   }
 
-  def mkIncludeGuardStart(module: Module, t: ClassType) {}
+  def mkIncludeGuardStart(module: Module, t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
 
   def getSuperTypeNameString(t: ClassType): String = {
     if (t.hasSuperType()) {
@@ -102,68 +101,68 @@ abstract class CppSrcFileOrHeader(val fileEnding: String) {
     }
   }
 
-  def mkIncludes(t: ClassType, genCustomCodeSections: Boolean = false) {}
+  def mkIncludes(t: ClassType, genCustomCodeSections: Boolean = false)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  def mkNumFieldsSet(t: ClassType) {}
+  def mkNumFieldsSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  def mkCustomPublicMethodsSection(t: ClassType) {}
-  def mkClassStart(t: ClassType, genCustomCodeSections: Boolean = false) {}
-  def mkPrivate() {}
-  def mkConstants(t: ClassType) {}
-  def mkMembers(t: ClassType) {}
-  def mkPublic() {}
-  def mkDefaultCtor(t: ClassType) {}
-  def mkRequiredMembersCtor(t: ClassType) {}
-  def mkAllMembersCtor(t: ClassType) {}
-  def mkDestructor(t: ClassType) {}
-  def mkGetters(t: ClassType) {}
-  def mkSetters(t: ClassType) {}
-  def mkHasers(t: ClassType) {}
-  def mkToString(t: ClassType) {}
-  def mkHashCode(t: ClassType) {}
-  def mkDeepCopy(t: ClassType) {}
-  def mkEquals(t: ClassType) {}
-  def mkMetadataMethodsComment(t: ClassType) {
+  def mkCustomPublicMethodsSection(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkClassStart(t: ClassType, genCustomCodeSections: Boolean = false)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkPrivate()(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkConstants(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkMembers(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkPublic()(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkDefaultCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkRequiredMembersCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkAllMembersCtor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkDestructor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkGetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkSetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkHasers(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkToString(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkHashCode(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkDeepCopy(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkEquals(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkMetadataMethodsComment(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
     txtBuffer.textln(FancyHeaders.serializationSectionHeader);
   }
 
-  def mkEqOperator(t: ClassType) {}
-  def mkTypeName(t: ClassType) {}
-  def mkTypeHashes(t: ClassType) {}
-  def mkAcceptVisitor(t: ClassType) {}
-  def mkDefaultConstructField(t: ClassType) {}
-  def mkReadFields(t: ClassType) {}
-  def mkReadField(t: ClassType) {}
-  def mkGetFields(t: ClassType) {}
-  def mkFieldById(t: ClassType) {}
-  def mkTypeHierarchyMethods(t: ClassType) {}
-  def mkNewInstance(t: ClassType) {}
-  def mkMetadataComment(t: ClassType) {
+  def mkEqOperator(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkTypeName(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkTypeHashes(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkAcceptVisitor(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkDefaultConstructField(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkReadFields(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkReadField(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkGetFields(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkFieldById(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkTypeHierarchyMethods(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkNewInstance(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkMetadataComment(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
     txtBuffer.textln(FancyHeaders.metadataSectionHeader);
   }
-  def mkMetaDataFields(t: ClassType) {}
-  def mkClassEnd(t: ClassType) {}
+  def mkMetaDataFields(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
+  def mkClassEnd(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  def mkUsingStatements(t: ClassType) {
+  def mkUsingStatements(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
   }
 
-  def mkSetFieldsSet(t: ClassType) {
+  def mkSetFieldsSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
   }
 
-  def mkValidate(t: ClassType) {
+  def mkValidate(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
   }
 
-  def mkIsFieldSet(t: ClassType) {
+  def mkIsFieldSet(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
   }
 
-  def mkNamespaceEnd(namespaces: Array[String]) {
+  def mkNamespaceEnd(namespaces: Array[String])(implicit txtBuffer: SourceCodeBuffer) {
     CppGenUtils.mkNameSpacesEnd(namespaces)
   }
 
-  def mkMetadataGetters(t: ClassType) {
+  def mkMetadataGetters(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
   }
 
-  def mkIncludeGuardEnd() {}
+  def mkIncludeGuardEnd()(implicit txtBuffer: SourceCodeBuffer) {}
 
 }

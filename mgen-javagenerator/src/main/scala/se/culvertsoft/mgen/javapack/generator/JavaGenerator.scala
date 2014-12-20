@@ -15,7 +15,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
 import se.culvertsoft.mgen.compiler.util.SettingsUtils.RichSettings
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.impl.MkAcceptVisitor
 import se.culvertsoft.mgen.javapack.generator.impl.MkAllMembersCtor
 import se.culvertsoft.mgen.javapack.generator.impl.MkClassEnd
@@ -55,7 +55,7 @@ object JavaGenerator {
   def canBeNull(f: Field): Boolean = {
     canBeNull(f.typ())
   }
-  
+
   def canBeNull(t: Type): Boolean = {
     t match {
       case t: PrimitiveType => false
@@ -66,7 +66,7 @@ object JavaGenerator {
   def needsDeepEqual(f: Field): Boolean = {
     needsDeepEqual(f.typ)
   }
-  
+
   def needsDeepEqual(t: Type): Boolean = {
     t match {
       case t: EnumType => false
@@ -74,11 +74,11 @@ object JavaGenerator {
       case _ => true
     }
   }
-  
+
   def isMutable(f: Field): Boolean = {
     isMutable(f.typ)
   }
-  
+
   def isMutable(t: Type): Boolean = {
     t match {
       case t: EnumType => false
@@ -87,7 +87,7 @@ object JavaGenerator {
       case _ => true
     }
   }
-  
+
   def mkCustomCodeSection(name: String): CustomCodeSection = {
     def mkKey(ending: String) = s"/* ${name}_${ending} */"
     new CustomCodeSection(mkKey("begin"), mkKey("end"))
@@ -114,13 +114,13 @@ object JavaGenerator {
 class JavaGenerator extends BuiltInStaticLangGenerator {
   import JavaGenerator.getCustomCodeSections
 
-  implicit val txtBuffer = SuperStringBuffer.getCached()
-
   override def generateMetaSources(
     folder: String,
     packagePath: String,
     referencedModules: Seq[Module],
     generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+
+    implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
 
     def mkClasReg(): GeneratedSourceFile = {
       val fileName = "ClassRegistry" + ".java"
@@ -167,6 +167,7 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
   }
 
   def generateClassSourceCode(t: ClassType, genCustomCodeSections: Boolean): String = {
+    implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
     txtBuffer.clear()
     mkPublicSection(t, genCustomCodeSections)
     mkMetadataMethodsSection(t)
@@ -174,11 +175,13 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     txtBuffer.toString()
   }
 
-  def generateEnumSourceCode(t: EnumType): String = {
+  def generateEnumSourceCode(t: EnumType): String = {   
+  implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
     MkEnum(t, t.module.path)
   }
 
-  def mkPublicSection(t: ClassType, genCustomCodeSections: Boolean) {
+  def mkPublicSection(t: ClassType, genCustomCodeSections: Boolean)(implicit txtBuf: SourceCodeBuffer) {
+    val currentModule = t.module()
     MkFancyHeader(t)
     MkPackage(currentModule)
     MkImports(t, currentModule, genCustomCodeSections)
@@ -201,7 +204,8 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkDeepCopy(t, currentModule)
   }
 
-  def mkMetadataMethodsSection(t: ClassType) {
+  def mkMetadataMethodsSection(t: ClassType)(implicit txtBuf: SourceCodeBuffer) {
+    val currentModule = t.module()
     MkMetadataMethodsComment(t)
     MkTypeIdMethods(t, currentModule)
     MkAcceptVisitor(t, currentModule)
@@ -214,7 +218,8 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     MkFieldById(t, currentModule)
   }
 
-  def mkMetadataFieldsSection(t: ClassType) {
+  def mkMetadataFieldsSection(t: ClassType)(implicit txtBuf: SourceCodeBuffer) {
+    val currentModule = t.module()
     MkMetadataComment(t)
     MkTypeIdFields(t, currentModule)
     MkFieldMetaData(t, currentModule)

@@ -26,7 +26,7 @@ import se.culvertsoft.mgen.cpppack.generator.impl.Alias
 
 object MkDefaultValue {
 
-  def apply(f: Field)(implicit currentModule: Module): String = {
+  def apply(f: Field)(implicit module: Module): String = {
 
     if (!f.hasDefaultValue) {
       return CppConstruction.defaultConstructNull(f.typ, f.isPolymorphic)
@@ -38,9 +38,7 @@ object MkDefaultValue {
 
   }
 
-  def apply(
-    d: DefaultValue,
-    isPolymorphicField: Boolean)(implicit currentModule: Module): String = {
+  def apply(d: DefaultValue, isPolymorphicField: Boolean)(implicit module: Module): String = {
 
     d match {
       case v: EnumDefaultValue =>

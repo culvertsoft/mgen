@@ -4,22 +4,17 @@ import scala.collection.JavaConversions.asScalaBuffer
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Field
-import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.fieldMetaString
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias._
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.get
 import se.culvertsoft.mgen.cpppack.generator.impl.Alias.getMutable
-import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isSetName
+import se.culvertsoft.mgen.cpppack.generator.impl.Alias.isFieldSet
 
 object MkAcceptVisitor {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
-
-    implicit val currentModule = module
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
     val allFields = t.fieldsInclSuper()
     val nonTransientFields = allFields.filterNot(_.isTransient)

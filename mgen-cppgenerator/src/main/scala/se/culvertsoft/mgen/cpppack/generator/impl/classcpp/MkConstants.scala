@@ -9,16 +9,14 @@ import se.culvertsoft.mgen.api.model.FixedPointType
 import se.culvertsoft.mgen.api.model.FloatingPointType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.CppTypeNames.getTypeName
 
 object MkConstants {
 
-  def apply(
-    t: ClassType,
-    module: Module)(implicit txtBuffer: SuperStringBuffer) {
+  def apply(t: ClassType)(implicit txtBuffer: SourceCodeBuffer) {
 
-    implicit val currentModule = module
+    implicit val module = t.module
 
     val constants = t.constants.filter(isConstantInCppFile)
 

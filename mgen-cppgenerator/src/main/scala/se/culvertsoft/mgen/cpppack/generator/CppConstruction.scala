@@ -1,19 +1,18 @@
 package se.culvertsoft.mgen.cpppack.generator
 
-import scala.collection.mutable.HashMap
 import CppTypeNames.getTypeName
 import se.culvertsoft.mgen.api.exceptions.GenerationException
+import se.culvertsoft.mgen.api.model.EnumType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.api.model.TypeEnum
-import se.culvertsoft.mgen.api.model.EnumType
 
 object CppConstruction {
 
   def defaultConstruct(
     typ: Type,
-    isPolymorphicField: Boolean)(implicit currentModule: Module): String = {
+    isPolymorphicField: Boolean)(implicit referencedFromModule: Module): String = {
 
     typ.typeEnum() match {
       case TypeEnum.BOOL => "false"
@@ -33,7 +32,7 @@ object CppConstruction {
         else
           s"${getTypeName(typ, isPolymorphicField)}()"
       case TypeEnum.ENUM =>
-        if (typ.asInstanceOf[EnumType].module == currentModule)
+        if (typ.asInstanceOf[EnumType].module == referencedFromModule)
           s"${typ.shortName}_UNKNOWN"
         else
           s"${typ.fullName.replaceAllLiterally(".", "::")}_UNKNOWN"
@@ -44,7 +43,7 @@ object CppConstruction {
 
   def defaultConstructNull(
     typ: Type,
-    isPolymorphicField: Boolean)(implicit currentModule: Module): String = {
+    isPolymorphicField: Boolean)(implicit referencedFromModule: Module): String = {
 
     typ.typeEnum() match {
       case TypeEnum.MAP => s"${getTypeName(typ, isPolymorphicField)}()"
@@ -52,7 +51,7 @@ object CppConstruction {
       case TypeEnum.ARRAY => s"${getTypeName(typ, isPolymorphicField)}()"
       case TypeEnum.CLASS => if (isPolymorphicField) "0" else defaultConstruct(typ, false)
       case TypeEnum.ENUM =>
-        if (typ.asInstanceOf[EnumType].module == currentModule)
+        if (typ.asInstanceOf[EnumType].module == referencedFromModule)
           s"${typ.shortName}_UNKNOWN"
         else
           s"${typ.fullName.replaceAllLiterally(".", "::")}_UNKNOWN"
@@ -61,11 +60,11 @@ object CppConstruction {
 
   }
 
-  def defaultConstruct(field: Field)(implicit currentModule: Module): String = {
+  def defaultConstruct(field: Field)(implicit referencedFromModule: Module): String = {
     defaultConstruct(field.typ(), field.isPolymorphic())
   }
 
-  def defaultConstructNull(field: Field)(implicit currentModule: Module): String = {
+  def defaultConstructNull(field: Field)(implicit referencedFromModule: Module): String = {
     defaultConstructNull(field.typ(), field.isPolymorphic())
   }
 

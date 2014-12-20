@@ -4,18 +4,19 @@ import scala.collection.JavaConversions.collectionAsScalaIterable
 
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object ForwardDeclareGenerator extends UtilityClassGenerator("ForwardDeclare", None, Header) {
 
-  override def mkClassStart(param: UtilClassGenParam) {}
+  override def mkClassStart(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  override def mkClassEnd(param: UtilClassGenParam) {}
+  override def mkClassEnd(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  override def mkNamespaceStart(param: UtilClassGenParam) {}
+  override def mkNamespaceStart(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  override def mkNamespaceEnd(param: UtilClassGenParam) {}
+  override def mkNamespaceEnd(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {}
 
-  override def mkIncludes(param: UtilClassGenParam) {
+  override def mkIncludes(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
     super.mkIncludes(param)
     endl()
 

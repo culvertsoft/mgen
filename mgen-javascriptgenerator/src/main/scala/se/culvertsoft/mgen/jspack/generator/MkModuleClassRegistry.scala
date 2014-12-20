@@ -19,11 +19,11 @@ import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.scopeExt
-import se.culvertsoft.mgen.compiler.util.SuperStringBuffer
+import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object MkModuleClassRegistry {
 
-  def apply(modules: Seq[Module])(implicit txtBuffer: SuperStringBuffer) = {
+  def apply(modules: Seq[Module])(implicit txtBuffer: SourceCodeBuffer) = {
 
     val allClasses = modules.flatMap(_.classes)
     txtBuffer {

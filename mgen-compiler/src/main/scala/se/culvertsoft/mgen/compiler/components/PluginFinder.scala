@@ -17,19 +17,19 @@ import se.culvertsoft.mgen.compiler.util.SplitCommaSeparated
 class PluginFinder(pluginPaths_in: Seq[String], useEnvPaths: Boolean) {
   def this(commaSeparatedPaths: String, useEnvPaths: Boolean) = this(SplitCommaSeparated(commaSeparatedPaths), useEnvPaths)
 
-  val DEFAULT_PATH = "plugins/"
-  val pluginPaths = getPaths()
-  val fileNames = pluginPaths.flatMap(listFiles(_, ".jar", false))
-  val jarUrls = fileNames.map(fileName => new URL("jar:file:" + fileName + "!/")).toArray
-  val classLoader = URLClassLoader.newInstance(jarUrls)
+  private val DEFAULT_PATH = "plugins/"
+  private val pluginPaths = getPaths()
+  private val fileNames = pluginPaths.flatMap(listFiles(_, ".jar", false))
+  private val jarUrls = fileNames.map(fileName => new URL("jar:file:" + fileName + "!/")).toArray
+  private val classLoader = URLClassLoader.newInstance(jarUrls)
 
-  val cache = new ThreadLocal[HashMap[String, Option[AnyRef]]] {
+  private val cache = new ThreadLocal[HashMap[String, Option[AnyRef]]] {
     override def initialValue(): HashMap[String, Option[AnyRef]] = {
       new HashMap[String, Option[AnyRef]]
     }
   }
 
-  def getCached[T <: AnyRef](name: String): Option[T] = {
+  def getThreadLocal[T <: AnyRef](name: String): Option[T] = {
     val x = cache.get().getOrElseUpdate(name, find[T](name).map(cls => cls.newInstance()))
     x.asInstanceOf[Option[T]]
   }
