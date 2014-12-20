@@ -1,7 +1,7 @@
 ---
 ---
 
-Using Maven (or ivy/gradle/sbt or similar) is probably the easiest way is to depend on MGen for java builds. Currently only snapshot builds are available. All you need to do is att 'mgen-javalib' as a dependency:
+Using Maven (or ivy/gradle/sbt or similar) is probably the easiest way is to depend on MGen for java builds. Just add 'mgen-javalib' as a dependency to your application:
 
 
 For the current release (beta 0.1) :
@@ -17,7 +17,7 @@ For the current release (beta 0.1) :
 {% endhighlight %}
 
 
-For SNAPSHOTS:
+For snapshots:
 
 {% highlight xml %}
 
