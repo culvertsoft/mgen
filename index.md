@@ -8,7 +8,7 @@ MGen is a toolkit for cross language object serialization. It consists of:
  * Tools for source code generation (The MGen compiler)
  * Language specific support libraries.
 
-Think Google's Protocol Buffers - on steroids, with support for polymorphism, heterogenous containers, maps, lists arrays and  custom serialization formats.
+Think Google's Protocol Buffers - on steroids, with support for native polymorphism, heterogenous containers, maps, lists, arrays and custom serialization formats.
 
 Generated classes accept generic visitor objects, while the MGen libraries provide built-in visitor classes that serialize to JSON and binary formats. You can also roll your own custom object visitors to implement whatever functionality you like.
 
