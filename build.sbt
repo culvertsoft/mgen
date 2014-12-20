@@ -32,5 +32,3 @@ lazy val mgen_javagenerator = (project in file("mgen-javagenerator")).dependsOn(
 lazy val mgen_cppgenerator = (project in file("mgen-cppgenerator")).dependsOn(mgen_compiler)
 
 lazy val mgen_javascriptgenerator = (project in file("mgen-javascriptgenerator")).dependsOn(mgen_compiler)
-
-lazy val mgen_visualdesigner = (project in file("mgen-visualdesigner")).dependsOn(mgen_compiler, mgen_javalib)

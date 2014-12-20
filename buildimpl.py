@@ -15,9 +15,7 @@ def clean():
 
 def build():
     createVersionFiles()
-    fastbuild_step1()
-    fastbuild_generate_code()
-    fastbuild_step2()
+    build_jvm_parts()
 
 
 def test():
@@ -103,10 +101,9 @@ def createVersionFiles():
     createJavaVersionFile2("javagenerator", mgen_version)
     createJavaVersionFile2("javalib", mgen_version)
     createJavaVersionFile2("javascriptgenerator", mgen_version)
-    createJavaVersionFile2("visualdesigner", mgen_version)
 
 
-def fastbuild_step1():
+def build_jvm_parts():
     sbt(".",   ('"project mgen_api" publish-local '
                 '"project mgen_idlparser" publish-local '
                 '"project mgen_idlgenerator" publish-local '
@@ -115,14 +112,6 @@ def fastbuild_step1():
                 '"project mgen_javagenerator" publish-local '
                 '"project mgen_cppgenerator" publish-local '
                 '"project mgen_javascriptgenerator" publish-local '))
-
-
-def fastbuild_generate_code():
-    check_call(mgen_cmd + 'model/project.xml plugin_paths="../mgen-javagenerator/target"', cwd="mgen-visualdesigner", shell=True)
-
-
-def fastbuild_step2():
-    sbt(".", '"project mgen_visualdesigner" assembly publish-local ')
 
 
 def tests_generate_code(): # Ideally here we'd just generate once, not nLangs times.
@@ -190,7 +179,6 @@ def copyJarFilesToZipDir():
     copySubProjectJarFilesToZipDir("mgen-javascriptgenerator", mgen_version, False)
     copySubProjectJarFilesToZipDir("mgen-cppgenerator", mgen_version, False)
     copySubProjectJarFilesToZipDir("mgen-javalib", mgen_version, False)
-    copySubProjectJarFilesToZipDir("mgen-visualdesigner", mgen_version, True)
     
 
 def getCppIncludeDir():
@@ -217,17 +205,10 @@ def create_install_zip():
     copyFile("mgen-starters/mgen.sh", "target/install_zip/bin/mgen.sh")
     copyFile("mgen-starters/mgen.ex_", "target/install_zip/bin/mgen.exe")
     
-    copyFile("mgen-starters/mgen-visualdesigner.sh", "target/install_zip/bin/mgen-visualdesigner")
-    copyFile("mgen-starters/mgen-visualdesigner.sh", "target/install_zip/bin/mgen-visualdesigner.sh")
-    copyFile("mgen-starters/mgen-visualdesigner.ex_", "target/install_zip/bin/mgen-visualdesigner.exe")
-    
     copyFile("LICENSE", "target/install_zip/LICENSE.TXT")
   
     mkFileExecutable("target/install_zip/bin/mgen")
     mkFileExecutable("target/install_zip/bin/mgen.sh")
-    
-    mkFileExecutable("target/install_zip/bin/mgen-visualdesigner")
-    mkFileExecutable("target/install_zip/bin/mgen-visualdesigner.sh")
     
     versionFile = open("target/install_zip/BUILD.TXT", "w")
     versionFile.write("Release version: " + mgen_version + "\n")
@@ -266,9 +247,6 @@ def install():
     mkFileExecutable(installPath + "/bin/mgen")
     mkFileExecutable(installPath + "/bin/mgen.sh")
 
-    mkFileExecutable(installPath + "/bin/mgen-visualdesigner")
-    mkFileExecutable(installPath + "/bin/mgen-visualdesigner.sh")
-
 def upload_to_culvertsoft():
     folderName = mgen_version.lower()
     
@@ -291,8 +269,7 @@ def publish_to_sonatype():
                 '"project mgen_compiler" publish-signed '
                 '"project mgen_javagenerator" publish-signed '
                 '"project mgen_cppgenerator" publish-signed '
-                '"project mgen_javascriptgenerator" publish-signed '
-                '"project mgen_visualdesigner" publish-signed '))
+                '"project mgen_javascriptgenerator" publish-signed '))
 
 
 def publish_impl():
