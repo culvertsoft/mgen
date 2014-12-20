@@ -3,8 +3,6 @@ layout: default
 link-title: Home
 ---
 
-Welcome to the MGen project page!
-
 MGen is a toolkit for cross language object serialization. It consists of:
 
  * The Mgen Compiler - a tool for source code generation
