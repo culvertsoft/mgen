@@ -1,6 +1,6 @@
 ---
 layout: default
-link-title: Video tutorials
+link-title: tutorials
 submenu:
   - { anchor: "defining_a_model", title: "defining a model" }
   - { anchor: "using_the_compiler", title: "generating code" }
@@ -9,9 +9,11 @@ submenu:
   - { anchor: "using_generated_javascript", title: "using javascript" }
 ---
 
-## Video Tutorials
+## Tutorials
 
-We're planning to release a set of video tutorials showing you how to use MGen, to complement our written instructions. The videos will be posted on this page.
+We're planning to release a set of video tutorials showing you how to use MGen, to complement our written instructions. The videos will be posted on this page. 
+
+For now, we have the following tutorials only in text:
 
 
 ### Defining a data model <a name="defining_a_model">&nbsp;</a>
