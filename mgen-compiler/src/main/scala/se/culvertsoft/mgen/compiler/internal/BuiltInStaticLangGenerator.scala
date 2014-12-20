@@ -1,7 +1,11 @@
 package se.culvertsoft.mgen.compiler.internal
 
-import scala.collection.JavaConversions._
-import scala.collection.JavaConverters._
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConversions.collectionAsScalaIterable
+import scala.collection.JavaConversions.mapAsScalaMap
+import scala.collection.JavaConversions.mutableSeqAsJavaList
+import scala.collection.JavaConversions.seqAsJavaList
+import scala.collection.JavaConverters.mapAsScalaMapConverter
 
 import se.culvertsoft.mgen.api.exceptions.GenerationException
 import se.culvertsoft.mgen.api.model.ClassType
@@ -32,8 +36,8 @@ abstract class BuiltInStaticLangGenerator extends Generator {
   }
 
   def generateSources(module: Module, generatorSettings: java.util.Map[String, String]): java.util.List[GeneratedSourceFile] = {
-    val enumSources = module.enums.par.flatMap(e => generateEnumSources(module, e, generatorSettings)).seq
-    val typesSources = module.classes.par.flatMap(t => generateClassSources(module, t, generatorSettings)).seq
+    val enumSources = module.enums.par.flatMap(generateEnumSources(module, _, generatorSettings)).seq
+    val typesSources = module.classes.par.flatMap(generateClassSources(module, _, generatorSettings)).seq
     enumSources ++ typesSources
   }
 

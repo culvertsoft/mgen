@@ -1,7 +1,5 @@
 package se.culvertsoft.mgen.compiler.components
 
-import java.util.ArrayList
-
 import scala.Option.option2Iterable
 import scala.collection.JavaConversions.asScalaBuffer
 
@@ -17,30 +15,21 @@ object GenerateCode {
     RemoveParkedFields(project)
     GenerateCode(project, settings, pluginLoader)
   }
-  
-  def apply(
-    project: Project,
-    generators: Seq[Generator]): Seq[GeneratedSourceFile] = {
+
+  def apply(project: Project, generators: Seq[Generator]): Seq[GeneratedSourceFile] = {
 
     print("Generating code...")
 
-    val out = new ArrayList[GeneratedSourceFile]
-
-    for (genSpec <- project.generators()) {
-      val optGenerator = generators.find(_.getClass.getName == genSpec.getGeneratorClassPath)
-
-      if (optGenerator.isDefined) {
-        val generator = optGenerator.get
-        val generatorSettings = genSpec.getGeneratorSettings()
-        val generated = generator.generate(project, generatorSettings)
-        out.addAll(generated)
+    val out = project.generators.par.flatMap { genSpec =>
+      generators.find(_.getClass.getName == genSpec.getGeneratorClassPath) match {
+        case Some(generator) => generator.generate(project, genSpec.getGeneratorSettings)
+        case None => Nil
       }
-
     }
 
     println("ok\n")
 
-    out
+    out.seq
 
   }
 
