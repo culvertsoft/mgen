@@ -250,8 +250,8 @@ def install():
 def upload_to_culvertsoft():
     folderName = mgen_version.lower()
     
-    if folderName.startswith("nightly."):
-        folderName = "nightly"
+    if not folderName.startswith("snap"):
+        folderName = "releases"
 
     zipName = "mgen-" + mgen_version + ".zip"
     zipSrc = "target/" + zipName
