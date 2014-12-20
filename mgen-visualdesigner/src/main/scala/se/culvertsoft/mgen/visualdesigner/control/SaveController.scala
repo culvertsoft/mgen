@@ -14,7 +14,7 @@ import javax.swing.JOptionPane
 import javax.swing.filechooser.FileNameExtensionFilter
 import se.culvertsoft.mgen.compiler.components.LinkTypes
 import se.culvertsoft.mgen.compiler.components.ParseProject
-import se.culvertsoft.mgen.compiler.components.PluginFinder
+import se.culvertsoft.mgen.compiler.components.PluginLoader
 import se.culvertsoft.mgen.compiler.util.FileUtils
 import se.culvertsoft.mgen.idlgenerator.IdlGenerator
 import se.culvertsoft.mgen.visualdesigner.ClassRegistry
@@ -332,7 +332,7 @@ class SaveController(controller: Controller, window: JFrame) extends SubControll
       val settings = new HashMap[String, String]
       settings.put("project", file.getPath())
 
-      val pluginFinder = new PluginFinder(Nil, true)
+      val pluginFinder = new PluginLoader(Nil, true)
       val project = ParseProject(settings.toMap, pluginFinder)
       LinkTypes(project)
 

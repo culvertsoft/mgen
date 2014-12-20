@@ -14,7 +14,7 @@ import se.culvertsoft.mgen.api.exceptions.MGenException
 import se.culvertsoft.mgen.compiler.util.EnvVarUtils
 import se.culvertsoft.mgen.compiler.util.SplitCommaSeparated
 
-class PluginFinder(pluginPaths_in: Seq[String], useEnvPaths: Boolean) {
+class PluginLoader(pluginPaths_in: Seq[String], useEnvPaths: Boolean) {
   def this(commaSeparatedPaths: String, useEnvPaths: Boolean) = this(SplitCommaSeparated(commaSeparatedPaths), useEnvPaths)
 
   private val DEFAULT_PATH = "plugins/"

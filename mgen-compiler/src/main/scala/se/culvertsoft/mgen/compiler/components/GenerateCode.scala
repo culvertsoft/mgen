@@ -13,11 +13,9 @@ import se.culvertsoft.mgen.api.plugins.Generator
 
 object GenerateCode {
 
-  def apply(settings: Map[String, String]): Seq[GeneratedSourceFile] = {
-    val pluginFinder = new PluginFinder(settings.getOrElse("plugin_paths", ""), settings.getOrElse("use_env_vars", "true").toBoolean)
-    val project = CreateProject(settings, pluginFinder)
+  def apply(settings: Map[String, String], project: Project, pluginLoader: PluginLoader): Seq[GeneratedSourceFile] = {
     RemoveParkedFields(project)
-    GenerateCode(project, settings, pluginFinder)
+    GenerateCode(project, settings, pluginLoader)
   }
   
   def apply(
@@ -46,7 +44,7 @@ object GenerateCode {
 
   }
 
-  def apply(project: Project, settings: Map[String, String], pluginFinder: PluginFinder): Seq[GeneratedSourceFile] = {
+  def apply(project: Project, settings: Map[String, String], pluginLoader: PluginLoader): Seq[GeneratedSourceFile] = {
 
     val failOnMissingGenerator = settings.getOrElse("fail_on_missing_generator", "false").toBoolean
 
@@ -58,7 +56,7 @@ object GenerateCode {
     println("Instantiating generators...")
     val generators = selectedGenerators.flatMap { selected =>
       val clsName = selected.getGeneratorClassPath
-      pluginFinder.find[Generator](clsName) match {
+      pluginLoader.find[Generator](clsName) match {
         case Some(cls) =>
           println(s"Created generator: ${clsName}")
           Some(cls.newInstance())

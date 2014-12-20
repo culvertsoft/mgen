@@ -4,7 +4,7 @@ import se.culvertsoft.mgen.api.model.Project
 
 object CreateProject {
 
-  def apply(settings: Map[String, String], pluginFinder: PluginFinder): Project = {
+  def apply(settings: Map[String, String], pluginFinder: PluginLoader): Project = {
 
     val checkForConflicts = settings.get("check_conflicts").map(_.toBoolean).getOrElse(true)
 

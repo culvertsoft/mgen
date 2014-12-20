@@ -17,7 +17,7 @@ object ParseProject {
 
   def apply(
     settings: Map[String, String],
-    pluginFinder: PluginFinder): Project = {
+    pluginFinder: PluginLoader): Project = {
 
     val projectPath =
       settings
@@ -46,7 +46,7 @@ object ParseProject {
     searchPaths0: Seq[String],
     parent: Project,
     alreadyParsed: HashMap[String, Project],
-    pluginFinder: PluginFinder): Project = {
+    pluginFinder: PluginLoader): Project = {
 
     val file = FileUtils.findFile(filePath, searchPaths0)
       .getOrElse(throw new RuntimeException(s"Could not find referenced project file: ${filePath}"))

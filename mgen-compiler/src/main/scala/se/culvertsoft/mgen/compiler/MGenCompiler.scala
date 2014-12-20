@@ -5,8 +5,11 @@ import scala.util.Success
 import scala.util.Try
 
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
+import se.culvertsoft.mgen.api.model.Project
+import se.culvertsoft.mgen.compiler.components.CreateProject
 import se.culvertsoft.mgen.compiler.components.GenerateCode
 import se.culvertsoft.mgen.compiler.components.ParseCmdLineArgs
+import se.culvertsoft.mgen.compiler.components.PluginLoader
 import se.culvertsoft.mgen.compiler.internal.PrintHelp
 import se.culvertsoft.mgen.compiler.internal.PrintIntro
 import se.culvertsoft.mgen.compiler.util.FileUtils
@@ -24,7 +27,11 @@ object MGenCompiler {
       if (settings.isEmpty)
         return
 
-      val code = generateCode(settings)
+      val pluginLoader = createPluginLoader(settings)
+
+      val project = createProject(settings, pluginLoader)
+
+      val code = generateCode(settings, project, pluginLoader)
 
       writeToDisk(code, settings)
 
@@ -41,12 +48,20 @@ object MGenCompiler {
     PrintIntro(s"(${BuildVersion.GIT_TAG} ${BuildVersion.GIT_COMMIT_DATE})")
   }
 
-  def generateCode(settings: Map[String, String]): Seq[GeneratedSourceFile] = {
-    GenerateCode(settings)
-  }
-
   def parseCmdLineSettings(cmdLineArgs: Array[String]): Map[String, String] = {
     ParseCmdLineArgs(cmdLineArgs)
+  }
+
+  def createPluginLoader(settings: Map[String, String]): PluginLoader = {
+    new PluginLoader(settings.getOrElse("plugin_paths", ""), settings.getOrElse("use_env_vars", "true").toBoolean)
+  }
+
+  def createProject(settings: Map[String, String], pluginLoader: PluginLoader): Project = {
+    CreateProject(settings, pluginLoader)
+  }
+
+  def generateCode(settings: Map[String, String], project: Project, pluginLoader: PluginLoader): Seq[GeneratedSourceFile] = {
+    GenerateCode(settings, project, pluginLoader)
   }
 
   def writeToDisk(code: Seq[GeneratedSourceFile], settings: Map[String, String]) {
