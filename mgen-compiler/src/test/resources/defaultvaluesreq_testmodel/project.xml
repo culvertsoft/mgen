@@ -22,6 +22,12 @@
 		<generate_unity_build>true</generate_unity_build>
 	</Generator>
 
+	<Generator name="Python">
+		<class_path>se.culvertsoft.mgen.pythongenerator.PythonGenerator</class_path>
+		<output_path>src_generated/test/python</output_path>
+		<classregistry_path>defaultvalreq.model</classregistry_path>
+	</Generator>
+
 	<Sources>
 		<Source>defaultvalreq.model.xml</Source>
 	</Sources>
