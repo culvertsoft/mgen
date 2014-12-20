@@ -102,7 +102,6 @@ def createVersionFiles():
     createJavaVersionFile2("idlparser", mgen_version)
     createJavaVersionFile2("javagenerator", mgen_version)
     createJavaVersionFile2("javalib", mgen_version)
-    createJavaVersionFile2("pythongenerator", mgen_version)
     createJavaVersionFile2("javascriptgenerator", mgen_version)
     createJavaVersionFile2("visualdesigner", mgen_version)
 
@@ -114,7 +113,6 @@ def fastbuild_step1():
                 '"project mgen_javalib" publish-local '
                 '"project mgen_compiler" assembly publish-local '
                 '"project mgen_javagenerator" publish-local '
-                '"project mgen_pythongenerator" publish-local '
                 '"project mgen_cppgenerator" publish-local '
                 '"project mgen_javascriptgenerator" publish-local '))
 
@@ -128,7 +126,7 @@ def fastbuild_step2():
 
 
 def tests_generate_code(): # Ideally here we'd just generate once, not nLangs times.
-    for lang in ["java", "cpp", "javascript", "python"]:
+    for lang in ["java", "cpp", "javascript"]:
         for model in ["project.xml", "transient_testmodel/project.xml", "defaultvalues_testmodel/project.xml", "defaultvaluesreq_testmodel/project.xml"]:
             compile4("mgen-" + lang + "lib", "../mgen-compiler/src/test/resources/" + model, ".", "../mgen-" + lang + "generator/target")          
     for name in ["depends", "write", "read"]:
