@@ -33,7 +33,7 @@ pomExtra := (
   <url>http://github.com/culvertsoft/mgen</url>
   <licenses>
     <license>
-      <name>GPL 2</name>
+      <name>MIT</name>
       <url>https://github.com/culvertsoft/mgen/blob/master/LICENSE</url>
       <distribution>repo</distribution>
     </license>
