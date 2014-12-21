@@ -3,24 +3,24 @@ layout: default
 link-title: Feature road map
 ---
 
-## Feature road map and future plans
+## Feature road map / wish list
 
-There are several features we would like to have implemented at some point in the future. Below are some of these:
+Below are features on our current wish list. This could be a good place to start if you're interested in making a contribution to MGen. Send us a message if you think we're missing something important.
 
- * Add support for Python (generator + library)
- * Add support for C# (generator + library)
- * Build or integrate a gui application for data model design
- * Add support for custom allocators (c++)
- * Add support for std:: and boost:: smart pointers (c++)
- * Add generated operators "<<", "<" and ">" (c++)
- * Add support for C++11 features
- * Add support for mixins
- * Add support for ordered maps
- * Add support for sets
- * Add support for read-only fields (only setable in constructors)
- * Better naming of boolean getters (getSet() -> isSet())
- * Add support for IDL: Xml Schema
- * Add support for IDL: JSON Schema
- * Add support for further languages
+ * Support for Python (generator + library)
+ * Support for C# (generator + library)
+ * A new dedicated non-XML IDL (plug-in).
+ * Better naming of generated boolean getters (getSet() -> isSet())
+ * A gui application for data model design
+ * Support for custom allocators (c++)
+ * Support for std:: and boost:: smart pointers (c++)
+ * Generated operators "<<", "<" and ">" (c++)
+ * Support for C++11 features
+ * Support for mixins
+ * Support for ordered maps
+ * Support for sets
+ * Support for read-only fields (only setable in constructors)
+ * Support for Xml Schema
+ * Support for JSON Schema
 
-We also have some sketches for something we call [MNet](https://github.com/culvertsoft/mnet/) (working name), which is intended to be a language agnostic software network infrastructure / service bus provider.
+We also have some sketches for something we call [MNet](https://github.com/culvertsoft/mnet/) (working name), which is intended to be a language- agnostic communication layer.
