@@ -6,6 +6,7 @@ link-title: Contact
 ### Help
 
 There are a few options:
+
  * [Our mailing list](https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list)
  * irc:freenode #culvertsoft
  * email johan@culvertsoft.se or mikael@culvertsoft.se. 
