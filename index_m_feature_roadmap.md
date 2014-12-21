@@ -23,4 +23,4 @@ Below are features on our current wish list. This could be a good place to start
  * Support for Xml Schema
  * Support for JSON Schema
 
-We also have some sketches for something we call [MNet](https://github.com/culvertsoft/mnet/) (working name), which is intended to be a language- agnostic communication layer.
+We also have some sketches for something we call [MNet](https://github.com/culvertsoft/mnet/) (working name), which is intended to be a language agnostic communication layer.
