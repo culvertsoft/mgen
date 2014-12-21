@@ -5,8 +5,12 @@ link-title: Contact
 
 ### Help
 
-Hop on irc:freenode #culvertsoft. 
-Or send an email to johan@culvertsoft.se or mikael@culvertsoft.se. We'll try to answer as best as we can.
+There are a few options:
+ * [Our mailing list](https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list)
+ * irc:freenode #culvertsoft
+ * email johan@culvertsoft.se or mikael@culvertsoft.se. 
+
+We'll try to answer as best as we can.
 
 
 ### Business
