@@ -30,7 +30,9 @@ Build Instructions:
   * clone the repo
   * python build.py --help [example: "python build.py -b" for just building]
 
-Example: py build.py -cbtezi (Clean-Build-Test-Eclipse-Zip-Install). 
+Example: 
+ * py build.py -cbtezi (Clean-Build-Test-Eclipse-Zip-Install). 
+
 There is no dependency logic in our build scripts, so for example Build must be executed explicitly before Test.
 
 Output will be placed inside each mgen-component's target/ directory (e.g. mgen-api/target/).
