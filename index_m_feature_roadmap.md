@@ -5,12 +5,11 @@ link-title: Feature road map
 
 ## Feature road map and future plans
 
-We have several features that we may implement for MGen in the future. 
-Below are some of these:
+There are several features we would like to have implemented at some point in the future. Below are some of these:
 
- * Add support for Python (generator + runtime library)
- * Add support for C# (generator + runtime library)
- * Finish building our visual gui application for data model design
+ * Add support for Python (generator + library)
+ * Add support for C# (generator + library)
+ * Build or integrate a gui application for data model design
  * Add support for custom allocators (c++)
  * Add support for std:: and boost:: smart pointers (c++)
  * Add generated operators "<<", "<" and ">" (c++)
