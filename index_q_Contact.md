@@ -11,7 +11,7 @@ There are a few options:
  * irc:freenode #culvertsoft
  * email johan@culvertsoft.se or mikael@culvertsoft.se. 
 
-We'll try to answer as best as we can. At some point we might host a website at [www.culvertsoft.se](http://www.culvertsoft.se).
+At some point we might host a website at [www.culvertsoft.se](http://www.culvertsoft.se).
 
 
 ### Bug reports
