@@ -9,7 +9,7 @@ This is where you can download the MGen source and learn how to build it.
 
 * [Building MGen](#building-mgen)
 * [License](#license)
-* [Discussion group](#https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list)
+* [Discussion group](https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list)
 
 
 ## Building MGen
