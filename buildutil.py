@@ -55,6 +55,11 @@ def copyTree(src, dst):
 def copyFile(src, dst):
     shutil.copyfile(src, dst)
 
+def getOrSetEnvVar(varName, default):
+    if (not varName in os.environ):
+        os.environ[varName] = default
+    return os.environ[varName]
+
 def findDirs(path, matching):
     out = []
     for root, dirnames, filenames in os.walk(path):
@@ -67,6 +72,16 @@ def findFiles(path, matching):
     for root, dirnames, filenames in os.walk(path):
         for fileName in fnmatch.filter(filenames, matching):
             out.append(os.path.join(root, fileName))
+    return out
+     
+def findFilesExt(path, names, exclDirs):
+    out = []
+    for root, dirs, files in os.walk(path, topdown=True):
+        dirs[:] = [d for d in dirs if d not in exclDirs]
+        for file in files:
+            for name in names:
+                if file.endswith(name):
+                    out.append(os.path.join(root, file))
     return out
 
 def rmFolders(path, matching):

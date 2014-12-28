@@ -43,5 +43,9 @@ temp/
 .settings
 .settings/
 
+# intellij
 .idea
 .idea/
+
+# doit
+.doit.db*
