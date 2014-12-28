@@ -16,7 +16,7 @@ def task_configure():
         buildimpl.default_cpp_build_cfg = "RelwithDebInfo" # Because VS is epicly slow in debug
         
     return {
-        'actions': [GetFileDep(doCfg)],
+        'actions': [RunOnceLazy(doCfg)],
         'doc': ': Configures the build from set environmental variables (i.e. MGEN_BUILD_VERSION)',
         'verbosity': 2
     }
@@ -121,7 +121,7 @@ class RunOnceLazy:
         self.done = False
         
     def __call__(self):
-        return getVal()
+        return self.getVal()
         
 class GetFileDep(RunOnceLazy):
     
@@ -149,7 +149,7 @@ def task_get_postgen_sources():
 
 def task_get_jvm_build_sources():
     def impl(): 
-        return buildutil.findFilesExt('.', ['.java', '.scala', '.sbt'], exclDirs = ['target', 'test', 'mgen-integrationtests'])
+        return buildutil.findFilesExt('.', ['.java', '.scala', '.sbt'], exclDirs = ['target', 'src_generated', 'test', 'mgen-integrationtests'])
     return {
         'actions': [GetFileDep(impl)] 
     }
