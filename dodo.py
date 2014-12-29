@@ -74,11 +74,7 @@ def task_test():
        
 def task_build():
     return {
-        'task_dep': [   
-            'configure',
-            'generate_version_stamp_files', 
-            'build_jvm'
-         ],
+        'task_dep': ['build_jvm'],
         'actions': [],
         'doc': ': Build MGen (default task)',
         'verbosity': 2
@@ -88,8 +84,6 @@ def task_eclipse():
     return {
         'calc_dep': ['get_build_sources'],
         'actions': [buildimpl.eclipse],
-        'clean': [lambda: buildimpl.sbt_clean('.')],
-        'targets': ['mgen-compiler/target'],
         'doc': ': Create eclipse project for jvm parts',
         'verbosity': 2
     }
