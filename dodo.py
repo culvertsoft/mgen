@@ -84,6 +84,16 @@ def task_build():
         'verbosity': 2
     }
  
+def task_eclipse():
+    return {
+        'calc_dep': ['get_build_sources'],
+        'actions': [buildimpl.eclipse],
+        'clean': [lambda: buildimpl.sbt_clean('.')],
+        'targets': ['mgen-api/target'],
+        'doc': ': Create eclipse project for jvm parts',
+        'verbosity': 2
+    }
+ 
 def task_build_jvm():
     return {
         'calc_dep': ['get_build_sources'],
