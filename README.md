@@ -30,7 +30,7 @@ Build Requirements (Test):
 
 Build Instructions:
   * clone the repo
-  * doit <target|list> (Default task is 'build')
+  * 'doit *target*' or 'doit list'
 
 Output will be placed inside each mgen-component's target/ directory (e.g. mgen-api/target/).
 
