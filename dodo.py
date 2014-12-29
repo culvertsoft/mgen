@@ -89,7 +89,7 @@ def task_eclipse():
         'calc_dep': ['get_build_sources'],
         'actions': [buildimpl.eclipse],
         'clean': [lambda: buildimpl.sbt_clean('.')],
-        'targets': ['mgen-api/target'],
+        'targets': ['mgen-compiler/target'],
         'doc': ': Create eclipse project for jvm parts',
         'verbosity': 2
     }
