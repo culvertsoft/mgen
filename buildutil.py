@@ -141,3 +141,32 @@ def zipdir(basedir, archivename):
                 absfn = os.path.join(root, fn)
                 zfn = absfn[len(basedir)+len(os.sep):] #XXX: relative path
                 z.write(absfn, zfn)
+
+
+###########################################################
+###################### HELPERS ############################
+
+class RunOnceLazy:
+    def getVal(self):
+        if (not self.done):
+            self.result = self.action()
+            self.done = True
+        return self.result
+    def __init__(self, action):
+        self.action = action
+        self.done = False
+    def __call__(self):
+        return self.getVal()
+    def reset(self):
+        self.done = False
+        
+class GetFileDep(RunOnceLazy):
+    def __call__(self):
+        return { 'file_dep': self.getVal() }
+
+def mkCalcDepFileTask(patterns, root = '.', exclDirs = [], taskDeps = [], doc = ''):
+    return { 
+        'actions': [GetFileDep(lambda: findFilesExt(root, patterns, exclDirs))],
+        'task_dep': taskDeps,
+        'doc': doc
+    }
