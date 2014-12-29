@@ -26,7 +26,7 @@ def task_zip():
     return {
         'task_dep': ['build'],
         'calc_dep': ['get_build_sources'],
-        'actions': [],
+        'actions': [buildimpl.create_install_zip],
         'doc': ': Create release zip',
         'verbosity': 2
     }
