@@ -25,7 +25,6 @@ def task_build():
  
 def task_test():
     return {
-        'task_dep': ['build', 'generate_test_models'],
         'calc_dep': ['get_test_sources'],
         'actions': [
             buildimpl.tests_integration_cpp,
@@ -33,15 +32,8 @@ def task_test():
             buildimpl.tests_integration_js,
             buildimpl.tests_normal
         ],
-        'targets': [
-            'mgen-cpplib/target', 
-            'mgen-integrationtests/generated'
-        ],
-        'clean': [
-            lambda: buildutil.rmFolder('mgen-integrationtests/generated/'),
-            lambda: buildutil.rmFolder('mgen-cpplib/target'),
-            lambda: buildutil.rmFolders('.', 'src_generated')
-         ],
+        'clean': [lambda: buildutil.rmFolder('mgen-cpplib/target')],
+        'targets': ['mgen-cpplib/target'],
         'doc': ': Run all tests',
         'verbosity': 2
     }
@@ -70,6 +62,13 @@ def task_generate_test_models():
         'calc_dep': ['get_test_models'],
         'task_dep': ['build'],
         'actions': [buildimpl.tests_generate_code],
+        'targets': [
+            'mgen-integrationtests/generated'
+        ],
+        'clean': [
+            lambda: buildutil.rmFolders('.', 'src_generated'), 
+            lambda: buildutil.rmFolder('mgen-integrationtests/generated/')
+        ],
         'doc': ': Generate source code for tests',
         'verbosity': 2
     }
@@ -144,7 +143,7 @@ def task_get_test_sources():
     return buildutil.mkCalcDepFileTask(   
         patterns = ['.java', '.scala', '.sbt', '.cpp', '.h', 'CMakeLists.txt'], 
         exclDirs = ['target'],
-        taskDeps = ['generate_version_stamp_files', 'generate_test_models'],
+        taskDeps = ['generate_test_models'],
         doc = ': Finds all sources after all test models have been generated' 
     )
 
