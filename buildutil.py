@@ -15,7 +15,8 @@ from subprocess import check_call
 from contextlib import closing
 from zipfile import ZipFile, ZIP_DEFLATED
 
-cpp_build_cfgs = ["Debug", "RelwithDebInfo", "Release"]
+###################################
+# File/folder utils
 
 def mkFolder(path):
     if not os.path.exists(path):
@@ -98,6 +99,11 @@ def findLocalFiles(path, matching):
         out.append(name)
     return out
 
+###################################
+# C++ utils
+
+cpp_build_cfgs = ["Debug", "RelwithDebInfo", "Release"]
+
 def cppBuild(path, cfg, projName):
     if platform.system()=="Windows":
         check_call("msbuild " + projName + ".sln /p:Configuration=" + cfg, cwd=path, shell=True)
@@ -117,6 +123,9 @@ def cppBuildRun(path, cfg, projname):
 def cmake(buildPath, srcPath, cfg):
     check_call("cmake -DCMAKE_BUILD_TYPE=" + cfg + " " + srcPath, cwd=buildPath, shell=True)
     
+###################################
+# Sbt utils
+
 def sbt(path, targets):
     check_call("sbt " + targets, cwd=path, shell=True)  
     
@@ -132,6 +141,9 @@ def sbt_clean(path):
 def sbt_jasmine(path):
     sbt(path, "jasmine")
 
+###################################
+# Zip utils
+
 def zipdir(basedir, archivename):
     assert os.path.isdir(basedir)
     with closing(ZipFile(archivename, "w", ZIP_DEFLATED)) as z:
@@ -142,9 +154,15 @@ def zipdir(basedir, archivename):
                 zfn = absfn[len(basedir)+len(os.sep):] #XXX: relative path
                 z.write(absfn, zfn)
 
+def unzip(file, outPath):
+    fh = open(file, 'rb')
+    z = zipfile.ZipFile(fh)
+    for name in z.namelist():
+        z.extract(name, outPath + "/")
+    fh.close()
 
-###########################################################
-###################### HELPERS ############################
+###################################
+# Doit utils
 
 class RunOnceLazy:
     def getVal(self):
