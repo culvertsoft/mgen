@@ -17,46 +17,39 @@ java_projects = { # name: executable
     "javascriptgenerator": False,
 }
 
-def compile4(workingDir, project, outPath, plug_paths):
+def mgen_compile(workingDir, project, outPath, plug_paths = None):
+    if not plug_paths: plug_paths = pluginPaths
     check_call(mgen_cmd + project + ' plugin_paths="' + plug_paths + '" output_path="' + outPath + '" use_env_vars="false"', cwd=workingDir, shell=True)
-
-def compile3(workingDir, project, outPath):
-    compile4(workingDir, project, outPath, pluginPaths)
-
-def compile(workingDir, project):
-    compile3(workingDir, project, ".")
 
 def getCommitDateString():
     return os.popen("git show -s --format=%ci").read().rstrip()
 
-def createJavaVersionFileContents(pkg, version):
-    dateString = getCommitDateString()
-    out = ""
-    out += "package " + pkg + ";\n\n"
-    out += "/**\n"
-    out += " * Class generated to keep track of what MGen version this is\n"
-    out += " */\n"
-    out += "public class BuildVersion {\n"
-    out += '   public static final String GIT_TAG = "' + version + '";\n'
-    out += '   public static final String GIT_COMMIT_DATE = "' + dateString + '";\n'
-    out += "}\n"
-    return out
-
-def createJavaVersionFile3(pkg, tgtFolder, version):
-    fName = tgtFolder + "/BuildVersion.java"    
-    newFileContents = createJavaVersionFileContents(pkg, version)
-    oldFileContents = file2String(fName)
-    if (newFileContents != oldFileContents):
-        mkFolder(tgtFolder)
-        f = open(fName, "w")
-        f.write(newFileContents)
-
-def createJavaVersionFile2(project, version):
-    pkg = "se.culvertsoft.mgen." + project
-    tgtFolder = "mgen-" + project + "/src/main/java/se/culvertsoft/mgen/" + project
-    createJavaVersionFile3(pkg, tgtFolder, version)
-
 def createVersionFiles():
+    def createJavaVersionFile2(project, version):
+        def createJavaVersionFile3(pkg, tgtFolder):
+            def createJavaVersionFileContents():
+                dateString = getCommitDateString()
+                out = ""
+                out += "package " + pkg + ";\n\n"
+                out += "/**\n"
+                out += " * Class generated to keep track of what MGen version this is\n"
+                out += " */\n"
+                out += "public class BuildVersion {\n"
+                out += '   public static final String GIT_TAG = "' + version + '";\n'
+                out += '   public static final String GIT_COMMIT_DATE = "' + dateString + '";\n'
+                out += "}\n"
+                return out
+            fName = tgtFolder + "/BuildVersion.java"    
+            newFileContents = createJavaVersionFileContents()
+            oldFileContents = file2String(fName)
+            if (newFileContents != oldFileContents):
+                mkFolder(tgtFolder)
+                f = open(fName, "w")
+                f.write(newFileContents)
+                f.close()
+        pkg = "se.culvertsoft.mgen." + project
+        tgtFolder = "mgen-" + project + "/src/main/java/se/culvertsoft/mgen/" + project
+        createJavaVersionFile3(pkg, tgtFolder)
     for project in java_projects.keys():
         createJavaVersionFile2(project, mgen_version)
 
@@ -66,9 +59,9 @@ def build_jvm_parts():
 def tests_generate_code(): # Ideally here we'd just generate once, not nLangs times.
     for lang in ["java", "cpp", "javascript"]:
         for model in ["project.xml", "transient_testmodel/project.xml", "defaultvalues_testmodel/project.xml", "defaultvaluesreq_testmodel/project.xml"]:
-            compile4("mgen-" + lang + "lib", "../mgen-compiler/src/test/resources/" + model, ".", "../mgen-" + lang + "generator/target")          
+            mgen_compile("mgen-" + lang + "lib", "../mgen-compiler/src/test/resources/" + model, ".", "../mgen-" + lang + "generator/target")          
     for name in ["depends", "write", "read"]:
-        compile3("mgen-integrationtests", 'models/'+name+'/project.xml', "generated/"+name)
+        mgen_compile("mgen-integrationtests", 'models/'+name+'/project.xml', "generated/"+name)
 
 def tests_integration_cpp():
     baseFolder = "mgen-integrationtests/generated"
@@ -104,20 +97,6 @@ def tests_normal():
     cmake("mgen-cpplib/target", "../src/test/cpp/src", default_cpp_build_cfg)
     cppBuildRun("mgen-cpplib/target", default_cpp_build_cfg, "mgen-cpplib-test")
 
-def copySubProjectJarFilesToZipDir(subprojectName, version, includeAssembly):
-    srcFileBase = subprojectName + "/target/" + subprojectName + "-" + version
-    destFileBase = "target/install_zip/jars/" + subprojectName
-    copyFile(srcFileBase + ".jar", destFileBase + ".jar")
-    copyFile(srcFileBase + "-sources.jar", destFileBase + "-sources.jar")
-    copyFile(srcFileBase + "-javadoc.jar", destFileBase + "-javadoc.jar")
-    if (includeAssembly):
-        assemblySrc = subprojectName + "/target/" + subprojectName + "-assembly-" + version + ".jar"
-        copyFile(assemblySrc, destFileBase + "-assembly.jar")
-
-def copyJarFilesToZipDir():
-    for project in java_projects.keys():
-        copySubProjectJarFilesToZipDir("mgen-" + project, mgen_version, java_projects[project])
-
 def getCppIncludeDir():
     return "mgen-cpplib/src/main/cpp"
 
@@ -125,23 +104,32 @@ def getInstallZipName():
     return "target/mgen-" + mgen_version + ".zip"
 
 def create_install_zip():
+    
+    def copySubProjectJarFilesToZipDir(subprojectName, version, includeAssembly):
+        srcFileBase = subprojectName + "/target/" + subprojectName + "-" + version
+        destFileBase = "target/install_zip/jars/" + subprojectName
+        copyFile(srcFileBase + ".jar", destFileBase + ".jar")
+        copyFile(srcFileBase + "-sources.jar", destFileBase + "-sources.jar")
+        copyFile(srcFileBase + "-javadoc.jar", destFileBase + "-javadoc.jar")
+        if (includeAssembly):
+            assemblySrc = subprojectName + "/target/" + subprojectName + "-assembly-" + version + ".jar"
+            copyFile(assemblySrc, destFileBase + "-assembly.jar")
+    
     rmFolder("target/install_zip")
     mkFolder("target/install_zip")
     mkFolder("target/install_zip/jars")
     mkFolder("target/install_zip/bin")
     mkFolder("target/install_zip/javascript")
-    
-    copyJarFilesToZipDir()
+                
+    for project in java_projects.keys():
+        copySubProjectJarFilesToZipDir("mgen-" + project, mgen_version, java_projects[project])
+
     copyTree(getCppIncludeDir(), "target/install_zip/include")
     copyFile("mgen-javascriptlib/src/main/javascript/mgen-lib.js", "target/install_zip/javascript/mgen-lib.js")
     copyFile("mgen-starters/mgen.sh", "target/install_zip/bin/mgen")
     copyFile("mgen-starters/mgen.sh", "target/install_zip/bin/mgen.sh")
     copyFile("mgen-starters/mgen.ex_", "target/install_zip/bin/mgen.exe")
     copyFile("LICENSE", "target/install_zip/LICENSE.TXT")
-  
-    mkFileExecutable("target/install_zip/bin/mgen")
-    mkFileExecutable("target/install_zip/bin/mgen.sh")
-    
     versionFile = open("target/install_zip/BUILD.TXT", "w")
     versionFile.write("Release version: " + mgen_version + "\n")
     versionFile.write("Git commit date: " + getCommitDateString() + "\n")
