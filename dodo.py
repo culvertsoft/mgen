@@ -27,10 +27,8 @@ def task_test():
     return {
         'calc_dep': ['get_test_sources'],
         'actions': [
-            buildimpl.tests_integration_cpp,
-            buildimpl.tests_integration_java,
-            buildimpl.tests_integration_js,
-            buildimpl.tests_normal
+            buildimpl.tests_normal,
+            buildimpl.tests_integration
         ],
         'clean': [lambda: buildutil.rmFolder('mgen-cpplib/target')],
         'targets': ['mgen-cpplib/target'],

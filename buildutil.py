@@ -75,7 +75,7 @@ def findFiles(path, matching):
             out.append(os.path.join(root, fileName))
     return out
      
-def findFilesExt(path, names, exclDirs):
+def findFilesExt(path, names, exclDirs = []):
     out = []
     for root, dirs, files in os.walk(path, topdown=True):
         dirs[:] = [d for d in dirs if d not in exclDirs]
@@ -130,16 +130,16 @@ def sbt(path, targets):
     check_call("sbt " + targets, cwd=path, shell=True)  
     
 def sbt_test(path):
-    sbt(path, "test")
+    if os.path.exists(path + '/build.sbt'):
+        sbt(path, "test")
 
 def sbt_eclipse(path):
-    sbt(path, "eclipse")
+    if os.path.exists(path + '/build.sbt'):
+        sbt(path, "eclipse")
 
 def sbt_clean(path):
-    sbt(path, "clean")
-
-def sbt_jasmine(path):
-    sbt(path, "jasmine")
+    if os.path.exists(path + '/build.sbt'):
+        sbt(path, "clean")
 
 ###################################
 # Zip utils

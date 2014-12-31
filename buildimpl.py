@@ -66,19 +66,39 @@ def createVersionFiles():
 def build_jvm_parts():
     sbt('.', 'compile publish-local assembly')
 
-def tests_generate_code(): # Ideally here we'd just generate once, not nLangs times.
-    for lang in tested_languages:
-        for model in ["project.xml", "transient_testmodel/project.xml", "defaultvalues_testmodel/project.xml", "defaultvaluesreq_testmodel/project.xml"]:
-            mgen_compile("mgen-" + lang + "lib", "../mgen-compiler/src/test/resources/" + model, ".", "../mgen-" + lang + "generator/target")          
-    for proj in integ_test_projects:
-        mgen_compile("mgen-integrationtests", 'models/'+proj+'/project.xml', "generated/"+proj)
+def tests_generate_code():
+    def prepareNormalTestSources():       
+        testModels = findFilesExt('mgen-compiler/src/test/resources', ['project.xml'], ['dependencies'])
         for lang in tested_languages:
-            copyTree(
-                'mgen-integrationtests/generated/' + proj + '/src_generated/' + lang, 
-                'mgen-integrationtests/' + lang + 'check/' + proj + '/src_generated/test/' + lang
-            )  
-        
-def tests_integration_cpp():
+            for model in testModels:
+                mgen_compile('mgen-' + lang + 'lib', '../' + model, '.', '../mgen-' + lang + 'generator/target')
+    def prepareIntegrationTestSources():
+        for proj in integ_test_projects:
+            mgen_compile("mgen-integrationtests", 'models/'+proj+'/project.xml', "generated/"+proj)
+            for lang in tested_languages:
+                copyTree(
+                    'mgen-integrationtests/generated/' + proj + '/src_generated/' + lang, 
+                    'mgen-integrationtests/' + lang + 'check/' + proj + '/src_generated/test/' + lang
+                )
+    prepareNormalTestSources()
+    prepareIntegrationTestSources()
+
+def tests_normal():
+    # Can this be done in one batch? Doesn't seem so, 
+    # seems like cwd is wierd when batching: test data isn't 
+    # copied over to the correct test dir - so we must make
+    # sure to run tests from each wd separately
+    for lang in tested_languages:
+        sbt_test('mgen-' + lang + 'lib')
+    # Special handling for C++ tests
+    mkFolder('mgen-cpplib/target')
+    cmake('mgen-cpplib/target', '../src/test/cpp/src', default_cpp_build_cfg)
+    cppBuildRun('mgen-cpplib/target', default_cpp_build_cfg, 'mgen-cpplib-test')
+
+def tests_integration():
+    # special handling for C++ integration tests - 
+    # these must be run first since they also generate the
+    # test data used by the other languages' tests
     baseFolder = "mgen-integrationtests/generated"
     for name in integ_test_projects:
         testFolder = baseFolder + "/" + name + "/data_generator"
@@ -86,28 +106,10 @@ def tests_integration_cpp():
         mkFolder(baseFolder + "/" + name + "/data_generated")
         cmake(testFolder, "../../../build/" + name, default_cpp_build_cfg)
         cppBuildRun(testFolder, default_cpp_build_cfg, "generate_"+name+"_testdata")
-
-def tests_integration_java():
-    for name in integ_test_projects:
-        sbt_test('mgen-integrationtests/javacheck/' + name)
-
-def tests_integration_js():
-    for name in integ_test_projects:
-        sbt_jasmine('mgen-integrationtests/javascriptcheck/' + name)
-
-def tests_normal():
-    # Can this be done in one batch? Doesn't seem so, 
-    # seems like cwd is wierd when batching: test data isn't 
-    # copied over to the correct test dir - so we must make
-    # sure to run tests from each wd separately
-    sbt_test('mgen-javalib')
-    sbt_test('mgen-javascriptlib')
-    mkFolder('mgen-cpplib/target')
-    cmake('mgen-cpplib/target', '../src/test/cpp/src', default_cpp_build_cfg)
-    cppBuildRun('mgen-cpplib/target', default_cpp_build_cfg, 'mgen-cpplib-test')
-
-def getCppIncludeDir():
-    return "mgen-cpplib/src/main/cpp"
+    #sbt integration tests
+    for lang in tested_languages:
+        for name in integ_test_projects:
+            sbt_test('mgen-integrationtests/' + lang + 'check/' + name)    
 
 def getInstallZipName():
     return "target/mgen-" + mgen_version + ".zip"
@@ -133,7 +135,7 @@ def create_install_zip():
     for project in java_projects.keys():
         copySubProjectJarFilesToZipDir("mgen-" + project, mgen_version, java_projects[project])
 
-    copyTree(getCppIncludeDir(), "target/install_zip/include")
+    copyTree("mgen-cpplib/src/main/cpp", "target/install_zip/include")
     copyFile("mgen-javascriptlib/src/main/javascript/mgen-lib.js", "target/install_zip/javascript/mgen-lib.js")
     copyFile("mgen-starters/mgen.sh", "target/install_zip/bin/mgen")
     copyFile("mgen-starters/mgen.sh", "target/install_zip/bin/mgen.sh")
@@ -148,7 +150,6 @@ def create_install_zip():
 
 def install():
     
-    #Check that we have an install path
     installPath = os.environ.get('MGEN_INSTALL_PATH')
     if installPath == None:
         raise Exception("Environmental variable MGEN_INSTALL_PATH not set")
