@@ -186,5 +186,6 @@ def mkCalcDepFileTask(patterns, root = '.', exclDirs = [], taskDeps = [], doc = 
     return { 
         'actions': [GetFileDep(lambda: findFilesExt(root, patterns, exclDirs))],
         'task_dep': taskDeps,
-        'doc': doc
+        'doc': doc,
+        'verbosity': 2
     }

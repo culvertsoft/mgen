@@ -16,6 +16,16 @@ java_projects = { # name: executable
     "javalib": False,
     "javascriptgenerator": False,
 }
+integ_test_projects = [
+    'depends',
+    'read',
+    'write'
+]
+tested_languages = [
+    "java", 
+    "cpp", 
+    "javascript"
+]
 
 def mgen_compile(workingDir, project, outPath, plug_paths = None):
     if not plug_paths: plug_paths = pluginPaths
@@ -57,15 +67,20 @@ def build_jvm_parts():
     sbt('.', 'compile publish-local assembly')
 
 def tests_generate_code(): # Ideally here we'd just generate once, not nLangs times.
-    for lang in ["java", "cpp", "javascript"]:
+    for lang in tested_languages:
         for model in ["project.xml", "transient_testmodel/project.xml", "defaultvalues_testmodel/project.xml", "defaultvaluesreq_testmodel/project.xml"]:
             mgen_compile("mgen-" + lang + "lib", "../mgen-compiler/src/test/resources/" + model, ".", "../mgen-" + lang + "generator/target")          
-    for name in ["depends", "write", "read"]:
-        mgen_compile("mgen-integrationtests", 'models/'+name+'/project.xml', "generated/"+name)
-
+    for proj in integ_test_projects:
+        mgen_compile("mgen-integrationtests", 'models/'+proj+'/project.xml', "generated/"+proj)
+        for lang in tested_languages:
+            copyTree(
+                'mgen-integrationtests/generated/' + proj + '/src_generated/' + lang, 
+                'mgen-integrationtests/' + lang + 'check/' + proj + '/src_generated/test/' + lang
+            )  
+        
 def tests_integration_cpp():
     baseFolder = "mgen-integrationtests/generated"
-    for name in ["depends", "write", "read"]:
+    for name in integ_test_projects:
         testFolder = baseFolder + "/" + name + "/data_generator"
         mkFolder(testFolder)
         mkFolder(baseFolder + "/" + name + "/data_generated")
@@ -73,29 +88,23 @@ def tests_integration_cpp():
         cppBuildRun(testFolder, default_cpp_build_cfg, "generate_"+name+"_testdata")
 
 def tests_integration_java():
-    integFolder = "mgen-integrationtests"
-    for name in ["depends", "write", "read"]:
-        testFolder = integFolder + "/javacheck/" + name
-        copyTree(integFolder + "/generated/" + name + "/src_generated/java", testFolder + "/src_generated/test/java")
-        sbt_test(testFolder)
+    for name in integ_test_projects:
+        sbt_test('mgen-integrationtests/javacheck/' + name)
 
 def tests_integration_js():
-    integFolder = "mgen-integrationtests"
-    for name in ["depends", "write", "read"]:
-        testFolder = integFolder + "/javascriptcheck/" + name
-        copyTree(integFolder + "/generated/" + name + "/src_generated/javascript", testFolder + "/src_generated/test/javascript")
-        sbt_jasmine(testFolder)
+    for name in integ_test_projects:
+        sbt_jasmine('mgen-integrationtests/javascriptcheck/' + name)
 
 def tests_normal():
     # Can this be done in one batch? Doesn't seem so, 
     # seems like cwd is wierd when batching: test data isn't 
     # copied over to the correct test dir - so we must make
     # sure to run tests from each wd separately
-    sbt_test("mgen-javalib")
-    sbt_test("mgen-javascriptlib")
-    mkFolder("mgen-cpplib/target")
-    cmake("mgen-cpplib/target", "../src/test/cpp/src", default_cpp_build_cfg)
-    cppBuildRun("mgen-cpplib/target", default_cpp_build_cfg, "mgen-cpplib-test")
+    sbt_test('mgen-javalib')
+    sbt_test('mgen-javascriptlib')
+    mkFolder('mgen-cpplib/target')
+    cmake('mgen-cpplib/target', '../src/test/cpp/src', default_cpp_build_cfg)
+    cppBuildRun('mgen-cpplib/target', default_cpp_build_cfg, 'mgen-cpplib-test')
 
 def getCppIncludeDir():
     return "mgen-cpplib/src/main/cpp"

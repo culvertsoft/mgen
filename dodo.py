@@ -57,7 +57,7 @@ def task_build_jvm():
         'verbosity': 2
     }
 
-def task_generate_test_models():
+def task_generate_test_sources():
     return {
         'calc_dep': ['get_test_models'],
         'task_dep': ['build'],
@@ -142,15 +142,15 @@ def task_get_test_models():
 def task_get_test_sources():
     return buildutil.mkCalcDepFileTask(   
         patterns = ['.java', '.scala', '.sbt', '.cpp', '.h', 'CMakeLists.txt'], 
-        exclDirs = ['target'],
-        taskDeps = ['generate_test_models'],
+        exclDirs = ['target', 'CMakeFiles'],
+        taskDeps = ['generate_test_sources'],
         doc = ': Finds all sources after all test models have been generated' 
     )
 
 def task_get_build_sources():
     return buildutil.mkCalcDepFileTask(   
         patterns = ['.java', '.scala', '.sbt', '.cpp', '.h', 'CMakeLists.txt'], 
-        exclDirs = ['target', 'src_generated', 'test', 'mgen-integrationtests'],
+        exclDirs = ['target', 'CMakeFiles', 'src_generated', 'test', 'mgen-integrationtests'],
         taskDeps = ['generate_version_stamp_files'],
         doc = ': Finds all sources for building MGen' 
     )
