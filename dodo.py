@@ -147,7 +147,7 @@ def task_get_test_sources():
 
 def task_get_build_sources():
     return buildutil.mkCalcDepFileTask(   
-        patterns = ['.java', '.scala', '.sbt', '.cpp', '.h', 'CMakeLists.txt'], 
+        patterns = ['.js', '.java', '.scala', '.sbt', '.cpp', '.h', 'CMakeLists.txt'], 
         exclDirs = ['target', 'CMakeFiles', 'src_generated', 'test', 'mgen-integrationtests'],
         taskDeps = ['generate_version_stamp_files'],
         doc = ': Finds all sources for building MGen' 
