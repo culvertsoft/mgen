@@ -141,7 +141,7 @@ def task_get_test_models():
 
 def task_get_test_sources():
     return buildutil.mkCalcDepFileTask(   
-        patterns = ['.java', '.scala', '.sbt', '.cpp', '.h', 'CMakeLists.txt'], 
+        patterns = ['.js', '.java', '.scala', '.sbt', '.cpp', '.h', 'CMakeLists.txt'], 
         exclDirs = ['target', 'CMakeFiles'],
         taskDeps = ['generate_test_sources'],
         doc = ': Finds all sources after all test models have been generated' 
