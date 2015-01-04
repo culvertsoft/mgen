@@ -27,3 +27,4 @@ MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/p
 [Djinni](https://github.com/dropbox/djinni).
 
 Check out [our original technical whitepaper (note: slightly outdated)](http://culvertsoft.se/docs/WhitePaper.pdf).
+
