@@ -20,8 +20,3 @@ MGen lets you:
  * Add your own IDL parsers through MGen's plug-in architecture
  * Add custom code generators through MGen's plug-in architecture
  * Edit generated code directly, and re-generate!
-
-Bottom line, MGen let's you build:
-
- * Accessible, comprehensible, cross-language data models that you come back to later and understand and attach to new (external or your own) interfaces.
-
