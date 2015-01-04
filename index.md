@@ -28,3 +28,4 @@ MGen is inspired by tools such as [Protocol Buffers](https://code.google.com/p/p
 
 Check out [our original technical whitepaper (note: slightly outdated)](http://culvertsoft.se/docs/WhitePaper.pdf).
 
+If you'd like to make a contribution, check [our discussion group](https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list) and [our github repo](https://github.com/culvertsoft/mgen).
