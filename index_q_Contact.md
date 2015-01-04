@@ -5,13 +5,10 @@ link-title: Contact
 
 ### Help
 
-At some point we might host a website at [www.culvertsoft.se](http://www.culvertsoft.se), but for now check:
+At some point we might host a website at [www.culvertsoft.se](http://www.culvertsoft.se), but for now check either:
 
  * [Our discussion group](https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list)
-
-or
-
- * [Post an issue at our github repo](https://github.com/culvertsoft/mgen).
+ * [Issues at our github repo](https://github.com/culvertsoft/mgen).
 
 
 
