@@ -8,6 +8,9 @@ link-title: Contact
 At some point we might host a website at [www.culvertsoft.se](http://www.culvertsoft.se), but for now check:
 
  * [Our discussion group](https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list)
+
+or
+
  * [Post an issue at our github repo](https://github.com/culvertsoft/mgen).
 
 
