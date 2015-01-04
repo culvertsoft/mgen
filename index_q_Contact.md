@@ -5,13 +5,10 @@ link-title: Contact
 
 ### Help
 
-There are a few options:
+At some point we might host a website at [www.culvertsoft.se](http://www.culvertsoft.se), but for now check:
 
- * [Our mailing list](https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list)
- * irc:freenode #culvertsoft
- * email johan@culvertsoft.se or mikael@culvertsoft.se. 
-
-At some point we might host a website at [www.culvertsoft.se](http://www.culvertsoft.se).
+ * [Our discussion group](https://groups.google.com/forum/?hl=en#!forum/mgen-mailing-list)
+ * [Post an issue at our github repo](https://github.com/culvertsoft/mgen).
 
 
 
