@@ -13,7 +13,7 @@ import se.culvertsoft.mgen.cpppack.generator.CppGenUtils
 
 object MkEnumHeader {
 
-  def apply(_e: EnumType, generatorSettings: java.util.Map[String, String]): String = {
+  def apply(_e: EnumType): String = {
 
     implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
     implicit val module = _e.module

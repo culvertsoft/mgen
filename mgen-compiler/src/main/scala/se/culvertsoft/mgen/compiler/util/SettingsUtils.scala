@@ -4,8 +4,7 @@ import scala.collection.JavaConverters.mapAsScalaMapConverter
 
 object SettingsUtils {
 
-  implicit class RichSettings(_settings: java.util.Map[String, String]) {
-    val settings = _settings.asScala
+  implicit class RichSettings(settings: Map[String, String]) {
 
     def getBool(name: String): Option[Boolean] = {
       settings.get(name) match {

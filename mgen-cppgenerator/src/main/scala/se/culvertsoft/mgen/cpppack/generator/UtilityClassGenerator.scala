@@ -2,8 +2,6 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import java.io.File
 
-import scala.collection.JavaConversions.mapAsScalaMap
-
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
@@ -31,7 +29,7 @@ abstract class UtilityClassGenerator(
     folder: String,
     packagePath: String,
     referencedModules: Seq[Module],
-    generatorSettings: java.util.Map[String, String]): GeneratedSourceFile = {
+    generatorSettings: Map[String, String]): GeneratedSourceFile = {
     val sourceCode = generateSourceCode(packagePath, referencedModules, generatorSettings)
     val fileName = className + (if (isHeader) ".h" else ".cpp")
     new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
@@ -40,7 +38,7 @@ abstract class UtilityClassGenerator(
   final def generateSourceCode(
     packagePath: String,
     referencedModules: Seq[Module],
-    generatorSettings: java.util.Map[String, String]): String = {
+    generatorSettings: Map[String, String]): String = {
 
     val nameSpaces = packagePath.split("\\.")
     val nameSpacesString = nameSpaces.mkString("::")
@@ -48,7 +46,7 @@ abstract class UtilityClassGenerator(
     val param = UtilClassGenParam(
       packagePath,
       referencedModules,
-      generatorSettings.toMap,
+      generatorSettings,
       nameSpaces,
       nameSpacesString)
 
@@ -107,7 +105,7 @@ abstract class UtilityClassGenerator(
 
   def mkIncludeGuardEnd(param: UtilClassGenParam)(implicit txtBuffer: SourceCodeBuffer) {
     if (isHeader) {
-      CppGenUtils.mkIncludeGuardEnd()
+      CppGenUtils.mkIncludeGuardEnd
     }
   }
 

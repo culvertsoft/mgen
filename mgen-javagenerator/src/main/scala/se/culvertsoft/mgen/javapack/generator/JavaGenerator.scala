@@ -1,7 +1,9 @@
 package se.culvertsoft.mgen.javapack.generator
 
 import java.io.File
+
 import scala.collection.JavaConversions.seqAsJavaList
+
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.CustomCodeSection
 import se.culvertsoft.mgen.api.model.EnumType
@@ -9,11 +11,13 @@ import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.GeneratedSourceFile
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.PrimitiveType
+import se.culvertsoft.mgen.api.model.StringType
 import se.culvertsoft.mgen.api.model.Type
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator.getModuleFolderPath
+import se.culvertsoft.mgen.compiler.internal.CodeGenerationTask
 import se.culvertsoft.mgen.compiler.util.SettingsUtils.RichSettings
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.impl.MkAcceptVisitor
@@ -48,7 +52,6 @@ import se.culvertsoft.mgen.javapack.generator.impl.MkToString
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdFields
 import se.culvertsoft.mgen.javapack.generator.impl.MkTypeIdMethods
 import se.culvertsoft.mgen.javapack.generator.impl.MkValidate
-import se.culvertsoft.mgen.api.model.StringType
 
 object JavaGenerator {
 
@@ -118,52 +121,50 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     folder: String,
     packagePath: String,
     referencedModules: Seq[Module],
-    generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-
-    implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
+    generatorSettings: Map[String, String]): Seq[CodeGenerationTask] = {
 
     def mkClasReg(): GeneratedSourceFile = {
+      implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
       val fileName = "ClassRegistry" + ".java"
       val sourceCode = MkClassRegistry(referencedModules, packagePath)
       new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
     def mkDispatcher(): GeneratedSourceFile = {
+      implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
       val fileName = "Dispatcher" + ".java"
       val sourceCode = MkDispatcher(referencedModules, packagePath)
       new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
     def mkHandler(): GeneratedSourceFile = {
+      implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
       val fileName = "Handler" + ".java"
       val sourceCode = MkHandler(referencedModules, packagePath)
       new GeneratedSourceFile(folder + File.separator + fileName, sourceCode)
     }
 
-    val clsRegistry = mkClasReg()
-    val dispatcher = mkDispatcher()
-    val handler = mkHandler()
-
-    List(clsRegistry, dispatcher, handler)
+    Seq(
+      CodeGenerationTask(mkClasReg()),
+      CodeGenerationTask(mkDispatcher()),
+      CodeGenerationTask(mkHandler()))
 
   }
 
-  override def generateClassSources(module: Module, t: ClassType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+  override def generateClassSources(module: Module, t: ClassType, settings: Map[String, String]): Seq[CodeGenerationTask] = {
     val folder = getModuleFolderPath(module, settings)
     val fileName = t.shortName + ".java"
     val generateCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(true)
-    val sourceCode = generateClassSourceCode(t, generateCustomCodeSections)
-    List(new GeneratedSourceFile(
+    Seq(CodeGenerationTask(new GeneratedSourceFile(
       folder + File.separator + fileName,
-      sourceCode,
-      getCustomCodeSections(generateCustomCodeSections)))
+      generateClassSourceCode(t, generateCustomCodeSections),
+      getCustomCodeSections(generateCustomCodeSections))))
   }
 
-  override def generateEnumSources(module: Module, t: EnumType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+  override def generateEnumSources(module: Module, t: EnumType, settings: Map[String, String]): Seq[CodeGenerationTask] = {
     val folder = getModuleFolderPath(module, settings)
     val fileName = t.shortName() + ".java"
-    val sourceCode = generateEnumSourceCode(t)
-    List(new GeneratedSourceFile(folder + File.separator + fileName, sourceCode))
+    Seq(CodeGenerationTask(new GeneratedSourceFile(folder + File.separator + fileName, generateEnumSourceCode(t))))
   }
 
   def generateClassSourceCode(t: ClassType, genCustomCodeSections: Boolean): String = {
@@ -175,8 +176,8 @@ class JavaGenerator extends BuiltInStaticLangGenerator {
     txtBuffer.toString()
   }
 
-  def generateEnumSourceCode(t: EnumType): String = {   
-  implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
+  def generateEnumSourceCode(t: EnumType): String = {
+    implicit val txtBuffer = SourceCodeBuffer.getThreadLocal()
     MkEnum(t, t.module.path)
   }
 

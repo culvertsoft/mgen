@@ -2,8 +2,6 @@ package se.culvertsoft.mgen.cpppack.generator
 
 import java.io.File
 
-import scala.collection.JavaConversions.seqAsJavaList
-
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.CustomCodeSection
 import se.culvertsoft.mgen.api.model.EnumType
@@ -13,6 +11,7 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.internal.BuiltInStaticLangGenerator
+import se.culvertsoft.mgen.compiler.internal.CodeGenerationTask
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEnumCpp
 import se.culvertsoft.mgen.cpppack.generator.impl.classh.MkEnumHeader
@@ -44,7 +43,7 @@ object CppGenerator {
   val custom_interfaces_section = mkCustomCodeSection("custom_ifcs")
   val custom_methods_section = mkCustomCodeSection("custom_methods")
 
-  val customClassCodeSections = List(
+  val customClassCodeSections = Seq(
     custom_includes_section,
     custom_interfaces_section,
     custom_methods_section)
@@ -64,44 +63,31 @@ class CppGenerator extends BuiltInStaticLangGenerator {
     folder: String,
     packagePath: String,
     referencedModules: Seq[Module],
-    generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+    generatorSettings: Map[String, String]): Seq[CodeGenerationTask] = {
 
-    val classRegH = CppClassRegistryHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
-    val classRegCpp = CppClassRegistrySrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
-
-    val dispatcherH = CppDispatchHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
-    val dispatcherCpp = CppDispatchSrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
-
-    val handlerH = CppHandlerHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
-    val handlerCpp = CppHandlerSrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
-
-    val fwdDeclare = ForwardDeclareGenerator.generate(folder, packagePath, referencedModules, generatorSettings)
-
-    List(
-      classRegH,
-      classRegCpp,
-      dispatcherH,
-      dispatcherCpp,
-      handlerH,
-      handlerCpp,
-      fwdDeclare)
+    Seq(
+      CodeGenerationTask(CppClassRegistryHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)),
+      CodeGenerationTask(CppClassRegistrySrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)),
+      CodeGenerationTask(CppDispatchHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)),
+      CodeGenerationTask(CppDispatchSrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)),
+      CodeGenerationTask(CppHandlerHeaderGenerator.generate(folder, packagePath, referencedModules, generatorSettings)),
+      CodeGenerationTask(CppHandlerSrcFileGenerator.generate(folder, packagePath, referencedModules, generatorSettings)),
+      CodeGenerationTask(ForwardDeclareGenerator.generate(folder, packagePath, referencedModules, generatorSettings)))
 
   }
 
-  override def generateClassSources(module: Module, t: ClassType, settings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
-    List(CppHeader.generate(t, settings),
-      CppSrcFile.generate(t, settings))
+  override def generateClassSources(module: Module, t: ClassType, settings: Map[String, String]): Seq[CodeGenerationTask] = {
+    Seq(CodeGenerationTask(CppHeader.generate(t, settings)),
+      CodeGenerationTask(CppSrcFile.generate(t, settings)))
   }
 
-  override def generateEnumSources(module: Module, t: EnumType, generatorSettings: java.util.Map[String, String]): java.util.Collection[GeneratedSourceFile] = {
+  override def generateEnumSources(module: Module, t: EnumType, generatorSettings: Map[String, String]): Seq[CodeGenerationTask] = {
     val folder = BuiltInStaticLangGenerator.getModuleFolderPath(module, generatorSettings)
     val hFileName = t.shortName + ".h"
-    val hSourceCode = MkEnumHeader(t, generatorSettings)
     val cppFileName = t.shortName + ".cpp"
-    val cppSourceCode = MkEnumCpp(t, generatorSettings)
-    List(
-      new GeneratedSourceFile(folder + File.separator + hFileName, hSourceCode),
-      new GeneratedSourceFile(folder + File.separator + cppFileName, cppSourceCode))
+    Seq(
+      CodeGenerationTask(new GeneratedSourceFile(folder + File.separator + hFileName, MkEnumHeader(t))),
+      CodeGenerationTask(new GeneratedSourceFile(folder + File.separator + cppFileName, MkEnumCpp(t))))
   }
 
 }

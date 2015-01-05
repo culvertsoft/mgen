@@ -57,7 +57,7 @@ def task_build_jvm():
 
 def task_generate_test_sources():
     return {
-        'calc_dep': ['get_test_models'],
+        'calc_dep': ['get_test_models', 'get_build_sources'],
         'task_dep': ['build'],
         'actions': [buildimpl.tests_generate_code],
         'targets': [

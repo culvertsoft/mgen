@@ -19,8 +19,8 @@ object SourceCodeBuffer {
 }
 
 class SourceCodeBuffer(
-  val scopeBegin: String = " {",
-  val scopeEnd: String = "}") {
+    val scopeBegin: String = " {",
+    val scopeEnd: String = "}") {
 
   private var tabString = "\t"
   private val buffer = new java.lang.StringBuilder(10 * 1024)
@@ -41,7 +41,7 @@ class SourceCodeBuffer(
   }
 
   def setTabString(s: String) = { tabString = s }
-  
+
   def backingBuffer() = buffer
 
   def endl2() = { buffer.append('\n').append('\n'); this }

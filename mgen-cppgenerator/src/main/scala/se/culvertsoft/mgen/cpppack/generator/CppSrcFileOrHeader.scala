@@ -14,7 +14,7 @@ import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 abstract class CppSrcFileOrHeader(val fileEnding: String) {
 
-  def generate(t: ClassType, settings: java.util.Map[String, String]): GeneratedSourceFile = {
+  def generate(t: ClassType, settings: Map[String, String]): GeneratedSourceFile = {
     val folder = BuiltInStaticLangGenerator.getModuleFolderPath(t.module, settings)
     val fileName = t.shortName() + fileEnding
     val genCustomCodeSections = settings.getBool("generate_custom_code_sections").getOrElse(true)
