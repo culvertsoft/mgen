@@ -4,7 +4,7 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.declared
 
 object MkClassStart {
 
@@ -18,7 +18,7 @@ object MkClassStart {
   }
 
   def apply(t: ClassType, module: Module, genCustomCodeSections: Boolean)(implicit txtBuffer: SourceCodeBuffer) {
-    apply(t.shortName, getTypeName(t.superType())(module), genCustomCodeSections)
+    apply(t.shortName, declared(t.superType, false)(module), genCustomCodeSections)
   }
 
 }

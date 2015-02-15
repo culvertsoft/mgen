@@ -6,10 +6,11 @@ import Alias.get
 import Alias.isFieldSet
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.declared
 
 object MkGetters {
 
@@ -18,22 +19,22 @@ object MkGetters {
     implicit val m = module
 
     for (field <- t.fields()) {
-      txtBuffer.tabs(1).textln(s"public ${getTypeName(field.typ())} ${get(field)} {")
-      txtBuffer.tabs(2).textln(s"return m_${field.name()};")
-      txtBuffer.tabs(1).textln(s"}").endl()
+      ln(1, s"public ${declared(field)} ${get(field)} {")
+      ln(2, s"return m_${field.name()};")
+      ln(1, s"}").endl()
     }
 
     for (field <- t.fields()) {
-      txtBuffer.tabs(1).textln(s"public boolean has${upFirst(field.name())}() {")
-      txtBuffer.tabs(2).textln(s"return ${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")};")
-      txtBuffer.tabs(1).textln(s"}").endl()
+      ln(1, s"public boolean has${upFirst(field.name())}() {")
+      ln(2, s"return ${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")};")
+      ln(1, s"}").endl()
     }
 
     for (field <- t.fieldsInclSuper()) {
-      txtBuffer.tabs(1).textln(s"public ${getTypeName(t)} unset${upFirst(field.name())}() {")
-      txtBuffer.tabs(2).textln(s"_set${upFirst(field.name())}Set(false, ${fieldSetDepthClsString}.SHALLOW);")
-      txtBuffer.tabs(2).textln(s"return this;")
-      txtBuffer.tabs(1).textln(s"}").endl()
+      ln(1, s"public ${declared(t, false)} unset${upFirst(field.name())}() {")
+      ln(2, s"_set${upFirst(field.name())}Set(false, ${fieldSetDepthClsString}.SHALLOW);")
+      ln(2, s"return this;")
+      ln(1, s"}").endl()
     }
   }
 }

@@ -23,18 +23,18 @@ import se.culvertsoft.mgen.javapack.generator.JavaTypeNames
 import se.culvertsoft.mgen.api.model.DefaultValue
 import scala.collection.JavaConversions._
 import se.culvertsoft.mgen.javapack.generator.JavaConstants
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames._
+import se.culvertsoft.mgen.javapack.generator.JavaConstruction._
 
 object MkDefaultValue {
 
-  def apply(
-    f: Field,
-    nonNull: Boolean)(implicit currentModule: Module): String = {
+  def apply(f: Field, nonNull: Boolean)(implicit currentModule: Module): String = {
 
     if (!f.hasDefaultValue) {
       if (nonNull)
-        return JavaConstruction.defaultConstruct(f.typ, false)
+        return defaultConstruct(f.typ)
       else
-        return JavaConstruction.defaultConstructNull(f.typ, false)
+        return defaultConstructNull(f.typ)
     }
 
     val d = f.defaultValue()
@@ -77,12 +77,12 @@ object MkDefaultValue {
             val entries = values.map(v => apply(v, true, isGenericArg, false, true)).mkString(", ")
             val prepend =
               if (!lastIsArray)
-                s"new ${JavaTypeNames.getTypeName(d.expectedType, isGenericArg, false)}"
+                s"new ${declared(d.expectedType, false)}"
               else
                 ""
             s"${prepend}{$entries}"
           case t: ListType =>
-            val typeArg = s"${JavaTypeNames.getTypeName(t.elementType(), true, false)}"
+            val typeArg = s"${declared(t.elementType, true)}"
             if (values.nonEmpty) {
               val entries = values.map(v => apply(v, true, false, false)).mkString("add(", ").add(", ").make()")
               s"new ${JavaConstants.listMakerClsStringQ}<$typeArg>(${values.size}).${entries}"
@@ -93,7 +93,7 @@ object MkDefaultValue {
       case v: MapDefaultValue =>
         val values = v.values.map(e => s"${apply(e._1, true, isGenericArg, false)}, ${apply(e._2, true, isGenericArg, false)}")
         val t = v.expectedType
-        val typeArg = s"${JavaTypeNames.getTypeName(t.keyType, true, false)}, ${JavaTypeNames.getTypeName(t.valueType, true, false)}"
+        val typeArg = s"${declared(t.keyType, true)}, ${declared(t.valueType, true)}"
         if (values.nonEmpty) {
           val entries = values.mkString("put(", ").put(", ").make()")
           s"new ${JavaConstants.mapMakerClsStringQ}<$typeArg>(${values.size}).${entries}"
@@ -103,7 +103,7 @@ object MkDefaultValue {
       case v: ObjectDefaultValue =>
         val values = v.overriddenDefaultValues
         val setCalls = values.map(e => s".${Alias.set(e._1, apply(e._2, true, isGenericArg, false))}").mkString("")
-        JavaConstruction.defaultConstruct(v.actualType, false) + setCalls
+        JavaConstruction.defaultConstruct(v.actualType) + setCalls
       case _ =>
         throw new GenerationException(s"Don't know how to generate default value code for $d")
     }

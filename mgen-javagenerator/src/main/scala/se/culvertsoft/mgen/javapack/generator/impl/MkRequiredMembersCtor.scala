@@ -10,7 +10,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.fieldTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.declared
 
 object MkRequiredMembersCtor {
 
@@ -26,7 +26,7 @@ object MkRequiredMembersCtor {
       for (i <- 0 until reqFields.size()) {
         val field = reqFields.get(i)
         val isLastField = i + 1 == reqFields.size()
-        txt(if (i > 0) 4 else 0, s"final ${fieldTypeName(field)} ${field.name()}")
+        txt(if (i > 0) 4 else 0, s"final ${declared(field)} ${field.name()}")
         if (!isLastField) {
           txtBuffer.comma().endl()
         }

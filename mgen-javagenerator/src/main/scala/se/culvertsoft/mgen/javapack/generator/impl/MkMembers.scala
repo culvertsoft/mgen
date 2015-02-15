@@ -9,7 +9,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.endl
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.declared
 
 object MkMembers {
 
@@ -18,13 +18,13 @@ object MkMembers {
     implicit val m = module
 
     for (c <- t.constants)
-      ln(1, s"public static final ${getTypeName(c.typ)} ${c.shortName} = ${MkDefaultValue(c.value, true)};")
+      ln(1, s"public static final ${declared(c.typ, false)} ${c.shortName} = ${MkDefaultValue(c.value, true)};")
     if (t.constants.nonEmpty)
       ln()
 
     val fields = t.fields()
     for (field <- fields) {
-      ln(1, s"private ${getTypeName(field.typ())} m_${field.name()};")
+      ln(1, s"private ${declared(field)} m_${field.name()};")
     }
 
     for (field <- fields) {

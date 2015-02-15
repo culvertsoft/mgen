@@ -8,7 +8,7 @@ import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.fieldTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.declared
 
 object MkAllMembersCtor {
 
@@ -22,7 +22,7 @@ object MkAllMembersCtor {
       for (i <- 0 until allFields.size()) {
         val field = allFields.get(i)
         val isLastField = i + 1 == allFields.size()
-        txtBuffer.tabs(if (i > 0) 4 else 0).text(s"final ${fieldTypeName(field)} ${field.name()}")
+        txtBuffer.tabs(if (i > 0) 4 else 0).text(s"final ${declared(field)} ${field.name()}")
         if (!isLastField) {
           txtBuffer.comma().endl()
         }

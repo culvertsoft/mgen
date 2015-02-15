@@ -6,11 +6,12 @@ import Alias.fieldId
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.TypeEnum
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.upFirst
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.readerClsString
 import se.culvertsoft.mgen.javapack.generator.JavaReadCalls.mkReadCall
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.getTypeName
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.declared
 
 object MkReadField {
 
@@ -22,22 +23,22 @@ object MkReadField {
     val needsSupress = allFields.map(_.typ().typeEnum()).find(e => e == TypeEnum.LIST || e == TypeEnum.MAP).isDefined
 
     if (needsSupress)
-      txtBuffer.tabs(1).textln("@SuppressWarnings(\"unchecked\")")
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln(s"public boolean _readField(final short fieldId,")
-    txtBuffer.tabs(1).textln(s"                         final Object context,")
-    txtBuffer.tabs(1).textln(s"                         final $readerClsString reader) throws java.io.IOException {")
-    txtBuffer.tabs(2).textln(s"switch(fieldId) {")
+      ln(1, "@SuppressWarnings(\"unchecked\")")
+    ln(1, "@Override")
+    ln(1, s"public boolean _readField(final short fieldId,")
+    ln(1, s"                         final Object context,")
+    ln(1, s"                         final $readerClsString reader) throws java.io.IOException {")
+    ln(2, s"switch(fieldId) {")
     for (field <- allFields) {
-      txtBuffer.tabs(3).textln(s"case (${fieldId(field)}):")
-      txtBuffer.tabs(4).textln(s"set${upFirst(field.name())}((${getTypeName(field.typ())})reader.${mkReadCall(field)}(_${field.name}_METADATA, context));")
-      txtBuffer.tabs(4).textln("return true;")
+      ln(3, s"case (${fieldId(field)}):")
+      ln(4, s"set${upFirst(field.name())}((${declared(field)})reader.${mkReadCall(field)}(_${field.name}_METADATA, context));")
+      ln(4, "return true;")
     }
-    txtBuffer.tabs(3).textln(s"default:")
-    txtBuffer.tabs(4).textln(s"reader.handleUnknownField(null, context);")
-    txtBuffer.tabs(4).textln(s"return false;")
-    txtBuffer.tabs(2).textln(s"}")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(3, s"default:")
+    ln(4, s"reader.handleUnknownField(null, context);")
+    ln(4, s"return false;")
+    ln(2, s"}")
+    ln(1, "}").endl()
 
   }
 }
