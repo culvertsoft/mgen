@@ -5,8 +5,8 @@ import static se.culvertsoft.mgen.javapack.util.BuiltInSerializerUtils.ensureNoM
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.Field;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
@@ -229,7 +229,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	 *             If an IOException occurs when writing to the the underlying
 	 *             output stream
 	 */
-	public abstract void writeListField(final ArrayList<Object> list, final Field field)
+	public abstract void writeListField(final List<Object> list, final Field field)
 			throws IOException;
 
 	/**
@@ -245,7 +245,7 @@ public abstract class BuiltInWriter implements FieldVisitor {
 	 *             If an IOException occurs when writing to the the underlying
 	 *             output stream
 	 */
-	public abstract void writeMapField(final HashMap<Object, Object> map, final Field field)
+	public abstract void writeMapField(final Map<Object, Object> map, final Field field)
 			throws IOException;
 
 	/**
@@ -362,10 +362,10 @@ public abstract class BuiltInWriter implements FieldVisitor {
 			writeArrayField(o, field);
 			break;
 		case LIST:
-			writeListField((ArrayList<Object>) o, field);
+			writeListField((List<Object>) o, field);
 			break;
 		case MAP:
-			writeMapField((HashMap<Object, Object>) o, field);
+			writeMapField((Map<Object, Object>) o, field);
 			break;
 		case CLASS:
 			writeMGenObjectField((MGenBase) o, field);

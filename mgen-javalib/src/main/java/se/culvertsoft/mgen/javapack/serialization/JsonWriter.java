@@ -2,8 +2,6 @@ package se.culvertsoft.mgen.javapack.serialization;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -276,7 +274,7 @@ public class JsonWriter extends TextFormatWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void writeListField(final ArrayList<Object> list, final Field f) throws IOException {
+	public void writeListField(final List<Object> list, final Field f) throws IOException {
 		beginWritePair(f.name());
 		writeList(list, (ListType) f.typ());
 	}
@@ -285,7 +283,7 @@ public class JsonWriter extends TextFormatWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void writeMapField(final HashMap<Object, Object> m, final Field f) throws IOException {
+	public void writeMapField(final Map<Object, Object> m, final Field f) throws IOException {
 		beginWritePair(f.name());
 		writeMap(m, (MapType) f.typ());
 	}

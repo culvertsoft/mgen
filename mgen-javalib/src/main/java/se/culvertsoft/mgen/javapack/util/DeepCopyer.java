@@ -4,6 +4,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import se.culvertsoft.mgen.api.model.ArrayType;
@@ -56,12 +57,12 @@ public class DeepCopyer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> ArrayList<T> deepCopy(final ArrayList<T> a, final Type type) {
+	public static <T> ArrayList<T> deepCopy(final List<T> a, final Type type) {
 		return (ArrayList<T>) deepCopyList(a, (ListType) type);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <K, V> HashMap<K, V> deepCopy(final HashMap<K, V> a, final Type type) {
+	public static <K, V> HashMap<K, V> deepCopy(final Map<K, V> a, final Type type) {
 		return (HashMap<K, V>) deepCopyMap(a, (MapType) type);
 	}
 
@@ -125,9 +126,9 @@ public class DeepCopyer {
 		case ARRAY:
 			return deepCopyArray(o, (ArrayType) type);
 		case LIST:
-			return deepCopyList((ArrayList<Object>) o, (ListType) type);
+			return deepCopyList((List<Object>) o, (ListType) type);
 		case MAP:
-			return deepCopyMap((HashMap<Object, Object>) o, (MapType) type);
+			return deepCopyMap((Map<Object, Object>) o, (MapType) type);
 		case CLASS:
 			return deepCopyMGenObject((MGenBase) o);
 		default:
@@ -136,7 +137,7 @@ public class DeepCopyer {
 		}
 	}
 
-	private static Map<Object, Object> deepCopyMap(final HashMap<?, ?> src,
+	private static HashMap<Object, Object> deepCopyMap(final Map<?, ?> src,
 			final MapType type) {
 		if (src == null)
 			return null;
@@ -150,7 +151,8 @@ public class DeepCopyer {
 		return out;
 	}
 
-	private static ArrayList<Object> deepCopyList(final ArrayList<?> list,
+	private static ArrayList<Object> deepCopyList(
+			final List<?> list,
 			final ListType type) {
 		if (list == null)
 			return null;

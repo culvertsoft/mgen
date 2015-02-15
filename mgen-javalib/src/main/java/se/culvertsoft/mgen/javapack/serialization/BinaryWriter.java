@@ -14,9 +14,7 @@ import static se.culvertsoft.mgen.api.model.BinaryTypeTag.TAG_STRING;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -220,7 +218,7 @@ public class BinaryWriter extends BuiltInWriter {
 	}
 
 	@Override
-	public void writeListField(final ArrayList<Object> list, final Field field) throws IOException {
+	public void writeListField(final List<Object> list, final Field field) throws IOException {
 		writeFieldStart(field.id(), TAG_LIST);
 		writeList(list, (ListType) field.typ(), false);
 	}
@@ -229,7 +227,7 @@ public class BinaryWriter extends BuiltInWriter {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public void writeMapField(final HashMap<Object, Object> map, final Field field)
+	public void writeMapField(final Map<Object, Object> map, final Field field)
 			throws IOException {
 		writeFieldStart(field.id(), TAG_MAP);
 		writeMap(map, (MapType) field.typ(), false);
@@ -636,7 +634,7 @@ public class BinaryWriter extends BuiltInWriter {
 	 *             If an IOException occurs when writing to the the underlying
 	 *             output stream
 	 */
-	private void writeMap(final HashMap<Object, Object> map, final MapType typ, final boolean tag)
+	private void writeMap(final Map<Object, Object> map, final MapType typ, final boolean tag)
 			throws IOException {
 
 		if (tag)
@@ -1322,7 +1320,7 @@ public class BinaryWriter extends BuiltInWriter {
 			writeList((List<Object>) o, (ListType) typ, tag);
 			break;
 		case MAP:
-			writeMap((HashMap<Object, Object>) o, (MapType) typ, tag);
+			writeMap((Map<Object, Object>) o, (MapType) typ, tag);
 			break;
 		case CLASS:
 			writeMGenObject((MGenBase) o, tag, (RuntimeClassType) typ);
