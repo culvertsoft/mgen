@@ -46,7 +46,7 @@ object CheckConflicts {
     }
 
     for (t <- allTypes) {
-      val fields = t.fields()
+      val fields = t.fieldsInclSuper()
       assertNoDuplicates(fields, (f: Field) => f.name) { (f1, f2) =>
         throw new TypeConflictException(s"Conflicting field names for type ${t.fullName()}: ${f1} and ${f2}.")
       }
