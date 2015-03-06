@@ -7,6 +7,7 @@ import Alias.get
 import Alias.isFieldSet
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldHasherClsString
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
@@ -20,21 +21,21 @@ object MkHashCode {
     val allFields = t.fieldsInclSuper()
     val hashBase = t.fullName().hashCode()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public int hashCode() {")
+    ln(1, "@Override")
+    ln(1, "public int hashCode() {")
 
     if (allFields.nonEmpty) {
-      txtBuffer.tabs(2).textln(s"final int prime = 31;")
-      txtBuffer.tabs(2).textln(s"int result = ${hashBase};")
+      ln(2, s"final int prime = 31;")
+      ln(2, s"int result = ${hashBase};")
       for (f <- allFields) {
-        txtBuffer.tabs(2).textln(s"result = ${isFieldSet(f, s"${fieldSetDepthClsString}.SHALLOW")} ? (prime * result + ${fieldHasherClsString}.calc(${get(f)}, ${fieldMetadata(f)}.typ())) : result;")
+        ln(2, s"result = ${isFieldSet(f, s"${fieldSetDepthClsString}.SHALLOW")} ? (prime * result + ${fieldHasherClsString}.calc(${get(f)}, ${fieldMetadata(f)}.typ())) : result;")
       }
-      txtBuffer.tabs(2).textln(s"return result;")
+      ln(2, s"return result;")
     } else {
-      txtBuffer.tabs(2).textln(s"return ${hashBase};")
+      ln(2, s"return ${hashBase};")
     }
 
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "}").endl()
 
   }
 }

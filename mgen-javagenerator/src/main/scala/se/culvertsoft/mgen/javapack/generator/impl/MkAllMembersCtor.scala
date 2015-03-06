@@ -6,6 +6,8 @@ import scala.collection.JavaConversions.bufferAsJavaList
 import Alias.isSetName
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
 import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.declared
@@ -18,39 +20,39 @@ object MkAllMembersCtor {
 
     val allFields = t.fieldsInclSuper()
     if (allFields.nonEmpty) {
-      txtBuffer.tabs(1).text(s"public ${t.shortName}(")
+      txt(1, s"public ${t.shortName}(")
       for (i <- 0 until allFields.size()) {
         val field = allFields.get(i)
         val isLastField = i + 1 == allFields.size()
-        txtBuffer.tabs(if (i > 0) 4 else 0).text(s"final ${declared(field)} ${field.name()}")
+        txt(if (i > 0) 4 else 0, s"final ${declared(field)} ${field.name()}")
         if (!isLastField) {
-          txtBuffer.comma().endl()
+          ln(",")
         }
       }
-      txtBuffer.textln(") {")
+      ln(") {")
 
       val fieldsToSuper = allFields -- t.fields
       if (fieldsToSuper.nonEmpty) {
-        txtBuffer.tabs(2).text("super(")
+        txt(2, "super(")
         for (i <- 0 until fieldsToSuper.size()) {
           val field = fieldsToSuper.get(i)
           val isLastField = i + 1 == fieldsToSuper.size()
-          txtBuffer.text(field.name())
+          txt(field.name())
           if (!isLastField) {
-            txtBuffer.text(", ")
+            txt(", ")
           }
         }
-        txtBuffer.textln(");")
+        ln(");")
       }
 
       for (field <- t.fields())
-        txtBuffer.tabs(2).textln(s"m_${field.name()} = ${field.name()};")
+        ln(2, s"m_${field.name()} = ${field.name()};")
       for (field <- t.fields()) {
         if (!JavaGenerator.canBeNull(field))
-          txtBuffer.tabs(2).textln(s"${isSetName(field)} = true;")
+          ln(2, s"${isSetName(field)} = true;")
       }
 
-      txtBuffer.tabs(1).textln("}").endl()
+      ln(1, "}").endl()
     }
   }
 }

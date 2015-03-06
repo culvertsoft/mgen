@@ -1,8 +1,11 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
+
 import Alias.fieldMetadata
-import Alias._
+import Alias.get
+import Alias.has
+import Alias.unset
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Module
@@ -10,11 +13,7 @@ import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsString
-import se.culvertsoft.mgen.javapack.generator.JavaConstants._
 import se.culvertsoft.mgen.javapack.generator.JavaGenerator
-import se.culvertsoft.mgen.api.model.PrimitiveType
-import se.culvertsoft.mgen.api.model.StringType
-import se.culvertsoft.mgen.api.model.EnumType
 
 object MkDeepCopy {
 

@@ -9,6 +9,7 @@ import Alias.isFieldSet
 import Alias.isSetName
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldIfcClsString
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
@@ -21,28 +22,28 @@ object MkIsFieldSet {
     implicit val m = module
 
     for (field <- t.fields()) {
-      txtBuffer.tabs(1).textln(s"public boolean ${isFieldSet(field, s"final ${fieldSetDepthClsString} fieldSetDepth")} {")
+      ln(1, s"public boolean ${isFieldSet(field, s"final ${fieldSetDepthClsString} fieldSetDepth")} {")
       if (field.typ.containsUserDefinedType) {
-        txtBuffer.tabs(2).textln(s"if (fieldSetDepth == ${fieldSetDepthClsString}.SHALLOW) {")
-        txtBuffer.tabs(3).textln(s"return ${isSetName(field)};")
-        txtBuffer.tabs(2).textln(s"} else {")
-        txtBuffer.tabs(3).textln(s"return ${isSetName(field)} && ${validatorClsString}.validateFieldDeep(${get(field)}, ${fieldMetadata(field)}.typ());")
-        txtBuffer.tabs(2).textln(s"}")
+        ln(2, s"if (fieldSetDepth == ${fieldSetDepthClsString}.SHALLOW) {")
+        ln(3, s"return ${isSetName(field)};")
+        ln(2, s"} else {")
+        ln(3, s"return ${isSetName(field)} && ${validatorClsString}.validateFieldDeep(${get(field)}, ${fieldMetadata(field)}.typ());")
+        ln(2, s"}")
       } else {
-        txtBuffer.tabs(2).textln(s"return ${isSetName(field)};")
+        ln(2, s"return ${isSetName(field)};")
       }
-      txtBuffer.tabs(1).textln(s"}").endl()
+      ln(1, s"}").endl()
     }
 
-    txtBuffer.tabs(1).textln(s"public boolean _isFieldSet(final $fieldIfcClsString field, final ${fieldSetDepthClsString} depth) {")
-    txtBuffer.tabs(2).textln(s"switch(field.id()) {")
+    ln(1, s"public boolean _isFieldSet(final $fieldIfcClsString field, final ${fieldSetDepthClsString} depth) {")
+    ln(2, s"switch(field.id()) {")
     for (field <- t.fieldsInclSuper()) {
-      txtBuffer.tabs(3).textln(s"case (${fieldId(field)}):")
-      txtBuffer.tabs(4).textln(s"return ${isFieldSet(field, "depth")};")
+      ln(3, s"case (${fieldId(field)}):")
+      ln(4, s"return ${isFieldSet(field, "depth")};")
     }
-    txtBuffer.tabs(3).textln(s"default:")
-    txtBuffer.tabs(4).textln(s"return false;")
-    txtBuffer.tabs(2).textln(s"}")
-    txtBuffer.tabs(1).textln(s"}").endl()
+    ln(3, s"default:")
+    ln(4, s"return false;")
+    ln(2, s"}")
+    ln(1, s"}").endl()
   }
 }

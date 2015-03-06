@@ -5,6 +5,8 @@ import scala.collection.JavaConversions.asScalaBuffer
 import Alias.isFieldSet
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 import se.culvertsoft.mgen.javapack.generator.JavaConstants.fieldSetDepthClsString
 
@@ -14,24 +16,24 @@ object MkValidate {
 
     implicit val m = module
 
-    txtBuffer.tabs(1).textln(s"public boolean _validate(final ${fieldSetDepthClsString} fieldSetDepth) { ")
-    txtBuffer.tabs(2).textln(s"if (fieldSetDepth == ${fieldSetDepthClsString}.SHALLOW) {")
-    txtBuffer.tabs(3).text(s"return true")
+    ln(1, s"public boolean _validate(final ${fieldSetDepthClsString} fieldSetDepth) { ")
+    ln(2, s"if (fieldSetDepth == ${fieldSetDepthClsString}.SHALLOW) {")
+    txt(3, s"return true")
     for (field <- t.fieldsInclSuper().filter(_.isRequired()))
-      txtBuffer.endl().tabs(4).text(s"&& ${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")}")
-    txtBuffer.textln(s";")
-    txtBuffer.tabs(2).textln(s"} else {")
-    txtBuffer.tabs(3).text(s"return true")
+      ln().tabs(4).text(s"&& ${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")}")
+    ln(s";")
+    ln(2, s"} else {")
+    txt(3, s"return true")
     for (field <- t.fieldsInclSuper()) {
       if (field.isRequired())
-        txtBuffer.endl().tabs(4).text(s"&& ${isFieldSet(field, s"${fieldSetDepthClsString}.DEEP")}")
+        ln().tabs(4).text(s"&& ${isFieldSet(field, s"${fieldSetDepthClsString}.DEEP")}")
       else if (field.typ.containsUserDefinedType)
-        txtBuffer.endl().tabs(4).text(s"&& (!${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")} || ${isFieldSet(field, s"${fieldSetDepthClsString}.DEEP")})")
+        ln().tabs(4).text(s"&& (!${isFieldSet(field, s"${fieldSetDepthClsString}.SHALLOW")} || ${isFieldSet(field, s"${fieldSetDepthClsString}.DEEP")})")
     }
-    txtBuffer.textln(s";")
-    txtBuffer.tabs(2).textln(s"}")
-    txtBuffer.tabs(1).textln(s"}")
-    txtBuffer.endl()
+    ln(s";")
+    ln(2, s"}")
+    ln(1, s"}")
+    ln()
 
   }
 }

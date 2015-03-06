@@ -1,7 +1,12 @@
 package se.culvertsoft.mgen.javapack.generator.impl
 
+import scala.collection.JavaConversions.asScalaBuffer
+import scala.collection.JavaConversions.mapAsScalaMap
+
 import se.culvertsoft.mgen.api.exceptions.GenerationException
+import se.culvertsoft.mgen.api.model.ArrayType
 import se.culvertsoft.mgen.api.model.BoolDefaultValue
+import se.culvertsoft.mgen.api.model.DefaultValue
 import se.culvertsoft.mgen.api.model.EnumDefaultValue
 import se.culvertsoft.mgen.api.model.Field
 import se.culvertsoft.mgen.api.model.Float32Type
@@ -11,20 +16,17 @@ import se.culvertsoft.mgen.api.model.Int32Type
 import se.culvertsoft.mgen.api.model.Int64Type
 import se.culvertsoft.mgen.api.model.Int8Type
 import se.culvertsoft.mgen.api.model.ListOrArrayDefaultValue
+import se.culvertsoft.mgen.api.model.ListType
 import se.culvertsoft.mgen.api.model.MapDefaultValue
 import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.api.model.NumericDefaultValue
 import se.culvertsoft.mgen.api.model.ObjectDefaultValue
 import se.culvertsoft.mgen.api.model.StringDefaultValue
-import se.culvertsoft.mgen.javapack.generator.JavaConstruction
-import se.culvertsoft.mgen.api.model.ArrayType
-import se.culvertsoft.mgen.api.model.ListType
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames
-import se.culvertsoft.mgen.api.model.DefaultValue
-import scala.collection.JavaConversions._
 import se.culvertsoft.mgen.javapack.generator.JavaConstants
-import se.culvertsoft.mgen.javapack.generator.JavaTypeNames._
-import se.culvertsoft.mgen.javapack.generator.JavaConstruction._
+import se.culvertsoft.mgen.javapack.generator.JavaConstruction
+import se.culvertsoft.mgen.javapack.generator.JavaConstruction.defaultConstruct
+import se.culvertsoft.mgen.javapack.generator.JavaConstruction.defaultConstructNull
+import se.culvertsoft.mgen.javapack.generator.JavaTypeNames.declared
 
 object MkDefaultValue {
 
@@ -61,10 +63,10 @@ object MkDefaultValue {
         v.value.toString
       case v: NumericDefaultValue =>
         v.expectedType match {
-          case t: Int8Type => s"(byte)${v.fixedPtValue}"
-          case t: Int16Type => s"(short)${v.fixedPtValue}"
-          case t: Int32Type => s"${v.fixedPtValue}"
-          case t: Int64Type => s"${v.fixedPtValue}L"
+          case t: Int8Type    => s"(byte)${v.fixedPtValue}"
+          case t: Int16Type   => s"(short)${v.fixedPtValue}"
+          case t: Int32Type   => s"${v.fixedPtValue}"
+          case t: Int64Type   => s"${v.fixedPtValue}L"
           case t: Float32Type => s"(float)${v.floatingPtValue}"
           case t: Float64Type => s"${v.floatingPtValue}"
         }

@@ -2,6 +2,7 @@ package se.culvertsoft.mgen.javapack.generator.impl
 
 import se.culvertsoft.mgen.api.model.ClassType
 import se.culvertsoft.mgen.api.model.Module
+import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
 
 object MkTypeIdMethods {
@@ -10,50 +11,50 @@ object MkTypeIdMethods {
 
     implicit val m = module
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public long _typeId() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_ID;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public long _typeId() {")
+    ln(2, s"return _TYPE_ID;")
+    ln(1, "}").endl()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public short _typeId16Bit() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_ID_16BIT;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public short _typeId16Bit() {")
+    ln(2, s"return _TYPE_ID_16BIT;")
+    ln(1, "}").endl()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public String _typeId16BitBase64() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_ID_16BIT_BASE64;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public String _typeId16BitBase64() {")
+    ln(2, s"return _TYPE_ID_16BIT_BASE64;")
+    ln(1, "}").endl()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public String _typeName() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_NAME;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public String _typeName() {")
+    ln(2, s"return _TYPE_NAME;")
+    ln(1, "}").endl()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public long[] _typeIds() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_IDS;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public long[] _typeIds() {")
+    ln(2, s"return _TYPE_IDS;")
+    ln(1, "}").endl()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public short[] _typeIds16Bit() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_IDS_16BIT;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public short[] _typeIds16Bit() {")
+    ln(2, s"return _TYPE_IDS_16BIT;")
+    ln(1, "}").endl()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public String[] _typeIds16BitBase64() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_IDS_16BIT_BASE64;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public String[] _typeIds16BitBase64() {")
+    ln(2, s"return _TYPE_IDS_16BIT_BASE64;")
+    ln(1, "}").endl()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public String _typeIds16BitBase64String() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_IDS_16BIT_BASE64_STRING;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public String _typeIds16BitBase64String() {")
+    ln(2, s"return _TYPE_IDS_16BIT_BASE64_STRING;")
+    ln(1, "}").endl()
 
-    txtBuffer.tabs(1).textln("@Override")
-    txtBuffer.tabs(1).textln("public String[] _typeNames() {")
-    txtBuffer.tabs(2).textln(s"return _TYPE_NAMES;")
-    txtBuffer.tabs(1).textln("}").endl()
+    ln(1, "@Override")
+    ln(1, "public String[] _typeNames() {")
+    ln(2, s"return _TYPE_NAMES;")
+    ln(1, "}").endl()
 
   }
 }
