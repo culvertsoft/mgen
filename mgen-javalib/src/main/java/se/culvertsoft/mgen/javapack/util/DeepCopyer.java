@@ -57,13 +57,13 @@ public class DeepCopyer {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> ArrayList<T> deepCopy(final List<T> a, final Type type) {
-		return (ArrayList<T>) deepCopyList(a, (ListType) type);
+	public static <T> List<T> deepCopy(final List<T> a, final Type type) {
+		return (List<T>) deepCopyList(a, (ListType) type);
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <K, V> HashMap<K, V> deepCopy(final Map<K, V> a, final Type type) {
-		return (HashMap<K, V>) deepCopyMap(a, (MapType) type);
+	public static <K, V> Map<K, V> deepCopy(final Map<K, V> a, final Type type) {
+		return (Map<K, V>) deepCopyMap(a, (MapType) type);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -94,9 +94,8 @@ public class DeepCopyer {
 		case STRING:
 			return deepCopy((String[]) array, type);
 		default:
-			final Class<?> compType = array.getClass().getComponentType();
 			final int n = Array.getLength(array);
-			final Object out = Array.newInstance(compType, n);
+			final Object out = type.newInstance(n);
 			for (int index = 0; index < n; index++) {
 				Array.set(
 						out,
@@ -137,26 +136,23 @@ public class DeepCopyer {
 		}
 	}
 
-	private static HashMap<Object, Object> deepCopyMap(final Map<?, ?> src,
+	private static Map<Object, Object> deepCopyMap(final Map<?, ?> src,
 			final MapType type) {
 		if (src == null)
 			return null;
-		final HashMap<Object, Object> out = new HashMap<Object, Object>(
-				src.size());
-		for (final Object key : src.keySet()) {
-			final Object value = src.get(key);
-			out.put(deepCopyObject(key, type.keyType()),
-					deepCopyObject(value, type.valueType()));
+		final Map<Object, Object> out = new HashMap<>(src.size());
+		for (final Map.Entry<?, ?> e : src.entrySet()) {
+			out.put(deepCopyObject(e.getKey(), type.keyType()),
+					deepCopyObject(e.getValue(), type.valueType()));
 		}
 		return out;
 	}
 
-	private static ArrayList<Object> deepCopyList(
-			final List<?> list,
+	private static List<Object> deepCopyList(final List<?> list,
 			final ListType type) {
 		if (list == null)
 			return null;
-		final ArrayList<Object> out = new ArrayList<Object>(list.size());
+		final List<Object> out = new ArrayList<>(list.size());
 		for (final Object src : list)
 			out.add(deepCopyObject(src, type.elementType()));
 		return out;
