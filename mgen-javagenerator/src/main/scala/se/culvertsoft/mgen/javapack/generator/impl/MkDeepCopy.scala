@@ -2,8 +2,8 @@ package se.culvertsoft.mgen.javapack.generator.impl
 
 import scala.collection.JavaConversions.asScalaBuffer
 
-import Alias.fieldMetadata
 import Alias.get
+import Alias.getCopy
 import Alias.has
 import Alias.unset
 import se.culvertsoft.mgen.api.model.ClassType
@@ -12,8 +12,8 @@ import se.culvertsoft.mgen.api.model.Module
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.ln
 import se.culvertsoft.mgen.compiler.internal.BuiltInGeneratorUtil.txt
 import se.culvertsoft.mgen.compiler.util.SourceCodeBuffer
-import se.culvertsoft.mgen.javapack.generator.JavaConstants.deepCopyerClsString
-import se.culvertsoft.mgen.javapack.generator.JavaGenerator
+import se.culvertsoft.mgen.javapack.generator.JavaGenerator.canBeNull
+import se.culvertsoft.mgen.javapack.generator.JavaGenerator.isMutable
 
 object MkDeepCopy {
 
@@ -22,8 +22,8 @@ object MkDeepCopy {
     implicit val m = module
 
     def deepCopyField(f: Field): String = {
-      if (JavaGenerator.isMutable(f)) {
-        s"${deepCopyerClsString}.deepCopy(${get(f)}, ${fieldMetadata(f)}.typ())"
+      if (isMutable(f)) {
+        getCopy(f)
       } else {
         get(f)
       }
@@ -48,7 +48,7 @@ object MkDeepCopy {
       }
       ln(");")
       for (f <- allFields) {
-        if (!JavaGenerator.canBeNull(f)) {
+        if (!canBeNull(f)) {
           ln(2, s"if (!${has(f)}) out.${unset(f)};")
         }
       }

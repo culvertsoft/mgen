@@ -30,6 +30,10 @@ object Alias {
     s"get${upFirst(field.name())}${preParan}()"
   }
 
+  def getCopy(field: Field): String = {
+    get(field, "Copy")
+  }
+
   def set(field: Field, input: String): String = {
     s"set${upFirst(field.name())}($input)"
   }
@@ -61,11 +65,11 @@ object Alias {
   def instantiate(t: UserDefinedType): String = {
     s"new ${t.fullName()}()"
   }
-  
+
   def has(f: Field): String = {
     s"has${upFirst(f.name)}()"
   }
-  
+
   def unset(f: Field): String = {
     s"unset${upFirst(f.name)}()"
   }

@@ -23,27 +23,33 @@ object JavaConstruction {
       case TypeEnum.FLOAT32 => "0.0f"
       case TypeEnum.FLOAT64 => "0.0"
       case TypeEnum.STRING  => "\"\""
-      case TypeEnum.MAP =>
-        val t = typ.asInstanceOf[MapType]
-        s"new java.util.HashMap<${declared(t.keyType, true)}, ${declared(t.valueType, true)}>()"
-      case TypeEnum.LIST =>
-        val t = typ.asInstanceOf[ListType]
-        s"new java.util.ArrayList<${declared(t.elementType, true)}>()"
-      case TypeEnum.ARRAY =>
-        val t = typ.asInstanceOf[ArrayType]
-        val needsZeros = s"new ${declared(t, false)}"
-        addZerosToArraySuffixBrackets(needsZeros)
-      case TypeEnum.ENUM  => s"${declared(typ, false)}.UNKNOWN"
-      case TypeEnum.CLASS => s"new ${declared(typ, false)}()"
-      case x              => throw new GenerationException(s"Don't know how to handle type $x")
+      case TypeEnum.MAP     => constructMap(typ.asInstanceOf[MapType], "16")
+      case TypeEnum.LIST    => constructList(typ.asInstanceOf[ListType], "16")
+      case TypeEnum.ARRAY   => constructArray(typ.asInstanceOf[ArrayType], "0")
+      case TypeEnum.ENUM    => s"${declared(typ, false)}.UNKNOWN"
+      case TypeEnum.CLASS   => s"new ${declared(typ, false)}()"
+      case x                => throw new GenerationException(s"Don't know how to handle type $x")
     }
 
   }
 
-  private def addZerosToArraySuffixBrackets(needsZeros: String): String = {
+  def constructList(t: ListType, n: String)(implicit currentModule: Module): String = {
+    s"new java.util.ArrayList<${declared(t.elementType, true)}>($n)"
+  }
+
+  def constructMap(t: MapType, n: String)(implicit currentModule: Module): String = {
+    s"new java.util.HashMap<${declared(t.keyType, true)}, ${declared(t.valueType, true)}>($n)"
+  }
+
+  def constructArray(t: ArrayType, n: String)(implicit currentModule: Module): String = {
+    val needsSz = s"new ${declared(t, false)}"
+    addIntToArraySuffixBrackets(needsSz, n)
+  }
+
+  private def addIntToArraySuffixBrackets(needsZeros: String, n: String = "0"): String = {
     val iStart = needsZeros.lastIndexWhere(c => c != '[' && c != ']') + 1
     val (pre, post) = needsZeros.splitAt(iStart)
-    pre + post.replaceAllLiterally("[]", "[0]")
+    pre + post.replaceAllLiterally("[]", s"[$n]")
   }
 
   def defaultConstruct(field: Field)(implicit currentModule: Module): String = {

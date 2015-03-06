@@ -35,10 +35,6 @@ object MkImports {
       ln(s"import ${fieldHasherClsStringQ};")
     }
 
-    if (t.fieldsInclSuper.filter(JavaGenerator.isMutable).nonEmpty) {
-      ln(s"import ${deepCopyerClsStringQ};")
-    }
-
     if (t.fieldsInclSuper.filter(JavaGenerator.needsDeepEqual).nonEmpty) {
       ln(s"import ${eqTesterClsStringQ};")
     }
