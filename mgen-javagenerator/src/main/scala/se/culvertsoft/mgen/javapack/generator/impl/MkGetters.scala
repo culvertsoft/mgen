@@ -112,12 +112,16 @@ object MkGetters {
       case TypeEnum.ARRAY =>
         val arrayType = typ.asInstanceOf[ArrayType]
         val elemType = arrayType.elementType
-        val elemTypString = declared(elemType, false)
-        val loopIndex = namer.next()
         ln(tabLevel + 1, s"$trgVar = ${constructArray(arrayType, s"$srcVar.length", false)};")
-        ln(tabLevel + 1, s"for (int $loopIndex = 0; $loopIndex < $srcVar.length; $loopIndex++) {")
-        cpExpr(s"$trgVar[$loopIndex]", s"$srcVar[$loopIndex]", tabLevel + 2, module, elemType, false, namer);
-        ln(tabLevel + 1, s"}")
+        if (isMutable(elemType)) {
+          val elemTypString = declared(elemType, false)
+          val loopIndex = namer.next()
+          ln(tabLevel + 1, s"for (int $loopIndex = 0; $loopIndex < $srcVar.length; $loopIndex++) {")
+          cpExpr(s"$trgVar[$loopIndex]", s"$srcVar[$loopIndex]", tabLevel + 2, module, elemType, false, namer);
+          ln(tabLevel + 1, s"}")
+        } else {
+          ln(tabLevel + 1, s"System.arraycopy($srcVar, 0, $trgVar, 0, $srcVar.length);")
+        }
       case TypeEnum.LIST =>
         val listType = typ.asInstanceOf[ListType]
         val elemType = listType.elementType
