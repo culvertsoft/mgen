@@ -60,7 +60,7 @@ object MkGetters {
     }
 
   }
-  
+
   class VarNamer {
     def next(): String = {
       val out = "var" + i
@@ -82,13 +82,14 @@ object MkGetters {
     implicit val m = module
 
     // To avoid double get
-    val srcVar = s"${trgVar}_from"
+    val srcVar = namer.next()
     val typString = declared(typ, genericTypeArg)
 
-    ln(tabLevel, "{")
+    if (isMutable(typ)) {
+      ln(tabLevel, s"final $typString $srcVar = ${_srcVar};")
+      ln(tabLevel, s"if ($srcVar != null) {")
+    }
 
-    ln(tabLevel + 1, s"final $typString $srcVar = ${_srcVar};")
-    ln(tabLevel + 1, s"if ($srcVar != null) {")
     // Not null
     typ.typeEnum match {
       case TypeEnum.MAP =>
@@ -100,49 +101,48 @@ object MkGetters {
         val srcElemName = namer.next()
         val trgKeyName = namer.next()
         val trgValueName = namer.next()
-        ln(tabLevel + 2, s"$trgVar = ${constructMap(mapType, s"$srcVar.size()")};")
-        ln(tabLevel + 2, s"for (final java.util.Map.Entry<$keyTypString, $valueTypString> $srcElemName : $srcVar.entrySet()) {")
-        ln(tabLevel + 3, s"$keyTypString $trgKeyName = null;")
-        ln(tabLevel + 3, s"$valueTypString $trgValueName = null;")
-        cpExpr(trgKeyName, s"$srcElemName.getKey()", tabLevel + 3, module, keyType, true, namer);
-        cpExpr(trgValueName, s"$srcElemName.getValue()", tabLevel + 3, module, valueType, true, namer);
-        ln(tabLevel + 3, s"$trgVar.put($trgKeyName, $trgValueName);")
-        ln(tabLevel + 2, s"}")
+        ln(tabLevel + 1, s"$trgVar = ${constructMap(mapType, s"$srcVar.size()")};")
+        ln(tabLevel + 1, s"for (final java.util.Map.Entry<$keyTypString, $valueTypString> $srcElemName : $srcVar.entrySet()) {")
+        ln(tabLevel + 2, s"$keyTypString $trgKeyName = null;")
+        ln(tabLevel + 2, s"$valueTypString $trgValueName = null;")
+        cpExpr(trgKeyName, s"$srcElemName.getKey()", tabLevel + 2, module, keyType, true, namer);
+        cpExpr(trgValueName, s"$srcElemName.getValue()", tabLevel + 2, module, valueType, true, namer);
+        ln(tabLevel + 2, s"$trgVar.put($trgKeyName, $trgValueName);")
+        ln(tabLevel + 1, s"}")
       case TypeEnum.ARRAY =>
         val arrayType = typ.asInstanceOf[ArrayType]
         val elemType = arrayType.elementType
-        val elemTypString = declared(elemType, true)
+        val elemTypString = declared(elemType, false)
         val loopIndex = namer.next()
         val trgElemname = namer.next()
-        ln(tabLevel + 2, s"$trgVar = ${constructArray(arrayType, s"$srcVar.length")};")
-        ln(tabLevel + 2, s"for (int $loopIndex = 0; $loopIndex < $srcVar.length; $loopIndex++) {")
-        ln(tabLevel + 3, s"$elemTypString $trgElemname = null;")
-        cpExpr(trgElemname, s"$srcVar[$loopIndex]", tabLevel + 3, module, elemType, true, namer);
-        ln(tabLevel + 3, s"$trgVar[$loopIndex] = $trgElemname;")
-        ln(tabLevel + 2, s"}")
+        ln(tabLevel + 1, s"$trgVar = ${constructArray(arrayType, s"$srcVar.length", false)};")
+        ln(tabLevel + 1, s"for (int $loopIndex = 0; $loopIndex < $srcVar.length; $loopIndex++) {")
+        cpExpr(s"$trgVar[$loopIndex]", s"$srcVar[$loopIndex]", tabLevel + 2, module, elemType, false, namer);
+        ln(tabLevel + 1, s"}")
       case TypeEnum.LIST =>
         val listType = typ.asInstanceOf[ListType]
         val elemType = listType.elementType
         val elemTypString = declared(elemType, true)
         val srcElemName = namer.next()
         val trgElemname = namer.next()
-        ln(tabLevel + 2, s"$trgVar = ${constructList(listType, s"$srcVar.size()")};")
-        ln(tabLevel + 2, s"for (final $elemTypString $srcElemName : $srcVar) {")
-        ln(tabLevel + 3, s"$elemTypString $trgElemname = null;")
-        cpExpr(trgElemname, srcElemName, tabLevel + 3, module, elemType, true, namer);
-        ln(tabLevel + 3, s"$trgVar.add($trgElemname);")
-        ln(tabLevel + 2, s"}")
+        ln(tabLevel + 1, s"$trgVar = ${constructList(listType, s"$srcVar.size()")};")
+        ln(tabLevel + 1, s"for (final $elemTypString $srcElemName : $srcVar) {")
+        ln(tabLevel + 2, s"$elemTypString $trgElemname = null;")
+        cpExpr(trgElemname, srcElemName, tabLevel + 2, module, elemType, true, namer);
+        ln(tabLevel + 2, s"$trgVar.add($trgElemname);")
+        ln(tabLevel + 1, s"}")
       case TypeEnum.CLASS =>
-        ln(tabLevel + 2, s"$trgVar = $srcVar.deepCopy();")
+        ln(tabLevel + 1, s"$trgVar = $srcVar.deepCopy();")
       case _ =>
-        ln(tabLevel + 2, s"$trgVar = $srcVar;")
+        ln(tabLevel, s"$trgVar = ${_srcVar};")
     }
 
-    ln(tabLevel + 1, s"} else {")
-    ln(tabLevel + 2, s"$trgVar = null;")
-    ln(tabLevel + 1, s"}")
+    if (isMutable(typ)) {
+      ln(tabLevel, s"} else {")
+      ln(tabLevel + 1, s"$trgVar = null;")
+      ln(tabLevel, s"}")
+    }
 
-    ln(tabLevel, "}")
   }
 
 }

@@ -25,7 +25,7 @@ object JavaConstruction {
       case TypeEnum.STRING  => "\"\""
       case TypeEnum.MAP     => constructMap(typ.asInstanceOf[MapType], "16")
       case TypeEnum.LIST    => constructList(typ.asInstanceOf[ListType], "16")
-      case TypeEnum.ARRAY   => constructArray(typ.asInstanceOf[ArrayType], "0")
+      case TypeEnum.ARRAY   => constructArray(typ.asInstanceOf[ArrayType], "0", true)
       case TypeEnum.ENUM    => s"${declared(typ, false)}.UNKNOWN"
       case TypeEnum.CLASS   => s"new ${declared(typ, false)}()"
       case x                => throw new GenerationException(s"Don't know how to handle type $x")
@@ -41,15 +41,19 @@ object JavaConstruction {
     s"new java.util.HashMap<${declared(t.keyType, true)}, ${declared(t.valueType, true)}>($n)"
   }
 
-  def constructArray(t: ArrayType, n: String)(implicit currentModule: Module): String = {
+  def constructArray(t: ArrayType, n: String, all: Boolean)(implicit currentModule: Module): String = {
     val needsSz = s"new ${declared(t, false)}"
-    addIntToArraySuffixBrackets(needsSz, n)
+    addIntToArraySuffixBrackets(needsSz, n, all)
   }
 
-  private def addIntToArraySuffixBrackets(needsZeros: String, n: String = "0"): String = {
+  private def addIntToArraySuffixBrackets(needsZeros: String, n: String = "0", all: Boolean): String = {
     val iStart = needsZeros.lastIndexWhere(c => c != '[' && c != ']') + 1
     val (pre, post) = needsZeros.splitAt(iStart)
-    pre + post.replaceAllLiterally("[]", s"[$n]")
+    if (all) {
+      pre + post.replaceAllLiterally("[]", s"[$n]")
+    } else {
+      pre + s"[$n]" + post.substring(2)
+    }
   }
 
   def defaultConstruct(field: Field)(implicit currentModule: Module): String = {
