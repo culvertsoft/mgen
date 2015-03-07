@@ -4,14 +4,14 @@
 Using Maven (or ivy/gradle/sbt or similar) is probably the easiest way is to depend on MGen for java builds. Just add 'mgen-javalib' as a dependency to use generated code:
 
 
-For the current release (beta 0.2.1) :
+For the current release:
 
 {% highlight xml %}
 
 <dependency>
   <groupId>se.culvertsoft</groupId>
   <artifactId>mgen-javalib</artifactId>
-  <version>0.2.1</version>
+  <version>0.2.4</version>
 </dependency>
 
 {% endhighlight %}
