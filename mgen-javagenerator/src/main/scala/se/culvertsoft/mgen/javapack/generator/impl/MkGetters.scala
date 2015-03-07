@@ -114,7 +114,6 @@ object MkGetters {
         val elemType = arrayType.elementType
         val elemTypString = declared(elemType, false)
         val loopIndex = namer.next()
-        val trgElemname = namer.next()
         ln(tabLevel + 1, s"$trgVar = ${constructArray(arrayType, s"$srcVar.length", false)};")
         ln(tabLevel + 1, s"for (int $loopIndex = 0; $loopIndex < $srcVar.length; $loopIndex++) {")
         cpExpr(s"$trgVar[$loopIndex]", s"$srcVar[$loopIndex]", tabLevel + 2, module, elemType, false, namer);
