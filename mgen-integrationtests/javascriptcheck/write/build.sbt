@@ -4,7 +4,7 @@ organization := "se.culvertsoft"
 
 version := scala.util.Properties.envOrElse("MGEN_BUILD_VERSION", "SNAPSHOT")
 
-scalaVersion := "2.11.5"
+scalaVersion := "2.11.6"
 
 isSnapshot := version.value.contains("SNAPSHOT")
 
