@@ -2,10 +2,7 @@ package se.culvertsoft.mgen.javapack.serialization;
 
 import java.io.IOException;
 
-import se.culvertsoft.mgen.api.model.BoolType;
-import se.culvertsoft.mgen.api.model.EnumType;
-import se.culvertsoft.mgen.api.model.Field;
-import se.culvertsoft.mgen.api.model.StringType;
+import se.culvertsoft.mgen.api.model.*;
 import se.culvertsoft.mgen.javapack.classes.ClassRegistryBase;
 import se.culvertsoft.mgen.javapack.classes.MGenBase;
 import se.culvertsoft.mgen.javapack.exceptions.SerializationException;
@@ -81,8 +78,6 @@ public class CommandLineArgParser<T extends MGenBase> {
 		}
 
 		m_builder.append("}");
-
-		System.out.println("Converted cmd line args to: " + m_builder.toString());
 
 		return m_jsonReader.readObject(m_builder.toString(), m_cls);
 	}
@@ -162,10 +157,15 @@ public class CommandLineArgParser<T extends MGenBase> {
 		if (m_n > 0)
 			m_builder.append(", ");
 		m_builder.append(quote(field.name()) + ": ");
-		if (field.typ() == StringType.INSTANCE || field.typ() instanceof EnumType)
-			m_builder.append(quote(value));
-		else
-			m_builder.append(value);
+		switch (field.typ().typeEnum()) {
+			case STRING:
+			case ENUM:
+				m_builder.append(quote(value));
+				break;
+			default:
+				m_builder.append(value);
+				break;
+		}
 		m_n++;
 	}
 
