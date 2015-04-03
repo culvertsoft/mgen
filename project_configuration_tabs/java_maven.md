@@ -11,7 +11,7 @@ For the current release:
 <dependency>
   <groupId>se.culvertsoft</groupId>
   <artifactId>mgen-javalib</artifactId>
-  <version>0.2.4</version>
+  <version>0.2.5</version>
 </dependency>
 
 {% endhighlight %}
