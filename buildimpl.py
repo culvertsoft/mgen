@@ -163,10 +163,10 @@ def install():
     mkFileExecutable(installPath + "/bin/mgen.sh")
 
 def upload_to_culvertsoft():
-    folderName = 'snapshot' if mgen_version == 'SNAPSHOT' else 'releases'
+    folderName = 'snapshot' if mgen_version == 'SNAPSHOT' else 'release'
     zipName = "mgen-" + mgen_version + ".zip"
     zipSrc = "target/" + zipName
-    zipDest = "www.culvertsoft.se:/var/www/" + folderName + "/" + zipName
+    zipDest = "/var/www/html/published_by_jenkins/culvertsoft/mgen/" + folderName + "/" + zipName
     print("Uploading " +  zipName + " to " + zipDest)
     os.system("scp " + zipSrc + " " + zipDest)
 
